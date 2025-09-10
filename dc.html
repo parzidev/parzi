@@ -3,37 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting...</title>
+    <meta name="description" content="Redirecting to Discord server">
+    <!-- Erişilebilirlik için meta açıklaması eklendi -->
+    <title>Redirecting to Discord</title>
+    <!-- Font Awesome doğrudan SVG olarak dahil edildi -->
     <style>
+        /* Temel stil resetleme ve ayarlar */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* Sistem fontları için daha iyi bir font stack */
         body {
-            background-color: #383a40; /* Koyu arka plan rengi */
-            color: #d4af37; /* Altın renkli metin */
-            font-family: Arial, sans-serif;
+            background-color: #36393f;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             text-align: center;
+            overflow: hidden;
+            line-height: 1.5;
         }
+        
+        /* Mobil cihazlar için daha iyi padding */
+        .container {
+            background-color: #2f3136;
+            border-radius: 8px;
+            padding: clamp(20px, 5vw, 40px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            max-width: min(90%, 500px);
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         h1 {
-            font-size: 2rem;
+            font-size: clamp(1.8rem, 5vw, 2.2rem);
+            margin-bottom: 20px;
+            color: #ffffff;
+            font-weight: 700;
+        }
+        
+        p {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            margin-bottom: 30px;
+            color: #b9bbbe;
+        }
+        
+        .discord-logo {
+            font-size: clamp(3rem, 8vw, 4rem);
+            color: #5865f2;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #202225;
+            border-radius: 4px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #5865f2;
+            border-radius: 4px;
+            animation: progress 3s linear forwards;
+        }
+        
+        @keyframes progress {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+        
+        .cancel-btn {
+            display: inline-block;
+            margin-top: 20px;
+            color: #b9bbbe;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.2s;
+            padding: 8px;
+            cursor: pointer;
+        }
+        
+        .cancel-btn:hover, .cancel-btn:focus {
+            color: #ffffff;
+            text-decoration: underline;
+            outline: none;
+        }
+        
+        /* Klavye erişilebilirliği için focus durumu eklendi */
+        .cancel-btn:focus-visible {
+            outline: 2px solid #5865f2;
+            border-radius: 4px;
+        }
+        
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        /* Discord SVG ikonu için stil */
+        .discord-svg {
+            width: 4rem;
+            height: 4rem;
+            fill: #5865f2;
             margin-bottom: 20px;
         }
-        p {
-            font-size: 1.2rem;
+        
+        /* Karanlık mod desteği için */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #36393f;
+            }
+            .container {
+                background-color: #2f3136;
+            }
+        }
+        
+        /* Yüksek kontrast modu desteği */
+        @media (forced-colors: active) {
+            .progress-bar {
+                background-color: Highlight;
+            }
+            .discord-logo {
+                color: Highlight;
+            }
         }
     </style>
-    <script>
-        setTimeout(function() {
-            window.location.href = "https://discord.gg/xH6NwWAsgp";
-        }, 3000); // 3 saniye bekleyip yönlendirir
-    </script>
 </head>
 <body>
-    <div>
-        <h1>Redirecting...</h1>
-        <p>You will be redirected in a few seconds.</p>
+    <div class="container" role="main">
+        <div class="particles" aria-hidden="true"></div>
+        <!-- SVG Discord logosu - daha iyi erişilebilirlik ve performans -->
+        <svg class="discord-svg" aria-label="Discord Logo" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/>
+        </svg>
+        <h1>Joining Discord...</h1>
+        <p>You will be redirected to our Discord server in a moment</p>
+        <div class="progress-container" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="progress-bar"></div>
+        </div>
+        <a href="javascript:void(0)" onclick="history.back(); return false;" class="cancel-btn" role="button">Cancel</a>
     </div>
+
+    <script>
+        // Güvenli yönlendirme ve performans iyileştirmeleri
+        document.addEventListener('DOMContentLoaded', function() {
+            // Erişilebilirlik için ilerleme çubuğunu güncelle
+            const progressBar = document.querySelector('.progress-bar');
+            const progressContainer = document.querySelector('.progress-container');
+            
+            // İlerleme çubuğu animasyonu için ARIA değerlerini güncelle
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += 1;
+                progressContainer.setAttribute('aria-valuenow', progress);
+                if (progress >= 100) clearInterval(progressInterval);
+            }, 30);
+            
+            // Arka plan parçacıkları oluştur - performans için optimize edildi
+            createParticles();
+            
+            // 3 saniye sonra Discord'a yönlendir
+            setTimeout(function() {
+                window.location.href = "https://discord.gg/xH6NwWAsgp";
+            }, 3000);
+        });
+        
+        // Optimize edilmiş parçacık oluşturma
+        function createParticles() {
+            const particlesContainer = document.querySelector('.particles');
+            const fragment = document.createDocumentFragment();
+            const particleCount = window.matchMedia('(max-width: 768px)').matches ? 15 : 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                createParticle(particlesContainer, fragment);
+            }
+            
+            particlesContainer.appendChild(fragment);
+        }
+        
+        function createParticle(container, fragment) {
+            const particle = document.createElement('div');
+            const size = Math.random() * 6 + 2;
+            const opacity = Math.random() * 0.3 + 0.1;
+            const duration = Math.random() * 20 + 10;
+            const uniqueAnimName = 'float-' + Math.floor(Math.random() * 1000000);
+            
+            // Stil özellikleri
+            Object.assign(particle.style, {
+                position: 'absolute',
+                width: size + 'px',
+                height: size + 'px',
+                backgroundColor: `rgba(88, 101, 242, ${opacity})`,
+                borderRadius: '50%',
+                top: Math.random() * 100 + '%',
+                left: Math.random() * 100 + '%',
+                animation: `${uniqueAnimName} ${duration}s linear infinite`
+            });
+            
+            // Animasyon tanımı
+            const translateX = Math.random() * 100 - 50;
+            const translateY = Math.random() * 100 - 50;
+            const rotate = Math.random() * 360;
+            const startOpacity = Math.random() * 0.5 + 0.3;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes ${uniqueAnimName} {
+                    0% {
+                        transform: translate(0, 0) rotate(0deg);
+                        opacity: ${startOpacity};
+                    }
+                    100% {
+                        transform: translate(${translateX}px, ${translateY}px) rotate(${rotate}deg);
+                        opacity: 0;
+                    }
+                }
+            `;
+            
+            document.head.appendChild(style);
+            fragment ? fragment.appendChild(particle) : container.appendChild(particle);
+            
+            // Bellek sızıntısını önlemek için temizleme
+            setTimeout(() => {
+                if (particle.parentNode) {
+                    particle.parentNode.removeChild(particle);
+                }
+                document.head.removeChild(style);
+                createParticle(container);
+            }, duration * 1000);
+        }
+    </script>
 </body>
 </html>
