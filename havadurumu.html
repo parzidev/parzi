@@ -309,6 +309,70 @@
                 min-height: 320px;
             }
         }
+
+        /* Night Mode Styles */
+        .night-bg {
+            background: linear-gradient(to bottom, #0c0c1a, #000000);
+        }
+
+        .moon {
+            width: 80px;
+            height: 80px;
+            background: #f0f8ff;
+            border-radius: 50%;
+            position: absolute;
+            top: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 30px #b0e0e6, 0 0 50px #add8e6;
+        }
+
+        .stars-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Night adaptations for other elements */
+        .cloud.night {
+            background: rgba(220, 220, 240, 0.5);
+        }
+
+        .cloud.night::before,
+        .cloud.night::after {
+            background: rgba(220, 220, 240, 0.5);
+        }
+
+        .rain.night {
+            background: rgba(135, 206, 250, 0.8);
+        }
+
+        .snow.night {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 4px rgba(173, 216, 230, 0.5);
+        }
+
+        .wind-line.night {
+            background: rgba(220, 220, 240, 0.6);
+        }
     </style>
 </head>
 <body>
@@ -353,13 +417,19 @@
     <button class="refresh-btn" id="refresh-btn" style="margin-top: 20px;">Yenile</button>
 
     <script>
-        // API anahtarı
-        const apiKey = 'bc9ee4dc966affd2c33c7358511d1510';
-        const cities = ['Nicosia', 'Arnavutköy'];
+        const cities = ['Gazimağusa', 'Arnavutköy'];
+
+        function parseTimeToMinutes(timeStr) {
+            const [time, period] = timeStr.split(' ');
+            let [hours, minutes] = time.split(':').map(Number);
+            if (period === 'PM' && hours !== 12) hours += 12;
+            if (period === 'AM' && hours === 12) hours = 0;
+            return hours * 60 + minutes;
+        }
         
         // State objects for animations
-        let card1State = { animationsRunning: false, rainInterval: null, snowInterval: null, windInterval: null };
-        let card2State = { animationsRunning: false, rainInterval: null, snowInterval: null, windInterval: null };
+        let card1State = { animationsRunning: false, rainInterval: null, snowInterval: null, windInterval: null, isNight: false };
+        let card2State = { animationsRunning: false, rainInterval: null, snowInterval: null, windInterval: null, isNight: false };
         
         // DOM elemanları for card 1
         const weatherCard1 = document.getElementById('weather-card1');
@@ -383,31 +453,18 @@
         
         const refreshBtn = document.getElementById('refresh-btn');
         
-        // Kelvin'i Celsius'a çevir
-        function kelvinToCelsius(kelvin) {
-            return Math.round(kelvin - 273.15);
-        }
-        
-        // Tarih formatı
-        function formatDateTime(timestamp) {
-            const date = new Date(timestamp * 1000);
-            const hours = date.getHours().toString().padStart(2, '0');
-            const minutes = date.getMinutes().toString().padStart(2, '0');
-            return `${hours}:${minutes}`;
-        }
-        
         // Hava durumu verilerini getir (parametreli)
         async function getWeatherData(city, loadingEl, updateCallback) {
             loadingEl.style.display = 'flex';
             
             try {
-                const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&lang=tr`);
+                const response = await fetch(`https://wttr.in/${encodeURIComponent(city)}?format=j1&lang=tr`);
                 const data = await response.json();
                 
-                if (data.cod === 200) {
+                if (response.ok) {
                     updateCallback(data);
                 } else {
-                    console.error('Hava durumu verileri alınamadı: ' + data.message);
+                    console.error('Hava durumu verileri alınamadı');
                 }
             } catch (error) {
                 console.error('Hava durumu verileri alınamadı: ' + error.message);
@@ -418,27 +475,50 @@
         
         // UI'ı güncelle (parametreli)
         function updateWeatherUI(data, cardEl, conditionEl, tempEl, feelsEl, humEl, windEl, updatedEl, state) {
-            // Temel veriler
-            const temp = kelvinToCelsius(data.main.temp);
-            const feelsLike = kelvinToCelsius(data.main.feels_like);
-            const weatherMain = data.weather[0].main;
-            const weatherDesc = data.weather[0].description;
-            const humidity = data.main.humidity;
-            const windSpeed = data.wind.speed.toFixed(1);
+            const current = data.current_condition[0];
+            const temp = current.temp_C;
+            const feelsLike = current.FeelsLikeC;
+            const humidity = current.humidity;
+            const windSpeedKmph = current.windspeedKmph;
+            const windSpeedMs = (parseFloat(windSpeedKmph) / 3.6).toFixed(1);
             
             // UI güncelleme
             tempEl.textContent = `${temp}°C`;
             feelsEl.textContent = `Hissedilen: ${feelsLike}°C`;
             humEl.textContent = `Nem: ${humidity}%`;
-            windEl.textContent = `Rüzgar: ${windSpeed} m/s`;
+            windEl.textContent = `Rüzgar: ${windSpeedMs} m/s`;
             
-            // Türkçe hava durumu başlığı
-            let turkishWeather = data.weather[0].description.charAt(0).toUpperCase() + data.weather[0].description.slice(1);
-            
+            let weatherDesc = current.lang_tr[0].value;
+            let turkishWeather = weatherDesc.charAt(0).toUpperCase() + weatherDesc.slice(1);
             conditionEl.textContent = turkishWeather;
             
-            // Son güncelleme zamanı
+            // Animasyon için weatherMain belirle (English description kullan)
+            let weatherMain;
+            const englishDesc = current.weatherDesc[0].value.toLowerCase();
+            if (englishDesc.includes('clear') || englishDesc.includes('sunny')) {
+                weatherMain = 'Clear';
+            } else if (englishDesc.includes('cloudy')) {
+                weatherMain = 'Clouds';
+            } else if (englishDesc.includes('rain') || englishDesc.includes('drizzle')) {
+                weatherMain = 'Rain';
+            } else if (englishDesc.includes('snow')) {
+                weatherMain = 'Snow';
+            } else if (englishDesc.includes('thunder')) {
+                weatherMain = 'Thunderstorm';
+            } else {
+                weatherMain = 'Clouds';
+            }
+            
+            // Gece/gündüz hesaplama
+            const astronomy = data.weather[0].astronomy[0];
+            const sunriseMin = parseTimeToMinutes(astronomy.sunrise);
+            const sunsetMin = parseTimeToMinutes(astronomy.sunset);
             const now = new Date();
+            const nowMin = now.getHours() * 60 + now.getMinutes();
+            const isNight = nowMin >= sunsetMin || nowMin <= sunriseMin;
+            state.isNight = isNight;
+            
+            // Son güncelleme zamanı
             const hours = now.getHours().toString().padStart(2, '0');
             const minutes = now.getMinutes().toString().padStart(2, '0');
             updatedEl.textContent = `Son güncelleme: ${hours}:${minutes}`;
@@ -447,7 +527,7 @@
             clearAnimations(cardEl, state);
             
             // Arka plan ve animasyonları ayarla
-            setupWeatherAnimation(cardEl, weatherMain, state);
+            setupWeatherAnimation(cardEl, weatherMain, state, isNight);
         }
         
         // Get weather for card 1
