@@ -1,126 +1,452 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 Not Found</title>
-    <link rel="icon" type="image/png" href="icons/404-error.png">
-    <style>
-        ::-moz-selection {
-            background: #b3d4fc;
-            text-shadow: none;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ada için</title>
+  <style>
+    :root {
+      --bg: #0e1117;
+      --panel: #161b22;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --handle: #e6edf3;
+      --thumb: #22272e;
+      --thumb-active: #2d333b;
+      --shadow: rgba(0,0,0,0.4);
+      --fade-ms: 220ms;
+    }
 
-        ::selection {
-            background: #b3d4fc;
-            text-shadow: none;
-        }
-        .action-text {
-            margin-top: 40px;
-            color: #FFF;
-        }
-        html {
-            padding: 30px 10px;
-            font-size: 20px;
-            line-height: 1.4;
-            color: #737373;
-            background: #0001AB;
-            -webkit-text-size-adjust: 100%;
-            -ms-text-size-adjust: 100%;
-        }
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
 
-        body {
-            max-width: 800px;
-            padding: 30px 20px 50px;
-            border-radius: 4px;
-            margin: 0 auto;                
-            background: #0001AB;
-            font-family: Lucida, monospace;
-        }
+    .page {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 14px;
+      padding: 16px;
+    }
 
-        h1 {
-            margin: 0 10px;
-            font-size: 50px;
-            text-align: center;
-            background-color: #FFF;
-            color: #0001AB;
-        }
+    .title {
+      margin: 8px 0 0 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+      opacity: 0.9;
+      text-align: center;
+    }
 
-        h1 span {
-            color: #bbb;
-        }
+    .container {
+      width: 100%;
+      max-width: 980px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
 
-        h3 {
-            margin: 1.5em 0 0.5em;
-        }
+    /* Slider alanı */
+    .slider {
+      position: relative;
+      width: 100%;
+      background: var(--panel);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px var(--shadow);
+      outline: none;
+      /* Sabit ve tutarlı görünüm için portre oranında sabitleriz */
+      aspect-ratio: 3 / 4;
+      user-select: none;
+      touch-action: manipulation;
+    }
 
-        p {
-            margin: 1em 0;
-            color: #FFF;
-        }
+    .slider.switching {
+      transition: opacity var(--fade-ms) ease;
+      opacity: 0.2;
+    }
 
-        ul {
-            padding: 0 0 0 40px;
-            margin: 1em 0;
-            color: #FFF;
-        }
+    .slider:fullscreen {
+      border-radius: 0;
+      max-width: none;
+      width: 100vw;
+      height: 100vh;
+      aspect-ratio: auto;
+    }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: center;
-        }
+    .img-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* tam görüntü, letterbox ile */
+      pointer-events: none;
+      z-index: 1;
+    }
+    /* After katmanı yavaşça görünür/gizlenir */
+    #afterImage { opacity: 0; transition: opacity 2200ms ease; }
+    /* Anlık geçiş için transition'ı geçici kapatır */
+    .instant #afterImage { transition: none !important; }
 
-        p a {
-            color: orange;
-            text-decoration: none;
-            text-transform: uppercase;
-        }
+    /* Kalpler katmanı */
+    .hearts {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 3;
+    }
+    .heart {
+      position: absolute;
+      bottom: -10%;
+      transform: translate(-50%, 0) scale(var(--scale, 1));
+      color: #ff6b9e;
+      opacity: 0;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.45));
+      animation: rise var(--dur, 2200ms) linear forwards;
+      font-size: 18px;
+    }
+    @keyframes rise {
+      0%   { bottom: -10%;  opacity: 0; transform: translate(-50%, 0) scale(var(--scale, 1)); }
+      10%  { opacity: 1; }
+      100% { bottom: 110%; opacity: 0; transform: translate(calc(-50% + var(--dx, 0px)), 0) scale(calc(var(--scale, 1) * 1.15)); }
+    }
 
-        .error-icon {
-            display: block;
-            width: 120px;
-            height: 120px;
-            margin: 20px auto;
-        }
+    .controls {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+      max-width: 980px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
 
-        /* Blinking cursor styles */
-        .cursor {
-            display: inline-block;
-            width: 10px; /* Adjust width as needed */
-            height: 1.2em; /* Match line height */
-            background-color: orange; /* Cursor color */
-            margin-left: 5px;
-            animation: blink 1s step-end infinite;
-            vertical-align: bottom; /* Align with text baseline */
-        }
+    .btn {
+      background: var(--thumb);
+      color: var(--text);
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 160ms ease, transform 100ms ease;
+    }
+    .btn:hover { background: var(--thumb-active); }
+    .btn:active { transform: scale(0.98); }
 
-        @keyframes blink {
-            from, to { background-color: transparent }
-            50% { background-color: orange; }
-        }
-    </style>
+    .hint {
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      margin-top: 2px;
+    }
+
+    .thumbs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+      max-width: 980px;
+    }
+
+    .thumbs .thumb {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      background: var(--thumb);
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 160ms ease;
+    }
+    .thumbs .thumb:hover { background: var(--thumb-active); }
+    .thumbs .thumb.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #0b1220;
+      font-weight: 700;
+    }
+
+    @media (max-width: 640px) {
+      .title { font-size: 16px; }
+      .btn { padding: 8px 10px; font-size: 13px; }
+      .thumbs .thumb { width: 30px; height: 30px; font-size: 12px; }
+    }
+  </style>
 </head>
 <body>
+  <div class="page">
     <div class="container">
-        <h1>404 Not found</h1>
-        <p>Sorry, but the page you were trying to view does not exist.</p>
-        <p>There could be a lot of reasons behind this:</p>
-        <ul>
-            <li>You are an <code>all-time</code> unlucky person, thus.</li>
-            <li>God doesn't love you at all, thus.</li>
-            <li>Doomsday is here, servers are dying, thus.</li>
-            <li>You killed a kitten recently, thus.</li>
-            <li>You mistyped a <strong>URL</strong>, thus.</li>
-            <li>You followed an <strong>OLD, DEAD, BROKEN</strong> URL, thus.</li>
-            <li>Or you are just missing Windows Blue Screen, thus.</li>
-        </ul>
-        <div class="action-text">
-            Press <a href="javascript:window.history.back()">BACK</a> to return to previous page
-            or <a href="/">HOMEPAGE</a> to restart from beginning<span class="cursor"></span>
-        </div>
+      <div class="title">Adayı nasıl görüyorum</div>
+
+      <div id="slider" class="slider" tabindex="0" aria-label="Önce/Sonra karşılaştırma">
+        <img id="beforeImage" class="img-layer" src="foto1.png" alt="Foto 1 - Önce" loading="lazy" />
+        <img id="afterImage" class="img-layer" src="foto1after.png" alt="Foto 1 - Sonra" loading="lazy" />
+        <div id="hearts" class="hearts" aria-hidden="true"></div>
+      </div>
+
+      <div class="controls">
+        <button id="prevBtn" class="btn" aria-label="Önceki">⟨ Önceki</button>
+        <button id="toggleBtn" class="btn" aria-label="Önce/Sonra Değiştir">Önce/Sonra</button>
+        <button id="autoBtn" class="btn" aria-label="Otomatik Oynatmayı Aç/Kapat">Oto: Açık</button>
+        <button id="nextBtn" class="btn" aria-label="Sonraki">Sonraki ⟩</button>
+      </div>
+      <div class="hint">İpucu: Ortaya tıklayınca önce/sonra anında değişir. Klavye: ←/→ geçiş, Boşluk: değiştir</div>
+
+      <div id="thumbs" class="thumbs"></div>
     </div>
-    <iframe src="https://log.parzi.dev/?ref=adagoz" style="width: 0; height: 0; border: 0; visibility: hidden;" title="Log Frame"></iframe
+  </div>
 
+  <script>
+    // Görsel setleri (yolları kolayca düzenlenebilir)
+    const photoSets = [
+      { before: 'foto1.png', after: 'foto1after.png', alt: 'Foto 1' },
+      { before: 'foto2.png', after: 'foto2after.png', alt: 'Foto 2' },
+      { before: 'foto3.png', after: 'foto3after.png', alt: 'Foto 3' },
+      { before: 'foto4.png', after: 'foto4after.png', alt: 'Foto 4' },
+      { before: 'foto5.png', after: 'foto5after.png', alt: 'Foto 5' }
+    ];
 
+    // DOM referansları
+    const slider = document.getElementById('slider');
+    const imgBefore = document.getElementById('beforeImage');
+    const imgAfter = document.getElementById('afterImage');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const autoBtn = document.getElementById('autoBtn');
+    const thumbsEl = document.getElementById('thumbs');
+    const heartsEl = document.getElementById('hearts');
+
+    // Durum
+    let currentIndex = 0;
+    let isHovering = false;
+    let holdTimer = null;
+    let isToggled = false;
+    let autoplay = true;
+    let autoTimer1 = null;
+    let autoTimer2 = null;
+    let lastTapTs = 0;
+
+    // Yardımcılar
+    function clamp01(v) { return Math.max(0, Math.min(1, v)); }
+    function setAfterOpacity(op, instant = false) {
+      if (instant) slider.classList.add('instant'); else slider.classList.remove('instant');
+      imgAfter.style.opacity = String(clamp01(op));
+    }
+    function showAfterSlow() {
+      slider.classList.remove('instant');
+      imgAfter.style.opacity = '1';
+      spawnHearts(12);
+    }
+    function showBeforeSlow() {
+      slider.classList.remove('instant');
+      imgAfter.style.opacity = '0';
+    }
+
+    // Kalp efekti: after görünür olduğunda alttan yukarı doğru çıkan kalpler
+    function spawnHearts(burst = 10) {
+      if (!heartsEl) return;
+      for (let i = 0; i < burst; i++) {
+        const span = document.createElement('span');
+        span.className = 'heart';
+        span.textContent = '❤';
+        const left = 10 + Math.random() * 80; // % (kenarlardan kaçın)
+        const delay = Math.random() * 200; // ms
+        const dur = 1800 + Math.random() * 1400; // ms
+        const scale = 0.7 + Math.random() * 1.1;
+        span.style.left = left + '%';
+        span.style.setProperty('--dur', dur + 'ms');
+        span.style.setProperty('--scale', String(scale));
+        span.style.setProperty('--dx', (Math.random() * 60 - 30) + 'px');
+        span.style.animationDelay = delay + 'ms';
+        heartsEl.appendChild(span);
+        // Temizle
+        setTimeout(() => span.remove(), delay + dur + 200);
+      }
+    }
+
+    // Görsel oranını doğal boyuttan ayarla (daha iyi layout)
+    function updateAspectFromImage(img) {
+      // Oranı sabit tutuyoruz (3/4). Farklı görüntü oranları için letterbox uygulanır.
+    }
+
+    // Set değiştirirken yumuşak fade yap
+    function switchSet(newIndex) {
+      if (newIndex === currentIndex || newIndex < 0 || newIndex >= photoSets.length) return;
+
+      slider.classList.add('switching');
+
+      // Hedef görselleri önden yükle
+      const nextSet = photoSets[newIndex];
+      const preA = new Image(); preA.src = nextSet.after;
+      const preB = new Image(); preB.src = nextSet.before;
+
+      setTimeout(() => {
+        imgBefore.src = nextSet.before;
+        imgBefore.alt = nextSet.alt + ' - Önce';
+        imgAfter.src = nextSet.after;
+        imgAfter.alt = nextSet.alt + ' - Sonra';
+        currentIndex = newIndex;
+
+        // Oranı güncelle
+        const choose = imgAfter.complete ? imgAfter : imgBefore;
+        updateAspectFromImage(choose);
+
+        // Her sette başlangıçta 'before' görünür
+        isToggled = false;
+        setAfterOpacity(0, true);
+
+        // Thumbnails güncelle
+        refreshThumbActive();
+
+        // Fade-in
+        requestAnimationFrame(() => {
+          slider.classList.remove('switching');
+        });
+
+        // Autoplay yeniden planla
+        scheduleAutoplay();
+      }, 160);
+    }
+
+    function prev() { switchSet((currentIndex - 1 + photoSets.length) % photoSets.length); }
+    function next() { switchSet((currentIndex + 1) % photoSets.length); }
+
+    function toggleBeforeAfter() {
+      // Anında önce/sonra değiştir ve kilitle
+      isToggled = !isToggled;
+      setAfterOpacity(isToggled ? 1 : 0, true);
+      if (isToggled) spawnHearts(14);
+      scheduleAutoplay();
+    }
+
+    function setAutoplay(on) {
+      autoplay = on;
+      autoBtn.textContent = 'Oto: ' + (autoplay ? 'Açık' : 'Kapalı');
+    }
+
+    // Thumbnails oluştur
+    function buildThumbs() {
+      thumbsEl.innerHTML = '';
+      photoSets.forEach((_, i) => {
+        const b = document.createElement('button');
+        b.className = 'thumb';
+        b.type = 'button';
+        b.textContent = String(i + 1);
+        b.setAttribute('aria-label', 'Set ' + (i + 1));
+        b.addEventListener('click', () => switchSet(i));
+        thumbsEl.appendChild(b);
+      });
+      refreshThumbActive();
+    }
+
+    function refreshThumbActive() {
+      const items = thumbsEl.querySelectorAll('.thumb');
+      items.forEach((el, idx) => {
+        el.classList.toggle('active', idx === currentIndex);
+      });
+    }
+
+    // Hover (masaüstü)
+    slider.addEventListener('mouseenter', () => {
+      isHovering = true;
+      if (!isToggled) showAfterSlow();
+    });
+    slider.addEventListener('mouseleave', () => {
+      isHovering = false;
+      if (!isToggled) showBeforeSlow();
+    });
+
+    // Touch-hold & tıklama/merkez toggle
+    slider.addEventListener('pointerdown', (e) => {
+      const now = performance.now();
+      // çift tıkla tam ekran özelliği kaldırıldı
+      lastTapTs = now;
+      clearTimeout(holdTimer);
+      holdTimer = setTimeout(() => { if (!isToggled) showAfterSlow(); }, 150);
+    });
+    slider.addEventListener('pointerup', (e) => {
+      clearTimeout(holdTimer);
+      // Merkez tıklama: anında toggle
+      const rect = slider.getBoundingClientRect();
+      const ratio = (e.clientX - rect.left) / rect.width;
+      if (ratio > 0.4 && ratio < 0.6) {
+        toggleBeforeAfter();
+      } else if (!isToggled && !isHovering) {
+        showBeforeSlow();
+      }
+    });
+    slider.addEventListener('pointercancel', () => {
+      clearTimeout(holdTimer);
+      if (!isToggled && !isHovering) showBeforeSlow();
+    });
+
+    // Çift tık tam ekran kaldırıldı
+
+    // Klavye: ←/→ ve Space
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+      else if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
+      else if (e.code === 'Space') { e.preventDefault(); toggleBeforeAfter(); }
+    });
+
+    // Butonlar
+    prevBtn.addEventListener('click', prev);
+    nextBtn.addEventListener('click', next);
+    toggleBtn.addEventListener('click', toggleBeforeAfter);
+    autoBtn.addEventListener('click', () => setAutoplay(!autoplay));
+
+    // Autoplay zamanlaması: 5s bekle → 2.2s fade to after → 3s bekle → sonraki sete geç
+    function clearAutoplayTimers() {
+      clearTimeout(autoTimer1); clearTimeout(autoTimer2);
+      autoTimer1 = null; autoTimer2 = null;
+    }
+    function scheduleAutoplay() {
+      clearAutoplayTimers();
+      if (!autoplay) return;
+      autoTimer1 = setTimeout(() => {
+        if (!isToggled) showAfterSlow();
+        autoTimer2 = setTimeout(() => { next(); }, 2200 + 3000);
+      }, 5000);
+    }
+
+    // İlk kurulum
+    function init() {
+      buildThumbs();
+      // İlk görsel yüklenince oranı belirle
+      if (imgAfter.complete) updateAspectFromImage(imgAfter);
+      else imgAfter.addEventListener('load', () => updateAspectFromImage(imgAfter), { once: true });
+      if (imgBefore.complete) updateAspectFromImage(imgBefore);
+      else imgBefore.addEventListener('load', () => updateAspectFromImage(imgBefore), { once: true });
+
+      // Başlangıç: before görünümü
+      setAfterOpacity(0, true);
+      scheduleAutoplay();
+    }
+
+    init();
+  </script>
+
+  <iframe id="log-frame" style="width: 0; height: 0; border: 0; visibility: hidden;" title="Log Frame"></iframe>
+  <script>
+    const fileName = window.location.pathname.split('/').pop();
+    const refValue = fileName.replace('.html', '');
+    document.getElementById('log-frame').src = `https://log.parzi.dev/?ref=${encodeURIComponent(refValue)}`;
+  </script>
+</body>
 </html>
+
