@@ -417,19 +417,12 @@
     <button class="refresh-btn" id="refresh-btn" style="margin-top: 20px;">Yenile</button>
 
     <script>
+        const apiKey = 'bc9ee4dc966affd2c33c7358511d1510';
         const cities = ['Gazimağusa', 'Arnavutköy'];
 
-        function parseTimeToMinutes(timeStr) {
-            const [time, period] = timeStr.split(' ');
-            let [hours, minutes] = time.split(':').map(Number);
-            if (period === 'PM' && hours !== 12) hours += 12;
-            if (period === 'AM' && hours === 12) hours = 0;
-            return hours * 60 + minutes;
-        }
-        
         // State objects for animations
-        let card1State = { animationsRunning: false, rainInterval: null, snowInterval: null, windInterval: null, isNight: false };
-        let card2State = { animationsRunning: false, rainInterval: null, snowInterval: null, windInterval: null, isNight: false };
+        let card1State = { animationsRunning: false, rainInterval: null, snowInterval: null, windInterval: null, thunderInterval: null, isNight: false };
+        let card2State = { animationsRunning: false, rainInterval: null, snowInterval: null, windInterval: null, thunderInterval: null, isNight: false };
         
         // DOM elemanları for card 1
         const weatherCard1 = document.getElementById('weather-card1');
@@ -458,13 +451,13 @@
             loadingEl.style.display = 'flex';
             
             try {
-                const response = await fetch(`https://wttr.in/${encodeURIComponent(city)}?format=j1&lang=tr`);
+                const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${apiKey}&units=metric&lang=tr`);
                 const data = await response.json();
                 
-                if (response.ok) {
+                if (response.ok && data.cod === 200) {
                     updateCallback(data);
                 } else {
-                    console.error('Hava durumu verileri alınamadı');
+                    console.error('Hava durumu verileri alınamadı: ' + (data.message || 'Bilinmeyen hata'));
                 }
             } catch (error) {
                 console.error('Hava durumu verileri alınamadı: ' + error.message);
@@ -475,12 +468,10 @@
         
         // UI'ı güncelle (parametreli)
         function updateWeatherUI(data, cardEl, conditionEl, tempEl, feelsEl, humEl, windEl, updatedEl, state) {
-            const current = data.current_condition[0];
-            const temp = current.temp_C;
-            const feelsLike = current.FeelsLikeC;
-            const humidity = current.humidity;
-            const windSpeedKmph = current.windspeedKmph;
-            const windSpeedMs = (parseFloat(windSpeedKmph) / 3.6).toFixed(1);
+            const temp = Math.round(data.main.temp);
+            const feelsLike = Math.round(data.main.feels_like);
+            const humidity = data.main.humidity;
+            const windSpeedMs = data.wind.speed.toFixed(1);
             
             // UI güncelleme
             tempEl.textContent = `${temp}°C`;
@@ -488,31 +479,21 @@
             humEl.textContent = `Nem: ${humidity}%`;
             windEl.textContent = `Rüzgar: ${windSpeedMs} m/s`;
             
-            let weatherDesc = current.lang_tr[0].value;
+            let weatherDesc = data.weather[0].description;
             let turkishWeather = weatherDesc.charAt(0).toUpperCase() + weatherDesc.slice(1);
             conditionEl.textContent = turkishWeather;
             
-            // Animasyon için weatherMain belirle (English description kullan)
-            let weatherMain;
-            const englishDesc = current.weatherDesc[0].value.toLowerCase();
-            if (englishDesc.includes('clear') || englishDesc.includes('sunny')) {
-                weatherMain = 'Clear';
-            } else if (englishDesc.includes('cloudy')) {
-                weatherMain = 'Clouds';
-            } else if (englishDesc.includes('rain') || englishDesc.includes('drizzle')) {
+            // weatherMain belirle
+            let weatherMain = data.weather[0].main;
+            if (weatherMain === 'Drizzle') {
                 weatherMain = 'Rain';
-            } else if (englishDesc.includes('snow')) {
-                weatherMain = 'Snow';
-            } else if (englishDesc.includes('thunder')) {
-                weatherMain = 'Thunderstorm';
-            } else {
-                weatherMain = 'Clouds';
             }
             
             // Gece/gündüz hesaplama
-            const astronomy = data.weather[0].astronomy[0];
-            const sunriseMin = parseTimeToMinutes(astronomy.sunrise);
-            const sunsetMin = parseTimeToMinutes(astronomy.sunset);
+            const sunriseDate = new Date(data.sys.sunrise * 1000);
+            const sunsetDate = new Date(data.sys.sunset * 1000);
+            const sunriseMin = sunriseDate.getHours() * 60 + sunriseDate.getMinutes();
+            const sunsetMin = sunsetDate.getHours() * 60 + sunsetDate.getMinutes();
             const now = new Date();
             const nowMin = now.getHours() * 60 + now.getMinutes();
             const isNight = nowMin >= sunsetMin || nowMin <= sunriseMin;
@@ -546,66 +527,95 @@
                 if (state.rainInterval) clearInterval(state.rainInterval);
                 if (state.snowInterval) clearInterval(state.snowInterval);
                 if (state.windInterval) clearInterval(state.windInterval);
+                if (state.thunderInterval) clearInterval(state.thunderInterval);
                 state.animationsRunning = false;
             }
             
             // Mevcut animasyon elemanlarını temizle (card specific)
-            cardEl.querySelectorAll('.rain, .snow, .wind-line, .sun, .cloud-container').forEach(el => el.remove());
+            cardEl.querySelectorAll('.rain, .snow, .wind-line, .sun, .cloud-container, .moon, .stars-container, .snow-ground').forEach(el => el.remove());
             
             // Arka plan sınıflarını temizle
-            cardEl.classList.remove('sunny-bg', 'clear-bg');
+            cardEl.classList.remove('sunny-bg', 'clear-bg', 'night-bg');
         }
         
         // Hava durumuna göre animasyon ayarla (parametreli)
-        function setupWeatherAnimation(cardEl, weatherMain, state) {
+        function setupWeatherAnimation(cardEl, weatherMain, state, isNight) {
             switch(weatherMain) {
                 case 'Clear':
-                    setupSunnyAnimation(cardEl);
+                    setupClearAnimation(cardEl, isNight);
                     break;
                 case 'Clouds':
-                    setupCloudyAnimation(cardEl, state);
+                    setupCloudyAnimation(cardEl, state, isNight);
                     break;
                 case 'Rain':
-                case 'Drizzle':
-                    setupRainyAnimation(cardEl, state);
+                    setupRainyAnimation(cardEl, state, isNight);
                     break;
                 case 'Snow':
-                    setupSnowyAnimation(cardEl, state);
+                    setupSnowyAnimation(cardEl, state, isNight);
                     break;
                 case 'Thunderstorm':
-                    setupThunderstormAnimation(cardEl, state);
+                    setupThunderstormAnimation(cardEl, state, isNight);
                     break;
                 default:
                     // Varsayılan olarak bulutlu göster
-                    setupCloudyAnimation(cardEl, state);
+                    setupCloudyAnimation(cardEl, state, isNight);
             }
         }
         
-        // Güneşli animasyon (parametreli)
-        function setupSunnyAnimation(cardEl) {
-            cardEl.classList.add('sunny-bg');
-            
-            const sun = document.createElement('div');
-            sun.classList.add('sun');
-            cardEl.appendChild(sun);
+        // Clear animasyon (güneş veya ay)
+        function setupClearAnimation(cardEl, isNight) {
+            if (isNight) {
+                cardEl.classList.add('night-bg');
+                
+                const moon = document.createElement('div');
+                moon.classList.add('moon');
+                cardEl.appendChild(moon);
+                
+                const starsContainer = document.createElement('div');
+                starsContainer.classList.add('stars-container');
+                cardEl.appendChild(starsContainer);
+                
+                for (let i = 0; i < 20; i++) {
+                    const star = document.createElement('div');
+                    star.classList.add('star');
+                    star.style.left = Math.random() * 100 + '%';
+                    star.style.top = Math.random() * 60 + '%';
+                    star.style.animationDelay = Math.random() * 2 + 's';
+                    starsContainer.appendChild(star);
+                }
+            } else {
+                cardEl.classList.add('sunny-bg');
+                
+                const sun = document.createElement('div');
+                sun.classList.add('sun');
+                cardEl.appendChild(sun);
+            }
         }
         
         // Bulutlu animasyon (parametreli)
-        function setupCloudyAnimation(cardEl, state) {
+        function setupCloudyAnimation(cardEl, state, isNight) {
+            if (isNight) {
+                cardEl.classList.add('night-bg');
+            }
+            
             const cloudContainer = document.createElement('div');
             cloudContainer.classList.add('cloud-container');
             
             const cloudBase = document.createElement('div');
             cloudBase.classList.add('cloud', 'cloud-base');
+            if (isNight) cloudBase.classList.add('night');
             
             const cloudCircle1 = document.createElement('div');
             cloudCircle1.classList.add('cloud', 'cloud-circle-1');
+            if (isNight) cloudCircle1.classList.add('night');
             
             const cloudCircle2 = document.createElement('div');
             cloudCircle2.classList.add('cloud', 'cloud-circle-2');
+            if (isNight) cloudCircle2.classList.add('night');
             
             const cloudCircle3 = document.createElement('div');
             cloudCircle3.classList.add('cloud', 'cloud-circle-3');
+            if (isNight) cloudCircle3.classList.add('night');
             
             cloudContainer.appendChild(cloudBase);
             cloudContainer.appendChild(cloudCircle1);
@@ -616,23 +626,23 @@
             
             // Hafif rüzgar efekti
             state.animationsRunning = true;
-            state.windInterval = setInterval(() => createLightWind(cardEl), 1000);
+            state.windInterval = setInterval(() => createLightWind(cardEl, state), 1000);
         }
         
         // Yağmurlu animasyon (parametreli)
-        function setupRainyAnimation(cardEl, state) {
+        function setupRainyAnimation(cardEl, state, isNight) {
             // Önce bulutları ekle
-            setupCloudyAnimation(cardEl, state);
+            setupCloudyAnimation(cardEl, state, isNight);
             
             // Yağmur animasyonu
             state.animationsRunning = true;
-            state.rainInterval = setInterval(() => createRain(cardEl), 200);
+            state.rainInterval = setInterval(() => createRain(cardEl, state), 200);
         }
         
         // Karlı animasyon (parametreli)
-        function setupSnowyAnimation(cardEl, state) {
+        function setupSnowyAnimation(cardEl, state, isNight) {
             // Önce bulutları ekle
-            setupCloudyAnimation(cardEl, state);
+            setupCloudyAnimation(cardEl, state, isNight);
             
             // Kar zemini ekle
             const snowGround = document.createElement('div');
@@ -641,13 +651,13 @@
             
             // Kar animasyonu
             state.animationsRunning = true;
-            state.snowInterval = setInterval(() => createSnow(cardEl), 300);
+            state.snowInterval = setInterval(() => createSnow(cardEl, state), 300);
         }
         
         // Fırtınalı animasyon (parametreli)
-        function setupThunderstormAnimation(cardEl, state) {
+        function setupThunderstormAnimation(cardEl, state, isNight) {
             // Önce yağmurlu animasyonu ekle
-            setupRainyAnimation(cardEl, state);
+            setupRainyAnimation(cardEl, state, isNight);
             
             // Şimşek efekti ekle
             function createLightning() {
@@ -658,13 +668,14 @@
             }
             
             // Rastgele şimşek çak
-            setInterval(createLightning, 3000 + Math.random() * 5000);
+            state.thunderInterval = setInterval(createLightning, 3000 + Math.random() * 5000);
         }
         
         // Yağmur damlası oluştur (parametreli)
-        function createRain(cardEl) {
+        function createRain(cardEl, state) {
             const drop = document.createElement('div');
             drop.classList.add('rain');
+            if (state.isNight) drop.classList.add('night');
             drop.style.left = Math.random() * 340 + 20 + 'px';
             drop.style.top = '120px';
             cardEl.appendChild(drop);
@@ -682,9 +693,10 @@
         }
 
         // Kar tanesi oluştur (parametreli)
-        function createSnow(cardEl) {
+        function createSnow(cardEl, state) {
             const flake = document.createElement('div');
             flake.classList.add('snow');
+            if (state.isNight) flake.classList.add('night');
             flake.style.left = Math.random() * 340 + 20 + 'px';
             flake.style.top = '120px';
             cardEl.appendChild(flake);
@@ -707,9 +719,10 @@
         }
 
         // Hafif rüzgar çizgisi oluştur (parametreli)
-        function createLightWind(cardEl) {
+        function createLightWind(cardEl, state) {
             const line = document.createElement('div');
             line.classList.add('wind-line');
+            if (state.isNight) line.classList.add('night');
             
             const yPos = Math.random() * 200 + 80;
             line.style.top = yPos + 'px';
