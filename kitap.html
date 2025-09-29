@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kitap</title>
+</head>
+<body>
+        <iframe src="https://log.parzi.dev/?ref=kitap" style="width: 0; height: 0; border: 0; visibility: hidden;" title="Log Frame"></iframe>
+
+    <div id="numberDisplay" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 48px; font-family: monospace; color: black;">
+        000000000000
+    </div>
+
+    <script>
+        function generateRandomNumber() {
+            return Math.floor(100000000000 + Math.random() * 900000000000).toString();
+        }
+
+        function updateNumber() {
+            document.getElementById('numberDisplay').textContent = generateRandomNumber();
+        }
+
+        // Update every 1 second
+        setInterval(updateNumber, 100);
+
+        // Initial update
+        updateNumber();
+    </script>
+</body>
+</html>
