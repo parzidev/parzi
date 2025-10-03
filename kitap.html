@@ -18,10 +18,12 @@
         }
 
         function updateNumber() {
-            document.getElementById('numberDisplay').textContent = generateRandomNumber();
+            const element = document.getElementById('numberDisplay');
+            element.textContent = generateRandomNumber();
+            element.style.color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+            document.body.style.backgroundColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
         }
 
-        // Update every 1 second
         setInterval(updateNumber, 100);
 
         // Initial update
