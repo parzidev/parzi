@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#ffeef8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Ada'ya ❤️</title>
+    <style>
+        :root {
+            font-size: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe4f3 50%, #ffd4eb 100%);
+            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            touch-action: pan-y;
+        }
+
+        .message-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            padding: 2rem 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 1rem 3rem rgba(255, 105, 180, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 182, 193, 0.4);
+            max-width: 85%;
+            max-height: 70vh;
+            width: auto;
+            animation: fadeIn 1.5s ease-in-out;
+            pointer-events: auto;
+            user-select: text;
+            will-change: transform, opacity;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .message-container h1 {
+            font-size: 1.75rem;
+            color: #ff1493;
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 3px rgba(255, 105, 180, 0.3);
+            font-weight: normal;
+            letter-spacing: 0.1rem;
+            line-height: 1.3;
+            flex-shrink: 0;
+        }
+
+        .message-container p {
+            font-size: 1rem;
+            color: #c71585;
+            line-height: 1.6;
+            font-style: italic;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 0.5rem;
+            word-wrap: break-word;
+            word-break: break-word;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Custom scrollbar */
+        .message-container p::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .message-container p::-webkit-scrollbar-track {
+            background: rgba(255, 182, 193, 0.2);
+            border-radius: 10px;
+        }
+
+        .message-container p::-webkit-scrollbar-thumb {
+            background: rgba(255, 105, 180, 0.5);
+            border-radius: 10px;
+        }
+
+        .message-container p::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 105, 180, 0.7);
+        }
+
+        /* Scroll fade efekti */
+        .message-container::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3rem;
+            background: linear-gradient(to top, rgba(255, 255, 255, 0.92), transparent);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 0 0 1.5rem 1.5rem;
+        }
+
+        .message-container.has-scroll::after {
+            opacity: 1;
+        }
+
+        .flowers-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 9rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 0.3rem;
+            padding: 0 0.5rem;
+            z-index: 1;
+            flex-wrap: nowrap;
+            overflow: hidden;
+        }
+
+        .flower {
+            width: 4.5rem;
+            height: auto;
+            max-height: 8rem;
+            object-fit: contain;
+            animation: grow 1s ease-out forwards;
+            opacity: 0;
+            transform: translateY(100px) scale(0.5);
+            filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.15));
+            pointer-events: none;
+            user-select: none;
+            will-change: transform, opacity;
+            flex-shrink: 0;
+        }
+
+        .flower:nth-child(1) { animation-delay: 0.1s; }
+        .flower:nth-child(2) { animation-delay: 0.2s; }
+        .flower:nth-child(3) { animation-delay: 0.3s; }
+        .flower:nth-child(4) { animation-delay: 0.4s; }
+        .flower:nth-child(5) { animation-delay: 0.5s; }
+        .flower:nth-child(6) { animation-delay: 0.6s; }
+        .flower:nth-child(7) { animation-delay: 0.7s; }
+        .flower:nth-child(8) { animation-delay: 0.8s; }
+        .flower:nth-child(9) { animation-delay: 0.9s; }
+        .flower:nth-child(10) { animation-delay: 1s; }
+        .flower:nth-child(11) { animation-delay: 1.1s; }
+        .flower:nth-child(12) { animation-delay: 1.2s; }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @keyframes grow {
+            0% {
+                opacity: 0;
+                transform: translateY(100px) scale(0.5);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Floating hearts */
+        .heart {
+            position: fixed;
+            font-size: 1.5rem;
+            color: #ff69b4;
+            animation: floatHeart 8s linear infinite;
+            opacity: 0;
+            z-index: 0;
+            will-change: transform, opacity;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(0deg);
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100vh) rotate(360deg);
+            }
+        }
+
+        /* Yan çiçekler */
+        .side-flower {
+            position: fixed;
+            width: 8rem;
+            height: auto;
+            object-fit: contain;
+            z-index: 50;
+            opacity: 0;
+            animation: fadeInSide 1.5s ease-out forwards;
+            filter: drop-shadow(0 3px 12px rgba(255, 105, 180, 0.2));
+            pointer-events: none;
+            user-select: none;
+            will-change: transform, opacity;
+        }
+
+        .left-flower {
+            left: -1rem;
+            transform: translateX(-100px) scale(0.7);
+        }
+
+        .right-flower {
+            right: -1rem;
+            transform: translateX(100px) scale(0.7);
+        }
+
+        .left-flower:nth-child(1) { 
+            top: 15%; 
+            animation-delay: 0.3s;
+        }
+        .left-flower:nth-child(2) { 
+            top: 45%; 
+            animation-delay: 0.5s;
+        }
+        .left-flower:nth-child(3) { 
+            top: 75%; 
+            animation-delay: 0.7s;
+        }
+
+        .right-flower:nth-child(4) { 
+            top: 15%; 
+            animation-delay: 0.4s;
+        }
+        .right-flower:nth-child(5) { 
+            top: 55%; 
+            animation-delay: 0.6s;
+        }
+
+        @keyframes fadeInSide {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 0.5;
+                transform: translateX(0) scale(0.7);
+            }
+        }
+
+        /* Küçük mobil cihazlar (iPhone SE, küçük Android'ler) */
+        @media (max-width: 380px) {
+            :root {
+                font-size: 14px;
+            }
+
+            .message-container {
+                padding: 1.25rem 1.5rem;
+                max-width: 92%;
+                max-height: 60vh;
+                border-width: 1px;
+            }
+
+            .message-container h1 {
+                font-size: 1.3rem;
+                margin-bottom: 0.65rem;
+                letter-spacing: 0.05rem;
+            }
+
+            .message-container p {
+                font-size: 0.85rem;
+                line-height: 1.5;
+                padding-right: 0.3rem;
+            }
+
+            .message-container p::-webkit-scrollbar {
+                width: 4px;
+            }
+
+            .flowers-container {
+                height: 7rem;
+                gap: 0.1rem;
+                padding: 0 0.2rem;
+            }
+
+            .flower {
+                width: 2.8rem;
+                max-height: 6rem;
+            }
+
+            /* Sadece 6 çiçek göster */
+            .flower:nth-child(n+7) {
+                display: none;
+            }
+
+            .side-flower {
+                width: 5rem;
+            }
+
+            .left-flower {
+                left: -1.5rem;
+                transform: translateX(-100px) scale(0.5);
+            }
+
+            .right-flower {
+                right: -1.5rem;
+                transform: translateX(100px) scale(0.5);
+            }
+
+            @keyframes fadeInSide {
+                100% {
+                    opacity: 0.35;
+                    transform: translateX(0) scale(0.5);
+                }
+            }
+
+            .heart {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Orta mobil cihazlar (iPhone, standart Android'ler) */
+        @media (min-width: 381px) and (max-width: 480px) {
+            :root {
+                font-size: 15px;
+            }
+
+            .message-container {
+                padding: 1.5rem 1.75rem;
+                max-width: 90%;
+                max-height: 65vh;
+            }
+
+            .message-container h1 {
+                font-size: 1.4rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .message-container p {
+                font-size: 0.9rem;
+                padding-right: 0.4rem;
+            }
+
+            .message-container p::-webkit-scrollbar {
+                width: 5px;
+            }
+
+            .flowers-container {
+                height: 8rem;
+                gap: 0.15rem;
+                padding: 0 0.3rem;
+            }
+
+            .flower {
+                width: 3.2rem;
+                max-height: 7rem;
+            }
+
+            /* 8 çiçek göster */
+            .flower:nth-child(n+9) {
+                display: none;
+            }
+
+            .side-flower {
+                width: 6.5rem;
+            }
+
+            .left-flower, .right-flower {
+                transform: translateX(-100px) scale(0.6);
+            }
+
+            @keyframes fadeInSide {
+                100% {
+                    opacity: 0.4;
+                    transform: translateX(0) scale(0.6);
+                }
+            }
+
+            .heart {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* Büyük mobil cihazlar (Plus modeller, büyük Android'ler) */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .message-container {
+                padding: 1.75rem 2rem;
+                max-width: 88%;
+                max-height: 68vh;
+            }
+
+            .message-container h1 {
+                font-size: 1.5rem;
+            }
+
+            .message-container p {
+                font-size: 0.95rem;
+            }
+
+            .flowers-container {
+                height: 8.5rem;
+                gap: 0.2rem;
+                padding: 0 0.4rem;
+            }
+
+            .flower {
+                width: 3.5rem;
+                max-height: 7.5rem;
+            }
+
+            /* 10 çiçek göster */
+            .flower:nth-child(n+11) {
+                display: none;
+            }
+
+            .side-flower {
+                width: 7rem;
+            }
+
+            .left-flower, .right-flower {
+                transform: translateX(-100px) scale(0.65);
+            }
+
+            @keyframes fadeInSide {
+                100% {
+                    opacity: 0.45;
+                    transform: translateX(0) scale(0.65);
+                }
+            }
+
+            .heart {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* Tablet ve yatay mobil */
+        @media (min-width: 769px) {
+            .message-container {
+                padding: 2.5rem 3rem;
+                max-width: 80%;
+            }
+
+            .message-container h1 {
+                font-size: 2rem;
+            }
+
+            .message-container p {
+                font-size: 1.1rem;
+            }
+
+            .flowers-container {
+                height: 10rem;
+            }
+
+            .flower {
+                width: 5rem;
+            }
+
+            .side-flower {
+                width: 9rem;
+            }
+        }
+
+        /* Yatay (landscape) mod için özel ayarlar */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .message-container {
+                padding: 0.75rem 1.25rem;
+                max-width: 65%;
+                max-height: 75vh;
+            }
+
+            .message-container h1 {
+                font-size: 1rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .message-container p {
+                font-size: 0.75rem;
+                line-height: 1.3;
+                padding-right: 0.3rem;
+            }
+
+            .message-container p::-webkit-scrollbar {
+                width: 3px;
+            }
+
+            .flowers-container {
+                height: 5rem;
+                gap: 0.3rem;
+            }
+
+            .flower {
+                width: 3rem;
+                max-height: 4.5rem;
+            }
+
+            /* Landscape'de sadece 5 çiçek göster */
+            .flower:nth-child(n+6) {
+                display: none;
+            }
+
+            .side-flower {
+                width: 4rem;
+            }
+
+            .left-flower, .right-flower {
+                transform: translateX(-100px) scale(0.4);
+            }
+
+            @keyframes fadeInSide {
+                100% {
+                    opacity: 0.3;
+                    transform: translateX(0) scale(0.4);
+                }
+            }
+
+            .heart {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <iframe src="https://log.parzi.dev/?ref=cicek" style="width: 0; height: 0; border: 0; visibility: hidden;" title="Log Frame"></iframe>
+
+    <!-- Sol taraftaki çiçekler -->
+    <img src="solcicek.png" alt="Sol Çiçek 1" class="side-flower left-flower">
+    <img src="solcicek.png" alt="Sol Çiçek 2" class="side-flower left-flower">
+    <img src="solcicek.png" alt="Sol Çiçek 3" class="side-flower left-flower">
+
+    <!-- Sağ taraftaki çiçekler -->
+    <img src="sagcicek.png" alt="Sağ Çiçek 1" class="side-flower right-flower">
+    <img src="sagcicek.png" alt="Sağ Çiçek 2" class="side-flower right-flower">
+
+    <!-- Ortadaki Mesaj -->
+    <div class="message-container">
+        <h1>Sevgili Ada,</h1>
+        <p id="message-text">
+            Yükleniyor...
+        </p>
+    </div>
+
+    <!-- Alttaki Çiçekler -->
+    <div class="flowers-container">
+        <img src="altcicek10.png" alt="Çiçek 1" class="flower">
+        <img src="altcicek6.png" alt="Çiçek 2" class="flower">
+        <img src="altcicek7.png" alt="Çiçek 3" class="flower">
+        <img src="altcicek4.png" alt="Çiçek 4" class="flower">
+        <img src="altcicek5.png" alt="Çiçek 5" class="flower">
+        <img src="altcicek6.png" alt="Çiçek 6" class="flower">
+        <img src="altcicek7.png" alt="Çiçek 7" class="flower">
+        <img src="altcicek8.png" alt="Çiçek 8" class="flower">
+        <img src="altcicek9.png" alt="Çiçek 9" class="flower">
+        <img src="altcicek10.png" alt="Çiçek 10" class="flower">
+        <img src="altcicek11.png" alt="Çiçek 11" class="flower">
+        <img src="altcicek12.png" alt="Çiçek 12" class="flower">
+    </div>
+
+    <script>
+        // not.txt'den mesajı yükle
+        async function loadMessage() {
+            try {
+                const response = await fetch('not.txt');
+                const text = await response.text();
+                const messageElement = document.getElementById('message-text');
+                
+                // Metni <br> ile satırlara böl (otomatik formatlama için)
+                messageElement.innerHTML = text.trim();
+                
+                // Scroll kontrolü
+                setTimeout(() => {
+                    checkScrollable();
+                }, 100);
+            } catch (error) {
+                console.error('Mesaj yüklenemedi:', error);
+                document.getElementById('message-text').innerHTML = 'Seni çok seviyorum! ❤️';
+            }
+        }
+
+        // Scroll gerekli mi kontrol et
+        function checkScrollable() {
+            const messageElement = document.getElementById('message-text');
+            const container = document.querySelector('.message-container');
+            
+            if (messageElement && container) {
+                if (messageElement.scrollHeight > messageElement.clientHeight) {
+                    container.classList.add('has-scroll');
+                } else {
+                    container.classList.remove('has-scroll');
+                }
+            }
+        }
+
+        // Sayfa yüklendiğinde mesajı çek
+        loadMessage();
+        
+        // Pencere boyutu değiştiğinde kontrol et
+        window.addEventListener('resize', checkScrollable);
+
+        // Mobil cihaz kontrolü
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+        
+        // Ekran boyutu kontrolü
+        const isSmallScreen = window.innerWidth <= 480;
+        
+        // Rastgele uçuşan kalpler (mobilde daha az sıklıkta)
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 3 + 5) + 's';
+            
+            // Mobilde daha küçük kalpler
+            let fontSize;
+            if (isSmallScreen) {
+                fontSize = Math.random() * 10 + 15;
+            } else if (isMobile) {
+                fontSize = Math.random() * 12 + 18;
+            } else {
+                fontSize = Math.random() * 20 + 25;
+            }
+            
+            heart.style.fontSize = fontSize + 'px';
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 8000);
+        }
+
+        // Kalp oluşturma sıklığı (mobilde daha az)
+        let heartInterval;
+        if (isSmallScreen) {
+            // Küçük ekranlarda her 4 saniyede bir
+            heartInterval = 4000;
+        } else if (isMobile) {
+            // Orta mobilde her 3 saniyede bir
+            heartInterval = 3000;
+        } else {
+            // Desktop'ta her 2 saniyede bir
+            heartInterval = 2000;
+        }
+
+        setInterval(createHeart, heartInterval);
+
+        // İlk kalbi hemen oluştur
+        if (!isSmallScreen) {
+            createHeart();
+        }
+
+        // Sayfa scroll'unu engelle (mesaj kutusu hariç)
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
+        
+        // Mesaj kutusu scroll'unu etkinleştir
+        const messageContainer = document.querySelector('.message-container');
+        if (messageContainer) {
+            messageContainer.addEventListener('touchmove', function(e) {
+                // Mesaj kutusunda scroll'a izin ver
+                e.stopPropagation();
+            }, { passive: true });
+        }
+    </script>
+</body>
+</html>
