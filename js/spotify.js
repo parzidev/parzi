@@ -28,17 +28,32 @@ const spotifyModule = (function() {
     // Spotify'da çalan şarkıyı getirme fonksiyonu
     async function fetchCurrentlyPlaying() {
         try {
-            console.log('Spotify verisi alınıyor');
+            console.log('🎵 Spotify verisi alınıyor...');
             
             // Artık CORS sorunu çözüldüğü için doğrudan API'ye istek yapabiliriz
             const response = await fetch('https://spoti.parzi.dev/api/public/currently-playing?username=31stgqfrikmgl3jhingnah3qoz2y');
             
             if (!response.ok) {
-                throw new Error(`Spotify verileri alınamadı: ${response.status}`);
+                // 404 hatası Spotify kapalı demektir
+                if (response.status === 404) {
+                    console.log('⚪ Spotify kapalı veya şu anda çalmıyor');
+                } else {
+                    console.warn(`⚠️ Spotify API hatası: ${response.status}`);
+                }
+                
+                // API hatası durumunda, "kapalı" durumu gibi göster
+                const data = { is_playing: false };
+                updateSpotifyCard(data);
+                return;
             }
             
             const data = await response.json();
-            console.log('Spotify verisi:', data);
+            
+            if (data.is_playing) {
+                console.log(`🟢 Çalıyor: ${data.track_name} - ${data.artists}`);
+            } else {
+                console.log('⚪ Spotify açık ama şu anda bir şey çalmıyor');
+            }
             
             // Global değişkenleri güncelle
             spotifyData = {
@@ -58,14 +73,10 @@ const spotifyModule = (function() {
             updateSpotifyCard(data);
             
         } catch (error) {
-            console.error('Spotify API hatası:', error);
+            console.error('❌ Spotify bağlantı hatası:', error.message);
             
             // API hatası durumunda, "kapalı" durumu gibi göster
-            const data = {
-                is_playing: false
-            };
-            
-            // Spotify kartını güncelle
+            const data = { is_playing: false };
             updateSpotifyCard(data);
         }
     }
