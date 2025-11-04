@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ennnnn... güzel kızsın 💖</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>💖</text></svg>">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      background-attachment: fixed;
+      overflow-x: hidden;
+      font-family: 'Georgia', serif;
+      min-height: 100vh;
+      -webkit-overflow-scrolling: touch; /* Mobilde smooth scroll */
+    }
+    
+    #container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      position: sticky;
+      top: 0;
+      padding: 20px;
+    }
+    
+    #text-wrapper {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px 60px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    #text-wrapper::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #ff6ec4, #7873f5, #4facfe, #ff6ec4);
+      border-radius: 20px;
+      z-index: -1;
+      animation: rotate-border 3s linear infinite;
+      background-size: 300% 300%;
+    }
+    
+    @keyframes rotate-border {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    #text {
+      font-size: 48px;
+      font-weight: bold;
+      color: #e91e63;
+      text-align: center;
+      line-height: 1.6;
+      word-wrap: break-word;
+      max-width: 600px;
+      letter-spacing: 2px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes glow {
+      from {
+        text-shadow: 2px 2px 4px rgba(233, 30, 99, 0.3),
+                     0 0 10px rgba(233, 30, 99, 0.2);
+      }
+      to {
+        text-shadow: 2px 2px 8px rgba(233, 30, 99, 0.6),
+                     0 0 20px rgba(233, 30, 99, 0.4);
+      }
+    }
+    
+    #ending-wrapper {
+      position: fixed;
+      bottom: 120px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 25px 45px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 25px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+      z-index: 100;
+      animation: pulse-wrapper 1.5s ease-in-out infinite;
+    }
+    
+    #ending {
+      font-size: 52px;
+      font-weight: bold;
+      background: linear-gradient(45deg, #f093fb, #f5576c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0;
+    }
+    
+    @keyframes pulse-wrapper {
+      0%, 100% { transform: translateX(-50%) scale(1); }
+      50% { transform: translateX(-50%) scale(1.05); }
+    }
+    
+    #message {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.95);
+      padding: 20px 40px;
+      border-radius: 30px;
+      font-size: 20px;
+      color: #e91e63;
+      font-weight: bold;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      animation: bounce 2s ease-in-out infinite;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-10px); }
+    }
+    
+    .heart {
+      position: fixed;
+      font-size: 30px;
+      animation: float-heart 8s ease-in-out infinite;
+      opacity: 0.6;
+    }
+    
+    .heart:nth-child(1) {
+      left: 10%;
+      top: 20%;
+      animation-delay: 0s;
+    }
+    
+    .heart:nth-child(2) {
+      right: 15%;
+      top: 40%;
+      animation-delay: 1s;
+    }
+    
+    .heart:nth-child(3) {
+      left: 20%;
+      top: 60%;
+      animation-delay: 2s;
+    }
+    
+    .heart:nth-child(4) {
+      right: 10%;
+      top: 70%;
+      animation-delay: 3s;
+    }
+    
+    @keyframes float-heart {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(10deg); }
+    }
+    
+    .star {
+      position: fixed;
+      font-size: 25px;
+      animation: twinkle 1.5s ease-in-out infinite;
+    }
+    
+    .star:nth-child(5) {
+      left: 5%;
+      top: 15%;
+    }
+    
+    .star:nth-child(6) {
+      right: 8%;
+      top: 25%;
+      animation-delay: 0.5s;
+    }
+    
+    .star:nth-child(7) {
+      left: 12%;
+      top: 80%;
+      animation-delay: 1s;
+    }
+    
+    @keyframes twinkle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+    
+    /* Mobil için responsive tasarım */
+    @media screen and (max-width: 768px) {
+      body {
+        background-attachment: scroll; /* Mobilde fixed yerine scroll kullan */
+      }
+      
+      #text-wrapper {
+        padding: 25px 30px;
+        max-width: 90vw;
+      }
+      
+      #text {
+        font-size: 32px;
+        letter-spacing: 1px;
+        max-width: 100%;
+      }
+      
+      #ending-wrapper {
+        bottom: 90px;
+        padding: 15px 25px;
+        max-width: 85vw;
+      }
+      
+      #ending {
+        font-size: 28px;
+      }
+      
+      #message {
+        bottom: 20px;
+        padding: 12px 25px;
+        font-size: 16px;
+        max-width: 80vw;
+        text-align: center;
+      }
+      
+      .heart {
+        font-size: 22px;
+      }
+      
+      .star {
+        font-size: 18px;
+      }
+      
+      #container {
+        padding: 10px;
+      }
+    }
+    
+    /* Çok küçük ekranlar için */
+    @media screen and (max-width: 480px) {
+      #text {
+        font-size: 28px;
+      }
+      
+      #ending {
+        font-size: 24px;
+      }
+      
+      #ending-wrapper {
+        bottom: 80px;
+        padding: 12px 20px;
+      }
+      
+      #message {
+        font-size: 14px;
+        padding: 10px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="heart">💖</div>
+  <div class="heart">💕</div>
+  <div class="heart">💗</div>
+  <div class="heart">💝</div>
+  <div class="star">✨</div>
+  <div class="star">⭐</div>
+  <div class="star">✨</div>
+
+  <div id="container">
+    <div id="text-wrapper">
+      <div id="text">e<span id="nnn">n</span></div>
+    </div>
+  </div>
+  
+  <div id="ending-wrapper">
+    <div id="ending">güzel kızsın 💖</div>
+  </div>
+  <div id="message">⬇️ aşağı kaydır ⬇️</div>
+
+  <script>
+    const nnnSpan = document.getElementById('nnn');
+    let nCount = 1;
+    let lastScrollTop = 0;
+    
+    // Sayfayı sürekli uzat
+    function extendPage() {
+      const currentHeight = document.body.scrollHeight;
+      const scrollPosition = window.scrollY + window.innerHeight;
+      
+      // Sayfa sonuna yaklaşıyorsak, daha fazla alan ekle
+      if (scrollPosition > currentHeight - 500) {
+        document.body.style.height = (currentHeight + 1000) + 'px';
+      }
+    }
+    
+    // Başlangıç yüksekliği
+    document.body.style.height = '3000px';
+    
+    // Scroll dinleyicisi
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      
+      // Sadece aşağı scroll ediyorsak
+      if (scrollTop > lastScrollTop) {
+        // Her 10 piksel scroll için 1 'n' ekle
+        const scrollDiff = scrollTop - lastScrollTop;
+        const nToAdd = Math.ceil(scrollDiff / 10);
+        
+        nCount += nToAdd;
+        nnnSpan.textContent = 'n'.repeat(nCount);
+        
+        // Sayfayı uzat
+        extendPage();
+      }
+      
+      lastScrollTop = scrollTop;
+    });
+    
+    // Klavye desteği - smooth scroll
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        window.scrollBy({ top: 100, behavior: 'smooth' });
+      } else if (e.key === ' ') {
+        e.preventDefault();
+        window.scrollBy({ top: 200, behavior: 'smooth' });
+      }
+    });
+    
+    // Touch event optimizasyonu (mobil için)
+    let touchStartY = 0;
+    let touchEndY = 0;
+    
+    document.addEventListener('touchstart', (e) => {
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    
+    document.addEventListener('touchmove', (e) => {
+      touchEndY = e.touches[0].clientY;
+    }, { passive: true });
+    
+    // Mobil cihazlarda scroll performansını artır
+    if ('ontouchstart' in window) {
+      // Mobil cihaz tespit edildi, mesajı güncelle
+      const message = document.getElementById('message');
+      if (window.innerWidth <= 768) {
+        message.textContent = '⬇️ kaydır ⬇️';
+      }
+    }
+  </script>
+</body>
+</html>
