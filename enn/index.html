@@ -87,51 +87,33 @@
     
     #ending-wrapper {
       position: fixed;
-      bottom: 120px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 25px 45px;
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 25px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-      z-index: 100;
-      animation: pulse-wrapper 1.5s ease-in-out infinite;
-    }
-    
-    #ending {
-      font-size: 52px;
-      font-weight: bold;
-      background: linear-gradient(45deg, #f093fb, #f5576c);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin: 0;
-    }
-    
-    @keyframes pulse-wrapper {
-      0%, 100% { transform: translateX(-50%) scale(1); }
-      50% { transform: translateX(-50%) scale(1.05); }
-    }
-    
-    #message {
-      position: fixed;
       bottom: 30px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(255, 255, 255, 0.95);
       padding: 20px 40px;
-      border-radius: 30px;
-      font-size: 20px;
-      color: #e91e63;
-      font-weight: bold;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      animation: bounce 2s ease-in-out infinite;
+      background: #d8b4e8;
+      border-radius: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
     
-    @keyframes bounce {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-50%) translateY(-10px); }
+    #ending {
+      font-size: 36px;
+      font-weight: bold;
+      color: #ff69b4;
+      margin: 0;
+      font-family: 'Georgia', serif;
     }
+    
+    #ending-heart {
+      font-size: 32px;
+      color: #ff69b4;
+    }
+    
+
     
     .heart {
       position: fixed;
@@ -215,21 +197,17 @@
       }
       
       #ending-wrapper {
-        bottom: 90px;
+        bottom: 20px;
         padding: 15px 25px;
         max-width: 85vw;
       }
       
       #ending {
-        font-size: 28px;
+        font-size: 24px;
       }
       
-      #message {
-        bottom: 20px;
-        padding: 12px 25px;
-        font-size: 16px;
-        max-width: 80vw;
-        text-align: center;
+      #ending-heart {
+        font-size: 22px;
       }
       
       .heart {
@@ -252,17 +230,16 @@
       }
       
       #ending {
-        font-size: 24px;
+        font-size: 20px;
       }
       
       #ending-wrapper {
-        bottom: 80px;
+        bottom: 15px;
         padding: 12px 20px;
       }
       
-      #message {
-        font-size: 14px;
-        padding: 10px 20px;
+      #ending-heart {
+        font-size: 18px;
       }
     }
   </style>
@@ -285,9 +262,9 @@
   </div>
   
   <div id="ending-wrapper">
-    <div id="ending">güzel kızsın 💖</div>
+    <div id="ending">en güzel kızsın</div>
+    <span id="ending-heart">💗</span>
   </div>
-  <div id="message">⬇️ aşağı kaydır ⬇️</div>
 
   <script>
     const nnnSpan = document.getElementById('nnn');
@@ -351,14 +328,7 @@
       touchEndY = e.touches[0].clientY;
     }, { passive: true });
     
-    // Mobil cihazlarda scroll performansını artır
-    if ('ontouchstart' in window) {
-      // Mobil cihaz tespit edildi, mesajı güncelle
-      const message = document.getElementById('message');
-      if (window.innerWidth <= 768) {
-        message.textContent = '⬇️ kaydır ⬇️';
-      }
-    }
+
   </script>
 </body>
 </html>
