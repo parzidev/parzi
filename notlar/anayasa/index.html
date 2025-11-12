@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anayasa Hukuku Ders Notları</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        nav {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 3px solid #667eea;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #667eea;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s;
+            font-weight: 600;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        nav a:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        section {
+            margin-bottom: 50px;
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        h3 {
+            color: #764ba2;
+            font-size: 1.5em;
+            margin: 25px 0 15px 0;
+        }
+
+        h4 {
+            color: #555;
+            font-size: 1.2em;
+            margin: 20px 0 10px 0;
+        }
+
+        p, li {
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .definition {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid #667eea;
+        }
+
+        .note {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .schema {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        strong {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #667eea;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+            font-size: 24px;
+        }
+
+        .back-to-top:hover {
+            background: #764ba2;
+            transform: translateY(-5px);
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            nav ul {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 ANAYASA HUKUKU DERS NOTLARI</h1>
+            <p>Türkiye Cumhuriyeti Anayasa Hukuku - Temel Kavramlar ve Konular</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="#devlet-organlari">Devlet Organları</a></li>
+                <li><a href="#anayasa-kavrami">Anayasa Kavramı</a></li>
+                <li><a href="#hukuk-devleti">Hukuk Devleti</a></li>
+                <li><a href="#anayasa-turleri">Anayasa Türleri</a></li>
+                <li><a href="#iktidar">Siyasi İktidar</a></li>
+                <li><a href="#devlet">Devlet</a></li>
+                <li><a href="#demokrasi">Demokrasi</a></li>
+                <li><a href="#kurucu-iktidar">Kurucu İktidar</a></li>
+                <li><a href="#siyasi-partiler">Siyasi Partiler</a></li>
+                <li><a href="#secimler">Seçimler</a></li>
+            </ul>
+        </nav>
+
+        <div class="content">
+            <section id="devlet-organlari">
+                <h2>1) Devletin Temel Organlarının Ayrımı</h2>
+                
+                <h3>Yasama: Meclis (TBMM)</h3>
+                <ul>
+                    <li>Kurallar koyar</li>
+                    <li>Kanunlar parlamentoda yapılır ve anayasaya aykırı olamaz</li>
+                    <li>Hiçbir organ yasamadan almadığı yetkileri kullanamaz</li>
+                </ul>
+
+                <h3>Yürütme: Hükümet</h3>
+                <ul>
+                    <li>Yasaları uygular</li>
+                    <li>Yetkilerini alırken asli bir yetki kullanmaz</li>
+                    <li>Yasama organı, yürütmenin sınırlarını belirler</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <h4>Yürütme Yapılanmaları:</h4>
+                    <p><strong>a) Parlamenter Sistem (İki Başlı):</strong> Devlet başkanı + Bakanlar kurulu</p>
+                    <p><strong>b) Başkanlık Sistemi (Tek Başlı):</strong> Başkan</p>
+                </div>
+
+                <h3>Yargı: Bağımsız Mahkeme</h3>
+                <ul>
+                    <li>Uyuşmazlık çözümü için bir işleyiş görevindedir</li>
+                    <li>Hazır bulunan yasaların işlerliğini ve denetimini sağlar</li>
+                    <li>Yasama ve yürütmenin mahkeme tarafından alınan karara uyma zorunluluğu vardır</li>
+                    <li>Meclis anayasaya aykırı bir kanun çıkardığında anayasa yargısı devreye girer</li>
+                    <li>Anayasa yargısı 1961 anayasası ile düzenlenmiştir</li>
+                </ul>
+            </section>
+
+            <section id="yontem">
+                <h2>2) Anayasa Hukukunda Yönteme İlişkin Bilgi</h2>
+                
+                <div class="definition">
+                    <h4>Hukuki Yöntem:</h4>
+                    <p>Yürürlükteki hukuk kurallarını inceleyip bunları olaylarla karşılaştırmaktır. Böylece yürürlükteki kuralların yorumlanması ve mahkeme kararlarının incelenmesi yapılmaktadır. Hukuki yöntemin uygulanmasında başvurulan mantık yolu <strong>tümdengelimdir</strong>.</p>
+                </div>
+
+                <div class="definition">
+                    <h4>Siyasi Bilimler Yöntemi:</h4>
+                    <p>Gözleme dayanır, <strong>tümevarım</strong> kullanır. Yani özelden genele.</p>
+                </div>
+            </section>
+
+            <section id="kaynaklar">
+                <h2>3) Anayasa Hukukunun Kaynakları</h2>
+                
+                <p>Hukukta kaynak denince, hukuku yapan, yaratan ve oluşturan varlık anlaşılır. Hukuk kaynakları dört grupta toplanır:</p>
+
+                <h3>a) Bilgi Kaynakları:</h3>
+                <ul>
+                    <li>Yürürlükteki kural, karar ve belgelerin bulundukları resmi yayınlar (Resmi Gazete, Düstur, tutanak dergileri)</li>
+                    <li>Metin, belge ve mahkeme kararlarını toplayan resmi olmayan belgeler (dergi, külliyat, kitap)</li>
+                </ul>
+
+                <h3>b) Yaratıcı Kaynaklar:</h3>
+                <p>Hukuku yaratan yetkili organlar söz konusu olduğunda kanun koyan yasama meclisleri, düzenleyici işlemler yapan yürütme gibi kaynaklardan söz edilir.</p>
+
+                <h3>c) Sosyolojik Kaynaklar:</h3>
+                <p>Hukuk kuralları tarihi gelişim içinde, ekonomik, sosyal ve kültürel ihtiyaçların etkisiyle, toplum bünyesinde gelişmiştir.</p>
+
+                <h3>d) Yürürlük Kaynakları:</h3>
+                <p>Hukuka normlar sistemi içinde biçimini veren kaynaklar olup, hukuk düzeninde varlık kazanmak için büründükleri ya da aldıkları biçimdir. Örneğin, yasama meclislerinin kural işlemleri kanun veya karar biçimlerinde; yürütmenin düzenleyici işlemleri tüzük, yönetmelik biçimlerinde yürürlüğe girer.</p>
+            </section>
+
+            <section id="anayasa-kavrami">
+                <h2>4) Anayasa Kavramının Tanımı</h2>
+                
+                <div class="definition">
+                    <h4>Anayasa Hukuku:</h4>
+                    <p>Yasama, yürütme ve yargı gibi devletin temel organlarının kuruluşunu, işleyişini ve bu organlar arasındaki karşılıklı ilişkileri ve devlet karşısında vatandaşların temel hak ve özgürlüklerini düzenleyen hukuk bilim dalıdır.</p>
+                </div>
+
+                <div class="definition">
+                    <h4>Anayasa:</h4>
+                    <ul>
+                        <li>Genel anlamda iktidarın sınırlandırılması</li>
+                        <li>Anayasal nitelikteki kuralların toplamıdır</li>
+                        <li><strong>Anayasa hukuk kurallarından oluşur</strong></li>
+                        <li><strong>Anayasa her türlü hukuk kuralından değil anayasal nitelikteki hukuk kurallarından oluşur</strong></li>
+                    </ul>
+                </div>
+
+                <h3>Hukuk Kuralı Nedir?</h3>
+                <div class="highlight-box">
+                    <p>Devletin yetkili organları tarafından konulan, insan davranışlarını düzenleyen, cebir ile müeyyidelendirilmiş emir, yasak, izin, yetkilerdir.</p>
+                    
+                    <h4>Dört Şartı Bulunur:</h4>
+                    <ol>
+                        <li>Bir emir, yasak, izin, yetki içermeli (<strong>normatiflik</strong>)</li>
+                        <li>Bir insan davranışını düzenlemeye yönelik olmalı</li>
+                        <li>Devletin yetkili bir organı koymalı</li>
+                        <li>Cebir ile müeyyidelendirilmiş olmalı</li>
+                    </ol>
+                </div>
+
+                <h3>Anayasal Nitelikteki Hukuk Kuralı</h3>
+                <p>Bir kuralın anayasal nitelikte olup olmadığına iki şekilde bakarız:</p>
+                
+                <h4>1) Maddi Kriter → Kuralın içeriği</h4>
+                <p>Kuralın neyi düzenlediğine bakar. Eğer devletin ana işleyişini, organlarını düzenliyorsa anayasa kuralıdır.</p>
+
+                <h4>2) Şekli Kriter → Bulunduğu yer, yapılış değiştiriliş şekli</h4>
+                <ul>
+                    <li>Eğer normlar hiyerarşisinin en üstünde yer alıyorsa</li>
+                    <li>Kanunlardan daha zor değiştiriliyor, düzenleniyorsa</li>
+                    <li>İçeriğe bakmaksızın anayasa kuralıdır</li>
+                </ul>
+
+                <div class="schema">
+Normlar Hiyerarşisi:
+
+    ANAYASA
+      ↓
+    KANUN
+      ↓
+    TÜZÜK
+      ↓
+  YÖNETMELİK
+                </div>
+            </section>
+
+            <section id="hukuk-devleti">
+                <h2>5) Hukuk Devleti</h2>
+                
+                <div class="definition">
+                    <ul>
+                        <li>Devletin koyduğu kurallara kendisi de uymasıdır</li>
+                        <li>Hukuka bağlı iktidar ortaya çıkarma çabasıdır</li>
+                        <li>Keyfi yönetimi engellemeyi ve iktidarı sınırlandırmayı amaçlar</li>
+                    </ul>
+                </div>
+
+                <h3>Bir Devletin Hukuk Devleti Olması İçin:</h3>
+                <ol>
+                    <li>Konulan tüm hukuk kurallarına devlet organlarının uyması</li>
+                    <li>Kuralların kaynağı insan hakları olmalıdır</li>
+                </ol>
+
+                <h3>Hukuk Devletinin Özellikleri:</h3>
+                <div class="highlight-box">
+                    <ol>
+                        <li>Eylem ve işlemleri yargısal denetime bağlı olan</li>
+                        <li>İnsan haklarına dayanan</li>
+                        <li>Adaletli hukuk düzeni kuran</li>
+                        <li>Yasal düzenlemelerde belirlilik ilkesine uyan</li>
+                        <li>Kişilere hukuk güvenliği sağlayan</li>
+                        <li>Hukuku tüm devlet organlarına egemen kılan</li>
+                        <li>Kurumların üstünde, yasa koyucunun bozamayacağı temel hukuk ilkeleri ve anayasanın bulunduğunun bilincinde bir devlet</li>
+                    </ol>
+                </div>
+
+                <div class="note">
+                    <strong>ÖNEMLİ:</strong> Bu ilkeden hareketle yasama organı ve hukuka bağlı iktidar, yargı denetimiyle denetlenir. Yargısal denetim yapılmazsa keyfilik başlar.
+                </div>
+            </section>
+
+            <section id="anayasa-turleri">
+                <h2>6) Anayasa Türleri</h2>
+                
+                <h3>Yazılı Anayasa / Yazısız Anayasa</h3>
+                
+                <h4>Yazılı Anayasa:</h4>
+                <ul>
+                    <li>Okunabilir</li>
+                    <li>Anayasa içinde olması gerekenlerin yetkili bir organ tarafından belirli bir belge içinde toplanmasıdır</li>
+                    <li><strong>Tek bir metinde toplanmak zorunda değiller</strong></li>
+                    <li>Osmanlı'da ilk defa Kanun-i Esasi ile ortaya çıkar</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <h4>Yazılı Anayasanın Yapılma Amacı:</h4>
+                    <ol>
+                        <li>İktidarın sınırlandırılması</li>
+                        <li>Temel hak ve hürriyetlerin güvence altına alınması</li>
+                        <li>Hukuka bağlı iktidar ortaya çıkarma çabası (hukuk devleti ve hukukun üstünlüğü ilkeleri)</li>
+                    </ol>
+                </div>
+
+                <h4>Yazısız Anayasa (Teamül-i Anayasa):</h4>
+                <ul>
+                    <li>Her şeyden önce yazılı anayasaya karşıdır</li>
+                    <li>Örf ve adet hukuku uygulanır</li>
+                    <li>En bilinen örneği İngiltere'dir</li>
+                </ul>
+
+                <div class="definition">
+                    <h4>Bir Kuralın Örf ve Adet Kuralı Olması İçin Üç Şartı Vardır:</h4>
+                    <ol>
+                        <li><strong>Maddi Şart:</strong> Kural toplum içinde sürekli tekrarlanmalı</li>
+                        <li><strong>Manevi Şart:</strong> Kurala uyulması zorunlu inancı toplumda bulunmalı</li>
+                        <li><strong>Hukukilik Şartı:</strong> Kuralın hukuk düzeni tarafından müeyyidelendirilmesi lazım</li>
+                    </ol>
+                </div>
+
+                <h3>Yumuşak Anayasa / Katı Anayasa</h3>
+                
+                <h4>Yumuşak Anayasa:</h4>
+                <p>Kanunlarla aynı usullerle ve organlarca değiştirilebilir. Yazısız anayasalar -varlıklarını kabul edersek- yumuşak anayasadır.</p>
+
+                <h4>Anayasaya Katılık Sağlamanın Farklı Yolları:</h4>
+                <div class="highlight-box">
+                    <ol>
+                        <li><strong>Özel Meclis Usulü:</strong> Anayasa değişikliği amacıyla kurulmuş özel bir meclis</li>
+                        <li><strong>Üye Tamsayısının Salt Çoğunluğu:</strong> Normal kanunlar için adi çoğunluk yeterken, anayasa için salt çoğunluk</li>
+                        <li><strong>Nitelikli Çoğunluk:</strong> 3/5, 2/3, 3/4 gibi çoğunluk gerekliliği</li>
+                        <li><strong>Halkoylaması:</strong> Değişikliğin halk oylamasına sunulması</li>
+                        <li><strong>Değiştirilemeyecek Maddeler:</strong> Bazı maddelerin değiştirilmesinin yasak olması</li>
+                        <li><strong>Süre Yasağı:</strong> Kabul edilmesinden itibaren belli bir süre değiştirilmesi yasak</li>
+                        <li><strong>Dönem Yasağı:</strong> Belirli dönemlerde değiştirilmesinin yasak olması</li>
+                        <li><strong>Değişikliğin İkinci Defa Kabul Edilmesi:</strong> Belli bir süre sonra yeniden onaylanması</li>
+                        <li><strong>Devlet Başkanına Veto Yetkisi:</strong> Mutlak veya güçleştirici veto</li>
+                        <li><strong>Federe Devletlerin Onayı:</strong> Federal devletlerde eyaletlerin onay vermesi</li>
+                    </ol>
+                </div>
+
+                <div class="note">
+                    <strong>Önemli Not:</strong> Bir anayasa yukarıdaki maddelerden en az birini içeriyorsa katıdır.
+                </div>
+
+                <h4>Optimal Katılık Derecesi:</h4>
+                <div class="highlight-box">
+                    <ul>
+                        <li>Anayasa tamamen katı olmamalı, değiştirilebilir olmalıdır</li>
+                        <li>Çok katı bir anayasa hukuki yollardan değiştirilemediğinde başka yollardan değiştirmeye çalışılır</li>
+                        <li>Anayasa çok yumuşak olursa bizzat anayasa tanımıyla çelişir</li>
+                        <li>Devletin temel organlarına istikrar kazandırmak az çok katı bir anayasayla mümkündür</li>
+                        <li><strong>Mühim olan:</strong> Anayasa, sadece parlamentonun çoğunluğuna sahip iktidar partisi tarafından değiştirilemesin. İktidar partisi muhalefet ile anlaşmak zorunda kalsın</li>
+                    </ul>
+                </div>
+
+                <h3>Kazuistik Anayasa / Çerçeve Anayasa</h3>
+                
+                <h4>Çerçeve Anayasa:</h4>
+                <p>Anayasa metni, genel ilkeleri düzenleyip çerçeve çizip içinin doldurulmasını kanunlara bırakıyorsa bu anayasa çerçeve anayasadır.</p>
+
+                <h4>Kazuistik Anayasa:</h4>
+                <p>Ayrıntılı ve uzun düzenlemeler içeren anayasa metnidir.</p>
+            </section>
+
+            <section id="iktidar">
+                <h2>7) Siyasi İktidar</h2>
+                
+                <ul>
+                    <li>İktidar emretme ve itaate dayanmaktadır</li>
+                    <li>İktidar sahipleri, egemen bir niteliğe sahiptir</li>
+                </ul>
+
+                <h3>Siyasi İktidar Konusunda Başlıca İki Görüş:</h3>
+                <ol>
+                    <li>İktidarın siyasi nitelikte olabilmesi, iktidarın hangi tür toplulukta kullanıldığına bağlıdır. Siyasi iktidar, global gruplarda ortaya çıkar</li>
+                    <li>Siyasi iktidar sadece milli devlette ortaya çıkar</li>
+                </ol>
+
+                <h3>Siyasi İktidarın Özellikleri:</h3>
+                <ul>
+                    <li>Bu otoriteler, belirli toprak parçası üzerinde sınırlanmış yetkiye sahiptir</li>
+                    <li>Devlet otoriteleri, sınırları içinde, alınan kararları uygulamak üzere egemen kamu gücüne sahiptirler</li>
+                    <li>Devletlerarası ilişkiler, eşitlikçi ve uzlaşmacı antlaşmalara dayanmaktadır</li>
+                </ul>
+
+                <h3>Siyasi İktidarın Kaynağı ve Meşruluğu</h3>
+                <div class="definition">
+                    <p><strong>Meşruluk:</strong> Devlet iktidarının kaynağı ve kullanışının yönetilenlerin inançlarına uygun olmasıdır.</p>
+                </div>
+
+                <h4>A) Teokratik Görüşler</h4>
+                <p>Dinsel kaynaklı, ilahi temelli görüşlerdir.</p>
+                <ul>
+                    <li><strong>Doğa Üstü İlahi Hukuk Doktrini:</strong> İktidar, tanrının seçtiği kişiye verilmiştir</li>
+                    <li><strong>Providansiyel İlahi Hukuk Doktrini:</strong> Hükümdar doğrudan tanrı tarafından seçilmez, ona karşı sorumludur</li>
+                </ul>
+
+                <h4>B) Demokratik Görüşler</h4>
+                <p>Egemenlik tanrıya değil insanlara aittir.</p>
+
+                <h4>a) Halk Egemenliği</h4>
+                <div class="highlight-box">
+                    <ul>
+                        <li>Egemenlik meşruluğunu genel iradeden alır (şu an yaşayan insanlara aittir)</li>
+                        <li>Oy kullanmak <strong>haktır</strong></li>
+                        <li>Doğrudan veya yarı-doğrudan demokrasiyi gerektirir</li>
+                        <li>Temsilciler halkın iradesiyle bağlıdır (<strong>emredici vekalet</strong>)</li>
+                        <li>Kuvvetler birliği, meclis hükümeti sistemi savunur</li>
+                        <li>Temsilcilerin azli mümkündür</li>
+                        <li>Tek meclisle bağdaşır</li>
+                        <li>Anayasa yargısıyla bağdaşmaz</li>
+                        <li>Bireyler arası mutlak eşitlik</li>
+                        <li>Genel oy ilkesi görülür</li>
+                    </ul>
+                </div>
+
+                <h4>b) Milli Egemenlik</h4>
+                <div class="highlight-box">
+                    <ul>
+                        <li>Egemenlik tektir, bölünemez ve <strong>millete</strong> aittir</li>
+                        <li>Seçmenlik bir <strong>görevdir</strong></li>
+                        <li>Mecburi ve sınırlı oy ilkeleri görülür</li>
+                        <li>Temsili demokrasi gerektirir</li>
+                        <li><strong>Emredici vekalet yasağı</strong> vardır</li>
+                        <li>Kuvvetler ayrılığı ilkesiyle bağdaşır</li>
+                        <li>Temsilcilerin azliyle uyuşmaz</li>
+                        <li>İki meclisli parlamentolarla bağdaşır</li>
+                        <li>Yargısal denetimle uyum içindedir</li>
+                        <li>Çoğunluğun iradesi esas değildir, çoğunluk yanılabilir</li>
+                        <li>Egemenlik tek tek vatandaşlara değil millete aittir</li>
+                    </ul>
+                </div>
+
+                <div class="note">
+                    <strong>Önemli:</strong> Millet kavramı, halktan daha genel, soyut ve tüzel bir anlama sahiptir. Millet, geçmiş nesilleri, şimdiki nesilleri ve gelecek nesilleri kapsayan bölünemez bir bütündür. Halk ise daha somuttur.
+                </div>
+            </section>
+
+            <section id="yorum">
+                <h2>8) Anayasa Hukukunda Yorum</h2>
+                
+                <p>Yorumun konusu metindir. Aynı hukuk metni farklı yorumcular tarafından farklı yorumlanabilir.</p>
+
+                <h3>A) Lafzi Yorum (Deyimsel, Dilbilgisel) Yöntemi</h3>
+                <p>Anayasa maddesinin anlamı, metinde kullanılan kelimelere, kelimelerin cümledeki yerine, söz dizimine ve noktalama işaretlerine bakarak tespit edilir.</p>
+
+                <h3>B) Tarihi Yorum Yöntemi</h3>
+                <p>Anayasa koyucusunun niyeti araştırılır.</p>
+
+                <h3>C) Sistematik Yorum Yöntemi</h3>
+                <p>Anayasa maddesinin anlamı için, maddenin içinde bulunduğu bağlama, diğer maddeler karşısında sistemde nerede bulunduğuna bakılır.</p>
+            </section>
+
+            <section id="devlet">
+                <h2>9) Devlet</h2>
+                
+                <div class="schema">
+Devletin Unsurları:
+
+Beşeri Unsur  →  İNSAN
+Toprak Unsuru →  ÜLKE
+İktidar Unsuru → EGEMENLİK
+                </div>
+
+                <p>Devletin oluşabilmesi için insan topluluğunun (millet) bir ülke üzerinde egemen olması gerekir.</p>
+
+                <h3>Devlet Şekilleri / Yönetimleri</h3>
+                
+                <h4>A) Cumhuriyet</h4>
+                <ul>
+                    <li>Dar anlamda monarşinin tersidir</li>
+                    <li>Geniş anlamda demokrasinin temel prensiplerini içine alan kavramdır</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <h4>Demokrasinin Temel İlkeleri:</h4>
+                    <ol>
+                        <li>Hukukun üstünlüğü</li>
+                        <li>Güçler ayrılığı</li>
+                        <li>Siyasi partiler (çoğulculuk)</li>
+                        <li>Eşitlik</li>
+                        <li>İnsan haklarına saygı</li>
+                        <li>Hürriyet</li>
+                        <li>Özgürlük</li>
+                        <li>Milli egemenlik</li>
+                    </ol>
+                </div>
+
+                <h4>B) Monarşi</h4>
+                <p>Saltanat haklarının sınırlanmasına göre ikiye ayrılır:</p>
+                <ul>
+                    <li><strong>Mutlak Monarşi:</strong> Monark sınırlandırılmamıştır</li>
+                    <li><strong>Meşruti Monarşi:</strong> Monark sınırlandırılmıştır</li>
+                </ul>
+                <p>Tahta geçişe göre de <strong>ırsi</strong> ve <strong>seçimli monarşi</strong> olarak ikiye ayrılır.</p>
+            </section>
+
+            <section id="devlet-bicimleri">
+                <h2>10) Devlet Biçimleri / Oluşumları</h2>
+                
+                <div class="schema">
+                    DEVLET BİÇİMLERİ OLUŞUMU
+                    
+A) TEK YAPILI DEVLET          B) KARMA YAPILI DEVLET
+
+a) Merkezi Tek    b) Bölgesel    a) Konfederasyon  b) Federasyon
+   Yapılı Devlet     Devlet
+                </div>
+
+                <h3>1) TEK YAPILI (ÜNİTER) DEVLET</h3>
+                
+                <h4>A) Merkezi Tek Yapılı Devlet</h4>
+                <ul>
+                    <li>Ülke sınırları içinde yasama-yürütme ve yargılama birliği var</li>
+                    <li>Tek ülke, tek millet, tek egemenlik ilkeleri hakimdir</li>
+                    <li>Tek yasama organı, tek yasama yetkisi var</li>
+                    <li>Yerel yönetimler kanun yapamaz</li>
+                </ul>
+
+                <h4>İdari Teşkilat</h4>
+                
+                <h5>a) Devletin Merkezi İdaresi:</h5>
+                <p>Bakanlar teşkilatı ve taşra teşkilatı (kaymakam, vali vb.)</p>
+                <ul>
+                    <li>Teşkilatlar devletin tüzel kişiliğinde yer alır</li>
+                    <li>Teşkilatların gelir ve giderleri tek bütçede toplanır</li>
+                    <li>Taşra teşkilatı, merkezin bir uzantısı konumundadır</li>
+                </ul>
+
+                <div class="definition">
+                    <h4>Ademi Temerküz (Yetki Genişliği):</h4>
+                    <p>Merkezden yönetimin sakıncalarını gidermek amacıyla, merkez yönetiminin taşrada görevli yüksek memurlarına sınırlı olarak belirli konularda karar alma ve uygulama yetkisi verilmesidir.</p>
+                </div>
+
+                <h5>b) Yerel Yönetimler (Mahalli İdareler):</h5>
+                <ul>
+                    <li>Ayrı bir tüzel kişiliğe sahiptirler ve özerktirler</li>
+                    <li>Kendilerine has mal varlıkları ve bütçeleri vardır</li>
+                    <li>Yasama ve yargı yetkileri yoktur</li>
+                </ul>
+
+                <p><strong>Türkiye'de Üçe Ayrılır:</strong></p>
+                <ol>
+                    <li>İller (vali vb.)</li>
+                    <li>Belediyeler (belediye başkanı vb.)</li>
+                    <li>Köyler (muhtar vb.)</li>
+                </ol>
+
+                <div class="definition">
+                    <h4>İdari Vesayet:</h4>
+                    <p>Yerinden yönetimin sakıncalarını giderebilmek için merkezi yönetime, mahalli yönetim üzerinde sınırlı bir denetim yetkisi verilmesidir. Bu yetki yasalarla belirlenen durumlarda, yasanın çizdiği sınırlarda kullanılması gereken bir denetimdir.</p>
+                </div>
+
+                <h4>B) Bölgesel Devlet</h4>
+                <ul>
+                    <li>Milletin tekliği ve bölgenin özerkliği gibi iki zıt ilkeyi bir araya getirir</li>
+                    <li>Özerk bölgelerin belli konularda yasama yetkisi vardır</li>
+                    <li>Özerk bölgelere verilen yetkiler kendilerine anayasayla verilir</li>
+                    <li>Özerk bölgeler yargı yetkisine sahip değildir</li>
+                    <li><strong>Örnek:</strong> İspanya ve İtalya</li>
+                </ul>
+
+                <h3>2) KARMA YAPILI DEVLET</h3>
+                
+                <h4>A) Konfederasyon</h4>
+                <ul>
+                    <li>Birden fazla bağımsız devletin bir amaçla (genellikle savunma) bir araya gelmesiyle oluşur</li>
+                    <li>Her üye devlet bağımsızlığını korur</li>
+                    <li>Uluslararası tek bir devlet sayılmaz</li>
+                </ul>
+
+                <h4>B) Federasyon</h4>
+                <ul>
+                    <li>Devlet, birden fazla federe devletin (eyalet) birleşiminden oluşur</li>
+                    <li>Her federe birimin kendi yasama, yürütme ve yargısı vardır</li>
+                    <li>Uluslararası düzende tek devlet sayılır</li>
+                </ul>
+            </section>
+
+            <section id="demokrasi">
+                <h2>11) Demokrasi</h2>
+                
+                <h3>1) Demokrasi Teorileri</h3>
+                
+                <h4>A) Normatif Demokrasi Teorisi</h4>
+                <ul>
+                    <li>Demokrasi halk tarafından, halk için, halkın yönetimidir</li>
+                    <li>Normatif demokrasi demokratik rejimlerin ulaşmak istediği bir idealdir</li>
+                </ul>
+
+                <h4>B) Ampirik Demokrasi Teorisi</h4>
+                <p>Kabataslak demokrasileri ele alır, ideale değil olana bakar.</p>
+                
+                <div class="highlight-box">
+                    <h4>Bir Siyasal Rejimin Demokratik Olması İçin 6 Şart:</h4>
+                    <ol>
+                        <li>Etkin siyasal makamlar seçimle belirlenmelidir</li>
+                        <li>Seçimler düzenli aralıklarla tekrarlanmalıdır</li>
+                        <li>Seçimler serbesttir (genel oy, eşit oy, gizli oy, açık sayım ilkeleri)</li>
+                        <li>Birden çok siyasal parti vardır</li>
+                        <li>Muhalefetin iktidar olma şansı mevcuttur</li>
+                        <li>Temel kamu hakları tanınmış ve güvence altına alınmıştır</li>
+                    </ol>
+                </div>
+
+                <h3>2) Demokrasi Anlayışları</h3>
+                
+                <h4>A) Çoğunlukçu Demokrasi Anlayışı</h4>
+                <ul>
+                    <li>Çoğunluk prensibine dayanır</li>
+                    <li>Demokrasi çoğunluğun yönetimidir</li>
+                    <li>Çoğunluğun gücü her şeyin üzerindedir</li>
+                    <li>Kökeni J.J. Rousseau'nun genel irade görüşüdür</li>
+                    <li>Genel irade mutlak, sınırsız, devredilemez, temsil edilemez ve yanılmaz bir iradedir</li>
+                </ul>
+
+                <h4>B) Çoğulcu Demokrasi Anlayışı</h4>
+                <ul>
+                    <li>Çoğunluk yönetimi ve azınlık hakları arasında bir denge kurulması gerektiğini savunur</li>
+                    <li>Çoğunluğun yönetim hakkı mutlak değildir, azınlığın temel haklarıyla sınırlıdır</li>
+                    <li>Çoğunluğun iradesini sınırlayıcı tedbirler: yazılı ve katı anayasa, kuvvetler ayrılığı, çift meclis sistemi, yargısal denetim vb.</li>
+                </ul>
+
+                <h3>3) Demokrasi Modelleri</h3>
+                
+                <h4>A) Çoğunlukçu Demokrasi (Westminster) Modeli</h4>
+                <div class="highlight-box">
+                    <p><strong>İlke:</strong> Hükümet halkın çoğunluğuna hizmet etmelidir</p>
+                    <ul>
+                        <li>Hükümetler tek parti tarafından oluşturulur</li>
+                        <li>Hükümet parlamento karşısında üstündür</li>
+                        <li>İki parti sistemi vardır</li>
+                        <li>Çoğunluk seçim sistemi vardır</li>
+                        <li>Üniter ve merkeziyetçi devlet yapısı vardır</li>
+                        <li>Yasama iktidarı tek mecliste toplanmıştır</li>
+                        <li>Anayasa yumuşaktır</li>
+                        <li>Yargının yürütme üzerindeki etkisi zayıftır</li>
+                        <li>Merkez bankası hükümetin elindedir</li>
+                        <li>Azınlığı ebediyen muhalefette kalmaya mahkum eder</li>
+                    </ul>
+                </div>
+
+                <h4>B) Uzlaşmacı (Oydaşmacı) Demokrasi Modeli</h4>
+                <div class="highlight-box">
+                    <p><strong>İlke:</strong> Hükümet mümkün olduğunca fazla kişinin çıkarına hizmet etmelidir</p>
+                    <ul>
+                        <li>Çeşitli gruplar arasında iktidar paylaşımı ve uzlaşma esas</li>
+                        <li>Yürütme ve yasama arasında kuvvet dengesi vardır</li>
+                        <li>Çok partili sistem vardır</li>
+                        <li>Nispi seçim yöntemi uygulanır</li>
+                        <li>Sendika konfederasyonları, meslek birlikleri gibi büyük örgütler vardır</li>
+                        <li>Federal ve ademi merkeziyetçi devlet sistemi vardır</li>
+                        <li>Birinci ve ikinci meclislerin kuvvetleri eşit ya da çok yakındır</li>
+                        <li>Yazılı, katı bir anayasası vardır</li>
+                        <li>Merkez bankası bağımsızdır</li>
+                        <li>Azınlığı siyasi karar sürecine dahil eder</li>
+                    </ul>
+                </div>
+
+                <h3>4) Egemenliğin Kullanılması Bakımından Demokrasi Tipleri</h3>
+                
+                <h4>A) Doğrudan Demokrasi</h4>
+                <ul>
+                    <li>Halk egemenliğini bizzat doğrudan doğruya kullanır</li>
+                    <li>Ne parlamento, ne hükümet, ne de yargı organı vardır</li>
+                    <li>Yönetilenler bizzat yönetendirler</li>
+                    <li>Halkın halk tarafından yönetilmesini öngörür (saf demokrasi)</li>
+                </ul>
+
+                <h4>B) Temsili Demokrasi</h4>
+                <p>Halk egemenliğini kendi seçtiği temsilciler aracılığıyla kullanır.</p>
+
+                <div class="definition">
+                    <h5>Emredici Vekalet Teorisi:</h5>
+                    <ul>
+                        <li>Milletvekili ve onu seçen seçmenler arasında bir sözleşme vardır</li>
+                        <li>Milletvekili seçmenlerden aldığı talimatlara uymak zorundadır</li>
+                        <li>Seçmenler, milletvekilini görevden alma hakkına sahiptir</li>
+                        <li>Doğrudan demokrasiye daha yakındır</li>
+                    </ul>
+                </div>
+
+                <div class="definition">
+                    <h5>Temsili Vekalet Teorisi:</h5>
+                    <ul>
+                        <li>Milletvekili sadece seçmenini değil tüm milleti temsil eder</li>
+                        <li>Milletvekili seçmenlerin emrine bağlı değildir</li>
+                        <li>Bağımsız iradeyle karar verir</li>
+                        <li>Seçmenlerle milletvekili arasındaki ilişki siyasal niteliktedir</li>
+                        <li>1789 Fransız Devrimi sonrası gelişmiştir</li>
+                    </ul>
+                </div>
+
+                <div class="note">
+                    <strong>Önemli:</strong> Günümüz anayasal sistemleri temsili vekalet sistemini benimsemiştir.
+                </div>
+
+                <h4>C) Yarı Doğrudan Demokrasi</h4>
+                <p>Egemenliğin kullanılması halk ile temsilciler arasında paylaştırılmıştır.</p>
+
+                <h5>Yarı Doğrudan Demokrasinin Araçları:</h5>
+                <div class="highlight-box">
+                    <ul>
+                        <li><strong>Referandum:</strong> Parlamento tarafından kabul edilen veya edilecek olan bir kanun metninin halkın oylamasına sunulması</li>
+                        <li><strong>Halk Vetosu:</strong> Parlamento tarafından kabul edilen kanunun, halkın inisiyatifi üzerine düzenlenen referandum sonucu reddedilmesi</li>
+                        <li><strong>Halk Teşebbüsü:</strong> Halkın istediği ama parlamentonun çıkarmaya yanaşmadığı konunun çıkarılmasını sağlayan araç</li>
+                        <li><strong>Temsilcilerin Azli:</strong> Temsilciden memnun kalmayan seçmenlerin görevden alınmasını teklif etmesi</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="kurucu-iktidar">
+                <h2>12) Kurucu İktidar</h2>
+                
+                <p>Devleti, hukuki ve siyasi bir kurum olarak kuran iktidara ya da güce denir.</p>
+
+                <div class="schema">
+Kurucu İktidar
+
+    Asli İktidar          Tali İktidar
+  (Anayasayı yapan)   (Anayasayı değiştiren)
+
+
+Kurulmuş İktidar:
+    - Yasama
+    - Yürütme
+    - Yargı
+                </div>
+
+                <h3>1) Asli Kurucu İktidar</h3>
+                <ul>
+                    <li>Anayasayı ilk kez ya da yeniden yapan iktidar</li>
+                    <li>Hukuki ve fiili nitelik taşır (hukuk dışı bir fiil sonunda hukuk yaratır)</li>
+                    <li>Sınırsızdır ve hukuk dışıdır</li>
+                </ul>
+
+                <h4>Ortaya Çıkabileceği Durumlar:</h4>
+                <div class="highlight-box">
+                    <ul>
+                        <li>Devrim</li>
+                        <li>Hükümet darbesi</li>
+                        <li>Savaş sonrası</li>
+                        <li>Sömürge olan ülkenin bağımsızlığına kavuşması</li>
+                        <li>Birden çok devletin birleşip yeni devlet kurması</li>
+                        <li>Bir devletin bağımsız birden fazla devlete ayrılması</li>
+                    </ul>
+                </div>
+
+                <h4>Anayasa Yapma Usulleri:</h4>
+                
+                <h5>Monarşik Usuller:</h5>
+                <ul>
+                    <li><strong>Ferman:</strong> Hükümdarın tek taraflı iradesini açıklama</li>
+                    <li><strong>Misak:</strong> Fermanın aksine, hükümdarın karşısında kendini ona kabul ettirebilen meclis vardır</li>
+                </ul>
+
+                <h5>Demokratik Usuller:</h5>
+                <ul>
+                    <li><strong>Kurucu Meclis:</strong> Anayasa yapmak için halk tarafından seçilmiş özel bir meclistir</li>
+                    <li><strong>Kurucu Referandum:</strong> Kurucu meclisin demokratikliğinin sorgulanmasıyla ortaya çıkmıştır</li>
+                </ul>
+
+                <h3>2) Tali Kurucu İktidar</h3>
+                <ul>
+                    <li>Bir anayasayı, o anayasada öngörülmüş usullerle değiştirme iktidarıdır</li>
+                    <li>Hukuki ve sınırlı nitelikte bir iktidar</li>
+                </ul>
+
+                <h4>Tali İktidarın Sınırlamaları:</h4>
+                <ol>
+                    <li><strong>Maddi Sınırlar:</strong> Bazı hükümlerin değişmesi yasaklanabilir</li>
+                    <li><strong>Zamansal Sınırlar:</strong> Belirli dönemlerde değiştirilmesi yasaklanabilir</li>
+                    <li><strong>Biçimsel Sınırlar</strong></li>
+                </ol>
+            </section>
+
+            <section id="anayasa-degisikligi">
+                <h2>13) Anayasa Yapım Süreci ve Değiştirilmesi</h2>
+                
+                <h3>Anayasa Değişikliği Usulü:</h3>
+                
+                <h4>1. AŞAMA: Teklif Yetkisi</h4>
+                <ul>
+                    <li>Teklif yetkisi zaman ve içerik bakımından sınırlanmış olabilir</li>
+                    <li>Yasamanın teklif yetkisi için teklif yetersayısı öngörülmüş olabilir</li>
+                    <li>Bu yetki; yasama organına, yasama ve yürütme organına, halka (halk teşebbüsü) ait olabilir</li>
+                </ul>
+
+                <h4>2. AŞAMA: Karar Yetkisi</h4>
+                <ul>
+                    <li>Yasamaya aittir</li>
+                    <li>Salt çoğunluk, 3/5, 2/3, 3/4 gibi özel karar yetersayıları öngörülmüştür</li>
+                    <li>Bazı ülkelerde değişiklik teklifi 2 defa görüşülür</li>
+                </ul>
+
+                <h4>3. AŞAMA: Onay Yetkisi</h4>
+                
+                <h5>Devlet Başkanına Ait Olursa:</h5>
+                <div class="highlight-box">
+                    <ul>
+                        <li><strong>Geciktirici Veto:</strong> Kanun teklifi iade edilir, sonrasında aynen kabul edilirse devlet başkanı yayımlar</li>
+                        <li><strong>Güçleştirici Veto:</strong> Kanun teklifi iade edilir ve yüksek nitelikli çoğunlukla kabul edilirse devlet başkanı kanunu yayımlar</li>
+                        <li><strong>Mutlak Veto:</strong> Devlet başkanı bu yetkiye sahipse kanun yürürlüğe girmez</li>
+                    </ul>
+                </div>
+
+                <h5>Yetki Halka Ait Olursa (Kurucu Referandum):</h5>
+                <ul>
+                    <li>Mecburi Referandum</li>
+                    <li>İhtiyari Referandum (devlet başkanının, parlamentonun veya halkın isteğiyle)</li>
+                </ul>
+            </section>
+
+            <section id="siyasi-partiler">
+                <h2>14) Siyasi Partiler</h2>
+                
+                <div class="definition">
+                    <p><strong>Siyasi Parti:</strong> Üyelerinin düşünce ve menfaatlerini gerçekleştirmek için, iktidarı kısmen ya da tamamen elde etme amacı ile siyasi hayata katılan teşkilatlanmış bir gruptur.</p>
+                </div>
+
+                <h4>Siyasi Partilerin Dört Ölçütü:</h4>
+                <ol>
+                    <li>Süreklilik</li>
+                    <li>Ülke çapında tam örgütlenme</li>
+                    <li>İktidarı kullanma isteği</li>
+                    <li>Seçim yolu ile halkın desteğini elde etme</li>
+                </ol>
+
+                <h3>Siyasi Partilerin Ortaya Çıkışı</h3>
+                <ul>
+                    <li>Modern anlamda siyasi partilerin ortaya çıkışında temsili rejimin ve oy hakkının genişlemesi etkili olmuştur</li>
+                    <li>Türkiye'de siyasi partiler 1961 anayasası ile düzenlenmiştir</li>
+                </ul>
+
+                <h3>Siyasi Partilerin İşlevleri</h3>
+                <ol>
+                    <li>Benzer görüşteki insanları bir araya getirerek ortak ideoloji oluşturur</li>
+                    <li>Politik kadroların yetiştirildiği ve devşirildiği politika okullarıdır</li>
+                    <li>İktidarın kullanılmasına katılmak-elde etmek</li>
+                    <li>Siyasal kültürün yayılmasını ve siyasal sosyalleşmeyi sağlar</li>
+                </ol>
+
+                <h3>Siyasi Partilerin Tasnifi</h3>
+                
+                <h4>A) Yapılarına Göre</h4>
+                
+                <h5>1) Kadro Partileri:</h5>
+                <ul>
+                    <li>Üyeleri, partiye servet ve destek sağlayacak kişilerden oluşur</li>
+                    <li>Amacı üye çoğaltmaktan çok, toplumdaki seçkinleri bir araya getirmektir</li>
+                    <li>İç örgütlenme zayıftır</li>
+                </ul>
+
+                <h5>2) Kitle Partileri:</h5>
+                <ul>
+                    <li>Daha fazla üye amaçlar</li>
+                    <li>Genel oy ilkesini benimser</li>
+                    <li>Çok kişiden az para istenir</li>
+                </ul>
+
+                <h4>B) İşlevine Göre</h4>
+                
+                <h5>1) Bireysel Temsil Partileri:</h5>
+                <ul>
+                    <li>Parti üyelerin hayatında çok sınırlı rol oynar</li>
+                    <li>Üyelerini belli bir görüş etrafında toplamaktansa her kesime hitap etmek isterler</li>
+                </ul>
+
+                <h5>2) Sosyal Bütünleşme Partileri:</h5>
+                <ul>
+                    <li>Aktif üyeler</li>
+                    <li>Üyelerini örgütsel ve ideolojik bir çatıda birleştirerek sosyal hayatlarıyla da ilgilenir</li>
+                </ul>
+
+                <h4>C) Disiplinli Olup Olmamalarına Göre</h4>
+                
+                <h5>1) Serbest Parti:</h5>
+                <ul>
+                    <li>Üyelerini katı bir disipline tabi tutmazlar</li>
+                    <li>İdeolojik birlikten yoksun oluşları serbest olmalarına yol açar</li>
+                </ul>
+
+                <h5>2) Disiplinli Parti:</h5>
+                <ul>
+                    <li>Üyelerin parti tüzük, program ve kararlarına sıkı sıkıya bağlı olduğu partilerdir</li>
+                    <li>Grupta alınan kararlar doğrultusunda oy kullanmak zorundadırlar</li>
+                    <li>Tersine davranışlar disiplin cezalarına yol açabilir</li>
+                </ul>
+
+                <h3>Siyasi Parti Sistemleri</h3>
+                
+                <h4>Yarışmacı Sistemler:</h4>
+                <ul>
+                    <li>Çok partili sistemler (ılımlı / aşırı)</li>
+                    <li>İki partili sistemler (saf / destekli)</li>
+                    <li>Bir partinin üstünlüğü sistemi (hakim parti / hegomonyacı)</li>
+                </ul>
+
+                <h3>Siyasi Partilerin Kapatılması</h3>
+                
+                <h4>Türkiye'de Kapatma Sebepleri:</h4>
+                <ol>
+                    <li>Partilerin tüzük ve programlarının anayasada sayılan yasaklara aykırılığı</li>
+                    <li>Eylemlerin kararlılık ve süreklilik yapılması (odak haline gelme)</li>
+                    <li>Türk uyruklu olmayan gerçek ve tüzel kişilerden maddi yardım alınması</li>
+                </ol>
+
+                <h4>AİHM'e Göre Şartlar:</h4>
+                <ol>
+                    <li>Kanunda öngörülebilirlik</li>
+                    <li>Meşru amaç</li>
+                    <li>Demokratik toplum düzeni için gerekli mi</li>
+                    <li>Ölçülülük ilkesi</li>
+                </ol>
+            </section>
+
+            <section id="secimler">
+                <h2>15) Seçimler</h2>
+                
+                <div class="definition">
+                    <p><strong>Seçim:</strong> Kanun koymak ve yönetmek için bir veya daha çok aday arasından yapılan tercihtir. Demokratik toplum için gerekli ama yeterli değildir.</p>
+                </div>
+
+                <h3>Oy Hakkı Şartları</h3>
+                
+                <h4>a) Olumlu Şartları:</h4>
+                <ol>
+                    <li>Vatandaşlık</li>
+                    <li>Yaş</li>
+                    <li>Seçmen listesine yazılı olmak</li>
+                </ol>
+
+                <h4>b) Olumsuz Şartları:</h4>
+                <ol>
+                    <li><strong>Ehliyetsizlik:</strong> Kişinin fiil ehliyetinden yoksun olması</li>
+                    <li><strong>Liyakatsizlik:</strong> Oy kullanmaya yaraşır olmama (yüz kızartıcı suç vb.)</li>
+                </ol>
+
+                <h3>Oy Hakkının İlkeleri</h3>
+                
+                <div class="highlight-box">
+                    <h4>1) Kısıtlı Oy İlkesi:</h4>
+                    <p>Oy hakkının servet, vergi, yetenek, cinsiyet şartlarına bağlı olarak tanınması.</p>
+
+                    <h4>2) Genel Oy:</h4>
+                    <p>Kısıtlı oyun tersi, oy hakkı şartlarını taşıyan herkesin oy vermesi.</p>
+
+                    <h4>3) Eşit Oy:</h4>
+                    <p>Bir kişi bir oy.</p>
+
+                    <h4>4) Çoğul Oy:</h4>
+                    <p>Bazı nitelikleri taşıyan kişilerin fazladan oy kullanabilmesi.</p>
+
+                    <h4>5) Tek Dereceli Seçim / Doğrudan Oy İlkesi:</h4>
+                    <p>Seçmenler ile seçilen arasına aracı girmez.</p>
+
+                    <h4>6) İki Dereceli Seçim:</h4>
+                    <p>Birinci seçmenler ikinci seçmenleri seçer, ikinci seçmenler ise milletvekilini seçer.</p>
+
+                    <h4>7) Bireysel Oy:</h4>
+                    <p>Seçmene seçme hakkı bir grubun üyesi olduğu için değil bir birey olması nedeniyle verilmiştir.</p>
+
+                    <h4>8) Kişisel Oy:</h4>
+                    <p>Herkes kendi oyunu kendi kullanır.</p>
+
+                    <h4>9) Gizli Oy:</h4>
+                    <p>Oy hakkının gizliliği.</p>
+
+                    <h4>10) Mecburi ve İhtiyari Oy:</h4>
+                    <p>Mecburi ise bir görev, ihtiyari ise bir hak.</p>
+
+                    <h4>11) Serbest Oy:</h4>
+                    <p>Vatandaşın baskı altında olmadan oy kullanabilmesi.</p>
+
+                    <h4>12) Açık Sayım ve Döküm İlkesi:</h4>
+                    <p>Oy sayımının göz önünde yapılması.</p>
+                </div>
+
+                <h3>Seçim Sistemleri</h3>
+                <div class="note">
+                    <p><strong>Not:</strong> Seçim sistemleri başlıca iki gruba ayrılır:</p>
+                    <ul>
+                        <li><strong>Çoğunluk Sistemi:</strong> En çok oy alan kazanır</li>
+                        <li><strong>Nispi Temsil Sistemi:</strong> Partilere aldıkları oy oranında sandalye verilir</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 Anayasa Hukuku Ders Notları | Türkiye Cumhuriyeti Anayasa Hukuku</p>
+            <p>Eğitim amaçlı hazırlanmıştır</p>
+        </footer>
+    </div>
+
+    <a href="#" class="back-to-top">↑</a>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Show/hide back to top button
+        const backToTop = document.querySelector('.back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTop.style.display = 'flex';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
