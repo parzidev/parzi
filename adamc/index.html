@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ada</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #2a2a2a;
+            font-family: 'Minecraft', Arial, sans-serif;
+            color: white;
+            background-image: url('background.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: repeat;
+        }
+
+        h1 {
+            font-size: 48px;
+            text-shadow: 2px 2px #000;
+            color: #fff;
+            margin: 20px 0;
+            text-transform: uppercase;
+        }
+
+        #gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 95%;
+            max-width: 1200px;
+            padding: 20px;
+        }
+
+        .image-container {
+            background-color: #897884;
+            border: 3px solid #373737;
+            padding: 10px;
+            text-align: center;
+            transition: transform 0.2s;
+            overflow: hidden;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            border: 2px solid #373737;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .image-container img:hover {
+            transform: scale(1.1);
+        }
+
+        .download-btn {
+            display: inline-block;
+            background-color: #556B2F;
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            margin-top: 10px;
+            border: 2px solid #373737;
+            font-family: 'Minecraft', Arial, sans-serif;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .download-btn:hover {
+            background-color: #7BA05B;
+        }
+
+        @media (max-width: 900px) {
+            #gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            #gallery {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Minecraft font yükleme */
+        @font-face {
+            font-family: 'Minecraft';
+            src: url('https://cdn.jsdelivr.net/gh/South-Paw/typeface-minecraft@master/font/minecraft.woff2') format('woff2');
+        }
+
+        .fullscreen-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            cursor: pointer;
+        }
+
+        .fullscreen-image {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%;
+            max-height: 90vh;
+            z-index: 1001;
+            border: 3px solid #556B2F;
+        }
+
+        .petal {
+            position: fixed;
+            z-index: 999;
+            pointer-events: none;
+            animation: fall linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translate(0, -10%) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(20px, 100vh) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Minecraft Anı</h1>
+    <div id="gallery"></div>
+    <div id="fullscreenOverlay" class="fullscreen-overlay"></div>
+
+    <script>
+        // Kiraz yaprağı oluşturma fonksiyonu
+        function createPetal() {
+            const petal = document.createElement('img');
+            petal.src = './petal.png';
+            petal.className = 'petal';
+
+            // Rastgele boyut (20px ile 40px arası)
+            const size = Math.random() * 20 + 20;
+            petal.style.width = `${size}px`;
+
+            // Rastgele başlangıç pozisyonu
+            const startPosition = Math.random() * window.innerWidth;
+            petal.style.left = `${startPosition}px`;
+            petal.style.top = '-50px';
+
+            // Rastgele animasyon süresi (5-15 saniye arası)
+            const animationDuration = Math.random() * 10 + 5;
+            petal.style.animationDuration = `${animationDuration}s`;
+
+            document.body.appendChild(petal);
+
+            // Yaprak yere düştükten sonra silme
+            setTimeout(() => {
+                petal.remove();
+            }, animationDuration * 1000);
+        }
+
+        // Her 500ms'de bir yeni yaprak oluştur
+        setInterval(createPetal, 500);
+
+        const gallery = document.getElementById('gallery');
+        const overlay = document.getElementById('fullscreenOverlay');
+
+        const images = [
+            "2025-10-22_01.28.15.png",
+            "2025-10-22_01.35.04.png",
+            "2025-10-22_01.35.15.png",
+            "2025-10-22_01.42.06.png",
+            "2025-10-22_01.47.19.png",
+            "2025-11-23_19.27.27.png",
+            "2025-11-23_19.58.21.png",
+            "2025-11-24_01.49.29.png",
+            "2025-11-24_01.50.02.png",
+            "2025-11-24_01.50.08.png",
+            "2025-11-24_02.54.00.png",
+            "2025-11-24_22.55.09.png",
+            "2025-11-24_22.58.46.png",
+            "2025-11-24_23.00.06.png",
+            "2025-11-24_23.01.17.png",
+            "2025-11-24_23.01.21.png",
+            "2025-11-24_23.01.22.png",
+            "2025-11-24_23.02.05.png",
+            "2025-11-24_23.04.23.png",
+            "2025-11-24_23.07.09.png",
+            "2025-11-24_23.08.19.png",
+            "2025-11-24_23.08.30.png",
+            "2025-11-24_23.14.30.png",
+            "2025-11-24_23.15.31.png",
+            "2025-11-24_23.20.42.png",
+            "2025-11-24_23.26.35.png",
+            "2025-11-24_23.27.26.png",
+            "2025-11-24_23.27.36.png",
+            "2025-11-24_23.28.53.png",
+            "2025-11-24_23.51.14.png",
+            "2025-11-25_00.04.29.png",
+            "2025-11-25_00.31.47.png",
+            "2025-11-25_00.32.01.png"
+        ];
+
+
+        images.forEach(image => {
+            const container = document.createElement('div');
+            container.className = 'image-container';
+
+            const imgElement = document.createElement('img');
+            imgElement.src = `./${image}`;
+            imgElement.alt = image;
+
+            // Resme tıklama olayı
+            imgElement.addEventListener('click', () => {
+                const fullscreenImg = document.createElement('img');
+                fullscreenImg.src = imgElement.src;
+                fullscreenImg.className = 'fullscreen-image';
+
+                overlay.innerHTML = '';
+                overlay.appendChild(fullscreenImg);
+                overlay.style.display = 'block';
+            });
+
+            const downloadButton = document.createElement('a');
+            downloadButton.href = `./${image}`;
+            downloadButton.download = image;
+            downloadButton.innerText = 'İndir';
+            downloadButton.className = 'download-btn';
+
+            container.appendChild(imgElement);
+            container.appendChild(downloadButton);
+            gallery.appendChild(container);
+        });
+
+        // Overlay'a tıklandığında kapatma
+        overlay.addEventListener('click', () => {
+            overlay.style.display = 'none';
+        });
+
+        // ESC tuşuna basıldığında kapatma
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                overlay.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>
