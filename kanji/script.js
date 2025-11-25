@@ -76,20 +76,6 @@ function nextQuestion() {
     const distractors = generateDistractors(currentRadical);
     const options = shuffleArray([currentRadical, ...distractors]);
 
-    // Render Options
-    optionsGrid.innerHTML = '';
-    options.forEach(option => {
-        const btn = document.createElement('button');
-        btn.className = 'option-btn';
-        const meaningText = Array.isArray(option.meaning) ? option.meaning[0] : option.meaning;
-        btn.textContent = meaningText;
-
-        btn.onclick = () => handleAnswer(option, btn);
-        optionsGrid.appendChild(btn);
-    });
-}
-
-function handleAnswer(selectedOption, btn) {
     if (!isAnswering) return;
     isAnswering = false;
 
