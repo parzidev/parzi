@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanji Quiz</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Kanji Quiz</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&family=Zen+Maru+Gothic:wght@300;400;700&display=swap"
+            rel="stylesheet">
+    </head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <h1>Ada Bebek Kanji Quiz 🎀</h1>
+            <div class="stats-container">
+                <span id="score">Score: 0</span>
+                <span id="high-score">Best: 0</span>
+                <span id="streak">Streak: 0</span>
+            </div>
+        </header>
+
+        <main class="quiz-container">
+            <div class="card-area">
+                <div class="radical-display" id="radical-display">?</div>
+            </div>
+
+            <div class="options-grid" id="options-grid">
+                <!-- Options will be injected here -->
+            </div>
+        </main>
+
+        <footer>
+            <p class="hint"> Ada Bebek! ✨</p>
+        </footer>
+    </div>
+    <script src="radicals.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
