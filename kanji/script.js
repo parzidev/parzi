@@ -76,6 +76,26 @@ function nextQuestion() {
     const distractors = generateDistractors(currentRadical);
     const options = shuffleArray([currentRadical, ...distractors]);
 
+    // Render Options
+    optionsGrid.innerHTML = '';
+    options.forEach(option => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        const meaningText = Array.isArray(option.meaning) ? option.meaning[0] : option.meaning;
+        const meaningTR = option.meaningTR || '';
+
+        // Display English and Turkish with separator
+        btn.innerHTML = `
+            <div style="padding-bottom: 4px;">${meaningText}</div>
+            <div style="font-size: 0.9em; color: var(--secondary-color); border-top: 1px solid var(--secondary-color); padding-top: 4px; margin-top: 4px;">${meaningTR}</div>
+        `;
+
+        btn.onclick = () => handleAnswer(option, btn);
+        optionsGrid.appendChild(btn);
+    });
+}
+
+function handleAnswer(selectedOption, btn) {
     if (!isAnswering) return;
     isAnswering = false;
 
@@ -107,7 +127,10 @@ function nextQuestion() {
 
         // Highlight correct answer
         Array.from(optionsGrid.children).forEach(child => {
-            if (child.textContent === (Array.isArray(currentRadical.meaning) ? currentRadical.meaning[0] : currentRadical.meaning)) {
+            // We need to check the text content of the first div inside the button
+            const firstDiv = child.querySelector('div');
+            const meaning = Array.isArray(currentRadical.meaning) ? currentRadical.meaning[0] : currentRadical.meaning;
+            if (firstDiv && firstDiv.textContent === meaning) {
                 child.classList.add('correct');
             }
         });
