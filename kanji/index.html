@@ -8,20 +8,10 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!DOCTYPE html>
-    <html lang="en">
-
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Kanji Quiz</title>
-        <link rel="stylesheet" href="style.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link
-            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&family=Zen+Maru+Gothic:wght@300;400;700&display=swap"
-            rel="stylesheet">
-    </head>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&family=Zen+Maru+Gothic:wght@300;400;700&display=swap"
+        rel="stylesheet">
+</head>
 
 <body>
     <div class="app-container">
@@ -42,10 +32,20 @@
             <div class="options-grid" id="options-grid">
                 <!-- Options will be injected here -->
             </div>
+
+            <!-- Feedback Overlay -->
+            <div class="feedback-overlay" id="feedback-overlay">
+                <div class="feedback-content">
+                    <div class="feedback-image-container">
+                        <img id="feedback-image" src="" alt="Radical">
+                    </div>
+                    <div class="feedback-text" id="feedback-text"></div>
+                </div>
+            </div>
         </main>
 
         <footer>
-            <p class="hint"> Ada Bebek! ✨</p>
+            <p class="hint">Ada Bebek! ✨</p>
         </footer>
     </div>
     <script src="radicals.js"></script>

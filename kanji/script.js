@@ -113,7 +113,8 @@ function handleAnswer(selectedOption, btn) {
             localStorage.setItem('kanjiHighScore', highScore);
         }
 
-        setTimeout(nextQuestion, 600);
+        // Show feedback overlay
+        showFeedback(true);
     } else {
         btn.classList.add('wrong');
         streak = 0;
@@ -134,11 +135,37 @@ function handleAnswer(selectedOption, btn) {
                 child.classList.add('correct');
             }
         });
-        setTimeout(nextQuestion, 1500);
+
+        // Show feedback overlay
+        showFeedback(false);
     }
 
     scoreEl.textContent = `Score: ${score}`;
     streakEl.textContent = `Streak: ${streak}`;
+}
+
+function showFeedback(isCorrect) {
+    const overlay = document.getElementById('feedback-overlay');
+    const feedbackImage = document.getElementById('feedback-image');
+    const feedbackText = document.getElementById('feedback-text');
+
+    // Set image
+    feedbackImage.src = currentRadical.image;
+    feedbackImage.alt = currentRadical.char;
+
+    // Set text
+    const meaning = Array.isArray(currentRadical.meaning) ? currentRadical.meaning[0] : currentRadical.meaning;
+    feedbackText.textContent = isCorrect ? `✓ Doğru! ${meaning}` : `✗ Yanlış! ${meaning}`;
+
+    // Set correct/wrong class
+    overlay.className = 'feedback-overlay show ' + (isCorrect ? 'correct' : 'wrong');
+
+    // Hide overlay and move to next question after delay
+    const delay = isCorrect ? 1500 : 2000;
+    setTimeout(() => {
+        overlay.classList.remove('show');
+        setTimeout(nextQuestion, 300);
+    }, delay);
 }
 
 // Start the game when DOM is ready
