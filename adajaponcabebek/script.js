@@ -321,5 +321,19 @@ function showFeedback(isCorrect) {
     }, delay);
 }
 
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+    if (quizContainer.style.display === 'none') return;
+    if (!isAnswering) return;
+
+    if (['1', '2', '3', '4'].includes(e.key)) {
+        const index = parseInt(e.key) - 1;
+        const buttons = optionsGrid.querySelectorAll('.option-btn');
+        if (buttons[index]) {
+            buttons[index].click();
+        }
+    }
+});
+
 // Start the game when DOM is ready
 document.addEventListener('DOMContentLoaded', init);
