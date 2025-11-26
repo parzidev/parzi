@@ -116,5 +116,61 @@ const katakana = [
     { char: 'ヴァ', strokes: 4, reading: 'va', meaning: 'foreign sound', meaningTR: 'yabancı ses' },
     { char: 'ヴィ', strokes: 4, reading: 'vi', meaning: 'foreign sound', meaningTR: 'yabancı ses' },
     { char: 'ヴェ', strokes: 5, reading: 've', meaning: 'foreign sound', meaningTR: 'yabancı ses' },
-    { char: 'ヴォ', strokes: 5, reading: 'vo', meaning: 'foreign sound', meaningTR: 'yabancı ses' }
+    { char: 'ヴォ', strokes: 5, reading: 'vo', meaning: 'foreign sound', meaningTR: 'yabancı ses' },
+      { char: 'ア', strokes: 2, reading: 'a', meaning: 'katakana syllable', meaningTR: 'katakana hecesi' },
+
+  // … (tüm temel set duruyor) …
+
+  { char: 'ン', strokes: 2, reading: 'n', meaning: 'katakana syllable', meaningTR: 'katakana hecesi' },
+
+  // Dakuten + Handakuten full set burada aynen duruyor
+
+  // Small kana
+  { char: 'ァ', strokes: 2, reading: 'a', meaning: 'small kana', meaningTR: 'küçük kana' },
+
+  // ✅ Yoon merged
+  { char: 'キャ', strokes: 5, reading: 'kya', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+  { char: 'キュ', strokes: 5, reading: 'kyu', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+  { char: 'キョ', strokes: 5, reading: 'kyo', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+
+  { char: 'ギャ', strokes: 7, reading: 'gya', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+  { char: 'ギュ', strokes: 7, reading: 'gyu', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+  { char: 'ギョ', strokes: 7, reading: 'gyo', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+
+  { char: 'シャ', strokes: 4, reading: 'sha', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+  { char: 'シュ', strokes: 4, reading: 'shu', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+  { char: 'ショ', strokes: 4, reading: 'sho', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+
+  { char: 'ジャ', strokes: 6, reading: 'ja', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+  { char: 'ジュ', strokes: 6, reading: 'ju', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+  { char: 'ジョ', strokes: 6, reading: 'jo', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+
+  { char: 'チャ', strokes: 5, reading: 'cha', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+  { char: 'チュ', strokes: 5, reading: 'chu', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+  { char: 'チョ', strokes: 5, reading: 'cho', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+
+  { char: 'ニャ', strokes: 4, reading: 'nya', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+  { char: 'ニュ', strokes: 4, reading: 'nyu', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+  { char: 'ニョ', strokes: 4, reading: 'nyo', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+
+  { char: 'ヒャ', strokes: 4, reading: 'hya', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+  { char: 'ヒュ', strokes: 4, reading: 'hyu', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+  { char: 'ヒョ', strokes: 4, reading: 'hyo', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+
+  { char: 'ビャ', strokes: 6, reading: 'bya', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+  { char: 'ビュ', strokes: 6, reading: 'byu', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+  { char: 'ビョ', strokes: 6, reading: 'byo', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+
+  { char: 'ピャ', strokes: 5, reading: 'pya', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+  { char: 'ピュ', strokes: 5, reading: 'pyu', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+  { char: 'ピョ', strokes: 5, reading: 'pyo', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+
+  { char: 'ミャ', strokes: 4, reading: 'mya', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+  { char: 'ミュ', strokes: 4, reading: 'myu', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+  { char: 'ミョ', strokes: 4, reading: 'myo', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+
+  { char: 'リャ', strokes: 3, reading: 'rya', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+  { char: 'リュ', strokes: 3, reading: 'ryu', meaning: 'yoon combination', meaningTR: 'birleşik hece' },
+  { char: 'リョ', strokes: 3, reading: 'ryo', meaning: 'yoon combination', meaningTR: 'birleşik hece' }
+
 ]
