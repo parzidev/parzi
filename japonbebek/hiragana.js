@@ -1,0 +1,105 @@
+const hiragana = [
+    // Basic gojūon
+    { char: 'あ', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi', strokes: 3, reading: 'a' },
+    { char: 'い', strokes: 2, reading: 'i', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'う', strokes: 2, reading: 'u', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'え', strokes: 2, reading: 'e', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'お', strokes: 3, reading: 'o', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+
+    { char: 'か', strokes: 3, reading: 'ka', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'き', strokes: 4, reading: 'ki', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'く', strokes: 1, reading: 'ku', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'け', strokes: 3, reading: 'ke', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'こ', strokes: 2, reading: 'ko', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+
+    { char: 'さ', strokes: 3, reading: 'sa', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'し', strokes: 1, reading: 'shi', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'す', strokes: 2, reading: 'su', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'せ', strokes: 3, reading: 'se', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'そ', strokes: 2, reading: 'so', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+
+    { char: 'た', strokes: 4, reading: 'ta', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'ち', strokes: 2, reading: 'chi', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'つ', strokes: 1, reading: 'tsu', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'て', strokes: 1, reading: 'te', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'と', strokes: 2, reading: 'to', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+
+    { char: 'な', strokes: 4, reading: 'na', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'に', strokes: 3, reading: 'ni', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'ぬ', strokes: 2, reading: 'nu', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'ね', strokes: 4, reading: 'ne', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'の', strokes: 1, reading: 'no', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+
+    { char: 'は', strokes: 3, reading: 'ha', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'ひ', strokes: 2, reading: 'hi', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'ふ', strokes: 1, reading: 'fu', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'へ', strokes: 1, reading: 'he', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'ほ', strokes: 4, reading: 'ho', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+
+    { char: 'ま', strokes: 3, reading: 'ma', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'み', strokes: 3, reading: 'mi', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'む', strokes: 2, reading: 'mu', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'め', strokes: 2, reading: 'me', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'も', strokes: 3, reading: 'mo', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+
+    { char: 'や', strokes: 3, reading: 'ya', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'ゆ', strokes: 2, reading: 'yu', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'よ', strokes: 2, reading: 'yo', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+
+    { char: 'ら', strokes: 2, reading: 'ra', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'り', strokes: 1, reading: 'ri', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'る', strokes: 1, reading: 'ru', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'れ', strokes: 2, reading: 're', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'ろ', strokes: 1, reading: 'ro', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+
+    { char: 'わ', strokes: 2, reading: 'wa', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+    { char: 'を', strokes: 3, reading: 'o', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+
+    { char: 'ん', strokes: 2, reading: 'n', meaning: 'hiragana syllable', meaningTR: 'hiragana hecesi' },
+
+    // Dakuten
+    { char: 'が', strokes: 5, reading: 'ga', meaning: 'dakuten hiragana', meaningTR: 'dakuten hiragana' },
+    { char: 'ぎ', strokes: 6, reading: 'gi', meaning: 'dakuten hiragana', meaningTR: 'dakuten hiragana' },
+    { char: 'ぐ', strokes: 3, reading: 'gu', meaning: 'dakuten hiragana', meaningTR: 'dakuten hiragana' },
+    { char: 'げ', strokes: 5, reading: 'ge', meaning: 'dakuten hiragana', meaningTR: 'dakuten hiragana' },
+    { char: 'ご', strokes: 4, reading: 'go', meaning: 'dakuten hiragana', meaningTR: 'dakuten hiragana' },
+
+    { char: 'ざ', strokes: 5, reading: 'za', meaning: 'dakuten hiragana', meaningTR: 'dakuten hiragana' },
+    { char: 'じ', strokes: 3, reading: 'ji', meaning: 'dakuten hiragana', meaningTR: 'dakuten hiragana' },
+    { char: 'ず', strokes: 4, reading: 'zu', meaning: 'dakuten hiragana', meaningTR: 'dakuten hiragana' },
+    { char: 'ぜ', strokes: 5, reading: 'ze', meaning: 'dakuten hiragana', meaningTR: 'dakuten hiragana' },
+    { char: 'ぞ', strokes: 4, reading: 'zo', meaning: 'dakuten hiragana', meaningTR: 'dakuten hiragana' },
+
+    { char: 'だ', strokes: 5, reading: 'da', meaning: 'dakuten hiragana', meaningTR: 'dakuten hiragana' },
+    { char: 'ぢ', strokes: 3, reading: 'ji', meaning: 'dakuten hiragana', meaningTR: 'dakuten hiragana' },
+    { char: 'づ', strokes: 3, reading: 'zu', meaning: 'dakuten hiragana', meaningTR: 'dakuten hiragana' },
+    { char: 'で', strokes: 3, reading: 'de', meaning: 'dakuten hiragana', meaningTR: 'dakuten hiragana' },
+    { char: 'ど', strokes: 3, reading: 'do', meaning: 'dakuten hiragana', meaningTR: 'dakuten hiragana' },
+
+    { char: 'ば', strokes: 5, reading: 'ba', meaning: 'dakuten hiragana', meaningTR: 'dakuten hiragana' },
+    { char: 'び', strokes: 4, reading: 'bi', meaning: 'dakuten hiragana', meaningTR: 'dakuten hiragana' },
+    { char: 'ぶ', strokes: 2, reading: 'bu', meaning: 'dakuten hiragana', meaningTR: 'dakuten hiragana' },
+    { char: 'べ', strokes: 3, reading: 'be', meaning: 'dakuten hiragana', meaningTR: 'dakuten hiragana' },
+    { char: 'ぼ', strokes: 5, reading: 'bo', meaning: 'dakuten hiragana', meaningTR: 'dakuten hiragana' },
+
+    // Handakuten
+    { char: 'ぱ', strokes: 4, reading: 'pa', meaning: 'handakuten hiragana', meaningTR: 'handakuten hiragana' },
+    { char: 'ぴ', strokes: 3, reading: 'pi', meaning: 'handakuten hiragana', meaningTR: 'handakuten hiragana' },
+    { char: 'ぷ', strokes: 2, reading: 'pu', meaning: 'handakuten hiragana', meaningTR: 'handakuten hiragana' },
+    { char: 'ぺ', strokes: 2, reading: 'pe', meaning: 'handakuten hiragana', meaningTR: 'handakuten hiragana' },
+    { char: 'ぽ', strokes: 4, reading: 'po', meaning: 'handakuten hiragana', meaningTR: 'handakuten hiragana' },
+
+    // Small kana
+    { char: 'ぁ', strokes: 2, reading: 'a', meaning: 'small kana', meaningTR: 'küçük kana' },
+    { char: 'ぃ', strokes: 1, reading: 'i', meaning: 'small kana', meaningTR: 'küçük kana' },
+    { char: 'ぅ', strokes: 1, reading: 'u', meaning: 'small kana', meaningTR: 'küçük kana' },
+    { char: 'ぇ', strokes: 1, reading: 'e', meaning: 'small kana', meaningTR: 'küçük kana' },
+    { char: 'ぉ', strokes: 2, reading: 'o', meaning: 'small kana', meaningTR: 'küçük kana' },
+
+    { char: 'ゃ', strokes: 2, reading: 'ya', meaning: 'small kana', meaningTR: 'küçük kana' },
+    { char: 'ゅ', strokes: 2, reading: 'yu', meaning: 'small kana', meaningTR: 'küçük kana' },
+    { char: 'ょ', strokes: 2, reading: 'yo', meaning: 'small kana', meaningTR: 'küçük kana' },
+
+    { char: 'っ', strokes: 1, reading: 'small tsu', meaning: 'gemination marker', meaningTR: 'çiftleme işareti' },
+    { char: 'ゎ', strokes: 2, reading: 'wa', meaning: 'small kana', meaningTR: 'küçük kana' }
+]
