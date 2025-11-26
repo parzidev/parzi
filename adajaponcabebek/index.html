@@ -53,6 +53,11 @@
                     <button class="menu-btn train-btn" onclick="startTraining('kanji', event)">Training</button>
                 </div>
             </div>
+
+            <button class="menu-btn review-btn" onclick="showReview()"
+                style="margin-top: 10px; background-color: var(--text-color); color: white; padding: 1rem;">
+                Yanlışlar 📖
+            </button>
         </div>
 
         <!-- Quiz Container -->
@@ -81,6 +86,20 @@
             <button class="back-btn" onclick="showMenu()">← Menu</button>
             <div class="training-grid" id="training-grid">
                 <!-- Training items will be injected here -->
+            </div>
+        </main>
+
+        <!-- Review Container -->
+        <main class="review-container" id="review-container"
+            style="display: none; flex-direction: column; gap: 1rem; width: 100%;">
+            <div class="review-header">
+                <button class="back-btn" onclick="showMenu()">← Menu</button>
+                <button class="clear-btn" onclick="clearMistakes()">
+                    Temizle 🗑️
+                </button>
+            </div>
+            <div class="review-grid" id="review-grid">
+                <!-- Mistakes will be injected here -->
             </div>
         </main>
 

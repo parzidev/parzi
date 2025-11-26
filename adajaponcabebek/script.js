@@ -11,6 +11,8 @@ const menuContainer = document.getElementById('menu-container');
 const quizContainer = document.getElementById('quiz-container');
 const trainingContainer = document.getElementById('training-container');
 const trainingGrid = document.getElementById('training-grid');
+const reviewContainer = document.getElementById('review-container');
+const reviewGrid = document.getElementById('review-grid');
 
 let currentMode = null; // 'hiragana', 'katakana', 'kanji'
 let currentDataSet = [];
@@ -22,6 +24,7 @@ let isAnswering = false;
 let retryQueue = []; // Stores { item: obj, readyAt: questionCount }
 let questionCount = 0;
 let isSpeedMode = false;
+let mistakes = JSON.parse(localStorage.getItem('mistakes')) || [];
 
 // Initialize
 function init() {
@@ -33,9 +36,95 @@ function showMenu() {
     quizContainer.style.display = 'none';
     trainingContainer.style.display = 'none';
     statsContainer.style.display = 'none';
+    reviewContainer.style.display = 'none';
     appTitle.textContent = "Ada Bebek Kanji Quiz 🎀";
     currentMode = null;
     isSpeedMode = false;
+}
+
+function saveMistakes() {
+    localStorage.setItem('mistakes', JSON.stringify(mistakes));
+}
+
+function addMistake(item, mode) {
+    // Check if already exists
+    const exists = mistakes.some(m => m.char === item.char && m.mode === mode);
+    if (!exists) {
+        mistakes.push({ ...item, mode: mode, date: new Date().toISOString() });
+        saveMistakes();
+    }
+}
+
+function showReview() {
+    menuContainer.style.display = 'none';
+    quizContainer.style.display = 'none';
+    trainingContainer.style.display = 'none';
+    statsContainer.style.display = 'none';
+    reviewContainer.style.display = 'flex';
+    appTitle.textContent = "Yanlışlar 📖";
+    renderReview();
+}
+
+function renderReview() {
+    reviewGrid.innerHTML = '';
+    if (mistakes.length === 0) {
+        reviewGrid.innerHTML = '<p style="text-align: center; width: 100%; color: var(--secondary-color);">Bizde yanlış olmaz 😎👍</p>';
+        return;
+    }
+
+    mistakes.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'review-card';
+
+        let charContent = item.char;
+        if (item.mode === 'kanji') {
+            charContent = `<img src="images/radicals-svg/${item.char}.svg" alt="${item.char}" onerror="this.parentElement.textContent='${item.char}'" style="height: 1.5em;">`;
+        }
+
+        let displayValue = '';
+        if (item.mode === 'hiragana' || item.mode === 'katakana') {
+            displayValue = item.reading;
+        } else {
+            displayValue = Array.isArray(item.meaning) ? item.meaning[0] : item.meaning;
+        }
+
+        card.innerHTML = `
+            <div class="training-char">${charContent}</div>
+            <div class="review-details" style="display: none; text-align: center;">
+                <div class="training-reading" style="font-weight: bold; margin-bottom: 5px;">${displayValue}</div>
+                <button class="review-solve-btn" onclick="removeMistake(${index}, event)">biliom✅</button>
+            </div>
+        `;
+
+        card.onclick = () => toggleReveal(card);
+        reviewGrid.appendChild(card);
+    });
+}
+
+function toggleReveal(card) {
+    const details = card.querySelector('.review-details');
+    if (details.style.display === 'none') {
+        details.style.display = 'block';
+        card.classList.add('revealed');
+    } else {
+        // details.style.display = 'none';
+        // card.classList.remove('revealed');
+    }
+}
+
+function removeMistake(index, event) {
+    if (event) event.stopPropagation();
+    mistakes.splice(index, 1);
+    saveMistakes();
+    renderReview();
+}
+
+function clearMistakes() {
+    if (confirm('Tüm hata defterini temizlemek istediğine emin misin?')) {
+        mistakes = [];
+        saveMistakes();
+        renderReview();
+    }
 }
 
 function selectGame(mode) {
@@ -67,6 +156,7 @@ function startQuiz(mode, event, speedMode = false) {
     quizContainer.style.display = 'flex';
     trainingContainer.style.display = 'none';
     statsContainer.style.display = 'flex';
+    reviewContainer.style.display = 'none';
 
     // Update Title
     const titles = {
@@ -107,6 +197,7 @@ function startTraining(mode, event) {
     quizContainer.style.display = 'none';
     trainingContainer.style.display = 'flex';
     statsContainer.style.display = 'none';
+    reviewContainer.style.display = 'none';
 
     const titles = {
         'hiragana': 'Hiragana Training',
@@ -260,6 +351,9 @@ function handleAnswer(selectedOption, btn) {
     } else {
         btn.classList.add('wrong');
         streak = 0;
+
+        // Add to mistakes
+        addMistake(currentItem, currentMode);
 
         retryQueue.push({
             item: currentItem,

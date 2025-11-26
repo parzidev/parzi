@@ -175,7 +175,8 @@ h1 {
 }
 
 .radical-display {
-    font-size: 8rem; /* Adjusted for text */
+    font-size: 8rem;
+    /* Adjusted for text */
     font-weight: 500;
     color: var(--text-color);
     line-height: 1;
@@ -288,11 +289,96 @@ h1 {
     margin-top: 0.2rem;
 }
 
-footer {
-    text-align: center;
-    color: var(--secondary-color);
-    font-size: 0.9rem;
-    margin-top: 1rem;
+/* Review Mode Styles */
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.clear-btn {
+    background-color: var(--wrong-color);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #c62828;
+    transition: transform 0.1s;
+}
+
+.clear-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+.review-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    padding: 10px;
+}
+
+.review-card {
+    background: var(--card-bg);
+    border: 3px solid #fff;
+    border-radius: 20px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+    aspect-ratio: 1;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+}
+
+.review-card:hover {
+    transform: translateY(-5px);
+}
+
+.review-card.revealed {
+    background-color: #fff8e1;
+    border-color: #ffca28;
+}
+
+.review-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+}
+
+.review-solve-btn {
+    margin-top: 8px;
+    background-color: var(--correct-color);
+    border: none;
+    border-radius: 15px;
+    padding: 5px 12px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    color: #1b5e20;
+    box-shadow: 0 2px 0 #2e7d32;
+    transition: all 0.1s;
+    width: 100%;
+}
+
+.review-solve-btn:hover {
+    background-color: #81c784;
+}
+
+.review-solve-btn:active {
+    transform: translateY(2px);
+    box-shadow: none;
 }
 
 /* Feedback Overlay */
@@ -360,6 +446,13 @@ footer {
         transform: scale(1);
         opacity: 1;
     }
+}
+
+footer {
+    text-align: center;
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+    margin-top: 1rem;
 }
 
 @media (max-width: 480px) {
