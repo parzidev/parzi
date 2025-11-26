@@ -211,6 +211,14 @@ function startTraining(mode, event) {
 
 function renderTraining() {
     trainingGrid.innerHTML = '';
+
+    // Set grid layout based on mode
+    if (currentMode === 'hiragana' || currentMode === 'katakana') {
+        trainingGrid.style.gridTemplateColumns = 'repeat(5, 1fr)';
+    } else {
+        trainingGrid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(80px, 1fr))';
+    }
+
     currentDataSet.forEach(item => {
         const card = document.createElement('div');
         card.className = 'training-card';
@@ -231,7 +239,36 @@ function renderTraining() {
         };
 
         trainingGrid.appendChild(card);
+
+        // Add placeholders for 5-column layout alignment
+        if (currentMode === 'hiragana' || currentMode === 'katakana') {
+            const isYoon = item.meaning === 'yoon combination' || item.meaning === 'birleşik hece';
+            const isYaRow = ['や', 'ヤ', 'ゃ', 'ャ'].includes(item.char);
+            const isYuRow = ['ゆ', 'ユ', 'ゅ', 'ュ'].includes(item.char);
+            const isWaRow = ['わ', 'ワ'].includes(item.char);
+
+            // Add gap after Ya-column items (Ya, Kya, Sha, etc.)
+            if (isYaRow || (isYoon && item.reading && item.reading.endsWith('a'))) {
+                trainingGrid.appendChild(createPlaceholder());
+            }
+            // Add gap after Yu-column items (Yu, Kyu, Shu, etc.)
+            else if (isYuRow || (isYoon && item.reading && item.reading.endsWith('u'))) {
+                trainingGrid.appendChild(createPlaceholder());
+            }
+            // Add 3 gaps after Wa
+            else if (isWaRow) {
+                trainingGrid.appendChild(createPlaceholder());
+                trainingGrid.appendChild(createPlaceholder());
+                trainingGrid.appendChild(createPlaceholder());
+            }
+        }
     });
+}
+
+function createPlaceholder() {
+    const placeholder = document.createElement('div');
+    placeholder.style.visibility = 'hidden';
+    return placeholder;
 }
 
 function getRandomItem() {
