@@ -264,6 +264,27 @@ function renderTraining() {
                 trainingGrid.appendChild(createPlaceholder());
                 trainingGrid.appendChild(createPlaceholder());
             }
+            // Add 4 gaps after N
+            else if (item.char === 'ん' || item.char === 'ン') {
+                trainingGrid.appendChild(createPlaceholder());
+                trainingGrid.appendChild(createPlaceholder());
+                trainingGrid.appendChild(createPlaceholder());
+                trainingGrid.appendChild(createPlaceholder());
+            }
+            // Add 4 gaps after Long Vowel
+            else if (item.char === 'ー') {
+                trainingGrid.appendChild(createPlaceholder());
+                trainingGrid.appendChild(createPlaceholder());
+                trainingGrid.appendChild(createPlaceholder());
+                trainingGrid.appendChild(createPlaceholder());
+            }
+            // Add 4 gaps after Vo (end of foreign extensions)
+            else if (item.char === 'ヴォ') {
+                trainingGrid.appendChild(createPlaceholder());
+                trainingGrid.appendChild(createPlaceholder());
+                trainingGrid.appendChild(createPlaceholder());
+                trainingGrid.appendChild(createPlaceholder());
+            }
         }
     });
 }
