@@ -105,27 +105,7 @@ const katakana = [
 
   { char: 'ー', strokes: 1, reading: 'long vowel', meaning: 'vowel extender', meaningTR: 'ünlü uzatma işareti' },
 
-  // Foreign extensions
-  { char: 'ファ', strokes: 3, reading: 'fa', meaning: 'foreign sound', meaningTR: 'yabancı ses' },
-  { char: 'フィ', strokes: 3, reading: 'fi', meaning: 'foreign sound', meaningTR: 'yabancı ses' },
-  { char: 'フェ', strokes: 4, reading: 'fe', meaning: 'foreign sound', meaningTR: 'yabancı ses' },
-  { char: 'フォ', strokes: 4, reading: 'fo', meaning: 'foreign sound', meaningTR: 'yabancı ses' },
-  { char: 'ティ', strokes: 4, reading: 'ti', meaning: 'foreign sound', meaningTR: 'yabancı ses' },
-  { char: 'ディ', strokes: 4, reading: 'di', meaning: 'foreign sound', meaningTR: 'yabancı ses' },
-  { char: 'ヴ', strokes: 3, reading: 'vu', meaning: 'foreign sound', meaningTR: 'yabancı ses' },
-  { char: 'ヴァ', strokes: 4, reading: 'va', meaning: 'foreign sound', meaningTR: 'yabancı ses' },
-  { char: 'ヴィ', strokes: 4, reading: 'vi', meaning: 'foreign sound', meaningTR: 'yabancı ses' },
-  { char: 'ヴェ', strokes: 5, reading: 've', meaning: 'foreign sound', meaningTR: 'yabancı ses' },
-  { char: 'ヴォ', strokes: 5, reading: 'vo', meaning: 'foreign sound', meaningTR: 'yabancı ses' },
 
-
-  // … (tüm temel set duruyor) …
-
-
-
-  // Dakuten + Handakuten full set burada aynen duruyor
-
-  // Small kana
 
 
   // ✅ Yoon merged

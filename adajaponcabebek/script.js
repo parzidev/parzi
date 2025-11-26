@@ -223,6 +223,40 @@ function renderTraining() {
     }
 
     currentDataSet.forEach(item => {
+        // Calculate target column based on vowel sound
+        let targetCol = 0;
+        const lastChar = item.reading ? item.reading.slice(-1).toLowerCase() : '';
+
+        if (['a'].includes(lastChar)) targetCol = 0;
+        else if (['i'].includes(lastChar)) targetCol = 1;
+        else if (['u'].includes(lastChar)) targetCol = 2;
+        else if (['e'].includes(lastChar)) targetCol = 3;
+        else if (['o'].includes(lastChar)) targetCol = 4;
+
+        // Special cases
+        if (item.char === 'ん' || item.char === 'ン') targetCol = 0;
+        if (item.reading === 'long vowel') targetCol = 0;
+        if (item.reading === 'small tsu') targetCol = 2; // Treat like 'u' column for alignment? Or maybe 0? Let's try 2 (middle) or just let it flow. Actually user wants 'tsu' usually in 'u' col.
+        if (item.char === 'ワ' || item.char === 'わ') targetCol = 0;
+        if (item.char === 'ヲ' || item.char === 'を') targetCol = 4;
+
+        // Calculate current column
+        let currentCol = trainingGrid.children.length % 5;
+
+        // Add placeholders to reach target column
+        // If we are past the target column, we need to wrap to next line
+        if (currentCol > targetCol) {
+            const needed = 5 - currentCol + targetCol;
+            for (let i = 0; i < needed; i++) {
+                trainingGrid.appendChild(createPlaceholder());
+            }
+        } else if (currentCol < targetCol) {
+            const gaps = targetCol - currentCol;
+            for (let i = 0; i < gaps; i++) {
+                trainingGrid.appendChild(createPlaceholder());
+            }
+        }
+
         const card = document.createElement('div');
         card.className = 'training-card';
 
@@ -236,54 +270,23 @@ function renderTraining() {
             <div class="training-reading">${item.reading || ''}</div>
         `;
 
-        // Optional: Add click to hear sound or see details
         card.onclick = () => {
             // Maybe play sound or show details modal
         };
 
         trainingGrid.appendChild(card);
 
-        // Add placeholders for 5-column layout alignment
+        // Post-card placeholders for special items that should fill the row
         if (currentMode === 'hiragana' || currentMode === 'katakana') {
-            const isYoon = item.meaning === 'yoon combination' || item.meaning === 'birleşik hece';
-            const isYaRow = ['や', 'ヤ', 'ゃ', 'ャ'].includes(item.char);
-            const isYuRow = ['ゆ', 'ユ', 'ゅ', 'ュ'].includes(item.char);
-            const isWaRow = ['わ', 'ワ'].includes(item.char);
-
-            // Add gap after Ya-column items (Ya, Kya, Sha, etc.)
-            if (isYaRow || (isYoon && item.reading && item.reading.endsWith('a'))) {
-                trainingGrid.appendChild(createPlaceholder());
-            }
-            // Add gap after Yu-column items (Yu, Kyu, Shu, etc.)
-            else if (isYuRow || (isYoon && item.reading && item.reading.endsWith('u'))) {
-                trainingGrid.appendChild(createPlaceholder());
-            }
-            // Add 3 gaps after Wa
-            else if (isWaRow) {
-                trainingGrid.appendChild(createPlaceholder());
-                trainingGrid.appendChild(createPlaceholder());
-                trainingGrid.appendChild(createPlaceholder());
-            }
-            // Add 4 gaps after N
-            else if (item.char === 'ん' || item.char === 'ン') {
-                trainingGrid.appendChild(createPlaceholder());
-                trainingGrid.appendChild(createPlaceholder());
-                trainingGrid.appendChild(createPlaceholder());
-                trainingGrid.appendChild(createPlaceholder());
-            }
-            // Add 4 gaps after Long Vowel
-            else if (item.char === 'ー') {
-                trainingGrid.appendChild(createPlaceholder());
-                trainingGrid.appendChild(createPlaceholder());
-                trainingGrid.appendChild(createPlaceholder());
-                trainingGrid.appendChild(createPlaceholder());
-            }
-            // Add 4 gaps after Vo (end of foreign extensions)
-            else if (item.char === 'ヴォ') {
-                trainingGrid.appendChild(createPlaceholder());
-                trainingGrid.appendChild(createPlaceholder());
-                trainingGrid.appendChild(createPlaceholder());
-                trainingGrid.appendChild(createPlaceholder());
+            if (item.char === 'ん' || item.char === 'ン' || item.reading === 'long vowel') {
+                // Fill the rest of the row
+                let newCol = trainingGrid.children.length % 5;
+                if (newCol !== 0) {
+                    const gaps = 5 - newCol;
+                    for (let i = 0; i < gaps; i++) {
+                        trainingGrid.appendChild(createPlaceholder());
+                    }
+                }
             }
         }
     });
