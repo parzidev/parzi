@@ -145,10 +145,25 @@ function getRandomItem() {
 
 function generateDistractors(correctItem, count = 3) {
     const distractors = new Set();
+    const isKana = currentMode === 'hiragana' || currentMode === 'katakana';
+
+    // Helper to get the value we are testing against (to avoid duplicates in options)
+    const getValue = (item) => {
+        if (isKana) return item.reading;
+        return Array.isArray(item.meaning) ? item.meaning[0] : item.meaning;
+    };
+
+    const correctValue = getValue(correctItem);
+    const usedValues = new Set([correctValue]);
+
     while (distractors.size < count) {
         const r = getRandomItem();
-        if (r.char !== correctItem.char) {
+        const rValue = getValue(r);
+
+        // Ensure distinct value from correct answer AND distinct from already picked distractors
+        if (r.char !== correctItem.char && !usedValues.has(rValue)) {
             distractors.add(r);
+            usedValues.add(rValue);
         }
     }
     return Array.from(distractors);
@@ -193,13 +208,21 @@ function nextQuestion() {
         const btn = document.createElement('button');
         btn.className = 'option-btn';
 
-        // Handle different data structures if necessary (though they seem consistent now)
-        const meaningText = Array.isArray(option.meaning) ? option.meaning[0] : option.meaning;
-        const meaningTR = option.meaningTR || '';
+        let mainText = '';
+        let subText = '';
+
+        if (currentMode === 'hiragana' || currentMode === 'katakana') {
+            mainText = option.reading;
+            // subText could be empty or maybe the type (e.g. "dakuten") if we wanted, but simple is better
+        } else {
+            // Kanji mode
+            mainText = Array.isArray(option.meaning) ? option.meaning[0] : option.meaning;
+            subText = option.meaningTR || '';
+        }
 
         btn.innerHTML = `
-            <div style="padding-bottom: 4px;">${meaningText}</div>
-            <div style="font-size: 0.9em; color: var(--secondary-color); border-top: 1px solid var(--secondary-color); padding-top: 4px; margin-top: 4px;">${meaningTR}</div>
+            <div style="padding-bottom: 4px;">${mainText}</div>
+            ${subText ? `<div style="font-size: 0.9em; color: var(--secondary-color); border-top: 1px solid var(--secondary-color); padding-top: 4px; margin-top: 4px;">${subText}</div>` : ''}
         `;
 
         btn.onclick = () => handleAnswer(option, btn);
@@ -237,9 +260,15 @@ function handleAnswer(selectedOption, btn) {
         // Highlight correct answer
         Array.from(optionsGrid.children).forEach(child => {
             const firstDiv = child.querySelector('div');
-            const meaning = Array.isArray(currentItem.meaning) ? currentItem.meaning[0] : currentItem.meaning;
-            // Simple text check might fail if HTML is involved, but here it's simple text
-            if (firstDiv && firstDiv.textContent === meaning) {
+            // Determine what text we are looking for based on mode
+            let targetText = '';
+            if (currentMode === 'hiragana' || currentMode === 'katakana') {
+                targetText = currentItem.reading;
+            } else {
+                targetText = Array.isArray(currentItem.meaning) ? currentItem.meaning[0] : currentItem.meaning;
+            }
+
+            if (firstDiv && firstDiv.textContent === targetText) {
                 child.classList.add('correct');
             }
         });
@@ -254,9 +283,21 @@ function handleAnswer(selectedOption, btn) {
 function showFeedback(isCorrect) {
     const overlay = document.getElementById('feedback-overlay');
     const feedbackText = document.getElementById('feedback-text');
+    const feedbackImage = document.getElementById('feedback-image');
 
-    const meaning = Array.isArray(currentItem.meaning) ? currentItem.meaning[0] : currentItem.meaning;
-    feedbackText.textContent = isCorrect ? `✓ Doğru! ${meaning}` : `✗ Yanlış! ${meaning}`;
+    let displayText = '';
+    if (currentMode === 'hiragana' || currentMode === 'katakana') {
+        displayText = currentItem.reading;
+    } else {
+        displayText = Array.isArray(currentItem.meaning) ? currentItem.meaning[0] : currentItem.meaning;
+    }
+
+    feedbackText.textContent = isCorrect ? `✓ Doğru! ${displayText}` : `✗ Yanlış! ${displayText}`;
+
+    if (feedbackImage) {
+        feedbackImage.src = isCorrect ? 'mutlu.png' : 'mutsuz.png';
+        feedbackImage.style.display = 'block';
+    }
 
     overlay.className = 'feedback-overlay show ' + (isCorrect ? 'correct' : 'wrong');
 
