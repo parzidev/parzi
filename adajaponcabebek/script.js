@@ -253,7 +253,7 @@ function handleAnswer(selectedOption, btn) {
         }
 
         if (isSpeedMode) {
-            setTimeout(nextQuestion, 100); // Very fast transition
+            setTimeout(nextQuestion, 400); // Slightly longer delay
         } else {
             showFeedback(true);
         }
@@ -283,7 +283,7 @@ function handleAnswer(selectedOption, btn) {
         });
 
         if (isSpeedMode) {
-            setTimeout(nextQuestion, 500); // Slightly longer delay for wrong answer to see correct one
+            setTimeout(nextQuestion, 800); // Longer delay for wrong answer
         } else {
             showFeedback(false);
         }
