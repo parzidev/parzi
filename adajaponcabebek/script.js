@@ -380,7 +380,7 @@ function handleAnswer(selectedOption, btn) {
             localStorage.setItem(scoreKey, highScore);
         }
 
-        if (score === 3) {
+        if (score === 100) {
             showSpecialSuccess();
         } else if (isSpeedMode) {
             setTimeout(nextQuestion, 400); // Slightly longer delay
