@@ -380,7 +380,9 @@ function handleAnswer(selectedOption, btn) {
             localStorage.setItem(scoreKey, highScore);
         }
 
-        if (isSpeedMode) {
+        if (score === 3) {
+            showSpecialSuccess();
+        } else if (isSpeedMode) {
             setTimeout(nextQuestion, 400); // Slightly longer delay
         } else {
             showFeedback(true);
@@ -422,6 +424,27 @@ function handleAnswer(selectedOption, btn) {
 
     scoreEl.textContent = `Score: ${score}`;
     streakEl.textContent = `Streak: ${streak}`;
+}
+
+function showSpecialSuccess() {
+    const overlay = document.getElementById('feedback-overlay');
+    const feedbackText = document.getElementById('feedback-text');
+    const feedbackImage = document.getElementById('feedback-image');
+
+    feedbackText.textContent = "oha çalışkan bebek";
+
+    if (feedbackImage) {
+        feedbackImage.src = 'ohacaliskan.png';
+        feedbackImage.style.display = 'block';
+    }
+
+    overlay.className = 'feedback-overlay show correct';
+
+    const delay = 4000;
+    setTimeout(() => {
+        overlay.classList.remove('show');
+        setTimeout(nextQuestion, 300);
+    }, delay);
 }
 
 function showFeedback(isCorrect) {
