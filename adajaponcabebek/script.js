@@ -21,6 +21,7 @@ let highScore = 0;
 let isAnswering = false;
 let retryQueue = []; // Stores { item: obj, readyAt: questionCount }
 let questionCount = 0;
+let isSpeedMode = false;
 
 // Initialize
 function init() {
@@ -34,6 +35,7 @@ function showMenu() {
     statsContainer.style.display = 'none';
     appTitle.textContent = "Ada Bebek Kanji Quiz 🎀";
     currentMode = null;
+    isSpeedMode = false;
 }
 
 function selectGame(mode) {
@@ -50,9 +52,10 @@ function getDataSet(mode) {
     }
 }
 
-function startQuiz(mode, event) {
+function startQuiz(mode, event, speedMode = false) {
     if (event) event.stopPropagation();
     currentMode = mode;
+    isSpeedMode = speedMode;
     currentDataSet = getDataSet(mode);
 
     if (currentDataSet.length === 0) {
@@ -71,10 +74,11 @@ function startQuiz(mode, event) {
         'katakana': 'Katakana Quiz',
         'kanji': 'Kanji Quiz'
     };
-    appTitle.textContent = titles[mode] + " 🎀";
+    appTitle.textContent = (isSpeedMode ? "⚡ " : "") + titles[mode] + (isSpeedMode ? " (Speed) ⚡" : " 🎀");
 
     // Load High Score
-    const savedScore = localStorage.getItem(mode + 'HighScore');
+    const scoreKey = mode + (isSpeedMode ? 'Speed' : '') + 'HighScore';
+    const savedScore = localStorage.getItem(scoreKey);
     highScore = savedScore ? parseInt(savedScore, 10) : 0;
     highScoreEl.textContent = `Best: ${highScore}`;
 
@@ -244,10 +248,15 @@ function handleAnswer(selectedOption, btn) {
         if (score > highScore) {
             highScore = score;
             highScoreEl.textContent = `Best: ${highScore}`;
-            localStorage.setItem(currentMode + 'HighScore', highScore);
+            const scoreKey = currentMode + (isSpeedMode ? 'Speed' : '') + 'HighScore';
+            localStorage.setItem(scoreKey, highScore);
         }
 
-        showFeedback(true);
+        if (isSpeedMode) {
+            setTimeout(nextQuestion, 100); // Very fast transition
+        } else {
+            showFeedback(true);
+        }
     } else {
         btn.classList.add('wrong');
         streak = 0;
@@ -273,7 +282,11 @@ function handleAnswer(selectedOption, btn) {
             }
         });
 
-        showFeedback(false);
+        if (isSpeedMode) {
+            setTimeout(nextQuestion, 500); // Slightly longer delay for wrong answer to see correct one
+        } else {
+            showFeedback(false);
+        }
     }
 
     scoreEl.textContent = `Score: ${score}`;

@@ -124,25 +124,6 @@ h1 {
     flex: 1;
 }
 
-.start-btn {
-    background-color: var(--accent-color);
-    color: white;
-}
-
-.start-btn:hover {
-    background-color: var(--ribbon-color);
-}
-
-.train-btn {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    border: 2px solid var(--secondary-color);
-}
-
-.train-btn:hover {
-    background-color: #ffebee;
-}
-
 /* Quiz Styles */
 .quiz-container {
     display: flex;
