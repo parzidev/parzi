@@ -3,6 +3,7 @@ const optionsGrid = document.getElementById('options-grid');
 const scoreEl = document.getElementById('score');
 const streakEl = document.getElementById('streak');
 const highScoreEl = document.getElementById('high-score');
+const totalCorrectEl = document.getElementById('total-correct');
 const appTitle = document.getElementById('app-title');
 const statsContainer = document.getElementById('stats-container');
 
@@ -20,6 +21,7 @@ let currentItem = null;
 let score = 0;
 let streak = 0;
 let highScore = 0;
+let totalCorrect = parseInt(localStorage.getItem('totalCorrect')) || 0;
 let isAnswering = false;
 let retryQueue = []; // Stores { item: obj, readyAt: questionCount }
 let questionCount = 0;
@@ -176,6 +178,7 @@ function startQuiz(mode, event, speedMode = false) {
     streak = 0;
     scoreEl.textContent = `Score: 0`;
     streakEl.textContent = `Streak: 0`;
+    totalCorrectEl.textContent = `Total: ${totalCorrect}`;
 
     retryQueue = [];
     questionCount = 0;
@@ -372,6 +375,11 @@ function handleAnswer(selectedOption, btn) {
         btn.classList.add('correct');
         score++;
         streak++;
+
+        // Update Total Correct
+        totalCorrect++;
+        totalCorrectEl.textContent = `Total: ${totalCorrect}`;
+        localStorage.setItem('totalCorrect', totalCorrect);
 
         if (score > highScore) {
             highScore = score;
