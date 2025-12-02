@@ -53,32 +53,3 @@ function createSnowflake() {
 
 
 setInterval(createSnowflake, 100);
-
-
-window.addEventListener('load', function () {
-    const audio = document.getElementById("myAudio");
-    audio.volume = 0.5;
-
-
-    setTimeout(function () {
-
-
-        var playPromise = audio.play();
-
-
-        if (playPromise !== undefined) {
-            playPromise.then(_ => {
-                console.log("Otomatik oynatma başarılı.");
-            })
-                .catch(error => {
-
-                    console.log("Otomatik oynatma engellendi, tıklama bekleniyor.");
-
-
-                    document.addEventListener('click', function () {
-                        audio.play();
-                    }, { once: true });
-                });
-        }
-    }, 500);
-});
