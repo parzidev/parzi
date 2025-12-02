@@ -1,0 +1,182 @@
+body {
+    margin: 0%;
+    padding: 0%;
+    background: url('background.png') no-repeat center center fixed;
+    background-size: cover;
+}
+
+body a {
+    text-decoration: none;
+}
+
+.snowflake {
+    position: fixed;
+    top: -10px;
+    z-index: 9999;
+    color: white;
+    font-size: 1em;
+    pointer-events: none;
+    user-select: none;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    animation-name: fall;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
+
+
+@keyframes fall {
+    to {
+        transform: translateY(105vh);
+    }
+}
+
+.welcome {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    height: 400px;
+}
+
+.welcome img {
+    width: 100%;
+    object-fit: cover;
+}
+
+.welcome-text {
+    position: absolute;
+    top: 150px;
+    font-size: 70px;
+    font-weight: bold;
+    font-family: "Roboto Slab", serif;
+    color: rgb(222, 0, 0);
+    z-index: 2;
+}
+
+.welcome-text-under {
+    position: absolute;
+    top: 250px;
+    text-align: center;
+    width: 40%;
+    font-size: 20px;
+    font-weight: 500;
+    font-family: "Roboto Slab", serif;
+    color: rgb(5, 160, 0);
+    z-index: 2;
+}
+
+.box-case {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    width: 100%;
+    padding: 40px;
+    padding-bottom: 10px;
+}
+
+.box {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    border-radius: 16px;
+    border: 3px solid rgb(227, 185, 0);
+    perspective: 1000px;
+    transition: 0.3s;
+}
+
+.door {
+    position: absolute;
+    left: 0%;
+    top: 0%;
+    width: 100%;
+    height: 100%;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    justify-content: center;
+    background-color: rgb(133, 20, 0);
+    color: #eee;
+    font-size: 40px;
+    font-family: "Roboto Slab", serif;
+    transform-origin: left;
+    z-index: 2;
+}
+
+.gift {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #eee;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    z-index: 1;
+}
+
+.toggle:checked~.door {
+    transition: 0.3s;
+    transform: rotateY(-110deg);
+}
+
+.box:has(.toggle:checked) {
+    transform: scale(1.1);
+    z-index: 2;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.toast-notification {
+    position: fixed;
+    width: 300px;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #e8e8e8;
+    color: #00ac0b;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    font-family: 'Roboto Slab', serif;
+    font-weight: bold;
+    transition: top 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.toast-notification.active {
+    top: 30px;
+}
+
+@media (max-width:555px) {
+    .welcome {
+        height: 700px;
+    }
+
+    .welcome-text {
+        top: 100px;
+        align-items: center;
+        font-size: 35px;
+    }
+
+    .welcome-text-under {
+        top: 150px;
+        width: auto;
+        font-size: 25px;
+    }
+
+    .gift {
+        text-align: center;
+    }
+}

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advent Takvimi | Merhaba Yeni Yıl!</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+
+<body>
+    <div id="notification-bar" class="toast-notification">
+        🎁 Sürpriz Kutusu Açıldı!
+    </div>
+    <div class="welcome">
+        <div class="welcome-text">Advent Takvimi</div>
+        <img src="/Gemini_Generated_Image_4qmkic4qmkic4qmk.webp" alt="">
+        <div class="welcome-text-under">Her gün birini açmana izin var böcek</div>
+
+    </div>
+
+    <div class="box-case" id="box">
+        <div class="box">
+            <input id="box1" type="radio" name="takvim" hidden class="toggle">
+            <div class="gift">
+                <span style="font-size:40px">🍫</span><br>
+                <strong>Çikolata</strong><br>
+                <small>"Mutluluk paylaştıkça artar."</small>
+            </div>
+            <label for="box1" class="door">1<i class="bi bi-lock"></i></label>
+        </div>
+
+        <div class="box">
+            <input id="box2" type="radio" name="takvim" hidden class="toggle">
+            <div class="gift">
+                <span style="font-size:40px">✨</span><br>
+                <strong>Sticker Seti</strong><br>
+                <small>"Hayatı renklendir!"</small>
+            </div>
+            <label for="box2" class="door">2<i class="bi bi-lock"></i></label>
+        </div>
+
+        <div class="box">
+            <input id="box3" type="radio" name="takvim" hidden class="toggle">
+            <div class="gift">
+                <span style="font-size:40px">☕</span><br>
+                <strong>Sıcak Kahve</strong><br>
+                <small>"İçini ısıtacak bir mola."</small>
+            </div>
+            <label for="box3" class="door">3<i class="bi bi-lock"></i></label>
+        </div>
+
+        <div class="box">
+            <input id="box4" type="radio" name="takvim" hidden class="toggle">
+            <div class="gift">
+                <span style="font-size:40px">🧸</span><br>
+                <strong>Peluş Ayıcık</strong><br>
+                <small>"Sana sarılmak için varım."</small>
+            </div>
+            <label for="box4" class="door">4<i class="bi bi-lock"></i></label>
+        </div>
+    </div>
+
+    <div class="box-case">
+        <div class="box">
+            <input id="box5" type="radio" name="takvim" hidden class="toggle">
+            <div class="gift">
+                <span style="font-size:40px">🕯️</span><br>
+                <strong>Kokulu Mum</strong><br>
+                <small>"Işığını yansıt."</small>
+            </div>
+            <label for="box5" class="door">5<i class="bi bi-lock"></i></label>
+        </div>
+
+        <div class="box">
+            <input id="box6" type="radio" name="takvim" hidden class="toggle">
+            <div class="gift">
+                <span style="font-size:40px">🧦</span><br>
+                <strong>Renkli Çorap</strong><br>
+                <small>"Sıcacık adımlar at."</small>
+            </div>
+            <label for="box6" class="door">6<i class="bi bi-lock"></i></label>
+        </div>
+
+        <div class="box">
+            <input id="box7" type="radio" name="takvim" hidden class="toggle">
+            <div class="gift">
+                <span style="font-size:40px">🔮</span><br>
+                <strong>Kar Küresi</strong><br>
+                <small>"Bir dilek tut!"</small>
+            </div>
+            <label for="box7" class="door">7<i class="bi bi-lock"></i></label>
+        </div>
+
+        <div class="box">
+            <input id="box8" type="radio" name="takvim" hidden class="toggle">
+            <div class="gift">
+                <span style="font-size:40px">🥚✨</span><br>
+                <strong>Sürpriz Yumurta</strong><br>
+                <small>"Acaba içinden ne çıkacak?"</small>
+            </div>
+            <label for="box8" class="door">8<i class="bi bi-lock"></i></label>
+        </div>
+    </div>
+    <div class="box-case">
+        <div class="box">
+            <input id="box9" type="radio" name="takvim" hidden class="toggle">
+            <div class="gift">
+                <span style="font-size:40px">🎵</span><br>
+                <strong>Özel Playlist</strong><br>
+                <small>"Ruhunu dinlendir."</small>
+            </div>
+            <label for="box9" class="door">9<i class="bi bi-lock"></i></label>
+        </div>
+
+        <div class="box">
+            <input id="box10" type="radio" name="takvim" hidden class="toggle">
+            <div class="gift">
+                <span style="font-size:40px">🍪</span><br>
+                <strong>Kurabiye</strong><br>
+                <small>"Ağzın tatlansın."</small>
+            </div>
+            <label for="box10" class="door">10<i class="bi bi-lock"></i></label>
+        </div>
+
+        <div class="box">
+            <input id="box11" type="radio" name="takvim" hidden class="toggle">
+            <div class="gift">
+                <span style="font-size:40px">🧖‍♀️✨</span><br>
+                <strong>Yüz Maskesi</strong><br>
+                <small>"Yeni yıla ışıl ışıl gir!"</small>
+            </div>
+            <label for="box11" class="door">11<i class="bi bi-lock"></i></label>
+        </div>
+
+        <div class="box">
+            <input id="box12" type="radio" name="takvim" hidden class="toggle">
+            <div class="gift">
+                <span style="font-size:40px">🎁</span><br>
+                <strong>BÜYÜK SÜRPRİZ</strong><br>
+                <small>"Harika bir yıl olsun!"</small>
+            </div>
+            <label for="box12" class="door">12<i class="bi bi-lock"></i></label>
+        </div>
+    </div>
+    <audio id="myAudio" loop>
+        <source src="/Christmas Theme.mp3" type="audio/mpeg">
+    </audio>
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
