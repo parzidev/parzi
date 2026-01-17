@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="tr" data-theme="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
     <link rel="stylesheet" href="css/style.css">
 
 </head>
+
 <body>
     <div class="page-container">
         <div class="main-container">
@@ -22,22 +24,26 @@
                     <h1 class="name">Parzi</h1>
                     <h2 class="title">I'm a software engineer.</h2>
                     <p class="xd-container"><span id="xd-text" class="xd-text glow-text hidden">xd</span></p>
-                    
+
                     <!-- Log iframe  test -->
-                    <iframe src="https://log.parzi.dev/?ref=iplogcv" style="width: 0; height: 0; border: 0; visibility: hidden;" title="Log Frame"></iframe>
-                    
+                    <iframe src="https://log.parzi.dev/?ref=iplogcv"
+                        style="width: 0; height: 0; border: 0; visibility: hidden;" title="Log Frame"></iframe>
+
                     <div class="social-links">
                         <a href="https://www.linkedin.com/in/parzi" class="linkedin"><i class="fab fa-linkedin"></i></a>
                         <a href="https://github.com/parzidev" class="github"><i class="fab fa-github"></i></a>
                         <a href="mailto:me@parzi.dev" class="mail"><i class="fas fa-envelope"></i></a>
-                        <a href="https://open.spotify.com/user/31stgqfrikmgl3jhingnah3qoz2y" class="spotify"><i class="fab fa-spotify"></i></a>
-                        <a href="https://discord.com/users/1013951210035875882" class="discord"><i class="fab fa-discord"></i></a>
+                        <a href="https://open.spotify.com/user/31stgqfrikmgl3jhingnah3qoz2y" class="spotify"><i
+                                class="fab fa-spotify"></i></a>
+                        <a href="https://discord.com/users/1013951210035875882" class="discord"><i
+                                class="fab fa-discord"></i></a>
                         <a href="https://www.twitter.com/parzidev" class="twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="https://www.instagram.com/parzi.dev" class="instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.instagram.com/parzi.dev" class="instagram"><i
+                                class="fab fa-instagram"></i></a>
                     </div>
                 </div>
             </div>
-            
+
             <div class="cards-container">
                 <div class="card time-card">
                     <div class="weather-animation"></div>
@@ -50,7 +56,7 @@
                         <div class="location">in Istanbul</div>
                     </div>
                 </div>
-                
+
                 <div class="card theme-card">
                     <button id="theme-toggle" class="theme-toggle">
                         <img src="images/light.svg" alt="Normal mode" class="theme-icon light-icon">
@@ -59,7 +65,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="secondary-container">
             <div class="education-card">
                 <div class="education-content-row">
@@ -68,11 +74,11 @@
                         <ul class="personal-list">
                             <li><strong>Name:</strong> Parzi</li>
                             <li><strong>Surname:</strong> Dinç</li>
-                            <li><strong>Age:</strong> 25</li>
+                            <li><strong>Age:</strong> <span id="live-age"></span></li>
                             <li><strong>Status:</strong> <span id="sleep-status">Loading...</span></li>
                             <li><strong>Location:</strong> Istanbul</li>
                             <li><strong>Language:</strong> Turkish, English</li>
-                            <li><strong>Computer Languages:</strong> Python, JavaScript C#</li>
+                            <li><strong>Computer Languages:</strong> Python, JavaScript</li>
                         </ul>
                     </div>
                     <div class="education-content">
@@ -101,48 +107,56 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="tertiary-container">
             <a href="https://github.com/parzidev" target="_blank" class="github-card">
                 <div class="github-user-info">
                     <div class="github-user-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                            <path d="M5.315 2.1c.791 -.113 1.9 .145 3.333 .966l.272 .161l.16 .1l.397 -.083a13.3 13.3 0 0 1 4.59 -.08l.456 .08l.396 .083l.161 -.1c1.385 -.84 2.487 -1.17 3.322 -1.148l.164 .008l.147 .017l.076 .014l.05 .011l.144 .047a1 1 0 0 1 .53 .514a5.2 5.2 0 0 1 .397 2.91l-.047 .267l-.046 .196l.123 .163c.574 .795 .93 1.728 1.03 2.707l.023 .295l.007 .272c0 3.855 -1.659 5.883 -4.644 6.68l-.245 .061l-.132 .029l.014 .161l.008 .157l.004 .365l-.002 .213l-.003 3.834a1 1 0 0 1 -.883 .993l-.117 .007h-6a1 1 0 0 1 -.993 -.883l-.007 -.117v-.734c-1.818 .26 -3.03 -.424 -4.11 -1.878l-.535 -.766c-.28 -.396 -.455 -.579 -.589 -.644l-.048 -.019a1 1 0 0 1 .564 -1.918c.642 .188 1.074 .568 1.57 1.239l.538 .769c.76 1.079 1.36 1.459 2.609 1.191l.001 -.678l-.018 -.168a5.03 5.03 0 0 1 -.021 -.824l.017 -.185l.019 -.12l-.108 -.024c-2.976 -.71 -4.703 -2.573 -4.875 -6.139l-.01 -.31l-.004 -.292a5.6 5.6 0 0 1 .908 -3.051l.152 -.222l.122 -.163l-.045 -.196a5.2 5.2 0 0 1 .145 -2.642l.1 -.282l.106 -.253a1 1 0 0 1 .529 -.514l.144 -.047l.154 -.03z"></path>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="currentColor" stroke="none">
+                            <path
+                                d="M5.315 2.1c.791 -.113 1.9 .145 3.333 .966l.272 .161l.16 .1l.397 -.083a13.3 13.3 0 0 1 4.59 -.08l.456 .08l.396 .083l.161 -.1c1.385 -.84 2.487 -1.17 3.322 -1.148l.164 .008l.147 .017l.076 .014l.05 .011l.144 .047a1 1 0 0 1 .53 .514a5.2 5.2 0 0 1 .397 2.91l-.047 .267l-.046 .196l.123 .163c.574 .795 .93 1.728 1.03 2.707l.023 .295l.007 .272c0 3.855 -1.659 5.883 -4.644 6.68l-.245 .061l-.132 .029l.014 .161l.008 .157l.004 .365l-.002 .213l-.003 3.834a1 1 0 0 1 -.883 .993l-.117 .007h-6a1 1 0 0 1 -.993 -.883l-.007 -.117v-.734c-1.818 .26 -3.03 -.424 -4.11 -1.878l-.535 -.766c-.28 -.396 -.455 -.579 -.589 -.644l-.048 -.019a1 1 0 0 1 .564 -1.918c.642 .188 1.074 .568 1.57 1.239l.538 .769c.76 1.079 1.36 1.459 2.609 1.191l.001 -.678l-.018 -.168a5.03 5.03 0 0 1 -.021 -.824l.017 -.185l.019 -.12l-.108 -.024c-2.976 -.71 -4.703 -2.573 -4.875 -6.139l-.01 -.31l-.004 -.292a5.6 5.6 0 0 1 .908 -3.051l.152 -.222l.122 -.163l-.045 -.196a5.2 5.2 0 0 1 .145 -2.642l.1 -.282l.106 -.253a1 1 0 0 1 .529 -.514l.144 -.047l.154 -.03z">
+                            </path>
                         </svg>
                     </div>
                     <span class="github-username">parzidev</span>
                 </div>
-                
+
                 <!-- GitHub Calendar ile Contribution Grid -->
                 <div class="calendar" id="github-calendar">
                     <!-- GitHub Calendar burada oluşturulacak -->
                 </div>
-                
+
                 <div class="github-stars">
                     <span id="stars-count">0</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="star-icon">
-                        <path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="currentColor" stroke="none" class="star-icon">
+                        <path
+                            d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z">
+                        </path>
                     </svg>
                 </div>
-                
+
                 <div class="github-content">
                     <div class="github-title">GitHub</div>
                     <div class="github-description">Check out my projects on GitHub.</div>
                 </div>
-                
+
                 <div class="github-footer">
                     <div class="visit-text">Visit</div>
                     <div class="arrow-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M17 7l-10 10"></path>
                             <path d="M8 7l9 0l0 9"></path>
                         </svg>
                     </div>
                 </div>
             </a>
-            
+
             <div class="spotify-card">
-                <div class="spotify-header">What I'm listening now on my <span class="spotify-text">spotify</span> <span class="spotify-status">🟢</span></div>
+                <div class="spotify-header">What I'm listening now on my <span class="spotify-text">spotify</span> <span
+                        class="spotify-status">🟢</span></div>
                 <div class="song-container">
                     <div class="album-cover-placeholder">🎵</div>
                     <div class="song-info">
@@ -175,17 +189,19 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Modüler JavaScript dosyaları -->
+    <script src="js/age.js"></script>
     <script src="js/time.js"></script>
     <script src="js/theme.js"></script>
     <script src="js/weather.js"></script>
     <script src="js/spotify.js"></script>
-     <script src="js/fitbit.js"></script>
+    <script src="js/fitbit.js"></script>
     <script src="js/github.js"></script>
     <script src="js/main.js"></script>
     <script src="js/zzz.js"></script>
     <!-- <script src="js/ai.js"></script> -->
 
 </body>
-</html>                     
+
+</html>
