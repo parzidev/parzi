@@ -55,7 +55,16 @@ async function updateSleepStatus() {
             if (sleepData.is_sleeping && sleepData.current_session) {
                 const startTime = new Date(sleepData.current_session.start_time);
                 const now = new Date();
-                const durationSeconds = Math.floor((now - startTime) / 1000);
+                let durationSeconds = Math.floor((now - startTime) / 1000);
+
+                // If we exceeded the expected duration (stale API status), use the expected duration
+                if (sleepData.current_session.expected_duration_ms) {
+                    const expectedSeconds = Math.floor(sleepData.current_session.expected_duration_ms / 1000);
+                    if (durationSeconds > expectedSeconds) {
+                        durationSeconds = expectedSeconds;
+                    }
+                }
+
                 const duration = formatSleepDuration(durationSeconds);
                 console.log(`💤 Sleeping: for ${duration}`);
                 sleepStatusElement.innerHTML = `😴 sleeping <span style="opacity: 0.7;">(${duration})</span>`;
