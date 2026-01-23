@@ -3,7 +3,7 @@
 
 (function () {
 
-    const birthDate = new Date('2002-01-24T00:00:00+03:00');
+    const birthDate = new Date('2000-01-24T00:00:00+03:00');
 
     function updateAge() {
         const now = new Date();
