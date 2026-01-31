@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Akorları - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+
+        .chord-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .chord-card {
+            background: linear-gradient(to bottom, #f8f9fa, #ffffff);
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chord-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .chord-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .chord-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+            border-color: #667eea;
+        }
+
+        .chord-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+            padding: 8px;
+            background: #f0f4ff;
+            border-radius: 8px;
+        }
+
+        .chord-card svg {
+            max-width: 100%;
+            height: auto;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1em;
+            opacity: 0.95;
+            margin-top: 5px;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .info-box h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            color: #856404;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .chord-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 15px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🎸 Test Akor Diyagramları</h1>
+        <p class="subtitle">SVG Diyagram Üreticimizin Örnekleri</p>
+
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-value" id="chordCount">-</span>
+                <span class="stat-label">Toplam Akor</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">40+</span>
+                <span class="stat-label">Veritabanında</span>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h3>ℹ️ Bilgi</h3>
+            <p>Bu akorlar <strong>chord_diagram_generator.py</strong> ile otomatik oluşturulmuştur.
+                Her diyagram parmak pozisyonlarını, açık telleri (○) ve çalınmayan telleri (×) gösterir.</p>
+        </div>
+
+        <div class="chord-grid" id="chordGrid">
+            <!-- Akorlar buraya yüklenecek -->
+        </div>
+    </div>
+
+    <script>
+        const chords = [
+            'C', 'Am', 'F', 'G', 'D', 'Em', 'C7', 'F#m', 'G#m'
+        ];
+
+        async function loadChords() {
+            const grid = document.getElementById('chordGrid');
+            let loadedCount = 0;
+
+            for (const chord of chords) {
+                try {
+                    const response = await fetch(`test_chords/${chord}.svg`);
+                    if (response.ok) {
+                        const svgContent = await response.text();
+
+                        const card = document.createElement('div');
+                        card.className = 'chord-card';
+                        card.innerHTML = `
+                            <div class="chord-name">${chord}</div>
+                            ${svgContent}
+                        `;
+
+                        grid.appendChild(card);
+                        loadedCount++;
+                    }
+                } catch (error) {
+                    console.error(`${chord} yüklenemedi:`, error);
+                }
+            }
+
+            document.getElementById('chordCount').textContent = loadedCount;
+        }
+
+        // Sayfa yüklenince akorları getir
+        loadChords();
+    </script>
+</body>
+
+</html>

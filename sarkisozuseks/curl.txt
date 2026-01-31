@@ -1,0 +1,17 @@
+curl 'https://www.repertuarim.com/theme/default/inc/ajaxr.php' \
+  -H 'Accept: text/html, */*; q=0.01' \
+  -H 'Accept-Language: tr-TR,tr;q=0.9,en;q=0.8,zh-CN;q=0.7,zh;q=0.6,ru;q=0.5' \
+  -H 'Connection: keep-alive' \
+  -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' \
+  -b 'PHPSESSID=44l3pv1dstjn3dqedkl56d9ko7; cookie_check=accept; cookie_dark-mode=active; pId=vnetb93fb19c-de75-4d50-b394-a49ce681573c; TAPAD=%7B%22id%22%3A%22fe71adc6-2d9d-43c1-b101-3cb77e2dbb28%22%7D; _ga=GA1.1.1314320096.1769788029; _pubcid=8020aaa0-2e79-41a8-b8c3-67ead5841240; _pubcid_cst=znv0HA%3D%3D; _ym_uid=1769788030906704596; _ym_uid_cst=znv0HA%3D%3D; _adplus_id=201726.3322633605; -unifiedid=%7B%22TDID_LOOKUP%22%3A%22FALSE%22%2C%22TDID_CREATED_AT%22%3A%222026-01-30T15%3A47%3A09%22%7D; -unifiedid_cst=znv0HA%3D%3D; adplus_s_id=127bdf3a-a214-4e66-bd91-06dfac0cd9e9; _cc_id=726b0c4ed0ab8009fbfc133f4dedca19; panoramaId_expiry=1770392830267; panoramaId=c3e12a73dc5b1e6bde6f262f4a86c8bd038a277a9a9a595642235635aeab9815; panoramaIdType=panoIndiv; FCCDCF=%5Bnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2C%5B%5B32%2C%22%5B%5C%22b6a3a8bd-8109-4197-8ca8-09463f56e2d2%5C%22%2C%5B1769788029%2C954000000%5D%5D%22%5D%5D%5D; cto_bundle=TBhbb19wR2hQckVFQU1DNlVlc2pLMElWa3VjSHhCaHBGSkJ2SmZzQXpYdnRYQXFQMENublVuVDRRT2RvWjVHM2tUMGhOaXNtTzE2a0EyZ1RRT2VNJTJGMzJvVTAyaEozNFBicmxlTnlRU0Z2WURXU2FVcDZkWFd0QUlxNDNTVmFkeXJ2NXFyJTJGNGhNNjVQVThnSzA4cGZ6aElVanB3JTNEJTNE; cto_bidid=vy4RmF9QclBycmJwRE9hYnBic1QlMkJNSTRYc29JYTFwRGcwWXp2VXNwQ2ZKbENveDNxMnNRMGtUTVZVMjFWbmlROW82VUFCRDhQeiUyRmRzUkZLRDdBNyUyRk01WnlKOFczJTJCNFgxaTVLUm1OUCUyQmQyJTJGTlkycE51MnV2c0c5aG1LTGRsZG1PUHhFNA; FCNEC=%5B%5B%22AKsRol8O8776Ar-WlmDhtYVik9O8q8TgcvinX7iZaX9l1BwVFUuBQeXShcDVTbEyZwqPqz05_1n4qLTUMr8iXStUz6z662E7bYkC_aODoWaqijo6fBoT3MGmzH6z96TsosJpv1DfCnwGC0qiy1W2pVie433AHBgxUg%3D%3D%22%5D%5D; __gads=ID=ee35185aabcac940:T=1769788032:RT=1769788032:S=ALNI_MY7kNU0WnGz6-ifz7n_aikf4WZacA; __gpi=UID=000012ed0b43cc69:T=1769788032:RT=1769788032:S=ALNI_MZPY8BSCFQPl_fBiFAHQfwMPZzBNQ; __eoi=ID=61814ad8620ad8f3:T=1769788032:RT=1769788032:S=AA-Afjaw8vw-_VEUOuQP2eA-MAol; _ga_Z5GH8Q0RZT=GS2.1.s1769788029$o1$g1$t1769788044$j45$l0$h0; rememberme=a80cd12119247f91e18da4305ae4e4f68c0c7a242998f25d088ff64; cookie_chord-history=3110%2C5534%2C3257%2C4460' \
+  -H 'Origin: https://www.repertuarim.com' \
+  -H 'Referer: https://www.repertuarim.com/' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36' \
+  -H 'X-Requested-With: XMLHttpRequest' \
+  -H 'sec-ch-ua: "Not(A:Brand";v="8", "Chromium";v="144", "Google Chrome";v="144"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Windows"' \
+  --data-raw 'get=randomContent'

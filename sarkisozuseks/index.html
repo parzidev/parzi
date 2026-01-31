@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Viewer 2.0 | Minimalist & Professional</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-soft: rgba(37, 99, 235, 0.08);
+            --bg: #fafafa;
+            --surface: #ffffff;
+            --border: #e5e7eb;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --accent: #2563eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: 100vh;
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .brand {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 24px;
+        }
+
+        .search-box {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-bottom: 16px;
+        }
+
+        .search-box input {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 14px;
+            width: 100%;
+            outline: none;
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .song-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .song-card {
+            padding: 10px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s;
+            margin-bottom: 2px;
+        }
+
+        .song-card:hover {
+            background: var(--bg);
+        }
+
+        .song-card.active {
+            background: var(--primary-soft);
+        }
+
+        .song-card .title {
+            font-weight: 500;
+            font-size: 14px;
+            display: block;
+            color: var(--text-main);
+        }
+
+        .song-card .artist {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* --- Main Content --- */
+        .main-viewer {
+            padding: 48px;
+            overflow-y: auto;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .meta-header {
+            margin-bottom: 32px;
+        }
+
+        .meta-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 4px;
+            color: var(--text-main);
+        }
+
+        .meta-header h2 {
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+
+        .info-bar {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .info-pill {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .info-pill span {
+            color: var(--primary);
+            font-weight: 600;
+            margin-left: 4px;
+        }
+
+        .lyrics-wrap {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            margin-top: 24px;
+        }
+
+        .lyrics-content {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 15px;
+            line-height: 2;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .chord-blue {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* --- Diagrams Bar --- */
+        .diag-drawer {
+            position: fixed;
+            bottom: 20px;
+            left: 280px;
+            right: 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transform: translateY(150%);
+            transition: transform 0.3s ease;
+            z-index: 500;
+        }
+
+        .diag-drawer.open {
+            transform: translateY(0);
+        }
+
+        .diag-item {
+            flex: 0 0 120px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .diag-item .label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .diag-item svg {
+            width: 90px;
+            height: auto;
+        }
+
+        .drawer-toggle {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 600;
+        }
+
+        .drawer-toggle:hover {
+            opacity: 0.9;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 900px) {
+            .app-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: fixed;
+                transform: translateX(-100%);
+                width: 260px;
+                height: 100%;
+                transition: transform 0.3s;
+                z-index: 100;
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .diag-drawer {
+                left: 16px;
+                right: 16px;
+            }
+
+            .main-viewer {
+                padding: 24px 16px;
+            }
+
+            .meta-header h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-grid">
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">ŞARKI SÖZÜ SİKİŞİ 2.0</div>
+            <div class="search-box">
+                <input type="text" placeholder="Şarkı veya sanatçı..." id="searchInput" oninput="filterSongs()">
+            </div>
+            <div class="song-list" id="songList"></div>
+            <button class="info-pill" onclick="randomSong()"
+                style="width: 100%; margin-top: 20px; cursor: pointer;">Rastgele</button>
+        </aside>
+
+        <main class="main-viewer" id="mainViewer">
+            <div class="container" id="contentArea">
+                <div style="height: 60vh; display: flex; align-items: center; justify-content: center; opacity: 0.2;">
+                    <h1>Kütüphaneden Seçim Yapın</h1>
+                </div>
+            </div>
+
+            <div class="diag-drawer" id="diagDrawer"></div>
+            <button class="drawer-toggle" id="toggleBtn" onclick="toggleDrawer()"
+                style="display: none;">Diyagramlar</button>
+        </main>
+    </div>
+
+    <script>
+        let allSongs = [];
+        let curId = null;
+        let drawerOpen = false;
+
+        async function init() {
+            try {
+                const r = await fetch('detayli_sarki_bilgileri_restructured.json');
+                allSongs = await r.json();
+                renderList(allSongs);
+                handleHash();
+                window.onhashchange = handleHash;
+            } catch (e) { console.error(e); }
+        }
+
+        function handleHash() {
+            const h = window.location.hash;
+            if (h.startsWith('#song/')) loadSong(parseInt(h.split('/')[1]));
+        }
+
+        function renderList(list) {
+            const html = list.map(s => `
+                <div class="song-card ${curId === s.id ? 'active' : ''}" onclick="window.location.hash='#song/${s.id}'">
+                    <span class="title">${s.sarkiadi}</span>
+                    <span class="artist">${s.sanatci}</span>
+                </div>
+            `).join('');
+            document.getElementById('songList').innerHTML = html;
+        }
+
+        function filterSongs() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            renderList(allSongs.filter(s => s.sarkiadi.toLowerCase().includes(q) || s.sanatci.toLowerCase().includes(q)));
+        }
+
+        function toggleDrawer() {
+            drawerOpen = !drawerOpen;
+            document.getElementById('diagDrawer').classList.toggle('open', drawerOpen);
+        }
+
+        function randomSong() {
+            const r = allSongs[Math.floor(Math.random() * allSongs.length)];
+            window.location.hash = `#song/${r.id}`;
+        }
+
+        async function loadSong(id) {
+            const s = allSongs.find(x => x.id === id);
+            if (!s) return;
+            curId = id;
+            drawerOpen = false;
+            document.getElementById('diagDrawer').classList.remove('open');
+            document.getElementById('toggleBtn').style.display = 'block';
+
+            const cArea = document.getElementById('contentArea');
+            cArea.innerHTML = `
+                <div class="meta-header">
+                    <h1>${s.sarkiadi}</h1>
+                    <h2>${s.sanatci}</h2>
+                    <div class="info-bar">
+                        <div class="info-pill">Ton: <span>${s.orjinal_ton || '-'}</span></div>
+                        <div class="info-pill">Kapo: <span>${s.kapo || '0'}</span></div>
+                    </div>
+                </div>
+                <div class="lyrics-wrap">
+                    <div class="lyrics-content">${parseLyrics(s.lyrics_data?.lines || [])}</div>
+                </div>
+            `;
+
+            loadDiagrams(s.used_chords || []);
+            document.getElementById('mainViewer').scrollTop = 0;
+            renderList(allSongs);
+        }
+
+        function parseLyrics(lines) {
+            return lines.map(l => {
+                let txt = l.content || '';
+                if (l.chords) {
+                    const sorted = [...new Set(l.chords)].sort((a, b) => b.length - a.length);
+                    sorted.forEach(c => {
+                        const esc = c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                        const re = new RegExp(`(?<![A-Za-z0-9#b])${esc}(?![A-Za-z0-9#b])`, 'g');
+                        txt = txt.replace(re, `<span class="chord-blue">${c}</span>`);
+                    });
+                }
+                return txt;
+            }).join('\n');
+        }
+
+        async function loadDiagrams(chords) {
+            const drawer = document.getElementById('diagDrawer');
+            if (!chords.length) {
+                drawer.innerHTML = '<p style="padding: 20px; opacity: 0.5;">Akor bulunamadı.</p>';
+                return;
+            }
+
+            drawer.innerHTML = chords.map(c => `
+                <article class="diag-item">
+                    <span class="label">${c}</span>
+                    <div id="svg-${c.replace('#', 'sharp')}">...</div>
+                </article>
+            `).join('');
+
+            for (const c of chords) {
+                const box = document.getElementById(`svg-${c.replace('#', 'sharp')}`);
+                try {
+                    let res = await fetch(`test_chords/${encodeURIComponent(c)}.svg`);
+                    if (!res.ok) {
+                        const base = c.replace(/[0-9]/g, '');
+                        res = await fetch(`test_chords/${encodeURIComponent(base)}.svg`);
+                    }
+                    if (res.ok) box.innerHTML = await res.text();
+                    else box.innerHTML = '<div style="font-size:10px; opacity: 0.3;">N/A</div>';
+                } catch (e) { box.innerHTML = 'ERR'; }
+            }
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
