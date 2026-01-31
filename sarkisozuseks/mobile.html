@@ -3,685 +3,364 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Şarkı Sözü | Mobile</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #0a0a0a;
-            --surface: #141414;
-            --surface-2: #1c1c1e;
-            --border: rgba(255, 255, 255, 0.08);
-            --text: #ffffff;
-            --text-muted: rgba(255, 255, 255, 0.5);
-            --accent: #3b82f6;
-            --accent-soft: rgba(59, 130, 246, 0.15);
-            --radius: 16px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        html,
-        body {
-            height: 100%;
-            overflow: hidden;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-        }
-
-        /* App Container */
-        .app {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Header */
-        .header {
-            padding: 12px 16px;
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-title {
-            font-size: 18px;
-            font-weight: 600;
-            flex: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .header-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: var(--surface-2);
-            border: none;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .header-btn:active {
-            transform: scale(0.95);
-            background: var(--accent-soft);
-        }
-
-        .header-btn svg {
-            width: 22px;
-            height: 22px;
-        }
-
-        /* Search Bar */
-        .search-container {
-            padding: 12px 16px;
-            background: var(--bg);
-        }
-
-        .search-bar {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .search-bar svg {
-            width: 18px;
-            height: 18px;
-            color: var(--text-muted);
-            flex-shrink: 0;
-        }
-
-        .search-bar input {
-            flex: 1;
-            background: none;
-            border: none;
-            color: var(--text);
-            font-size: 15px;
-            font-family: inherit;
-            outline: none;
-        }
-
-        .search-bar input::placeholder {
-            color: var(--text-muted);
-        }
-
-        /* Views */
-        .view {
-            flex: 1;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .view.hidden {
-            display: none;
-        }
-
-        /* Song List */
-        .song-list {
-            padding: 8px 16px 100px;
-        }
-
-        .song-item {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 16px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid transparent;
-        }
-
-        .song-item:active {
-            transform: scale(0.98);
-            border-color: var(--accent);
-        }
-
-        .song-item.active {
-            border-color: var(--accent);
-            background: linear-gradient(135deg, var(--surface) 0%, var(--accent-soft) 100%);
-        }
-
-        .song-name {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            line-height: 1.3;
-        }
-
-        .song-artist {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        /* Song Detail View */
-        .detail-view {
-            padding: 0 16px 120px;
-        }
-
-        .detail-header {
-            padding: 24px 0;
-            text-align: center;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 24px;
-        }
-
-        .detail-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            line-height: 1.2;
-        }
-
-        .detail-artist {
-            font-size: 15px;
-            color: var(--text-muted);
-            margin-bottom: 16px;
-        }
-
-        .meta-chips {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .chip {
-            background: var(--surface-2);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .chip span {
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        .lyrics-container {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 20px;
-        }
-
-        .lyrics {
-            font-size: 15px;
-            line-height: 2;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            color: rgba(255, 255, 255, 0.85);
-        }
-
-        .chord {
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        /* Chord Drawer */
-        .chord-drawer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            border-radius: 24px 24px 0 0;
-            transform: translateY(100%);
-            transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
-            z-index: 200;
-            max-height: 60vh;
-        }
-
-        .chord-drawer.open {
-            transform: translateY(0);
-        }
-
-        .drawer-handle {
-            width: 36px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 3px;
-            margin: 10px auto 8px;
-        }
-
-        .drawer-title {
-            text-align: center;
-            font-size: 16px;
-            font-weight: 600;
-            padding: 8px 16px 16px;
-        }
-
-        .chord-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 12px;
-            padding: 0 16px 24px;
-            overflow-y: auto;
-            max-height: calc(60vh - 80px);
-        }
-
-        .chord-card {
-            background: var(--surface-2);
-            border-radius: 12px;
-            padding: 12px;
-            text-align: center;
-        }
-
-        .chord-card .name {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--accent);
-            margin-bottom: 8px;
-        }
-
-        .chord-card svg {
-            width: 80px;
-            height: auto;
-            display: block;
-            margin: 0 auto;
-        }
-
-        /* FAB */
-        .fab {
-            position: fixed;
-            bottom: 24px;
-            right: 20px;
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
-            background: var(--accent);
-            border: none;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
-            cursor: pointer;
-            transition: all 0.2s;
-            z-index: 150;
-        }
-
-        .fab:active {
-            transform: scale(0.92);
-        }
-
-        .fab svg {
-            width: 24px;
-            height: 24px;
-        }
-
-        .fab.hidden {
-            display: none;
-        }
-
-        /* Shuffle FAB */
-        .shuffle-fab {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 14px 28px;
-            border-radius: 30px;
-            background: linear-gradient(135deg, var(--accent), #8b5cf6);
-            border: none;
-            color: white;
-            font-size: 14px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.35);
-            transition: all 0.2s;
-            z-index: 100;
-        }
-
-        .shuffle-fab:active {
-            transform: translateX(-50%) scale(0.95);
-        }
-
-        .shuffle-fab svg {
-            width: 18px;
-            height: 18px;
-        }
-
-        /* Backdrop */
-        .backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s;
-            z-index: 150;
-        }
-
-        .backdrop.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* Empty State */
-        .empty-state {
-            padding: 60px 20px;
-            text-align: center;
-        }
-
-        .empty-state svg {
-            width: 64px;
-            height: 64px;
-            color: var(--text-muted);
-            margin-bottom: 16px;
-            opacity: 0.3;
-        }
-
-        .empty-state p {
-            color: var(--text-muted);
-            font-size: 15px;
-        }
-
-        /* Smooth Scrollbar */
-        .view::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .view::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .view::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 4px;
-        }
-
-        .chord-grid::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .chord-grid::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 4px;
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-in {
-            animation: fadeIn 0.3s ease forwards;
-        }
-    </style>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ŞarkıSözÜ | Söz & Akor</title>
+    <meta name="description" content="Türkçe şarkı sözleri ve akor uygulaması">
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-    <div class="app">
-        <!-- Header -->
-        <header class="header">
-            <button class="header-btn back-btn hidden" id="backBtn" onclick="showList()">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
-            </button>
-            <h1 class="header-title" id="headerTitle">Şarkılar</h1>
-        </header>
+    <div class="app-container">
+        <!-- Screen: Home (Keşfet) -->
+        <section id="screen-home" class="screen active">
+            <header class="screen-header">
+                <div class="header-content">
+                    <div class="header-titles">
+                        <h1 class="app-title">ŞarkıSözÜ</h1>
+                        <p class="app-subtitle">Söz & Akor</p>
+                    </div>
+                    <button class="icon-btn-circle" onclick="switchScreen('favorites')" aria-label="Favoriler">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                        </svg>
+                    </button>
+                </div>
+            </header>
 
-        <!-- List View -->
-        <div class="view" id="listView">
-            <div class="search-container">
+            <div class="search-bar-container">
                 <div class="search-bar">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="11" cy="11" r="8" />
-                        <path stroke-linecap="round" d="M21 21l-4.35-4.35" />
+                        <path d="m21 21-4.35-4.35" stroke-linecap="round" />
                     </svg>
-                    <input type="text" placeholder="Ara..." id="searchInput" oninput="filterSongs()">
+                    <input type="text" placeholder="Ara" id="homeSearch">
                 </div>
             </div>
-            <div class="song-list" id="songList"></div>
-            <button class="shuffle-fab" onclick="randomSong()">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+
+            <div class="screen-content">
+                <!-- Son Açılanlar Section -->
+                <section class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Son Açılanlar</h2>
+                        <a href="#" class="section-link" id="recentCount">Seni 30 ›</a>
+                    </div>
+                    <div class="carousel-container">
+                        <div class="carousel" id="recentCarousel">
+                            <!-- Carousel items will be dynamically inserted -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Popüler Section -->
+                <section class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Popüler</h2>
+                        <a href="#" class="section-link" id="popularCount">Seni 15 ›</a>
+                    </div>
+                    <div class="song-list" id="popularList">
+                        <!-- Song rows will be dynamically inserted -->
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <!-- Screen: Song Detail -->
+        <section id="screen-song" class="screen">
+            <header class="screen-header song-header">
+                <div class="header-content">
+                    <button class="icon-btn back-btn" onclick="switchScreen('home')" aria-label="Geri">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="m15 18-6-6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                    <div class="song-header-info">
+                        <h1 class="song-title" id="songTitle">İnsanız Ayıbı Yok</h1>
+                        <p class="song-artist" id="songArtist">Gökhan Türkmen</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="icon-btn" id="favoriteBtn" aria-label="Favorilere Ekle">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polygon
+                                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                            </svg>
+                        </button>
+                        <button class="icon-btn" aria-label="Paylaş">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                                <polyline points="16 6 12 2 8 6" stroke-linecap="round" stroke-linejoin="round" />
+                                <line x1="12" y1="2" x2="12" y2="15" stroke-linecap="round" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="song-meta-pills">
+                    <span class="pill" id="songTonPill">Ton: <strong>F#m</strong></span>
+                    <span class="pill" id="songCapoPill">Capo: <strong>0</strong></span>
+                </div>
+            </header>
+
+            <div class="screen-content song-content">
+                <!-- Song Card Header -->
+                <div class="song-card-header">
+                    <div class="song-card-title">
+                        <h2 id="songCardTitle">İnsanız Ayıbı Yok</h2>
+                        <span class="chord-inline" id="songCardChord">C#7</span>
+                    </div>
+                    <p class="song-card-artist" id="songCardArtist">Gökhan Türkmen</p>
+                </div>
+
+                <!-- Controls Area -->
+                <div class="controls-bar">
+                    <div class="stepper-group">
+                        <span class="stepper-label">Ton:</span>
+                        <div class="stepper">
+                            <button class="stepper-btn" onclick="transpose(-1)">−</button>
+                            <span class="stepper-value" id="tonValue">1</span>
+                            <button class="stepper-btn" onclick="transpose(1)">+</button>
+                        </div>
+                    </div>
+                    <div class="stepper-group">
+                        <span class="stepper-label">Capo:</span>
+                        <div class="stepper">
+                            <button class="stepper-btn" onclick="adjustCapo(-1)">−</button>
+                            <span class="stepper-value" id="capoValue">1</span>
+                            <button class="stepper-btn" onclick="adjustCapo(1)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="controls-row">
+                    <div class="segmented-control" id="lyricsToggle">
+                        <button class="segment" data-value="lyrics" onclick="setLyricsMode('lyrics')">Söz</button>
+                        <button class="segment active" data-value="chords" onclick="setLyricsMode('chords')">Söz &
+                            Akor</button>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="autoScrollToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <!-- Lyrics Card -->
+                <div class="lyrics-card" id="lyricsCard">
+                    <div class="lyrics-content" id="lyricsContent">
+                        <!-- Lyrics will be dynamically inserted -->
+                    </div>
+                </div>
+
+                <!-- Chord Carousel -->
+                <div class="chord-carousel-container">
+                    <div class="chord-carousel" id="chordCarousel">
+                        <!-- Chord cards will be dynamically inserted -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screen: Search (Ara) -->
+        <section id="screen-search" class="screen">
+            <header class="screen-header search-screen-header">
+                <div class="search-bar-full">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.35-4.35" stroke-linecap="round" />
+                    </svg>
+                    <input type="text" placeholder="Ara" id="searchInput">
+                    <button class="icon-btn-small" aria-label="Filtre">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="4" y1="21" x2="4" y2="14" />
+                            <line x1="4" y1="10" x2="4" y2="3" />
+                            <line x1="12" y1="21" x2="12" y2="12" />
+                            <line x1="12" y1="8" x2="12" y2="3" />
+                            <line x1="20" y1="21" x2="20" y2="16" />
+                            <line x1="20" y1="12" x2="20" y2="3" />
+                            <line x1="1" y1="14" x2="7" y2="14" />
+                            <line x1="9" y1="8" x2="15" y2="8" />
+                            <line x1="17" y1="16" x2="23" y2="16" />
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <div class="screen-content">
+                <!-- Son Aramalar -->
+                <section class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Son Aramalar</h2>
+                    </div>
+                    <div class="recent-searches" id="recentSearches">
+                        <div class="search-chip" onclick="doSearch('Kır Zincirlerini')">Kır Zincirlerini</div>
+                        <div class="search-chip" onclick="doSearch('Aşkın Olayım')">Aşkın Olayım</div>
+                    </div>
+                </section>
+
+                <!-- Filtreler -->
+                <section class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Filtreler</h2>
+                    </div>
+                    <div class="filter-pills">
+                        <button class="filter-pill">Ton <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="m6 9 6 6 6-6" />
+                            </svg></button>
+                        <button class="filter-pill">Capo <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="m6 9 6 6 6-6" />
+                            </svg></button>
+                        <button class="filter-pill">Sanatçı <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="m6 9 6 6 6-6" />
+                            </svg></button>
+                        <button class="filter-pill">Favorilerimde</button>
+                    </div>
+                </section>
+
+                <!-- Search Results -->
+                <section class="section">
+                    <div class="song-list" id="searchResults">
+                        <!-- Search result rows will be dynamically inserted -->
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <!-- Screen: Favorites -->
+        <section id="screen-favorites" class="screen">
+            <header class="screen-header">
+                <div class="header-content favorites-header">
+                    <h1 class="screen-title">Favoriler</h1>
+                    <button class="icon-btn" aria-label="Equalizer">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="4" y1="21" x2="4" y2="14" />
+                            <line x1="4" y1="10" x2="4" y2="3" />
+                            <line x1="12" y1="21" x2="12" y2="12" />
+                            <line x1="12" y1="8" x2="12" y2="3" />
+                            <line x1="20" y1="21" x2="20" y2="16" />
+                            <line x1="20" y1="12" x2="20" y2="3" />
+                            <line x1="1" y1="14" x2="7" y2="14" />
+                            <line x1="9" y1="8" x2="15" y2="8" />
+                            <line x1="17" y1="16" x2="23" y2="16" />
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <div class="favorites-segments">
+                <div class="segmented-control" id="favoritesToggle">
+                    <button class="segment active" data-value="songs">Şarkılar</button>
+                    <button class="segment" data-value="lists">Listeler</button>
+                </div>
+            </div>
+
+            <div class="screen-content">
+                <section class="section">
+                    <div class="song-list" id="favoritesList">
+                        <!-- Favorite songs will be dynamically inserted -->
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <!-- Screen: Settings (Ayarlar) -->
+        <section id="screen-settings" class="screen">
+            <header class="screen-header">
+                <div class="header-content">
+                    <h1 class="screen-title">Ayarlar</h1>
+                </div>
+            </header>
+
+            <div class="screen-content">
+                <div class="settings-list">
+                    <div class="settings-group">
+                        <div class="settings-item">
+                            <span class="settings-label">Karanlık Mod</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="darkModeToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="settings-item">
+                            <span class="settings-label">Yazı Boyutu</span>
+                            <div class="stepper">
+                                <button class="stepper-btn">−</button>
+                                <span class="stepper-value">16</span>
+                                <button class="stepper-btn">+</button>
+                            </div>
+                        </div>
+                        <div class="settings-item">
+                            <span class="settings-label">Otomatik Kaydırma Hızı</span>
+                            <div class="stepper">
+                                <button class="stepper-btn">−</button>
+                                <span class="stepper-value">3</span>
+                                <button class="stepper-btn">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-group">
+                        <div class="settings-item clickable">
+                            <span class="settings-label">Hakkında</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="m9 18 6-6-6-6" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <div class="settings-item clickable">
+                            <span class="settings-label">Geri Bildirim</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="m9 18 6-6-6-6" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab Bar -->
+        <nav class="tab-bar">
+            <button class="tab-item active" data-screen="home" onclick="switchScreen('home')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
                 </svg>
-                Rastgele
+                <span>Keşfet</span>
             </button>
-        </div>
-
-        <!-- Detail View -->
-        <div class="view hidden" id="detailView">
-            <div class="detail-view" id="detailContent"></div>
-        </div>
-
-        <!-- Chord FAB -->
-        <button class="fab hidden" id="chordFab" onclick="toggleChordDrawer()">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10" />
-                <path stroke-linecap="round" d="M8 12h8M12 8v8" />
-            </svg>
-        </button>
-
-        <!-- Backdrop -->
-        <div class="backdrop" id="backdrop" onclick="toggleChordDrawer()"></div>
-
-        <!-- Chord Drawer -->
-        <div class="chord-drawer" id="chordDrawer">
-            <div class="drawer-handle"></div>
-            <div class="drawer-title">Akorlar</div>
-            <div class="chord-grid" id="chordGrid"></div>
-        </div>
+            <button class="tab-item" data-screen="search" onclick="switchScreen('search')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.35-4.35" stroke-linecap="round" />
+                </svg>
+                <span>Ara</span>
+            </button>
+            <button class="tab-item" data-screen="favorites" onclick="switchScreen('favorites')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon
+                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                </svg>
+                <span>Favoriler</span>
+            </button>
+            <button class="tab-item" data-screen="settings" onclick="switchScreen('settings')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                </svg>
+                <span>Ayarlar</span>
+            </button>
+        </nav>
     </div>
 
-    <script>
-        let allSongs = [];
-        let currentSong = null;
-        let chordDrawerOpen = false;
-
-        // Init
-        async function init() {
-            try {
-                const res = await fetch('detayli_sarki_bilgileri_restructured.json');
-                allSongs = await res.json();
-                renderList(allSongs);
-                handleHash();
-                window.onhashchange = handleHash;
-            } catch (e) {
-                console.error('Data load error:', e);
-            }
-        }
-
-        function handleHash() {
-            const hash = window.location.hash;
-            if (hash.startsWith('#song/')) {
-                const id = parseInt(hash.split('/')[1]);
-                loadSong(id);
-            } else {
-                showList();
-            }
-        }
-
-        function renderList(list) {
-            if (list.length === 0) {
-                document.getElementById('songList').innerHTML = `
-                    <div class="empty-state">
-                        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"/>
-                        </svg>
-                        <p>Şarkı bulunamadı</p>
-                    </div>
-                `;
-                return;
-            }
-
-            const html = list.map((s, i) => `
-                <div class="song-item animate-in ${currentSong?.id === s.id ? 'active' : ''}" 
-                     style="animation-delay: ${i * 0.03}s"
-                     onclick="window.location.hash='#song/${s.id}'">
-                    <div class="song-name">${s.sarkiadi}</div>
-                    <div class="song-artist">${s.sanatci}</div>
-                </div>
-            `).join('');
-            document.getElementById('songList').innerHTML = html;
-        }
-
-        function filterSongs() {
-            const q = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = allSongs.filter(s =>
-                s.sarkiadi.toLowerCase().includes(q) ||
-                s.sanatci.toLowerCase().includes(q)
-            );
-            renderList(filtered);
-        }
-
-        function showList() {
-            document.getElementById('listView').classList.remove('hidden');
-            document.getElementById('detailView').classList.add('hidden');
-            document.getElementById('backBtn').classList.add('hidden');
-            document.getElementById('headerTitle').textContent = 'Şarkılar';
-            document.getElementById('chordFab').classList.add('hidden');
-            closeChordDrawer();
-            currentSong = null;
-            window.location.hash = '';
-        }
-
-        async function loadSong(id) {
-            const song = allSongs.find(s => s.id === id);
-            if (!song) return;
-
-            currentSong = song;
-
-            // Update UI
-            document.getElementById('listView').classList.add('hidden');
-            document.getElementById('detailView').classList.remove('hidden');
-            document.getElementById('backBtn').classList.remove('hidden');
-            document.getElementById('headerTitle').textContent = song.sarkiadi;
-            document.getElementById('chordFab').classList.remove('hidden');
-
-            // Render detail
-            const content = document.getElementById('detailContent');
-            content.innerHTML = `
-                <div class="detail-header animate-in">
-                    <h1 class="detail-title">${song.sarkiadi}</h1>
-                    <p class="detail-artist">${song.sanatci}</p>
-                    <div class="meta-chips">
-                        <div class="chip">Ton: <span>${song.orjinal_ton || '-'}</span></div>
-                        <div class="chip">Kapo: <span>${song.kapo || '0'}</span></div>
-                    </div>
-                </div>
-                <div class="lyrics-container animate-in" style="animation-delay: 0.1s">
-                    <div class="lyrics">${parseLyrics(song.lyrics_data?.lines || [])}</div>
-                </div>
-            `;
-
-            // Load chords
-            loadChords(song.used_chords || []);
-
-            // Scroll to top
-            document.getElementById('detailView').scrollTop = 0;
-        }
-
-        function parseLyrics(lines) {
-            return lines.map(line => {
-                let text = line.content || '';
-                if (line.chords) {
-                    const sorted = [...new Set(line.chords)].sort((a, b) => b.length - a.length);
-                    sorted.forEach(chord => {
-                        const escaped = chord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                        const regex = new RegExp(`(?<![A-Za-z0-9#b])${escaped}(?![A-Za-z0-9#b])`, 'g');
-                        text = text.replace(regex, `<span class="chord">${chord}</span>`);
-                    });
-                }
-                return text;
-            }).join('\n');
-        }
-
-        async function loadChords(chords) {
-            const grid = document.getElementById('chordGrid');
-
-            if (!chords.length) {
-                grid.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 20px;">Akor bulunamadı</p>';
-                return;
-            }
-
-            grid.innerHTML = chords.map(c => `
-                <div class="chord-card">
-                    <div class="name">${c}</div>
-                    <div id="svg-${c.replace('#', 'sharp').replace(/[^a-zA-Z0-9]/g, '_')}">...</div>
-                </div>
-            `).join('');
-
-            for (const chord of chords) {
-                const id = `svg-${chord.replace('#', 'sharp').replace(/[^a-zA-Z0-9]/g, '_')}`;
-                const container = document.getElementById(id);
-
-                try {
-                    let res = await fetch(`test_chords/${encodeURIComponent(chord)}.svg`);
-                    if (!res.ok) {
-                        const base = chord.replace(/[0-9]/g, '');
-                        res = await fetch(`test_chords/${encodeURIComponent(base)}.svg`);
-                    }
-                    if (res.ok) {
-                        container.innerHTML = await res.text();
-                    } else {
-                        container.innerHTML = '<span style="font-size: 11px; color: var(--text-muted);">N/A</span>';
-                    }
-                } catch (e) {
-                    container.innerHTML = '<span style="font-size: 11px; color: var(--text-muted);">ERR</span>';
-                }
-            }
-        }
-
-        function toggleChordDrawer() {
-            chordDrawerOpen = !chordDrawerOpen;
-            document.getElementById('chordDrawer').classList.toggle('open', chordDrawerOpen);
-            document.getElementById('backdrop').classList.toggle('visible', chordDrawerOpen);
-        }
-
-        function closeChordDrawer() {
-            chordDrawerOpen = false;
-            document.getElementById('chordDrawer').classList.remove('open');
-            document.getElementById('backdrop').classList.remove('visible');
-        }
-
-        function randomSong() {
-            const song = allSongs[Math.floor(Math.random() * allSongs.length)];
-            window.location.hash = `#song/${song.id}`;
-        }
-
-        init();
-    </script>
+    <script src="app.js"></script>
 </body>
 
 </html>

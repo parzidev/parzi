@@ -1,0 +1,888 @@
+/* ========================================
+   ŞarkıSözÜ - Mobile App Styles
+   Exact Replica of Design Mockup
+   ======================================== */
+
+/* --- CSS Variables --- */
+:root {
+    --bg: #f5f5f7;
+    --surface: #ffffff;
+    --text-primary: #1a1a2e;
+    --text-secondary: #8e8e93;
+    --text-muted: #c7c7cc;
+    --accent: #5b5fc7;
+    --accent-light: #e8e9ff;
+    --border: #e5e5ea;
+    --chord-badge: #5b5fc7;
+    --chord-text: #5b5fc7;
+
+    --header-height: 100px;
+    --tab-bar-height: 70px;
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+    --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+    --font-mono: 'SF Mono', 'Menlo', 'Monaco', monospace;
+}
+
+/* --- Reset --- */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.4;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* --- App Container --- */
+.app-container {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Screens --- */
+.screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(100%);
+    transition: all 0.3s ease;
+}
+
+.screen.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
+/* --- Screen Header --- */
+.screen-header {
+    background: var(--surface);
+    padding: 12px 20px 16px;
+    flex-shrink: 0;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-titles {
+    flex: 1;
+}
+
+.app-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+}
+
+.app-subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.screen-title {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* --- Icon Buttons --- */
+.icon-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--accent);
+    cursor: pointer;
+}
+
+.icon-btn-circle {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--accent);
+    cursor: pointer;
+}
+
+/* --- Search Bar --- */
+.search-bar-container {
+    padding: 0 20px 16px;
+    background: var(--surface);
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--bg);
+    border-radius: 12px;
+}
+
+.search-bar svg {
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.search-bar input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: var(--text-primary);
+    font-family: inherit;
+}
+
+.search-bar input::placeholder {
+    color: var(--text-secondary);
+}
+
+/* --- Screen Content --- */
+.screen-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: calc(var(--tab-bar-height) + var(--safe-bottom) + 20px);
+    -webkit-overflow-scrolling: touch;
+}
+
+/* --- Sections --- */
+.section {
+    padding: 20px 20px 0;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.section-link {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-decoration: none;
+}
+
+/* --- Carousel --- */
+.carousel-container {
+    margin: 0 -20px;
+    padding: 0 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.carousel-container::-webkit-scrollbar {
+    display: none;
+}
+
+.carousel {
+    display: flex;
+    gap: 12px;
+    padding-right: 20px;
+}
+
+.carousel-item {
+    flex: 0 0 100px;
+    cursor: pointer;
+}
+
+.carousel-item-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+
+.carousel-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.carousel-item-image svg {
+    width: 40px;
+    height: 40px;
+    color: white;
+    opacity: 0.6;
+}
+
+.carousel-item-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+}
+
+.carousel-item-subtitle {
+    font-size: 11px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.carousel-item-meta {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.carousel-meta-badge {
+    font-size: 10px;
+    color: var(--accent);
+    background: var(--accent-light);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+/* --- Song List (Popular) --- */
+.song-list {
+    background: var(--surface);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.song-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.song-row:not(:last-child) {
+    border-bottom: 0.5px solid var(--border);
+}
+
+.song-row:active {
+    background: var(--bg);
+}
+
+.song-row-index {
+    width: 20px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.song-row-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.song-row-icon svg {
+    width: 22px;
+    height: 22px;
+    color: white;
+    opacity: 0.8;
+}
+
+.song-row-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.song-row-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.song-row-artist {
+    font-size: 13px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.song-row-badge {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    padding: 4px 10px;
+    background: var(--accent-light);
+    border-radius: 6px;
+}
+
+/* --- Tab Bar --- */
+.tab-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    background: var(--surface);
+    border-top: 0.5px solid var(--border);
+    padding: 8px 0 calc(8px + var(--safe-bottom));
+    z-index: 1000;
+}
+
+.tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 20px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.tab-item.active {
+    color: var(--accent);
+}
+
+.tab-item svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* ========================================
+   SONG DETAIL SCREEN
+   ======================================== */
+
+.song-header {
+    padding-bottom: 12px;
+}
+
+.song-header .header-content {
+    gap: 8px;
+}
+
+.back-btn {
+    color: var(--accent);
+}
+
+.song-header-info {
+    flex: 1;
+    text-align: center;
+    min-width: 0;
+}
+
+.song-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.song-artist {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.header-actions {
+    display: flex;
+    gap: 0;
+}
+
+.song-meta-pills {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.pill {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.pill strong {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+/* --- Song Card Header --- */
+.song-card-header {
+    background: var(--surface);
+    margin: 16px 20px;
+    border-radius: 16px;
+    padding: 16px;
+}
+
+.song-card-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.song-card-title h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.song-card-title .chord-inline {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.song-card-artist {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+/* --- Controls Bar --- */
+.controls-bar {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 12px 20px;
+    background: var(--surface);
+    margin: 0 20px;
+    border-radius: 12px;
+}
+
+.stepper-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stepper-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.stepper {
+    display: flex;
+    align-items: center;
+    background: var(--bg);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.stepper-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: var(--accent);
+    cursor: pointer;
+}
+
+.stepper-btn:active {
+    background: var(--border);
+}
+
+.stepper-value {
+    width: 28px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* --- Controls Row --- */
+.controls-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    margin-top: 12px;
+}
+
+/* --- Segmented Control --- */
+.segmented-control {
+    display: flex;
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 3px;
+}
+
+.segment {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.segment.active {
+    background: var(--accent);
+    color: white;
+}
+
+/* --- Toggle Switch --- */
+.toggle-switch {
+    position: relative;
+    width: 51px;
+    height: 31px;
+    cursor: pointer;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    inset: 0;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 31px;
+    transition: all 0.3s;
+}
+
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 27px;
+    height: 27px;
+    left: 1px;
+    top: 1px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s;
+}
+
+.toggle-switch input:checked+.toggle-slider {
+    background: #34c759;
+    border-color: #34c759;
+}
+
+.toggle-switch input:checked+.toggle-slider::before {
+    transform: translateX(20px);
+}
+
+/* --- Lyrics Card --- */
+.lyrics-card {
+    margin: 0 20px;
+    background: var(--surface);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.lyrics-content {
+    padding: 20px;
+    font-family: var(--font-mono);
+    font-size: 15px;
+    line-height: 2;
+}
+
+.lyrics-line {
+    margin-bottom: 2px;
+}
+
+.chord {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 13px;
+}
+
+/* --- Chord Carousel --- */
+.chord-carousel-container {
+    margin-top: 20px;
+    padding: 0 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.chord-carousel-container::-webkit-scrollbar {
+    display: none;
+}
+
+.chord-carousel {
+    display: flex;
+    gap: 10px;
+    padding-bottom: 20px;
+}
+
+.chord-card {
+    flex: 0 0 80px;
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 12px 8px;
+    text-align: center;
+    border: 1px solid var(--border);
+}
+
+.chord-card-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.chord-card svg {
+    width: 60px;
+    height: auto;
+}
+
+/* ========================================
+   SEARCH SCREEN
+   ======================================== */
+
+.search-screen-header {
+    padding-bottom: 0;
+}
+
+.search-bar-full {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--bg);
+    border-radius: 12px;
+    margin: 0 20px 16px;
+}
+
+.search-bar-full svg {
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.search-bar-full input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: var(--text-primary);
+    font-family: inherit;
+}
+
+.search-bar-full input::placeholder {
+    color: var(--text-secondary);
+}
+
+.icon-btn-small {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--accent);
+    cursor: pointer;
+}
+
+/* --- Recent Searches --- */
+.recent-searches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.search-chip {
+    padding: 10px 16px;
+    background: var(--surface);
+    border-radius: 20px;
+    font-size: 14px;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+/* --- Filter Pills --- */
+.filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.filter-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 14px;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.filter-pill svg {
+    color: var(--text-secondary);
+}
+
+/* ========================================
+   FAVORITES SCREEN
+   ======================================== */
+
+.favorites-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.favorites-header .screen-title {
+    flex: 1;
+}
+
+.favorites-header .icon-btn {
+    color: var(--accent);
+}
+
+.favorites-segments {
+    padding: 16px 20px;
+    background: var(--surface);
+}
+
+.favorites-segments .segmented-control {
+    width: 100%;
+}
+
+.favorites-segments .segment {
+    flex: 1;
+    text-align: center;
+}
+
+/* ========================================
+   SETTINGS SCREEN
+   ======================================== */
+
+.settings-list {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.settings-group {
+    background: var(--surface);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.settings-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+}
+
+.settings-item:not(:last-child) {
+    border-bottom: 0.5px solid var(--border);
+}
+
+.settings-item.clickable {
+    cursor: pointer;
+}
+
+.settings-item.clickable:active {
+    background: var(--bg);
+}
+
+.settings-label {
+    font-size: 16px;
+    color: var(--text-primary);
+}
+
+.settings-item svg {
+    color: var(--text-muted);
+}
+
+/* === Utilities === */
+.hidden {
+    display: none !important;
+}
+
+/* === Empty State === */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 40px;
+    text-align: center;
+}
+
+.empty-state svg {
+    width: 48px;
+    height: 48px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+}
+
+.empty-state h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.empty-state p {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
