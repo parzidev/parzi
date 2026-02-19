@@ -5,774 +5,605 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hava Durumu</title>
+    <!-- Modern web fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons for clean SVGs -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body {
+        :root {
+            --bg-base: #000000;
+            --bg-card: rgba(20, 20, 22, 0.65);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.15);
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --accent: #ededed;
+            --accent-bg: #111111;
+        }
+
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
             align-items: center;
-            background: #1a1a1a;
-            font-family: Arial, sans-serif;
-            color: white;
-            padding: 20px;
-            box-sizing: border-box;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Abstract Glow Background typically found in Next.js brand sites */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100vw;
             height: 100vh;
+            background:
+                radial-gradient(circle at 15% 30%, rgba(56, 189, 248, 0.06), transparent 25%),
+                radial-gradient(circle at 85% 60%, rgba(168, 85, 247, 0.05), transparent 25%),
+                radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.03), transparent 40%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            padding: 3rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            animation: fadeDown 0.6s ease-out;
         }
 
         h1 {
-            font-size: clamp(1.8rem, 5vw, 2.5rem);
-            margin: 20px 0 10px 0;
-            color: white;
-            text-align: center;
-        }
-
-        .location {
-            font-size: clamp(1rem, 4vw, 1.2rem);
-            margin-bottom: 20px;
-            color: #ccc;
-            text-align: center;
-        }
-
-        .weather-card {
-            width: min(95%, 400px);
-            min-height: 450px;
-            height: auto;
-            background: linear-gradient(to bottom, #252b59, #1e2142);
-            border-radius: 15px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            font-size: 1.35rem;
+            font-weight: 600;
+            letter-spacing: -0.025em;
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 25px;
-            box-sizing: border-box;
-            margin: 0;
-        }
-
-        .weather-title {
-            font-size: clamp(1.8rem, 7vw, 32px);
-            font-weight: bold;
-            text-align: left;
-            margin-top: 10px;
-            z-index: 10;
-        }
-
-        .temperature {
-            font-size: clamp(3rem, 10vw, 80px);
-            font-weight: bold;
-            margin-top: auto;
-            margin-bottom: 10px;
-            z-index: 10;
-        }
-
-        .details {
-            font-size: clamp(0.9rem, 4vw, 16px);
-            opacity: 0.8;
-            margin-bottom: 8px;
-            z-index: 10;
-        }
-
-        .details-container {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .last-updated {
-            font-size: 12px;
-            opacity: 0.6;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .cards-container {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-            width: 100%;
-            max-width: 900px;
-        }
-
-        .city-name {
-            font-size: clamp(1rem, 4vw, 1.2rem);
-            margin-bottom: 10px;
-            color: #ccc;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        /* Güneş Animasyonu */
-        .sun {
-            width: 100px;
-            height: 100px;
-            background: #FFD700;
-            border-radius: 50%;
-            position: absolute;
-            top: 120px;
-            left: 50%;
-            transform: translateX(-50%);
-            box-shadow: 0 0 30px #FFD700;
-        }
-
-        .sunny-bg {
-            background: linear-gradient(to bottom, #4a5bcc, #2e3a87);
-        }
-
-        .clear-bg {
-            background: linear-gradient(to bottom, #2e3a87, #1e2142);
-        }
-
-        /* Bulut Stili */
-        .cloud-container {
-            position: absolute;
-            top: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 180px;
-            height: 80px;
-        }
-
-        .cloud {
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50px;
-            position: absolute;
-        }
-
-        .cloud-base {
-            width: 120px;
-            height: 40px;
-            bottom: 0;
-            left: 30px;
-        }
-
-        .cloud-circle-1 {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            bottom: 10px;
-            left: 30px;
-        }
-
-        .cloud-circle-2 {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            bottom: 5px;
-            left: 65px;
-        }
-
-        .cloud-circle-3 {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            bottom: 10px;
-            left: 110px;
-        }
-
-        /* Yağmur Animasyonu */
-        .rain {
-            position: absolute;
-            width: 2px;
-            height: 20px;
-            background: #4a95ff;
-        }
-
-        /* Kar Animasyonu */
-        .snow {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: white;
-            border-radius: 50%;
-        }
-
-        /* Rüzgar Animasyonu */
-        .wind-line {
-            position: absolute;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.5);
-        }
-
-        /* Kar zemini */
-        .snow-ground {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 20px;
-            background: white;
-            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(to right, #ffffff, #a1a1aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .refresh-btn {
-            padding: 12px 24px;
-            background: #3a3f6d;
+            background-color: var(--text-primary);
+            color: var(--bg-base);
             border: none;
-            border-radius: 8px;
-            color: white;
-            font-size: clamp(0.9rem, 4vw, 16px);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: background 0.3s;
-            margin-top: 20px;
-            width: min(90%, 200px);
-            -webkit-tap-highlight-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
         }
 
         .refresh-btn:hover {
-            background: #4a5095;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(255, 255, 255, 0.15);
+            background-color: #f4f4f5;
         }
 
-        .loading {
+        .refresh-btn:active {
+            transform: translateY(1px);
+        }
+
+        .spin-anim {
+            animation: spin 1s linear infinite;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            animation: fadeUp 0.6s ease-out 0.2s both;
+        }
+
+        .weather-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            position: relative;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            overflow: hidden;
+        }
+
+        /* Ambient glow effect inside card */
+        .weather-card::after {
+            content: '';
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            border-radius: 15px;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 100%);
+            pointer-events: none;
         }
 
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
+        .weather-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-hover);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            z-index: 1;
+        }
+
+        .city-name {
+            font-size: 1.25rem;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            color: var(--text-primary);
+        }
+
+        .weather-desc {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-transform: capitalize;
+            margin-top: 0.4rem;
+        }
+
+        .weather-icon-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .temperature {
+            display: flex;
+            align-items: flex-start;
+            font-size: 6rem;
+            font-weight: 700;
+            letter-spacing: -0.05em;
+            line-height: 1;
+            margin: 1.5rem 0;
+            color: var(--text-primary);
+            z-index: 1;
+        }
+
+        .deg-symbol {
+            font-size: 3.5rem;
+            font-weight: 400;
+            margin-top: 0.2rem;
+            color: var(--text-secondary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            z-index: 1;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .stat-label {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .last-updated {
+            position: absolute;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            z-index: 1;
+        }
+
+        /* Loading Skeleton Animation */
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 25%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 75%);
+            background-size: 200% 100%;
+            animation: skeletonLoading 1.5s infinite;
+            border-radius: 6px;
+        }
+
+        .skeleton-text {
+            height: 1rem;
+            width: 60%;
+            margin-top: 0.4rem;
+        }
+
+        .skeleton-temp {
+            height: 4.5rem;
+            width: 50%;
+            margin: 1.5rem 0;
+            border-radius: 12px;
+        }
+
+        .skeleton-icon {
+            height: 48px;
+            width: 48px;
             border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes skeletonLoading {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
         }
 
         @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
             to {
                 transform: rotate(360deg);
             }
         }
 
-        @media (max-width: 480px) {
-            body {
-                padding: 0;
+        @keyframes fadeDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
             }
 
-            .weather-card {
-                padding: 20px;
-                height: auto;
-                margin: 10px;
-            }
-
-            .cloud-container {
-                transform: scale(0.8) translateX(-60%);
-            }
-
-            .sun {
-                transform: scale(0.8) translateX(-60%);
-            }
-
-            .details-container {
-                gap: 3px;
-            }
-
-            .last-updated {
-                font-size: 11px;
-                margin-top: 15px;
-            }
-
-            .refresh-btn {
-                width: 100%;
-                padding: 15px;
-                font-size: clamp(1rem, 5vw, 18px);
-            }
-
-            .temperature {
-                font-size: clamp(3rem, 10vw, 80px);
-            }
-
-            .details {
-                font-size: clamp(1rem, 5vw, 18px);
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        @media (max-height: 600px) {
-            body {
-                justify-content: flex-start;
-                padding-top: 10px;
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
 
-            h1 {
-                margin-top: 10px;
-            }
-
-            .weather-card {
-                min-height: 320px;
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        /* Night Mode Styles */
-        .night-bg {
-            background: linear-gradient(to bottom, #0c0c1a, #000000);
-        }
-
-        .moon {
-            width: 80px;
-            height: 80px;
-            background: #f0f8ff;
-            border-radius: 50%;
-            position: absolute;
-            top: 120px;
-            left: 50%;
-            transform: translateX(-50%);
-            box-shadow: 0 0 30px #b0e0e6, 0 0 50px #add8e6;
-        }
-
-        .stars-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 60%;
-            pointer-events: none;
-            overflow: hidden;
-        }
-
-        .star {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 2s ease-in-out infinite;
-        }
-
-        @keyframes twinkle {
+        @keyframes float {
 
             0%,
             100% {
-                opacity: 0.3;
-                transform: scale(1);
+                transform: translateY(0);
             }
 
             50% {
-                opacity: 1;
-                transform: scale(1.2);
+                transform: translateY(-8px);
             }
         }
 
-        /* Night adaptations for other elements */
-        .cloud.night {
-            background: rgba(220, 220, 240, 0.5);
+        .float-anim {
+            animation: float 4s ease-in-out infinite;
         }
 
-        .cloud.night::before,
-        .cloud.night::after {
-            background: rgba(220, 220, 240, 0.5);
+        /* Responsive */
+        @media (max-width: 640px) {
+            .container {
+                padding: 2rem 1rem;
+                gap: 1.5rem;
+            }
+
+            .weather-card {
+                padding: 1.5rem;
+            }
+
+            header {
+                padding-bottom: 1rem;
+            }
+
+            .temperature {
+                font-size: 4.5rem;
+                margin: 1rem 0;
+            }
+
+            .deg-symbol {
+                font-size: 2.5rem;
+            }
         }
 
-        .rain.night {
-            background: rgba(135, 206, 250, 0.8);
+        /* Icon styling */
+        .lucide {
+            stroke-width: 2;
         }
 
-        .snow.night {
-            background: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 0 4px rgba(173, 216, 230, 0.5);
+        .icon-sun {
+            color: #facc15;
         }
 
-        .wind-line.night {
-            background: rgba(220, 220, 240, 0.6);
+        .icon-moon {
+            color: #e2e8f0;
+        }
+
+        .icon-cloud {
+            color: #94a3b8;
+        }
+
+        .icon-rain {
+            color: #60a5fa;
+        }
+
+        .icon-snow {
+            color: #bae6fd;
+        }
+
+        .icon-lightning {
+            color: #facc15;
         }
     </style>
 </head>
 
 <body>
-    <h1>Hava Durumu</h1>
+    <div class="container">
+        <header>
+            <h1>
+                <i data-lucide="cloud-sun" style="width: 24px; height: 24px; color: #facc15;"></i>
+                Hava Durumu
+            </h1>
+            <button class="refresh-btn" id="refresh-btn">
+                <i data-lucide="refresh-cw" id="refresh-icon" style="width: 14px; height: 14px;"></i>
+                Yenile
+            </button>
+        </header>
 
-    <div class="cards-container">
-        <div>
-            <div class="city-name">Ada Ev</div>
-            <div class="weather-card" id="weather-card1">
-                <div class="loading" id="loading1">
-                    <div class="spinner"></div>
+        <div class="cards-grid">
+            <!-- Ada Ev Kartı -->
+            <div class="weather-card" id="card-ada">
+                <div class="card-header">
+                    <div>
+                        <h2 class="city-name">Ada Ev</h2>
+                        <div class="weather-desc" id="desc-ada">
+                            <div class="skeleton skeleton-text" style="width: 80px;"></div>
+                        </div>
+                    </div>
+                    <div class="weather-icon-container float-anim" id="icon-ada">
+                        <div class="skeleton skeleton-icon"></div>
+                    </div>
                 </div>
-                <div class="weather-title" id="weather-condition1">Yükleniyor...</div>
-                <div class="temperature" id="temperature1">--°C</div>
-                <div class="details-container">
-                    <div class="details" id="feels-like1">Hissedilen: --°C</div>
-                    <div class="details" id="humidity1">Nem: --%</div>
-                    <div class="details" id="wind1">Rüzgar: -- m/s</div>
+
+                <div id="temp-ada" class="temperature">
+                    <div class="skeleton skeleton-temp"></div>
                 </div>
-                <div class="last-updated" id="last-updated1">Son güncelleme: --:--</div>
+
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label"><i data-lucide="thermometer" style="width: 14px; height: 14px;"></i>
+                            Hissedilen</span>
+                        <span class="stat-value" id="feels-ada">
+                            <div class="skeleton skeleton-text" style="height: 0.95rem; width: 40px; margin-top: 0">
+                            </div>
+                        </span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label"><i data-lucide="droplets" style="width: 14px; height: 14px;"></i>
+                            Nem</span>
+                        <span class="stat-value" id="hum-ada">
+                            <div class="skeleton skeleton-text" style="height: 0.95rem; width: 40px; margin-top: 0">
+                            </div>
+                        </span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label"><i data-lucide="wind" style="width: 14px; height: 14px;"></i>
+                            Rüzgar</span>
+                        <span class="stat-value" id="wind-ada">
+                            <div class="skeleton skeleton-text" style="height: 0.95rem; width: 60px; margin-top: 0">
+                            </div>
+                        </span>
+                    </div>
+                </div>
+                <div class="last-updated" id="time-ada"></div>
             </div>
-        </div>
 
-        <div>
-            <div class="city-name">Parzi Ev</div>
-            <div class="weather-card" id="weather-card2">
-                <div class="loading" id="loading2">
-                    <div class="spinner"></div>
+            <!-- Parzi Ev Kartı -->
+            <div class="weather-card" id="card-parzi">
+                <div class="card-header">
+                    <div>
+                        <h2 class="city-name">Parzi Ev</h2>
+                        <div class="weather-desc" id="desc-parzi">
+                            <div class="skeleton skeleton-text" style="width: 80px;"></div>
+                        </div>
+                    </div>
+                    <div class="weather-icon-container float-anim" id="icon-parzi">
+                        <div class="skeleton skeleton-icon"></div>
+                    </div>
                 </div>
-                <div class="weather-title" id="weather-condition2">Yükleniyor...</div>
-                <div class="temperature" id="temperature2">--°C</div>
-                <div class="details-container">
-                    <div class="details" id="feels-like2">Hissedilen: --°C</div>
-                    <div class="details" id="humidity2">Nem: --%</div>
-                    <div class="details" id="wind2">Rüzgar: -- m/s</div>
+
+                <div id="temp-parzi" class="temperature">
+                    <div class="skeleton skeleton-temp"></div>
                 </div>
-                <div class="last-updated" id="last-updated2">Son güncelleme: --:--</div>
+
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label"><i data-lucide="thermometer" style="width: 14px; height: 14px;"></i>
+                            Hissedilen</span>
+                        <span class="stat-value" id="feels-parzi">
+                            <div class="skeleton skeleton-text" style="height: 0.95rem; width: 40px; margin-top: 0">
+                            </div>
+                        </span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label"><i data-lucide="droplets" style="width: 14px; height: 14px;"></i>
+                            Nem</span>
+                        <span class="stat-value" id="hum-parzi">
+                            <div class="skeleton skeleton-text" style="height: 0.95rem; width: 40px; margin-top: 0">
+                            </div>
+                        </span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label"><i data-lucide="wind" style="width: 14px; height: 14px;"></i>
+                            Rüzgar</span>
+                        <span class="stat-value" id="wind-parzi">
+                            <div class="skeleton skeleton-text" style="height: 0.95rem; width: 60px; margin-top: 0">
+                            </div>
+                        </span>
+                    </div>
+                </div>
+                <div class="last-updated" id="time-parzi"></div>
             </div>
         </div>
     </div>
 
-    <button class="refresh-btn" id="refresh-btn" style="margin-top: 20px;">Yenile</button>
-
     <script>
-        const apiKey = 'bc9ee4dc966affd2c33c7358511d1510';
-        const cities = ['Gazimağusa', 'Lüleburgaz'];
+        // Init icons generally
+        lucide.createIcons();
 
-        // State objects for animations
-        let card1State = { animationsRunning: false, rainInterval: null, snowInterval: null, windInterval: null, thunderInterval: null, isNight: false };
-        let card2State = { animationsRunning: false, rainInterval: null, snowInterval: null, windInterval: null, thunderInterval: null, isNight: false };
+        const API_KEY = 'bc9ee4dc966affd2c33c7358511d1510';
+        const CITIES = [
+            { id: 'ada', name: 'Gazimağusa' },
+            { id: 'ada', name: 'Gazimağusa' },
+            { id: 'ada', name: 'Gazimağusa' },
+            { id: 'parzi', name: 'Lüleburgaz' }
+        ];
 
-        // DOM elemanları for card 1
-        const weatherCard1 = document.getElementById('weather-card1');
-        const weatherCondition1 = document.getElementById('weather-condition1');
-        const temperatureElement1 = document.getElementById('temperature1');
-        const feelsLikeElement1 = document.getElementById('feels-like1');
-        const humidityElement1 = document.getElementById('humidity1');
-        const windElement1 = document.getElementById('wind1');
-        const lastUpdatedElement1 = document.getElementById('last-updated1');
-        const loadingElement1 = document.getElementById('loading1');
+        function getIconConfig(main, isNight) {
+            main = main.toLowerCase();
+            if (main.includes('clear')) return { name: isNight ? 'moon' : 'sun', class: isNight ? 'icon-moon' : 'icon-sun' };
+            if (main.includes('cloud')) return { name: 'cloud', class: 'icon-cloud' };
+            if (main.includes('rain') || main.includes('drizzle')) return { name: 'cloud-rain', class: 'icon-rain' };
+            if (main.includes('snow')) return { name: 'snowflake', class: 'icon-snow' };
+            if (main.includes('thunder')) return { name: 'cloud-lightning', class: 'icon-lightning' };
+            return { name: 'cloud', class: 'icon-cloud' }; // default
+        }
 
-        // DOM elemanları for card 2
-        const weatherCard2 = document.getElementById('weather-card2');
-        const weatherCondition2 = document.getElementById('weather-condition2');
-        const temperatureElement2 = document.getElementById('temperature2');
-        const feelsLikeElement2 = document.getElementById('feels-like2');
-        const humidityElement2 = document.getElementById('humidity2');
-        const windElement2 = document.getElementById('wind2');
-        const lastUpdatedElement2 = document.getElementById('last-updated2');
-        const loadingElement2 = document.getElementById('loading2');
-
-        const refreshBtn = document.getElementById('refresh-btn');
-
-        // Hava durumu verilerini getir (parametreli)
-        async function getWeatherData(city, loadingEl, updateCallback) {
-            loadingEl.style.display = 'flex';
-
+        async function fetchWeather(cityObj) {
             try {
-                const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${apiKey}&units=metric&lang=tr`);
+                const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(cityObj.name)}&appid=${API_KEY}&units=metric&lang=tr`;
+                const response = await fetch(url);
                 const data = await response.json();
 
                 if (response.ok && data.cod === 200) {
-                    updateCallback(data);
+                    updateCardUI(cityObj.id, data);
                 } else {
-                    console.error('Hava durumu verileri alınamadı: ' + (data.message || 'Bilinmeyen hata'));
+                    console.error('API Error:', data.message);
+                    setCardError(cityObj.id);
                 }
             } catch (error) {
-                console.error('Hava durumu verileri alınamadı: ' + error.message);
-            } finally {
-                loadingEl.style.display = 'none';
+                console.error('Fetch Error:', error);
+                setCardError(cityObj.id);
             }
         }
 
-        // UI'ı güncelle (parametreli)
-        function updateWeatherUI(data, cardEl, conditionEl, tempEl, feelsEl, humEl, windEl, updatedEl, state) {
+        function updateCardUI(id, data) {
             const temp = Math.round(data.main.temp);
-            const feelsLike = Math.round(data.main.feels_like);
-            const humidity = data.main.humidity;
-            const windSpeedMs = data.wind.speed.toFixed(1);
+            const feels = Math.round(data.main.feels_like);
+            const hum = data.main.humidity;
+            const wind = data.wind.speed.toFixed(1);
+            let desc = data.weather[0].description;
+            let main = data.weather[0].main;
 
-            // UI güncelleme
-            tempEl.textContent = `${temp}°C`;
-            feelsEl.textContent = `Hissedilen: ${feelsLike}°C`;
-            humEl.textContent = `Nem: ${humidity}%`;
-            windEl.textContent = `Rüzgar: ${windSpeedMs} m/s`;
+            const nowUnix = Math.floor(Date.now() / 1000);
+            const isNight = nowUnix < data.sys.sunrise || nowUnix > data.sys.sunset;
 
-            let weatherDesc = data.weather[0].description;
-            let turkishWeather = weatherDesc.charAt(0).toUpperCase() + weatherDesc.slice(1);
-            conditionEl.textContent = turkishWeather;
+            document.getElementById(`desc-${id}`).textContent = desc;
+            document.getElementById(`temp-${id}`).innerHTML = `${temp}<span class="deg-symbol">°</span>`;
+            document.getElementById(`feels-${id}`).textContent = `${feels}°`;
+            document.getElementById(`hum-${id}`).textContent = `${hum}%`;
+            document.getElementById(`wind-${id}`).textContent = `${wind} km/s`;
 
-            // weatherMain belirle
-            let weatherMain = data.weather[0].main;
-            if (weatherMain === 'Drizzle') {
-                weatherMain = 'Rain';
-            }
+            const timeStr = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById(`time-${id}`).textContent = `${timeStr}`;
 
-            // Gece/gündüz hesaplama
-            const sunriseDate = new Date(data.sys.sunrise * 1000);
-            const sunsetDate = new Date(data.sys.sunset * 1000);
-            const sunriseMin = sunriseDate.getHours() * 60 + sunriseDate.getMinutes();
-            const sunsetMin = sunsetDate.getHours() * 60 + sunsetDate.getMinutes();
-            const now = new Date();
-            const nowMin = now.getHours() * 60 + now.getMinutes();
-            const isNight = nowMin >= sunsetMin || nowMin <= sunriseMin;
-            state.isNight = isNight;
+            const iconConfig = getIconConfig(main, isNight);
+            const iconContainer = document.getElementById(`icon-${id}`);
+            iconContainer.innerHTML = `<i data-lucide="${iconConfig.name}" class="${iconConfig.class}" style="width: 48px; height: 48px; stroke-width: 1.5px;"></i>`;
 
-            // Son güncelleme zamanı
-            const hours = now.getHours().toString().padStart(2, '0');
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            updatedEl.textContent = `Son güncelleme: ${hours}:${minutes}`;
-
-            // Mevcut animasyonları temizle
-            clearAnimations(cardEl, state);
-
-            // Arka plan ve animasyonları ayarla
-            setupWeatherAnimation(cardEl, weatherMain, state, isNight);
+            lucide.createIcons({ root: iconContainer });
         }
 
-        // Get weather for card 1
-        function getWeatherForCard1() {
-            getWeatherData(cities[0], loadingElement1, (data) => updateWeatherUI(data, weatherCard1, weatherCondition1, temperatureElement1, feelsLikeElement1, humidityElement1, windElement1, lastUpdatedElement1, card1State));
+        function setCardError(id) {
+            document.getElementById(`desc-${id}`).textContent = 'Bağlantı Hatası';
+            document.getElementById(`temp-${id}`).innerHTML = `--<span class="deg-symbol">°</span>`;
+            document.getElementById(`feels-${id}`).textContent = `--°`;
+            document.getElementById(`hum-${id}`).textContent = `--%`;
+            document.getElementById(`wind-${id}`).textContent = `--`;
         }
 
-        // Get weather for card 2
-        function getWeatherForCard2() {
-            getWeatherData(cities[1], loadingElement2, (data) => updateWeatherUI(data, weatherCard2, weatherCondition2, temperatureElement2, feelsLikeElement2, humidityElement2, windElement2, lastUpdatedElement2, card2State));
+        async function refreshAll() {
+            const btnIcon = document.getElementById('refresh-icon');
+            btnIcon.classList.add('spin-anim');
+
+            // Re-render skeletons
+            CITIES.forEach(c => {
+                document.getElementById(`desc-${c.id}`).innerHTML = `<div class="skeleton skeleton-text" style="width: 80px;"></div>`;
+                document.getElementById(`temp-${c.id}`).innerHTML = `<div class="skeleton skeleton-temp"></div>`;
+                document.getElementById(`icon-${c.id}`).innerHTML = `<div class="skeleton skeleton-icon"></div>`;
+                document.getElementById(`feels-${c.id}`).innerHTML = `<div class="skeleton skeleton-text" style="height: 0.95rem; width: 40px; margin-top: 0"></div>`;
+                document.getElementById(`hum-${c.id}`).innerHTML = `<div class="skeleton skeleton-text" style="height: 0.95rem; width: 40px; margin-top: 0"></div>`;
+                document.getElementById(`wind-${c.id}`).innerHTML = `<div class="skeleton skeleton-text" style="height: 0.95rem; width: 60px; margin-top: 0"></div>`;
+                document.getElementById(`time-${c.id}`).textContent = '';
+            });
+
+            await Promise.all(CITIES.map(c => fetchWeather(c)));
+
+            setTimeout(() => {
+                btnIcon.classList.remove('spin-anim');
+            }, 600); // small delay for smoother animation transition
         }
 
-        // Animasyonları temizle (parametreli)
-        function clearAnimations(cardEl, state) {
-            if (state.animationsRunning) {
-                if (state.rainInterval) clearInterval(state.rainInterval);
-                if (state.snowInterval) clearInterval(state.snowInterval);
-                if (state.windInterval) clearInterval(state.windInterval);
-                if (state.thunderInterval) clearInterval(state.thunderInterval);
-                state.animationsRunning = false;
-            }
+        document.getElementById('refresh-btn').addEventListener('click', refreshAll);
 
-            // Mevcut animasyon elemanlarını temizle (card specific)
-            cardEl.querySelectorAll('.rain, .snow, .wind-line, .sun, .cloud-container, .moon, .stars-container, .snow-ground').forEach(el => el.remove());
+        // Fetch on load
+        window.addEventListener('load', refreshAll);
 
-            // Arka plan sınıflarını temizle
-            cardEl.classList.remove('sunny-bg', 'clear-bg', 'night-bg');
-        }
+        // Auto refresh 5 mins
+        setInterval(refreshAll, 5 * 60 * 1000);
 
-        // Hava durumuna göre animasyon ayarla (parametreli)
-        function setupWeatherAnimation(cardEl, weatherMain, state, isNight) {
-            switch (weatherMain) {
-                case 'Clear':
-                    setupClearAnimation(cardEl, isNight);
-                    break;
-                case 'Clouds':
-                    setupCloudyAnimation(cardEl, state, isNight);
-                    break;
-                case 'Rain':
-                    setupRainyAnimation(cardEl, state, isNight);
-                    break;
-                case 'Snow':
-                    setupSnowyAnimation(cardEl, state, isNight);
-                    break;
-                case 'Thunderstorm':
-                    setupThunderstormAnimation(cardEl, state, isNight);
-                    break;
-                default:
-                    // Varsayılan olarak bulutlu göster
-                    setupCloudyAnimation(cardEl, state, isNight);
-            }
-        }
-
-        // Clear animasyon (güneş veya ay)
-        function setupClearAnimation(cardEl, isNight) {
-            if (isNight) {
-                cardEl.classList.add('night-bg');
-
-                const moon = document.createElement('div');
-                moon.classList.add('moon');
-                cardEl.appendChild(moon);
-
-                const starsContainer = document.createElement('div');
-                starsContainer.classList.add('stars-container');
-                cardEl.appendChild(starsContainer);
-
-                for (let i = 0; i < 20; i++) {
-                    const star = document.createElement('div');
-                    star.classList.add('star');
-                    star.style.left = Math.random() * 100 + '%';
-                    star.style.top = Math.random() * 60 + '%';
-                    star.style.animationDelay = Math.random() * 2 + 's';
-                    starsContainer.appendChild(star);
-                }
-            } else {
-                cardEl.classList.add('sunny-bg');
-
-                const sun = document.createElement('div');
-                sun.classList.add('sun');
-                cardEl.appendChild(sun);
-            }
-        }
-
-        // Bulutlu animasyon (parametreli)
-        function setupCloudyAnimation(cardEl, state, isNight) {
-            if (isNight) {
-                cardEl.classList.add('night-bg');
-            }
-
-            const cloudContainer = document.createElement('div');
-            cloudContainer.classList.add('cloud-container');
-
-            const cloudBase = document.createElement('div');
-            cloudBase.classList.add('cloud', 'cloud-base');
-            if (isNight) cloudBase.classList.add('night');
-
-            const cloudCircle1 = document.createElement('div');
-            cloudCircle1.classList.add('cloud', 'cloud-circle-1');
-            if (isNight) cloudCircle1.classList.add('night');
-
-            const cloudCircle2 = document.createElement('div');
-            cloudCircle2.classList.add('cloud', 'cloud-circle-2');
-            if (isNight) cloudCircle2.classList.add('night');
-
-            const cloudCircle3 = document.createElement('div');
-            cloudCircle3.classList.add('cloud', 'cloud-circle-3');
-            if (isNight) cloudCircle3.classList.add('night');
-
-            cloudContainer.appendChild(cloudBase);
-            cloudContainer.appendChild(cloudCircle1);
-            cloudContainer.appendChild(cloudCircle2);
-            cloudContainer.appendChild(cloudCircle3);
-
-            cardEl.appendChild(cloudContainer);
-
-            // Hafif rüzgar efekti
-            state.animationsRunning = true;
-            state.windInterval = setInterval(() => createLightWind(cardEl, state), 1000);
-        }
-
-        // Yağmurlu animasyon (parametreli)
-        function setupRainyAnimation(cardEl, state, isNight) {
-            // Önce bulutları ekle
-            setupCloudyAnimation(cardEl, state, isNight);
-
-            // Yağmur animasyonu
-            state.animationsRunning = true;
-            state.rainInterval = setInterval(() => createRain(cardEl, state), 200);
-        }
-
-        // Karlı animasyon (parametreli)
-        function setupSnowyAnimation(cardEl, state, isNight) {
-            // Önce bulutları ekle
-            setupCloudyAnimation(cardEl, state, isNight);
-
-            // Kar zemini ekle
-            const snowGround = document.createElement('div');
-            snowGround.classList.add('snow-ground');
-            cardEl.appendChild(snowGround);
-
-            // Kar animasyonu
-            state.animationsRunning = true;
-            state.snowInterval = setInterval(() => createSnow(cardEl, state), 300);
-        }
-
-        // Fırtınalı animasyon (parametreli)
-        function setupThunderstormAnimation(cardEl, state, isNight) {
-            // Önce yağmurlu animasyonu ekle
-            setupRainyAnimation(cardEl, state, isNight);
-
-            // Şimşek efekti ekle
-            function createLightning() {
-                cardEl.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
-                setTimeout(() => {
-                    cardEl.style.backgroundColor = '';
-                }, 100);
-            }
-
-            // Rastgele şimşek çak
-            state.thunderInterval = setInterval(createLightning, 3000 + Math.random() * 5000);
-        }
-
-        // Yağmur damlası oluştur (parametreli)
-        function createRain(cardEl, state) {
-            const drop = document.createElement('div');
-            drop.classList.add('rain');
-            if (state.isNight) drop.classList.add('night');
-            drop.style.left = Math.random() * 340 + 20 + 'px';
-            drop.style.top = '120px';
-            cardEl.appendChild(drop);
-
-            let position = 120;
-            const fall = setInterval(() => {
-                position += 5;
-                drop.style.top = position + 'px';
-
-                if (position > 450) {
-                    clearInterval(fall);
-                    drop.remove();
-                }
-            }, 20);
-        }
-
-        // Kar tanesi oluştur (parametreli)
-        function createSnow(cardEl, state) {
-            const flake = document.createElement('div');
-            flake.classList.add('snow');
-            if (state.isNight) flake.classList.add('night');
-            flake.style.left = Math.random() * 340 + 20 + 'px';
-            flake.style.top = '120px';
-            cardEl.appendChild(flake);
-
-            let position = 120;
-            let offset = Math.random() * 4 - 2;
-            let horizontalPos = parseFloat(flake.style.left);
-
-            const fall = setInterval(() => {
-                position += 2;
-                horizontalPos += offset;
-                flake.style.top = position + 'px';
-                flake.style.left = horizontalPos + 'px';
-
-                if (position > 400) {
-                    clearInterval(fall);
-                    flake.remove();
-                }
-            }, 50);
-        }
-
-        // Hafif rüzgar çizgisi oluştur (parametreli)
-        function createLightWind(cardEl, state) {
-            const line = document.createElement('div');
-            line.classList.add('wind-line');
-            if (state.isNight) line.classList.add('night');
-
-            const yPos = Math.random() * 200 + 80;
-            line.style.top = yPos + 'px';
-            line.style.left = '20px';
-            line.style.width = '0px';
-
-            cardEl.appendChild(line);
-
-            let width = 0;
-            const grow = setInterval(() => {
-                width += 4;
-                line.style.width = width + 'px';
-
-                if (width > 120) {
-                    clearInterval(grow);
-                    setTimeout(() => line.remove(), 100);
-                }
-            }, 30);
-        }
-
-        // Sayfa yüklendiğinde hava durumunu getir
-        window.addEventListener('load', () => {
-            getWeatherForCard1();
-            getWeatherForCard2();
-        });
-
-        // Yenile düğmesi her iki kart için de yenile
-        refreshBtn.addEventListener('click', () => {
-            getWeatherForCard1();
-            getWeatherForCard2();
-        });
-
-        // Otomatik yenileme her iki kart için (5 dakikada bir)
-        setInterval(() => {
-            getWeatherForCard1();
-            getWeatherForCard2();
-        }, 5 * 60 * 1000);
     </script>
 </body>
 
