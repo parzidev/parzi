@@ -11,7 +11,7 @@
     --glow-color: #ff00ff;
     --glow-spread: 5px;
     --glow-opacity: 0.7;
-    
+
     /* Hava durumu renkleri - Daha simetrik ve benzer renk tonları */
     --weather-clear-start: rgba(255, 180, 60, 0.5);
     --weather-clear-end: rgba(255, 140, 40, 0.7);
@@ -50,7 +50,7 @@ html[data-night-mode="on"] {
 }
 
 body {
-    background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+    background-color: var(--bg-gradient-start);
     color: var(--text-color);
     min-height: 100vh;
     padding: 2rem;
@@ -142,14 +142,37 @@ body::after {
 }
 
 @keyframes wave {
-    0% { transform: rotate(0deg); }
-    10% { transform: rotate(14deg); }
-    20% { transform: rotate(-8deg); }
-    30% { transform: rotate(14deg); }
-    40% { transform: rotate(-4deg); }
-    50% { transform: rotate(10deg); }
-    60% { transform: rotate(0deg); }
-    100% { transform: rotate(0deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    10% {
+        transform: rotate(14deg);
+    }
+
+    20% {
+        transform: rotate(-8deg);
+    }
+
+    30% {
+        transform: rotate(14deg);
+    }
+
+    40% {
+        transform: rotate(-4deg);
+    }
+
+    50% {
+        transform: rotate(10deg);
+    }
+
+    60% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
 }
 
 .social-links {
@@ -172,12 +195,36 @@ body::after {
 }
 
 /* Social media icon colors for dark mode */
-html[data-theme="dark"] .linkedin { color: #0077b5; transition: all 0.3s ease; }
-html[data-theme="dark"] .github { color: #f5f5f5; transition: all 0.3s ease; }
-html[data-theme="dark"] .mail { color: #ea4335; transition: all 0.3s ease; }
-html[data-theme="dark"] .spotify { color: #1DB954; transition: all 0.3s ease; }
-html[data-theme="dark"] .discord { color: #7289DA; transition: all 0.3s ease; }
-html[data-theme="dark"] .twitter { color: #1DA1F2; transition: all 0.3s ease; }
+html[data-theme="dark"] .linkedin {
+    color: #0077b5;
+    transition: all 0.3s ease;
+}
+
+html[data-theme="dark"] .github {
+    color: #f5f5f5;
+    transition: all 0.3s ease;
+}
+
+html[data-theme="dark"] .mail {
+    color: #ea4335;
+    transition: all 0.3s ease;
+}
+
+html[data-theme="dark"] .spotify {
+    color: #1DB954;
+    transition: all 0.3s ease;
+}
+
+html[data-theme="dark"] .discord {
+    color: #7289DA;
+    transition: all 0.3s ease;
+}
+
+html[data-theme="dark"] .twitter {
+    color: #1DA1F2;
+    transition: all 0.3s ease;
+}
+
 html[data-theme="dark"] .instagram i {
     background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
     -webkit-background-clip: text;
@@ -188,38 +235,38 @@ html[data-theme="dark"] .instagram i {
 }
 
 /* Social media icon colors for night mode */
-html[data-night-mode="on"] .linkedin { 
-    color: #0099ff; 
+html[data-night-mode="on"] .linkedin {
+    color: #0099ff;
     text-shadow: 0 0 8px currentColor;
     transition: all 0.3s ease;
 }
 
-html[data-night-mode="on"] .github { 
-    color: #ffffff; 
+html[data-night-mode="on"] .github {
+    color: #ffffff;
     text-shadow: 0 0 8px currentColor;
     transition: all 0.3s ease;
 }
 
-html[data-night-mode="on"] .mail { 
-    color: #ff5555; 
+html[data-night-mode="on"] .mail {
+    color: #ff5555;
     text-shadow: 0 0 8px currentColor;
     transition: all 0.3s ease;
 }
 
-html[data-night-mode="on"] .spotify { 
-    color: #1ED760; 
+html[data-night-mode="on"] .spotify {
+    color: #1ED760;
     text-shadow: 0 0 8px currentColor;
     transition: all 0.3s ease;
 }
 
-html[data-night-mode="on"] .discord { 
-    color: #7289DA; 
+html[data-night-mode="on"] .discord {
+    color: #7289DA;
     text-shadow: 0 0 8px currentColor;
     transition: all 0.3s ease;
 }
 
-html[data-night-mode="on"] .twitter { 
-    color: #1DA1F2; 
+html[data-night-mode="on"] .twitter {
+    color: #1DA1F2;
     text-shadow: 0 0 8px currentColor;
     transition: all 0.3s ease;
 }
@@ -379,12 +426,15 @@ html[data-night-mode="on"] .social-links a:hover {
         transform: translateY(-20px) rotate(10deg);
         opacity: 0;
     }
+
     10% {
         opacity: 0.8;
     }
+
     90% {
         opacity: 0.8;
     }
+
     100% {
         transform: translateY(120px) rotate(10deg);
         opacity: 0;
@@ -427,12 +477,15 @@ html[data-night-mode="on"] .social-links a:hover {
         transform: translateY(-20px) translateX(0) rotate(0deg);
         opacity: 0;
     }
+
     10% {
         opacity: 0.9;
     }
+
     90% {
         opacity: 0.9;
     }
+
     100% {
         transform: translateY(120px) translateX(20px) rotate(360deg);
         opacity: 0;
@@ -455,8 +508,17 @@ html[data-night-mode="on"] .social-links a:hover {
 }
 
 @keyframes sun-pulse {
-    0%, 100% { transform: scale(1); opacity: 0.9; }
-    50% { transform: scale(1.1); opacity: 1; }
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.9;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
 }
 
 .sun-ray {
@@ -472,8 +534,17 @@ html[data-night-mode="on"] .social-links a:hover {
 }
 
 @keyframes sun-ray {
-    0%, 100% { opacity: 0.2; width: 20px; }
-    50% { opacity: 0.8; width: 30px; }
+
+    0%,
+    100% {
+        opacity: 0.2;
+        width: 20px;
+    }
+
+    50% {
+        opacity: 0.8;
+        width: 30px;
+    }
 }
 
 /* Bulut animasyonu için */
@@ -488,8 +559,13 @@ html[data-night-mode="on"] .social-links a:hover {
 }
 
 @keyframes cloud-float {
-    0% { transform: translateX(-120px); }
-    100% { transform: translateX(120px); }
+    0% {
+        transform: translateX(-120px);
+    }
+
+    100% {
+        transform: translateX(120px);
+    }
 }
 
 /* Rüzgar animasyonu için */
@@ -504,10 +580,23 @@ html[data-night-mode="on"] .social-links a:hover {
 }
 
 @keyframes wind {
-    0% { transform: translateX(-100%) scaleX(0.1); opacity: 0; }
-    5% { opacity: 0.8; }
-    95% { opacity: 0.8; }
-    100% { transform: translateX(100%) scaleX(1); opacity: 0; }
+    0% {
+        transform: translateX(-100%) scaleX(0.1);
+        opacity: 0;
+    }
+
+    5% {
+        opacity: 0.8;
+    }
+
+    95% {
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translateX(100%) scaleX(1);
+        opacity: 0;
+    }
 }
 
 .theme-card {
@@ -572,6 +661,7 @@ html[data-night-mode="on"] .dark-icon {
         filter: drop-shadow(0 0 5px var(--glow-color));
         opacity: 0.8;
     }
+
     100% {
         filter: drop-shadow(0 0 12px var(--glow-color));
         opacity: 1;
@@ -607,6 +697,7 @@ html[data-night-mode="on"] .theme-toggle::before {
         width: 60px;
         height: 60px;
     }
+
     100% {
         opacity: 0.6;
         width: 80px;
@@ -634,6 +725,7 @@ html[data-night-mode="on"] .theme-toggle::after {
         height: 0;
         opacity: 0;
     }
+
     100% {
         height: 50px;
         opacity: 0.7;
@@ -698,12 +790,35 @@ html[data-night-mode="on"] .progress-bar {
 
 /* Special glow effect for the XD text */
 @keyframes rainbow-glow {
-    0% { text-shadow: 0 0 var(--glow-spread) #ff0000; color: #ff5555; }
-    20% { text-shadow: 0 0 var(--glow-spread) #ffaa00; color: #ffaa55; }
-    40% { text-shadow: 0 0 var(--glow-spread) #00ff00; color: #55ff55; }
-    60% { text-shadow: 0 0 var(--glow-spread) #0000ff; color: #5555ff; }
-    80% { text-shadow: 0 0 var(--glow-spread) #aa00ff; color: #aa55ff; }
-    100% { text-shadow: 0 0 var(--glow-spread) #ff0000; color: #ff5555; }
+    0% {
+        text-shadow: 0 0 var(--glow-spread) #ff0000;
+        color: #ff5555;
+    }
+
+    20% {
+        text-shadow: 0 0 var(--glow-spread) #ffaa00;
+        color: #ffaa55;
+    }
+
+    40% {
+        text-shadow: 0 0 var(--glow-spread) #00ff00;
+        color: #55ff55;
+    }
+
+    60% {
+        text-shadow: 0 0 var(--glow-spread) #0000ff;
+        color: #5555ff;
+    }
+
+    80% {
+        text-shadow: 0 0 var(--glow-spread) #aa00ff;
+        color: #aa55ff;
+    }
+
+    100% {
+        text-shadow: 0 0 var(--glow-spread) #ff0000;
+        color: #ff5555;
+    }
 }
 
 html[data-night-mode="on"] .xd-text {
@@ -801,7 +916,8 @@ html[data-night-mode="on"] .profile-card:hover {
     text-overflow: ellipsis;
 }
 
-.song-artist, .song-album {
+.song-artist,
+.song-album {
     font-size: 0.8rem;
     opacity: 0.8;
     white-space: nowrap;
@@ -841,7 +957,9 @@ html[data-night-mode="on"] .profile-card:hover {
     margin-top: 1rem;
 }
 
-.github-card, .spotify-card, .fitbit-card {
+.github-card,
+.spotify-card,
+.fitbit-card {
     background: var(--card-bg);
     border-radius: 15px;
     padding: 20px;
@@ -863,7 +981,9 @@ html[data-night-mode="on"] .profile-card:hover {
     text-decoration: none;
 }
 
-.github-card:hover, .spotify-card:hover, .fitbit-card:hover {
+.github-card:hover,
+.spotify-card:hover,
+.fitbit-card:hover {
     transform: translateY(-5px);
     border-color: rgba(255, 255, 255, 0.2);
 }
@@ -877,7 +997,10 @@ html[data-night-mode="on"] .profile-card:hover {
     justify-content: space-between;
 }
 
-.fitbit-status { opacity: 0.8; font-size: 0.9rem; }
+.fitbit-status {
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
 
 .fitbit-body {
     display: flex;
@@ -890,7 +1013,7 @@ html[data-night-mode="on"] .profile-card:hover {
     width: 140px;
     height: 140px;
     border-radius: 50%;
-    background: conic-gradient(#7c4dff var(--progress), rgba(255,255,255,0.08) 0);
+    background: conic-gradient(#7c4dff var(--progress), rgba(255, 255, 255, 0.08) 0);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -902,18 +1025,35 @@ html[data-night-mode="on"] .profile-card:hover {
     width: 112px;
     height: 112px;
     border-radius: 50%;
-    background: rgba(0,0,0,0.2);
+    background: rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-.step-count { font-size: 1.6rem; font-weight: 700; }
-.step-label { font-size: 0.8rem; opacity: 0.7; }
+.step-count {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
 
-.fitbit-info { text-align: center; margin-top: 6px; font-size: 0.85rem; opacity: 0.9; }
-.fitbit-info .fitbit-date { font-size: 0.75rem; opacity: 0.65; margin-top: 2px; }
+.step-label {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+.fitbit-info {
+    text-align: center;
+    margin-top: 6px;
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+.fitbit-info .fitbit-date {
+    font-size: 0.75rem;
+    opacity: 0.65;
+    margin-top: 2px;
+}
 
 .github-user-info {
     display: flex;
@@ -1157,10 +1297,10 @@ html[data-theme="dark"] .level-4 {
 .education-content {
     min-width: 320px;
     flex: 2 1 400px;
-    background: rgba(0,0,0,0.04);
+    background: rgba(0, 0, 0, 0.04);
     border-radius: 12px;
     padding: 24px 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .education-section {
@@ -1223,6 +1363,7 @@ html[data-theme="dark"] .level-4 {
     0% {
         text-shadow: 0 0 var(--glow-spread) var(--glow-color);
     }
+
     100% {
         text-shadow: 0 0 calc(var(--glow-spread) * 2) var(--glow-color);
     }
@@ -1232,16 +1373,18 @@ html[data-theme="dark"] .level-4 {
     .page-container {
         grid-template-columns: 1fr;
     }
-    
-    .main-container, .secondary-container, .tertiary-container {
+
+    .main-container,
+    .secondary-container,
+    .tertiary-container {
         grid-column: 1;
     }
-    
+
     .profile-card {
         flex-direction: column;
         height: auto;
     }
-    
+
     .profile-image {
         width: 100%;
         height: 200px;
@@ -1257,7 +1400,7 @@ body.has-stars::before {
     width: 100%;
     height: 100%;
     pointer-events: none;
-    background-image: 
+    background-image:
         radial-gradient(1px 1px at 25px 5px, white, transparent),
         radial-gradient(1px 1px at 50px 25px, white, transparent),
         radial-gradient(1px 1px at 125px 20px, white, transparent),
@@ -1281,10 +1424,12 @@ body.has-stars.stars-visible::before {
         transform: translate(0, 0) rotate(315deg) scale(0);
         opacity: 0;
     }
+
     10% {
         transform: translate(-10px, 10px) rotate(315deg) scale(1);
         opacity: 1;
     }
+
     100% {
         transform: translate(-100px, 100px) rotate(315deg) scale(0.2);
         opacity: 0;
@@ -1327,9 +1472,11 @@ body.has-stars.stars-visible::before {
     0% {
         opacity: 0.6;
     }
+
     50% {
         opacity: 0.3;
     }
+
     100% {
         opacity: 0.6;
     }
@@ -1392,8 +1539,8 @@ body.has-stars.stars-visible::before {
 .education-content-row {
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
-    gap: 2.5rem;
+    justify-content: center;
+    gap: 1.5rem;
     align-items: flex-start;
 }
 
@@ -1401,10 +1548,10 @@ body.has-stars.stars-visible::before {
     min-width: 260px;
     max-width: 320px;
     flex: 1 1 260px;
-    background: rgba(0,0,0,0.08);
+    background: rgba(0, 0, 0, 0.08);
     border-radius: 12px;
     padding: 24px 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .personal-header {
@@ -1430,8 +1577,116 @@ body.has-stars.stars-visible::before {
         flex-direction: column;
         gap: 1.5rem;
     }
+
     .personal-info {
         margin-right: 0;
         max-width: 100%;
     }
-} 
+}
+
+/* Visitor Card Styles */
+.visitor-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    min-height: 100px;
+    padding: 10px;
+    text-align: center;
+    background: var(--card-bg);
+    margin-top: 0;
+    /* Align with others */
+}
+
+.visitor-icon {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+html[data-night-mode="on"] .visitor-icon {
+    color: var(--glow-color);
+    text-shadow: 0 0 5px var(--glow-color);
+}
+
+.visitor-info-text {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.8rem;
+    line-height: 1.3;
+}
+
+.visitor-ip {
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.visitor-location {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+/* Your Info Styles */
+.your-info {
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+html[data-night-mode="on"] .your-info {
+    border-left: 2px solid rgba(255, 255, 255, 0.05);
+}
+
+@media (max-width: 900px) {
+    .your-info {
+        border-left: none;
+        border-top: 2px solid rgba(255, 255, 255, 0.1);
+        padding-top: 20px;
+    }
+}
+
+/* Fix for long IPv6 addresses */
+#visitor-ip {
+    word-break: break-all;
+    display: inline-block;
+    /* Ensures it respects container width */
+    vertical-align: top;
+}
+
+/* Center Your Info content */
+.your-info {
+    text-align: center;
+}
+
+.your-info .personal-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Centered & Colored Education Headers */
+.education-type {
+    text-align: center;
+}
+
+.type-university {
+    color: #4facfe;
+    /* Nice Blue */
+    text-shadow: 0 0 5px rgba(79, 172, 254, 0.4);
+}
+
+.type-highschool {
+    color: #43e97b;
+    /* Nice Green */
+    text-shadow: 0 0 5px rgba(67, 233, 123, 0.4);
+}
+
+.type-precollege {
+    color: #fa709a;
+    /* Nice Pink */
+    text-shadow: 0 0 5px rgba(250, 112, 154, 0.4);
+}
