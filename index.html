@@ -202,6 +202,45 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Server Stats Card -->
+            <div class="server-card">
+                <div class="server-header">Server Status <span id="server-status-dot" class="server-status">🟡</span>
+                </div>
+                <div class="server-body">
+                    <div class="server-stat">
+                        <div class="server-stat-label"><i class="fas fa-microchip"></i> CPU</div>
+                        <div class="server-stat-value" id="server-cpu">-</div>
+                        <div class="server-bar-bg">
+                            <div class="server-bar" id="server-cpu-bar"></div>
+                        </div>
+                    </div>
+                    <div class="server-stat">
+                        <div class="server-stat-label"><i class="fas fa-memory"></i> RAM</div>
+                        <div class="server-stat-value" id="server-ram">-</div>
+                        <div class="server-bar-bg">
+                            <div class="server-bar" id="server-ram-bar"></div>
+                        </div>
+                    </div>
+                    <div class="server-stat">
+                        <div class="server-stat-label"><i class="fas fa-hdd"></i> Disk</div>
+                        <div class="server-stat-value" id="server-disk">-</div>
+                        <div class="server-bar-bg">
+                            <div class="server-bar" id="server-disk-bar"></div>
+                        </div>
+                    </div>
+                    <div class="server-stat-row">
+                        <div class="server-stat-mini">
+                            <div class="server-stat-label"><i class="fas fa-clock"></i> Uptime</div>
+                            <div class="server-stat-value" id="server-uptime">-</div>
+                        </div>
+                        <div class="server-stat-mini">
+                            <div class="server-stat-label"><i class="fas fa-network-wired"></i> Network</div>
+                            <div class="server-stat-value" id="server-network">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -212,6 +251,7 @@
     <script src="js/weather.js"></script>
     <script src="js/spotify.js"></script>
     <script src="js/fitbit.js"></script>
+    <script src="js/server.js"></script>
     <script src="js/github.js"></script>
     <script src="js/visitor.js"></script>
     <script src="js/main.js"></script>
