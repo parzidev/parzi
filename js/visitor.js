@@ -75,6 +75,19 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             if (ipElement) {
                 ipElement.textContent = data.ip || 'Unknown';
+
+                // Click-to-copy IP
+                ipElement.addEventListener('click', () => {
+                    navigator.clipboard.writeText(ipElement.textContent).then(() => {
+                        const tooltip = ipElement.parentElement.querySelector('.copy-tooltip');
+                        if (tooltip) {
+                            tooltip.classList.remove('show');
+                            void tooltip.offsetWidth; // reflow to restart animation
+                            tooltip.classList.add('show');
+                            setTimeout(() => tooltip.classList.remove('show'), 1200);
+                        }
+                    });
+                });
             }
 
             if (locationElement) {

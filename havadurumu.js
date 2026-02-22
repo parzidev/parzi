@@ -1,6 +1,6 @@
 
 const apiKey = 'bc9ee4dc966affd2c33c7358511d1510';
-const city = 'arnavutköy';
+const city = 'lüleburgaz';
 
 async function getWeather() {
     try {
@@ -22,6 +22,6 @@ async function getWeather() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     getWeather(); // Sayfa yüklendiğinde hava durumu bilgisini al
 });
