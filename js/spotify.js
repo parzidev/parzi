@@ -83,7 +83,7 @@ const spotifyModule = (function () {
     // Spotify kartını güncelleme fonksiyonu
     function updateSpotifyCard(data) {
         const spotifyCard = document.querySelector('.spotify-card');
-        const albumCover = spotifyCard.querySelector('.album-cover-placeholder');
+        const albumCover = spotifyCard.querySelector('.album-cover-placeholder, .album-cover-container');
         const songTitle = spotifyCard.querySelector('.song-title');
         const songArtist = spotifyCard.querySelector('.song-artist');
         const songAlbum = spotifyCard.querySelector('.song-album');
@@ -102,8 +102,12 @@ const spotifyModule = (function () {
 
             // Albüm kapağını güncelle
             if (albumCover) {
-                // Albüm kapağı placeholder'ı bir img elementi ile değiştir
-                albumCover.innerHTML = `<img src="${data.album_image}" alt="${data.album_name}" class="album-cover">`;
+                albumCover.textContent = '';
+                const image = document.createElement('img');
+                image.src = data.album_image || '';
+                image.alt = data.album_name || data.track_name || 'Album cover';
+                image.className = 'album-cover';
+                albumCover.appendChild(image);
                 albumCover.className = 'album-cover-container';
             }
 
@@ -122,7 +126,7 @@ const spotifyModule = (function () {
 
             // Albüm kapağını varsayılan hale getir
             if (albumCover) {
-                albumCover.innerHTML = '🎵';
+                albumCover.textContent = '🎵';
                 albumCover.className = 'album-cover-placeholder';
             }
 
@@ -152,4 +156,4 @@ const spotifyModule = (function () {
         getData: function () { return spotifyData; }
     };
 
-})(); 
+})();

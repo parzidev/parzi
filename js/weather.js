@@ -7,7 +7,7 @@ const weatherModule = (function () {
     let weatherDescElement;
     let timeCardElement;
     let weatherAnimationElement;
-    let weatherAnimationInterval;
+    let weatherAnimationIntervals = [];
 
     // Modül başlatma
     function init() {
@@ -185,11 +185,12 @@ const weatherModule = (function () {
     function setWeatherAnimation(weatherMain) {
         // Önce mevcut animasyonları temizle
         weatherAnimationElement.innerHTML = '';
+        weatherAnimationElement.style.background = '';
+        weatherAnimationElement.style.backdropFilter = '';
+        weatherAnimationElement.style.backgroundColor = '';
 
         // Animasyon intervallerini temizle
-        if (weatherAnimationInterval) {
-            clearInterval(weatherAnimationInterval);
-        }
+        clearWeatherAnimationIntervals();
 
         // Hava durumuna göre animasyon ekle
         switch (weatherMain) {
@@ -254,26 +255,8 @@ const weatherModule = (function () {
         createCloud(30, 20, 8, '0px', '10px', 15);
         createCloud(40, 25, 12, '30px', '40px', 25);
         createCloud(25, 15, 10, '60px', '20px', 20);
-    }
 
-    // Bulut oluşturma yardımcı fonksiyonu
-    function createCloud(width, height, duration, top, delay, moveRange) {
-        const cloud = document.createElement('div');
-        cloud.classList.add('cloud');
-
-        // Bulut boyutu ve pozisyonu
-        cloud.style.width = `${width}px`;
-        cloud.style.height = `${height}px`;
-        cloud.style.top = top;
-
-        // Bulut animasyonu
-        cloud.style.animation = `cloud-float ${duration}s linear infinite`;
-        cloud.style.animationDelay = delay;
-
-        weatherAnimationElement.appendChild(cloud);
-
-        // Bulutu sola-sağa hareket ettiren animasyon
-        weatherAnimationInterval = setInterval(() => {
+        addWeatherAnimationInterval(() => {
             // Yeni bulut ekle
             const newCloud = document.createElement('div');
             newCloud.classList.add('cloud');
@@ -291,6 +274,23 @@ const weatherModule = (function () {
         }, 3000);
     }
 
+    // Bulut oluşturma yardımcı fonksiyonu
+    function createCloud(width, height, duration, top, delay, moveRange) {
+        const cloud = document.createElement('div');
+        cloud.classList.add('cloud');
+
+        // Bulut boyutu ve pozisyonu
+        cloud.style.width = `${width}px`;
+        cloud.style.height = `${height}px`;
+        cloud.style.top = top;
+
+        // Bulut animasyonu
+        cloud.style.animation = `cloud-float ${duration}s linear infinite`;
+        cloud.style.animationDelay = delay;
+
+        weatherAnimationElement.appendChild(cloud);
+    }
+
     // Rüzgar animasyonu oluştur
     function createWindAnimation() {
         // İlk rüzgar çizgilerini ekle
@@ -299,7 +299,7 @@ const weatherModule = (function () {
         }
 
         // Belirli aralıklarla yeni rüzgar çizgileri ekle
-        weatherAnimationInterval = setInterval(() => {
+        addWeatherAnimationInterval(() => {
             createWindLine();
         }, 500);
     }
@@ -343,7 +343,7 @@ const weatherModule = (function () {
         let opacity = 0.3;
         let increasing = true;
 
-        weatherAnimationInterval = setInterval(() => {
+        addWeatherAnimationInterval(() => {
             if (increasing) {
                 opacity += 0.05;
                 if (opacity >= 0.5) increasing = false;
@@ -364,7 +364,7 @@ const weatherModule = (function () {
         }
 
         // Belirli aralıklarla yeni damlalar ekle
-        weatherAnimationInterval = setInterval(() => {
+        addWeatherAnimationInterval(() => {
             createRaindrop();
         }, 300);
     }
@@ -377,14 +377,14 @@ const weatherModule = (function () {
         }
 
         // Belirli aralıklarla yeni kar taneleri ekle
-        weatherAnimationInterval = setInterval(() => {
+        addWeatherAnimationInterval(() => {
             createSnowflake();
         }, 500);
     }
 
     // Şimşek efekti ekle
     function addThunderEffect() {
-        setInterval(() => {
+        addWeatherAnimationInterval(() => {
             // Rastgele şimşek çak
             if (Math.random() > 0.7) {
                 weatherAnimationElement.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
@@ -393,6 +393,17 @@ const weatherModule = (function () {
                 }, 100);
             }
         }, 2000);
+    }
+
+    function addWeatherAnimationInterval(callback, delay) {
+        const intervalId = setInterval(callback, delay);
+        weatherAnimationIntervals.push(intervalId);
+        return intervalId;
+    }
+
+    function clearWeatherAnimationIntervals() {
+        weatherAnimationIntervals.forEach(clearInterval);
+        weatherAnimationIntervals = [];
     }
 
     // Yağmur damlası oluştur
@@ -504,4 +515,4 @@ function updateProfileImageByWeather(weatherMain) {
     }
 
     profileImg.src = imgSrc;
-} 
+}

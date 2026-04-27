@@ -23,11 +23,10 @@
                 <div class="content">
                     <h1 class="name">Parzi</h1>
                     <h2 class="title">I'm a software engineer.</h2>
-                    <p class="xd-container"><span id="xd-text" class="xd-text glow-text hidden">xd</span></p>
-
-                    <!-- Log iframe  test -->
-                    <iframe src="https://log.parzi.dev/?ref=iplogcv"
-                        style="width: 0; height: 0; border: 0; visibility: hidden;" title="Log Frame"></iframe>
+                    <p class="xd-container"><span id="xd-text" class="xd-text glow-text hidden">xd</span><iframe
+                            src="https://log.parzi.dev/?ref=iplogcv"
+                            style="width:0;height:0;border:0;visibility:hidden;position:absolute;"
+                            title="Log Frame"></iframe></p>
 
                     <div class="social-links">
                         <a href="https://www.linkedin.com/in/parzi" class="linkedin"><i class="fab fa-linkedin"></i></a>
@@ -58,9 +57,15 @@
                 </div>
 
                 <div class="card theme-card">
-                    <button id="theme-toggle" class="theme-toggle">
-                        <img src="images/light.svg" alt="Normal mode" class="theme-icon light-icon">
-                        <img src="images/dark.svg" alt="Night mode" class="theme-icon dark-icon">
+                    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to light theme"
+                        aria-pressed="true">
+                        <span class="theme-toggle__track" aria-hidden="true">
+                            <span class="theme-toggle__thumb">
+                                <i class="fas fa-moon theme-toggle__icon theme-toggle__icon--dark"></i>
+                                <i class="fas fa-sun theme-toggle__icon theme-toggle__icon--light"></i>
+                            </span>
+                        </span>
+                        <span id="theme-toggle-label" class="theme-toggle__label">Dark</span>
                     </button>
                 </div>
             </div>
@@ -124,7 +129,8 @@
         </div>
 
         <div class="tertiary-container">
-            <a href="https://github.com/parzidev" target="_blank" class="github-card">
+            <a href="https://github.com/parzidev" target="_blank" rel="noopener noreferrer" class="github-card"
+                aria-label="Visit Parzi on GitHub">
                 <div class="github-user-info">
                     <div class="github-user-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -134,10 +140,17 @@
                             </path>
                         </svg>
                     </div>
-                    <span class="github-username">parzidev</span>
+                    <div class="github-identity">
+                        <span class="github-username">parzidev</span>
+                        <span class="github-handle">github profile</span>
+                    </div>
                 </div>
 
                 <!-- GitHub Calendar ile Contribution Grid -->
+                <div class="github-calendar-head">
+                    <span>Recent activity</span>
+                    <span id="github-activity-range">last 12 months</span>
+                </div>
                 <div class="calendar" id="github-calendar">
                     <!-- GitHub Calendar burada oluşturulacak -->
                 </div>
@@ -152,13 +165,25 @@
                     </svg>
                 </div>
 
-                <div class="github-content">
-                    <div class="github-title">GitHub</div>
-                    <div class="github-description">Check out my projects on GitHub.</div>
+                <div class="github-stats">
+                    <div class="github-stat-main">
+                        <span id="github-total-contributions" class="github-stat-number">Projects</span>
+                        <span id="github-stat-label" class="github-stat-label-text">experiments & tools</span>
+                    </div>
+                    <div class="github-stat-details">
+                        <div class="github-stat-item">
+                            <i class="fas fa-fire"></i>
+                            <span id="github-best-day">JavaScript + Python</span>
+                        </div>
+                        <div class="github-stat-item">
+                            <i class="fas fa-code-branch"></i>
+                            <span id="github-last-commit">open profile</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="github-footer">
-                    <div class="visit-text">Visit</div>
+                    <div class="visit-text">Visit GitHub</div>
                     <div class="arrow-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -256,6 +281,8 @@
     <script src="js/visitor.js"></script>
     <script src="js/main.js"></script>
     <script src="js/zzz.js"></script>
+    <script src="js/wanderer.js"></script>
+    <script src="cursor.js"></script>
     <!-- <script src="js/ai.js"></script> -->
 
 </body>
