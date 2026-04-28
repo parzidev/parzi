@@ -79,6 +79,11 @@ html[data-night-mode="on"] {
     font-family: 'Poppins', sans-serif;
 }
 
+html,
+body {
+    overflow-x: hidden;
+}
+
 body {
     background:
         radial-gradient(circle at 18% 8%, rgba(255, 255, 255, 0.12), transparent 28%),
@@ -117,6 +122,7 @@ body::after {
     grid-template-columns: repeat(12, 1fr);
     grid-gap: 1rem;
     position: relative;
+    width: 100%;
 }
 
 .main-container {
@@ -124,6 +130,7 @@ body::after {
     display: flex;
     gap: 1rem;
     align-items: stretch;
+    min-width: 0;
 }
 
 .profile-card {
@@ -136,6 +143,7 @@ body::after {
     width: 100%;
     height: 210px;
     transition: background var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    min-width: 0;
 }
 
 .profile-image {
@@ -156,6 +164,7 @@ body::after {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    min-width: 0;
 }
 
 .name {
@@ -1654,6 +1663,7 @@ html[data-theme="dark"] .level-4 {
         flex: 0 0 auto;
         flex-direction: row;
         gap: 0.75rem;
+        position: relative;
     }
 
     .cards-container .card {
@@ -1666,7 +1676,44 @@ html[data-theme="dark"] .level-4 {
     }
 
     .theme-card {
-        min-height: 140px;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: auto;
+        min-height: auto;
+        height: auto;
+        padding: 0;
+        background: transparent;
+        box-shadow: none;
+        border: none;
+        backdrop-filter: none;
+    }
+
+    .theme-toggle {
+        width: 66px;
+        height: 32px;
+        padding: 4px;
+        border-radius: 999px;
+    }
+
+    .theme-toggle__label {
+        display: none;
+    }
+
+    .theme-toggle__track {
+        width: 58px;
+        height: 24px;
+    }
+
+    .theme-toggle__thumb {
+        width: 18px;
+        height: 18px;
+        top: 3px;
+        left: 3px;
+    }
+
+    html[data-theme="light"] .theme-toggle__thumb {
+        transform: translateX(34px);
     }
 
     .tertiary-container {
@@ -1692,9 +1739,12 @@ html[data-theme="dark"] .level-4 {
         flex-direction: column;
     }
 
-    .time-card,
-    .theme-card {
+    .time-card {
         min-height: 120px;
+    }
+
+    .theme-card {
+        min-height: auto;
     }
 
     .social-links {
