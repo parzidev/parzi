@@ -164,6 +164,22 @@
         'mod conflict detected'
     ];
 
+    const transitionMessages = [
+        'window hop',
+        'portal open',
+        'teleporting...',
+        'dimension shift',
+        'alt-tab dodge',
+        'loading next window',
+        'transfer complete',
+        'syncing position',
+        'phase shift',
+        'warp drive engaged',
+        'entering new instance',
+        'scene changed',
+        'respawned elsewhere'
+    ];
+
     const bot = document.createElement('button');
     bot.type = 'button';
     bot.className = 'wander-bot';
@@ -246,6 +262,14 @@
         state.x += (state.targetX - state.x) * 0.007;
         state.y += (state.targetY - state.y) * 0.007;
         state.updatedAt = Date.now();
+
+        const nextWindowId = getContainingWindowId(state.x, state.y);
+        if (nextWindowId && nextWindowId !== state.windowId) {
+            state.windowId = nextWindowId;
+            setTransitionMessage();
+        } else if (!state.windowId) {
+            state.windowId = nextWindowId || state.windowId;
+        }
     }
 
     function setRandomTarget() {
@@ -289,6 +313,11 @@
         writeState(state);
     }
 
+    function setTransitionMessage() {
+        state.message = transitionMessages[Math.floor(Math.random() * transitionMessages.length)];
+        state.messageUntil = Date.now() + 1200;
+    }
+
     function randomBetween(min, max) {
         return Math.random() * Math.max(0, max - min) + min;
     }
@@ -307,6 +336,7 @@
             lastTargetAt: performance.now(),
             updatedAt: Date.now(),
             ownerId: instanceId,
+            windowId: instanceId,
             message: '',
             messageUntil: 0
         };
@@ -364,6 +394,16 @@
         const windows = getActiveWindows();
         if (!windows.length) return getCurrentWindowShape();
         return windows[Math.floor(Math.random() * windows.length)];
+    }
+
+    function getContainingWindowId(worldX, worldY) {
+        const windows = getActiveWindows();
+        for (const win of windows) {
+            if (worldX >= win.x && worldX <= win.x + win.w && worldY >= win.y && worldY <= win.y + win.h) {
+                return win.id;
+            }
+        }
+        return '';
     }
 
     function getWorldBounds() {
