@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Bad Apple!!</title>
+    <link id="favicon" rel="icon" type="image/png" href="images/1.png">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: black;
+        }
+        #bg-video {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+            object-fit: cover;
+        }
+        #loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: white;
+            font-family: monospace;
+            z-index: 10;
+            text-align: center;
+        }
+        #start-button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 20px;
+            cursor: pointer;
+            background: white;
+            color: black;
+            border: none;
+            border-radius: 8px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loader">
+        <button id="start-button">Start with Sound</button>
+    </div>
+    <video loop id="bg-video">
+        <source src="bad_apple.mp4" type="video/mp4">
+    </video>
+
+    <script src="frames.js"></script>
+    <script>
+        const max = 939;
+        const loader = document.getElementById('loader');
+        const video = document.getElementById('bg-video');
+
+        function startFaviconAnimation() {
+            let i = 0;
+            setInterval(() => {
+                let oldFavicon = document.getElementById("favicon");
+                let newFavicon = document.createElement("link");
+                newFavicon.id = "favicon";
+                newFavicon.rel = "icon";
+                newFavicon.type = "image/png";
+                
+                if (frames && frames[i]) {
+                    newFavicon.href = frames[i];
+                } else {
+                    newFavicon.href = `images/${i + 1}.png`;
+                }
+                
+                document.head.removeChild(oldFavicon);
+                document.head.appendChild(newFavicon);
+
+                i++;
+                if (i >= max) i = 0;
+            }, 250);
+        }
+
+        const startBtn = document.getElementById('start-button');
+        startBtn.onclick = () => {
+            loader.style.display = 'none';
+            video.muted = false;
+            video.play();
+            startFaviconAnimation();
+        };
+    </script>
+
+</body>
+
+</html>
