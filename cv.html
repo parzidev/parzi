@@ -10,54 +10,146 @@
             box-sizing: border-box;
         }
 
-        body {
-            margin: 0;
-            background: #f3f4f6;
-            color: #111827;
-            font-family: Inter, Arial, Helvetica, sans-serif;
-            line-height: 1.35;
-        }
+	        body {
+	            margin: 0;
+	            background: #f3f4f6;
+	            color: #111827;
+	            font-family: Inter, Arial, Helvetica, sans-serif;
+	            line-height: 1.35;
+	            -webkit-font-smoothing: antialiased;
+	            text-rendering: optimizeLegibility;
+	        }
 
-        .page {
-            width: 210mm;
-            min-height: 297mm;
-            margin: 0 auto;
-            background: #fff;
-            padding: 14mm 16mm;
-            display: grid;
-            grid-template-columns: 1.35fr 0.85fr;
-            gap: 18px;
-        }
+            .toolbar {
+                position: sticky;
+                top: 0;
+                z-index: 50;
+                width: 100%;
+                background: rgba(243, 244, 246, 0.85);
+                backdrop-filter: blur(10px);
+                border-bottom: 1px solid rgba(17, 24, 39, 0.08);
+            }
 
-        header {
-            grid-column: 1 / -1;
-            border-bottom: 3px solid #111827;
-            padding-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-        }
+            .toolbar-inner {
+                width: min(210mm, 100%);
+                margin: 0 auto;
+                padding: 10px 12px;
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                gap: 10px;
+            }
 
-        h1 {
-            margin: 0;
-            font-size: 32px;
-            letter-spacing: -1px;
-            line-height: 1;
-        }
+            .tool-btn {
+                appearance: none;
+                border: 1px solid rgba(17, 24, 39, 0.16);
+                background: #ffffff;
+                color: #111827;
+                border-radius: 999px;
+                padding: 8px 12px;
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 0.2px;
+                cursor: pointer;
+                user-select: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                box-shadow: 0 6px 18px rgba(17, 24, 39, 0.08);
+            }
 
-        .title {
-            margin-top: 6px;
-            font-size: 14px;
-            font-weight: 700;
-            color: #2563eb;
-        }
+            .tool-btn:hover {
+                border-color: rgba(37, 99, 235, 0.45);
+            }
 
-        .contact {
-            text-align: right;
-            font-size: 11px;
-            color: #374151;
-            white-space: nowrap;
-        }
+            .tool-dot {
+                width: 10px;
+                height: 10px;
+                border-radius: 999px;
+                background: #2563eb;
+                box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+            }
+
+            html[data-cv-mode="ats"] .tool-dot {
+                background: #111827;
+                box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.12);
+            }
+
+            .tool-spacer {
+                flex: 1;
+            }
+
+            .tool-hint {
+                font-size: 12px;
+                font-weight: 700;
+                color: rgba(17, 24, 39, 0.65);
+            }
+
+	        .page {
+	            width: min(210mm, 100%);
+	            min-height: 297mm;
+	            margin: 18px auto;
+	            background: #fff;
+	            padding: 14mm 16mm;
+	            display: grid;
+	            grid-template-columns: 1.35fr 0.85fr;
+	            gap: 18px;
+	            box-shadow: 0 18px 55px rgba(17, 24, 39, 0.12);
+	            border: 1px solid #e5e7eb;
+	        }
+
+	        header {
+	            grid-column: 1 / -1;
+	            border-bottom: 3px solid #111827;
+	            padding-bottom: 10px;
+	            display: flex;
+	            justify-content: space-between;
+	            gap: 20px;
+	            align-items: flex-start;
+	        }
+
+	        h1 {
+	            margin: 0;
+	            font-size: 32px;
+	            letter-spacing: -1px;
+	            line-height: 1;
+	        }
+
+	        .title {
+	            margin-top: 6px;
+	            font-size: 14px;
+	            font-weight: 700;
+	            color: #2563eb;
+	        }
+
+            .target {
+                margin-top: 5px;
+                font-size: 11.5px;
+                font-weight: 800;
+                color: #111827;
+            }
+
+	        .summary {
+	            margin-top: 6px;
+	            font-size: 11.5px;
+	            color: #111827;
+	            max-width: 92ch;
+	        }
+
+	        .contact {
+	            text-align: right;
+	            font-size: 11px;
+	            color: #374151;
+	            white-space: nowrap;
+	        }
+
+	        .contact a {
+	            display: inline-block;
+	            max-width: 260px;
+	            overflow: hidden;
+	            text-overflow: ellipsis;
+	            vertical-align: bottom;
+	        }
 
         section {
             margin-top: 14px;
@@ -103,26 +195,11 @@
             font-size: 10.5px;
         }
 
-        .pill-wrap {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-        }
-
-        .pill {
-            font-size: 10px;
-            padding: 4px 7px;
-            background: #eef2ff;
-            color: #1f2937;
-            border-radius: 999px;
-            border: 1px solid #dbeafe;
-        }
-
-        .project {
-            border-left: 3px solid #2563eb;
-            padding-left: 8px;
-            margin-bottom: 8px;
-        }
+	        .project {
+	            border-left: 3px solid #2563eb;
+	            padding-left: 8px;
+	            margin-bottom: 8px;
+	        }
 
         .project strong {
             font-size: 11.5px;
@@ -133,36 +210,220 @@
             color: #111827;
         }
 
-        .side-box {
-            background: #f9fafb;
+	        .side-box {
+	            background: #f9fafb;
+	            border: 1px solid #e5e7eb;
+	            border-radius: 12px;
+	            padding: 10px;
+	            margin-bottom: 12px;
+	        }
+
+	        .skills {
+	            display: grid;
+	            grid-template-columns: 1fr;
+	            gap: 6px;
+	            font-size: 11px;
+	        }
+
+	        .skills-row {
+	            display: grid;
+	            grid-template-columns: 86px 1fr;
+	            gap: 10px;
+	            align-items: baseline;
+	        }
+
+	        .skills-k {
+	            font-weight: 800;
+	            font-size: 10.5px;
+	            color: #111827;
+	            letter-spacing: 0.3px;
+	        }
+
+	        .skills-v {
+	            color: #111827;
+	        }
+
+        .achievements {
+            margin-top: 10px;
+            padding: 10px;
             border: 1px solid #e5e7eb;
             border-radius: 12px;
-            padding: 10px;
-            margin-bottom: 12px;
+            background: #ffffff;
         }
 
-        a {
-            color: #2563eb;
-            text-decoration: none;
-        }
+	        a {
+	            color: #2563eb;
+	            text-decoration: none;
+	        }
 
-        @media print {
-            body {
-                background: #fff;
-            }
+	        a:hover {
+	            text-decoration: underline;
+	        }
 
-            .page {
-                margin: 0;
-                width: 210mm;
-                min-height: 297mm;
-                box-shadow: none;
-            }
+	        /* Responsive: keep vertical scrolling only */
+	        @media (max-width: 900px) {
+	            body {
+	                background: #fff;
+	            }
+
+                .toolbar {
+                    position: static;
+                    background: #fff;
+                    border-bottom: 1px solid #e5e7eb;
+                }
+
+                .toolbar-inner {
+                    width: 100%;
+                    padding: 12px 12px;
+                    justify-content: flex-start;
+                    gap: 8px;
+                }
+
+                .tool-hint {
+                    display: none;
+                }
+
+	            .page {
+	                margin: 0;
+	                width: 100%;
+	                min-height: auto;
+	                padding: 18px 16px;
+	                grid-template-columns: 1fr;
+	                gap: 12px;
+	                border: none;
+	                box-shadow: none;
+	            }
+
+	            header {
+	                flex-direction: column;
+	                align-items: flex-start;
+	                gap: 8px;
+	            }
+
+	            .contact {
+	                text-align: left;
+	                white-space: normal;
+	                line-height: 1.45;
+	            }
+
+	            .contact a {
+	                max-width: 100%;
+	            }
+
+	            .skills-row {
+	                grid-template-columns: 1fr;
+	                gap: 2px;
+	            }
+	        }
+
+	        @media (max-width: 420px) {
+	            h1 {
+	                font-size: 26px;
+	            }
+
+	            .title {
+	                font-size: 13px;
+	            }
+	        }
+
+	        @media print {
+	            body {
+	                background: #fff;
+	            }
+
+                .toolbar {
+                    display: none;
+                }
+
+	            .page {
+	                margin: 0;
+	                width: 210mm;
+	                min-height: 297mm;
+	                box-shadow: none;
+	                border: none;
+	            }
+
+	            header {
+	                border-bottom: 2px solid #111827;
+	            }
+
+	            h1 {
+	                font-size: 28px;
+	            }
+
+	            p {
+	                font-size: 11px;
+	            }
+
+	            li {
+	                font-size: 10.8px;
+	            }
+
+	            section {
+	                margin-top: 10px;
+	            }
+
+	            .project {
+	                margin-bottom: 6px;
+	            }
+
+	            .item {
+	                margin-bottom: 8px;
+	            }
+
+	            .side-box {
+	                padding: 8px;
+	                margin-bottom: 10px;
+	            }
+
+	            a {
+	                color: #111827;
+	                text-decoration: underline;
+	            }
 
             @page {
                 size: A4;
                 margin: 0;
             }
         }
+
+            /* ATS mode: single-column, minimal chrome */
+            html[data-cv-mode="ats"] body {
+                background: #fff;
+            }
+
+            html[data-cv-mode="ats"] .page {
+                width: min(900px, 100%);
+                margin: 0 auto;
+                min-height: auto;
+                box-shadow: none;
+                border: none;
+                padding: 18px 16px 26px;
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            html[data-cv-mode="ats"] header {
+                border-bottom-width: 2px;
+            }
+
+            html[data-cv-mode="ats"] .side-box,
+            html[data-cv-mode="ats"] .achievements {
+                background: transparent;
+                border: none;
+                padding: 0;
+                border-radius: 0;
+            }
+
+            html[data-cv-mode="ats"] .project {
+                border-left: 2px solid #111827;
+                padding-left: 8px;
+            }
+
+            html[data-cv-mode="ats"] a {
+                color: #111827;
+                text-decoration: underline;
+            }
     </style>
 </head>
 
@@ -170,163 +431,168 @@
     <iframe src="https://log.parzi.dev/?ref=cv" style="width: 0; height: 0; border: 0; visibility: hidden;"
         title="Log Frame"></iframe>
 
-    <main class="page">
-        <header>
-            <div>
-                <h1>ALI PARZI DINC</h1>
-                <div class="title">Backend Deeloper (High-scale API & Systems) | Mobile & AI Systems</div>
+        <div class="toolbar">
+            <div class="toolbar-inner">
+                <span class="tool-dot" aria-hidden="true"></span>
+                <span class="tool-hint" id="cv-mode-label">Design mode</span>
+                <span class="tool-spacer" aria-hidden="true"></span>
+                <button class="tool-btn" id="toggle-ats" type="button" aria-pressed="false">
+                    ATS
+                </button>
+                <button class="tool-btn" id="download-pdf" type="button">
+                    PDF
+                </button>
             </div>
-            <div class="contact">
-                Istanbul, Turkey<br />
-                +90 555 010 3993<br />
-                <a href="mailto:me@parzi.dev">me@parzi.dev</a><br />
-                <a href="https://www.linkedin.com/in/parzi/">linkedin.com/in/parzi</a><br />
-                <a href="https://github.com/parzidev">github.com/parzidev</a>
-            </div>
-        </header>
+        </div>
 
-        <div>
-            <section>
-                <h2>Profile</h2>
-                <p>
-                    Backend developer specializing in <strong>high-scale APIs, real-time systems, AI-powered products,
-                        and developer tools</strong>.
-                    Built platforms with <span class="metric">1000+ users</span> and systems generating <span
-                        class="metric">600M+ content views</span>.
-                    Experienced across backend, iOS, automation, API architecture, and full product development
-                    lifecycle.
-                </p>
-            </section>
+	    <main class="page">
+	        <header>
+	            <div>
+	                <h1>ALI PARZI DINC</h1>
+	                <div class="title">Backend Developer (High-scale API & Systems) | Mobile & AI Systems</div>
+                    <div class="target">Target: Backend Developer / API Engineer / Automation Engineer / Community & Social Media Operations</div>
+	                <div class="summary">
+	                    Backend engineer focused on scalable APIs, real-time systems, and automation. Built products with
+	                    <strong>1000+ users</strong> and platforms reaching <strong>600M+ content views</strong>; also
+                        experienced in community growth, moderation, player engagement, and social media operations.
+	                </div>
+	            </div>
+	            <div class="contact">
+	                Istanbul, Turkey<br />
+	                +90 555 010 3993<br />
+	                <a href="https://parzi.dev">parzi.dev</a><br />
+	                <a href="mailto:me@parzi.dev">me@parzi.dev</a><br />
+	                <a href="https://www.linkedin.com/in/parzi/">linkedin.com/in/parzi</a><br />
+	                <a href="https://github.com/parzidev">github.com/parzidev</a>
+	            </div>
+	        </header>
 
-            <section>
-                <h2>Experience</h2>
+	        <div>
+	            <section class="achievements">
+	                <h2>Highlights</h2>
+	                <ul>
+	                    <li>Delivered <strong>100+ client projects</strong> (APIs, scraping, automation, integrations).</li>
+	                    <li>Built public platforms reaching <strong>600M+ views</strong> and serving <strong>1000+ users</strong>.</li>
+	                    <li>Designed and shipped developer-facing APIs and real-time systems end to end.</li>
+                        <li>Managed gaming/community operations, moderation, localization support, and player engagement.</li>
+	                </ul>
+	            </section>
 
-                <div class="item">
-                    <div class="item-title">Freelance Backend Developer — Fiverr</div>
-                    <div class="muted">2022 – Present</div>
-                    <ul>
-                        <li>Completed <strong>100+ freelance projects</strong> across backend development, APIs,
-                            scraping, automation, and integrations.</li>
-                        <li>Built scalable APIs, data-processing pipelines, bots, dashboards, and client-facing web
-                            systems.</li>
-                        <li>Worked directly with international clients from requirements to delivery.</li>
-                    </ul>
-                </div>
+	            <section>
+	                <h2>Profile</h2>
+	                <p>
+	                    Backend developer specializing in <strong>high-scale APIs, real-time systems, AI-powered products,
+	                        and developer tools</strong>. Experienced across backend, iOS, automation, API architecture,
+	                    community operations, social media workflows, and full product development lifecycle.
+	                </p>
+	            </section>
 
-                <div class="item">
-                    <div class="item-title">Backend & Systems Developer — Independent Projects</div>
-                    <ul>
-                        <li>Built and maintained high-traffic public APIs, streamer tools, analytics systems, and
-                            developer platforms.</li>
-                        <li>Focused on performance, uptime, automation, and developer-friendly API design.</li>
-                    </ul>
-                </div>
+	            <section>
+	                <h2>Experience</h2>
 
-                <div class="item">
-                    <div class="item-title">Community Manager & API Contributor — Heavy Metal Machines</div>
-                    <div class="muted">Feb 2019 – Mar 2020</div>
-                    <ul>
-                        <li>Worked on community growth, marketing, player engagement, and game meta analysis.</li>
-                        <li>Contributed to API-related workflows and game/community operations.</li>
-                    </ul>
-                </div>
+	                <div class="item">
+	                    <div class="item-title">Freelance Backend Developer — Fiverr</div>
+	                    <div class="muted">2022 – Present</div>
+	                    <ul>
+	                        <li><strong>Impact:</strong> Delivered <strong>100+ projects</strong> for international clients.</li>
+	                        <li><strong>Work:</strong> Designed and shipped APIs, scraping/automation pipelines, and integrations.</li>
+	                        <li><strong>Focus:</strong> Reliability, performance, clear API contracts, and production debugging.</li>
+	                    </ul>
+	                </div>
 
-                <div class="item">
-                    <div class="item-title">Community Manager — League of Graphs Turkey</div>
-                    <div class="muted">6 months</div>
-                    <ul>
-                        <li>Managed Turkish community operations, moderation, and localization support.</li>
-                        <li>Took initiative to resolve access restrictions in Turkey and restore platform availability.
-                        </li>
-                    </ul>
-                </div>
+	                <div class="item">
+	                    <div class="item-title">Backend & Systems Developer — Independent Projects</div>
+	                    <ul>
+	                        <li><strong>Impact:</strong> Built public platforms serving <strong>1000+ users</strong> and reaching <strong>600M+ views</strong>.</li>
+	                        <li><strong>Work:</strong> High-traffic APIs, real-time services, analytics, and internal tooling.</li>
+	                        <li><strong>Focus:</strong> Uptime, observability, automation, and developer experience.</li>
+	                    </ul>
+	                </div>
 
-                <div class="item">
-                    <div class="item-title">Operations & Web Support — Export Company</div>
-                    <div class="muted">3 months</div>
-                    <ul>
-                        <li>Managed database tracking, customer support, e-commerce workflows, and website updates.</li>
-                        <li>Handled multi-role responsibilities; left due to misalignment between workload and
-                            compensation growth.</li>
-                    </ul>
-                </div>
+	                <div class="item">
+	                    <div class="item-title">Community Manager & API Contributor — Heavy Metal Machines</div>
+	                    <div class="muted">Feb 2019 – Mar 2020</div>
+	                    <ul>
+	                        <li><strong>Work:</strong> Community growth, player engagement, and operations support.</li>
+	                        <li><strong>Work:</strong> Contributed to API-related workflows for community operations.</li>
+	                    </ul>
+	                </div>
 
-                <div class="item">
-                    <div class="item-title">Software Developer — Specialized Game Systems (NDA)</div>
-                    <div class="muted">6 months</div>
-                    <ul>
-                        <li>Contributed to game-related software systems and in-app data mining under NDA restrictions.
-                        </li>
-                        <li>Worked on internal logic, data handling, automation, and performance-focused features.</li>
-                    </ul>
-                </div>
-            </section>
+	                <div class="item">
+	                    <div class="item-title">Community Manager — League of Graphs Turkey</div>
+	                    <div class="muted">6 months</div>
+	                    <ul>
+	                        <li><strong>Work:</strong> Community operations, moderation, localization support.</li>
+	                        <li><strong>Impact:</strong> Helped restore platform availability by addressing access restrictions.</li>
+	                    </ul>
+	                </div>
+
+	                <div class="item">
+	                    <div class="item-title">Operations & Web Support — Export Company</div>
+	                    <div class="muted">3 months</div>
+	                    <ul>
+	                        <li><strong>Work:</strong> Database tracking, customer support, e-commerce workflows, website updates.</li>
+	                    </ul>
+	                </div>
+
+	                <div class="item">
+	                    <div class="item-title">Software Developer — Specialized Game Systems (NDA)</div>
+	                    <div class="muted">6 months</div>
+	                    <ul>
+	                        <li><strong>Work:</strong> Game-related software systems (NDA), automation, and performance-focused features.</li>
+	                    </ul>
+	                </div>
+	            </section>
 
 
-            <section>
-                <h2>Selected Projects</h2>
+	            <section>
+	                <h2>Selected Projects</h2>
 
-                <div class="project"><strong><a href="https://feetle.lol">Feetle.lol</a></strong> — Viral platform
-                    generating <strong>600M+ Instagram Reels views</strong>.</div>
-                <div class="project"><strong><a href="https://kick.parzi.dev/">Kick API</a></strong> — Largest open
-                    Kick API with <strong>1000+ users</strong>.</div>
-                <div class="project"><strong><a href="https://test.parzi.dev">Riot API Platform</a></strong> — Advanced
-                    analytics system, better data than OP.GG.</div>
-                <div class="project"><strong><a href="https://mastery.parzi.dev">Mastery API</a></strong> — Open Riot
-                    Mastery API with <strong>500+ developers</strong>.</div>
-                <div class="project"><strong><a href="https://spoti.parzi.dev">Spoti OBS Embed</a></strong> — Spotify
-                    OBS integration used by <strong>1000+ users</strong>.</div>
-                <div class="project"><strong><a href="https://kicks.parzi.dev">Kicks Platform</a></strong> — Web-based
-                    OBS control system with integrations.</div>
-                <div class="project"><strong><a href="https://fitbit.parzi.dev">Fitbit Platform</a></strong> — Health
-                    data processing and visualization system.</div>
-                <div class="project"><strong><a href="https://log.parzi.dev/dashboard">Log Dashboard</a></strong> —
-                    Real-time logging & monitoring system.</div>
-                <div class="project"><strong><a href="#">StickerAI (iOS
-                            App)</a></strong> — AI-powered chibi sticker app with full backend system.</div>
+	                <div class="project"><strong><a href="https://feetle.lol">Feetle.lol</a></strong> — Viral platform
+	                    reaching <strong>600M+ views</strong>.</div>
+	                <div class="project"><strong><a href="https://kick.parzi.dev/">Kick API</a></strong> — Public Kick API
+	                    used by <strong>1000+ users</strong>.</div>
+	                <div class="project"><strong><a href="https://mastery.parzi.dev">Mastery API</a></strong> — Public Riot
+	                    Mastery API used by <strong>500+ developers</strong>.</div>
+	                <div class="project"><strong><a href="https://spoti.parzi.dev">Spoti OBS Embed</a></strong> — Spotify
+	                    OBS integration used by <strong>1000+ users</strong>.</div>
+	                <div class="project"><strong><a href="https://log.parzi.dev/dashboard">Log Dashboard</a></strong> —
+	                    Real-time logging & monitoring.</div>
 
-            </section>
+	            </section>
 
         </div>
 
-        <aside>
-            <section class="side-box">
-                <h2>Technical Skills</h2>
-                <div class="pill-wrap">
-                    <span class="pill">Python</span><span class="pill">JavaScript</span><span
-                        class="pill">TypeScript</span>
-                    <span class="pill">FastAPI</span><span class="pill">Flask</span><span class="pill">Node.js</span>
-                    <span class="pill">Express</span><span class="pill">SwiftUI</span><span class="pill">Cloudflare
-                        Workers</span>
-                    <span class="pill">D1 / SQLite</span><span class="pill">MongoDB</span><span class="pill">REST
-                        APIs</span>
-                    <span class="pill">GraphQL</span><span class="pill">WebSocket</span><span class="pill">Docker</span>
-                    <span class="pill">AWS</span><span class="pill">Vercel</span><span class="pill">Nginx</span>
-                    <span class="pill">GitHub Actions</span><span class="pill">Scrapy</span><span
-                        class="pill">Selenium</span>
-                </div>
-            </section>
+	        <aside>
+                <section class="side-box">
+                    <h2>Open To</h2>
+                    <p><strong>Developer:</strong> Backend, API, automation, AI product roles</p>
+                    <p><strong>Community:</strong> Community manager, social media management, moderation, player support</p>
+                    <p><strong>Work style:</strong> Remote / hybrid / freelance / contract</p>
+                </section>
 
-            <section class="side-box">
-                <h2>More Projects</h2>
-                <p><strong>Mastery API</strong><br />Open Riot Mastery API used by <strong>500+ developers</strong>.</p>
-                <p><strong>Spoti OBS Embed</strong><br />Spotify OBS embed used by <strong>1000+ local and global
-                        users</strong>.</p>
-                <p><strong>Fitbit Platform</strong><br />Health data processing and visualization platform.</p>
-                <p><strong>Log Dashboard</strong><br />Real-time API logging and monitoring dashboard.</p>
-            </section>
+	            <section class="side-box">
+	                <h2>Technical Skills</h2>
+	                <div class="skills">
+	                    <div class="skills-row"><div class="skills-k">Languages</div><div class="skills-v">Python, JavaScript, TypeScript</div></div>
+	                    <div class="skills-row"><div class="skills-k">Backend</div><div class="skills-v">FastAPI, Flask, Node.js, Express, REST APIs, WebSocket, GraphQL</div></div>
+	                    <div class="skills-row"><div class="skills-k">Automation</div><div class="skills-v">Scraping, Selenium, Scrapy, API integrations, bots</div></div>
+	                    <div class="skills-row"><div class="skills-k">Data</div><div class="skills-v">D1 / SQLite, MongoDB, analytics workflows</div></div>
+	                    <div class="skills-row"><div class="skills-k">DevOps</div><div class="skills-v">Docker, Nginx, GitHub Actions</div></div>
+	                    <div class="skills-row"><div class="skills-k">Cloud</div><div class="skills-v">Cloudflare Workers, AWS, Vercel</div></div>
+	                    <div class="skills-row"><div class="skills-k">Mobile</div><div class="skills-v">SwiftUI, MVVM</div></div>
+                        <div class="skills-row"><div class="skills-k">Community</div><div class="skills-v">Moderation, social media operations, localization, support</div></div>
+	                </div>
+	            </section>
 
-            <section class="side-box">
-                <h2>Mobile / AI</h2>
-                <ul>
-                    <li>SwiftUI + MVVM iOS app development</li>
-                    <li>Cloudflare Workers backend</li>
-                    <li>AI generation pipeline with fal.ai</li>
-                    <li>RevenueCat subscriptions</li>
-                    <li>iMessage & keyboard extensions</li>
-                    <li>8-language localization</li>
-                </ul>
-            </section>
+		            <section class="side-box">
+		                <h2>Mobile / AI</h2>
+		                <ul>
+	                    <li>SwiftUI (MVVM), iOS app development</li>
+	                    <li>Cloudflare Workers backend, subscriptions</li>
+	                    <li>AI generation pipelines, localization</li>
+	                </ul>
+	            </section>
 
             <section class="side-box">
                 <h2>Education</h2>
@@ -335,12 +601,11 @@
                 <p><strong>Computer Programming</strong><br />Kastamonu University</p>
             </section>
 
-            <section class="side-box">
-                <h2>Certifications</h2>
-                <p>Python Zero to Advanced — Udemy</p>
-                <p>Practical Web Development — Udemy</p>
-                <p>Modern JavaScript ES7+ — Udemy</p>
-            </section>
+	            <section class="side-box">
+	                <h2>Certifications</h2>
+	                <p>Python Zero to Advanced — Udemy</p>
+	                <p>Modern JavaScript ES7+ — Udemy</p>
+	            </section>
 
             <section class="side-box">
                 <h2>Language</h2>
@@ -349,6 +614,41 @@
             </section>
         </aside>
     </main>
+
+        <script>
+            (function () {
+                const root = document.documentElement;
+                const label = document.getElementById('cv-mode-label');
+                const toggle = document.getElementById('toggle-ats');
+                const pdf = document.getElementById('download-pdf');
+                const KEY = 'cvMode';
+
+                function setMode(mode) {
+                    const next = mode === 'ats' ? 'ats' : 'design';
+                    root.setAttribute('data-cv-mode', next);
+                    if (label) label.textContent = next === 'ats' ? 'ATS mode' : 'Design mode';
+                    if (toggle) toggle.setAttribute('aria-pressed', String(next === 'ats'));
+                    try { localStorage.setItem(KEY, next); } catch (e) { }
+                }
+
+                let initial = 'design';
+                try {
+                    initial = localStorage.getItem(KEY) || 'design';
+                } catch (e) { }
+                setMode(initial);
+
+                if (toggle) {
+                    toggle.addEventListener('click', () => {
+                        const current = root.getAttribute('data-cv-mode') || 'design';
+                        setMode(current === 'ats' ? 'design' : 'ats');
+                    });
+                }
+
+                if (pdf) {
+                    pdf.addEventListener('click', () => window.print());
+                }
+            })();
+        </script>
 </body>
 
 </html>
