@@ -4,13 +4,25 @@ const themeModule = (function() {
     let themeToggle;
     let themeToggleLabel;
     let xdText;
+    let themeColorMeta;
     let currentMode = 'dark'; // default mode
+    const browserChrome = {
+        dark: {
+            favicon: 'images/code-white.png',
+            themeColor: '#1a0a2e'
+        },
+        light: {
+            favicon: 'images/code.png',
+            themeColor: '#f5f0ff'
+        }
+    };
 
     // Modül başlatma
     function init() {
         themeToggle = document.getElementById('theme-toggle');
         themeToggleLabel = document.getElementById('theme-toggle-label');
         xdText = document.getElementById('xd-text');
+        themeColorMeta = document.getElementById('theme-color-meta');
 
         if (!themeToggle) {
             console.error('Tema değiştirme öğeleri bulunamadı.');
@@ -51,6 +63,20 @@ const themeModule = (function() {
         if (themeToggleLabel) {
             themeToggleLabel.textContent = currentMode === 'dark' ? 'Dark' : 'Light';
         }
+
+        updateBrowserChrome(currentMode);
+    }
+
+    function updateBrowserChrome(mode) {
+        const chrome = browserChrome[mode] || browserChrome.dark;
+
+        if (themeColorMeta) {
+            themeColorMeta.setAttribute('content', chrome.themeColor);
+        }
+
+        document.querySelectorAll('link[rel~="icon"]').forEach(iconLink => {
+            iconLink.setAttribute('href', chrome.favicon);
+        });
     }
 
     function normalizeMode(mode) {

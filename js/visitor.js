@@ -78,14 +78,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Click-to-copy IP
                 ipElement.addEventListener('click', () => {
-                    navigator.clipboard.writeText(ipElement.textContent).then(() => {
-                        const tooltip = ipElement.parentElement.querySelector('.copy-tooltip');
-                        if (tooltip) {
-                            tooltip.classList.remove('show');
-                            void tooltip.offsetWidth; // reflow to restart animation
-                            tooltip.classList.add('show');
-                            setTimeout(() => tooltip.classList.remove('show'), 1200);
-                        }
+                    const ipText = ipElement.textContent.trim();
+                    if (!ipText || ipText === 'Loading...' || ipText === 'Error') return;
+
+                    copyText(ipText).then(() => {
+                        showCopyFeedback(ipElement);
+                    }).catch(error => {
+                        console.warn('IP could not be copied:', error.message);
                     });
                 });
             }
@@ -126,3 +125,46 @@ document.addEventListener('DOMContentLoaded', () => {
             if (ispElement) ispElement.textContent = 'Error';
         });
 });
+
+function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text);
+    }
+
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.setAttribute('readonly', '');
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+
+    return new Promise((resolve, reject) => {
+        try {
+            document.execCommand('copy') ? resolve() : reject(new Error('Copy failed'));
+        } catch (error) {
+            reject(error);
+        } finally {
+            textarea.remove();
+        }
+    });
+}
+
+function showCopyFeedback(ipElement) {
+    const tooltip = ipElement.parentElement.querySelector('.copy-tooltip');
+    ipElement.classList.add('copied');
+
+    if (tooltip) {
+        tooltip.classList.remove('show');
+        void tooltip.offsetWidth; // reflow to restart animation
+        tooltip.classList.add('show');
+    }
+
+    window.clearTimeout(ipElement.copyFeedbackTimeout);
+    ipElement.copyFeedbackTimeout = window.setTimeout(() => {
+        ipElement.classList.remove('copied');
+        if (tooltip) {
+            tooltip.classList.remove('show');
+        }
+    }, 1200);
+}

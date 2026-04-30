@@ -65,6 +65,10 @@
             .catch(() => {
                 const statusEl = document.getElementById('server-status-dot');
                 if (statusEl) statusEl.textContent = '🔴';
+                ['server-cpu', 'server-ram', 'server-disk', 'server-uptime', 'server-network'].forEach(id => {
+                    const valueEl = document.getElementById(id);
+                    if (valueEl) valueEl.textContent = 'N/A';
+                });
             });
     }
 

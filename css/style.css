@@ -235,15 +235,55 @@ body::after {
 }
 
 .social-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
     font-size: 26px;
-    transition: all 0.3s ease;
+    transition: transform 0.22s ease, opacity 0.22s ease, filter 0.22s ease;
     opacity: 0.8;
     color: var(--text-color);
+    transform-origin: center;
+    will-change: transform;
 }
 
 .social-links a:hover {
-    transform: translateY(-5px);
+    transform: translateY(-5px) scale(1.08) rotate(-2deg);
+    filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.18));
     opacity: 1;
+}
+
+.social-links a:active {
+    transform: translateY(-2px) scale(0.92);
+}
+
+.social-links a:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.75);
+    outline-offset: 5px;
+    border-radius: 50%;
+}
+
+html[data-theme="light"] .social-links a:focus-visible {
+    outline-color: rgba(36, 20, 51, 0.55);
+}
+
+.social-links a:hover i {
+    animation: social-pop 0.28s ease;
+}
+
+@keyframes social-pop {
+    0% {
+        transform: scale(1);
+    }
+
+    45% {
+        transform: scale(1.16);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 /* Social media icon colors for dark mode */
@@ -336,7 +376,7 @@ html[data-night-mode="on"] .instagram i {
 html[data-night-mode="on"] .social-links a:hover {
     text-shadow: 0 0 15px currentColor;
     opacity: 1;
-    transform: translateY(-8px);
+    transform: translateY(-8px) scale(1.08) rotate(-2deg);
 }
 
 .cards-container {
@@ -1833,6 +1873,52 @@ body.has-stars.stars-visible::before {
     width: 60%;
 }
 
+.loading-value {
+    --skeleton-width: 7.5ch;
+    display: inline-block;
+    width: var(--skeleton-width);
+    max-width: 100%;
+    color: transparent !important;
+    border-radius: 4px;
+    background: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.08),
+            rgba(255, 255, 255, 0.22),
+            rgba(255, 255, 255, 0.08));
+    background-size: 220% 100%;
+    animation: skeleton-shimmer 1.25s ease-in-out infinite;
+    vertical-align: middle;
+}
+
+.loading-value--short {
+    --skeleton-width: 6ch;
+}
+
+.loading-value--medium {
+    --skeleton-width: 10ch;
+}
+
+.loading-value--long {
+    --skeleton-width: 14ch;
+}
+
+.loading-value--ip {
+    --skeleton-width: 12ch;
+}
+
+.copyable.loading-value {
+    pointer-events: none;
+    border-color: transparent;
+    box-shadow: none;
+}
+
+html[data-theme="light"] .loading-value {
+    background: linear-gradient(90deg,
+            rgba(36, 20, 51, 0.06),
+            rgba(36, 20, 51, 0.16),
+            rgba(36, 20, 51, 0.06));
+    background-size: 220% 100%;
+}
+
 @keyframes skeleton-loading {
     0% {
         opacity: 0.6;
@@ -1844,6 +1930,16 @@ body.has-stars.stars-visible::before {
 
     100% {
         opacity: 0.6;
+    }
+}
+
+@keyframes skeleton-shimmer {
+    0% {
+        background-position: 120% 0;
+    }
+
+    100% {
+        background-position: -120% 0;
     }
 }
 
@@ -2116,6 +2212,14 @@ html[data-night-mode="on"] .your-info {
     box-shadow: 0 0 12px rgba(0, 255, 120, 0.3);
 }
 
+.copyable.copied {
+    background: rgba(0, 255, 120, 0.14);
+    border-color: rgba(0, 255, 120, 0.55);
+    box-shadow: 0 0 14px rgba(0, 255, 120, 0.28), inset 0 0 8px rgba(0, 255, 120, 0.08);
+    color: #00ff88;
+    text-shadow: 0 0 7px rgba(0, 255, 120, 0.45);
+}
+
 .copy-tooltip {
     display: none;
     position: absolute;
@@ -2128,10 +2232,17 @@ html[data-night-mode="on"] .your-info {
     white-space: nowrap;
     animation: fadeInOut 1.2s ease forwards;
     pointer-events: none;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 8px 18px rgba(30, 215, 96, 0.22);
+}
+
+.copy-tooltip i {
+    font-size: 0.65rem;
 }
 
 .copy-tooltip.show {
-    display: inline-block;
+    display: inline-flex;
 }
 
 @keyframes fadeInOut {
