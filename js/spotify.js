@@ -13,6 +13,14 @@ const spotifyModule = (function () {
         progressPercent: 0,
         spotifyUrl: ''
     };
+    let progressAnimationFrame = null;
+    let progressState = {
+        isPlaying: false,
+        baseProgressMs: 0,
+        durationMs: 0,
+        syncedAt: 0,
+        lastRenderedSecond: -1
+    };
 
     // Modül başlatma
     function init() {
@@ -61,9 +69,9 @@ const spotifyModule = (function () {
                 artists: data.artists,
                 albumName: data.album_name,
                 albumImage: data.album_image,
-                duration: data.duration.ms,
-                progress: data.progress.ms,
-                progressPercent: data.progress_percent,
+                duration: data.duration?.ms || 0,
+                progress: data.progress?.ms || 0,
+                progressPercent: data.progress_percent || 0,
                 spotifyUrl: data.spotify_url
             };
 
@@ -93,22 +101,28 @@ const spotifyModule = (function () {
 
         // Şarkı çalıyor mu durumunu güncelle
         if (data.is_playing) {
+            spotifyCard.classList.add('is-playing');
             spotifyStatus.textContent = '🟢';
-            lastPlayed.textContent = `${data.progress.formatted} / ${data.duration.formatted}`;
-            // İlerleme çubuğunu güncelle
-            if (progressBar) {
-                progressBar.style.width = `${data.progress_percent}%`;
-            }
+            syncSmoothProgress(data);
 
             // Albüm kapağını güncelle
             if (albumCover) {
-                albumCover.textContent = '';
-                const image = document.createElement('img');
-                image.src = data.album_image || '';
-                image.alt = data.album_name || data.track_name || 'Album cover';
-                image.className = 'album-cover';
-                albumCover.appendChild(image);
-                albumCover.className = 'album-cover-container';
+                const currentImage = albumCover.querySelector('img');
+                const nextImage = data.album_image || '';
+                const currentImageSrc = currentImage ? currentImage.getAttribute('src') : '';
+
+                if (!nextImage) {
+                    albumCover.textContent = '🎵';
+                    albumCover.className = 'album-cover-placeholder';
+                } else if (!currentImage || currentImageSrc !== nextImage) {
+                    albumCover.textContent = '';
+                    const image = document.createElement('img');
+                    image.src = nextImage;
+                    image.alt = data.album_name || data.track_name || 'Album cover';
+                    image.className = 'album-cover';
+                    albumCover.appendChild(image);
+                    albumCover.className = 'album-cover-container';
+                }
             }
 
             // Şarkı bilgilerini güncelle
@@ -116,6 +130,11 @@ const spotifyModule = (function () {
             if (songArtist) songArtist.textContent = `by ${data.artists}`;
             if (songAlbum) songAlbum.textContent = data.album_name;
         } else {
+            stopSmoothProgress();
+            spotifyData.isPlaying = false;
+            spotifyData.progress = 0;
+            spotifyData.progressPercent = 0;
+            spotifyCard.classList.remove('is-playing');
             spotifyStatus.textContent = '⚪';
 
             // Spotify kapalı olduğunda özel mesaj göster (İngilizce)
@@ -137,7 +156,7 @@ const spotifyModule = (function () {
         }
 
         // Spotify kartına tıklandığında şarkıya yönlendir (şarkı çalıyorsa)
-        if (data.is_playing) {
+        if (data.is_playing && data.spotify_url) {
             spotifyCard.onclick = function (e) {
                 window.open(data.spotify_url, '_blank');
             };
@@ -148,6 +167,94 @@ const spotifyModule = (function () {
             spotifyCard.onclick = null;
             spotifyCard.style.cursor = 'default';
         }
+    }
+
+    function syncSmoothProgress(data) {
+        const durationMs = data.duration?.ms || 0;
+        const progressMs = data.progress?.ms || 0;
+
+        if (!durationMs) {
+            stopSmoothProgress();
+            const progressBar = document.querySelector('.spotify-card .progress-bar');
+            const lastPlayed = document.querySelector('.spotify-card .last-played');
+            if (progressBar) progressBar.style.width = `${data.progress_percent || 0}%`;
+            if (lastPlayed && data.progress?.formatted && data.duration?.formatted) {
+                lastPlayed.textContent = `${data.progress.formatted} / ${data.duration.formatted}`;
+            }
+            return;
+        }
+
+        progressState = {
+            isPlaying: true,
+            baseProgressMs: progressMs,
+            durationMs: durationMs,
+            syncedAt: Date.now(),
+            lastRenderedSecond: -1
+        };
+
+        startSmoothProgress();
+        renderSmoothProgress();
+    }
+
+    function startSmoothProgress() {
+        if (progressAnimationFrame) return;
+
+        const tick = () => {
+            renderSmoothProgress();
+            if (progressState.isPlaying) {
+                progressAnimationFrame = requestAnimationFrame(tick);
+            }
+        };
+
+        progressAnimationFrame = requestAnimationFrame(tick);
+    }
+
+    function stopSmoothProgress() {
+        progressState.isPlaying = false;
+        progressState.lastRenderedSecond = -1;
+
+        if (progressAnimationFrame) {
+            cancelAnimationFrame(progressAnimationFrame);
+            progressAnimationFrame = null;
+        }
+    }
+
+    function renderSmoothProgress() {
+        const progressBar = document.querySelector('.spotify-card .progress-bar');
+        const lastPlayed = document.querySelector('.spotify-card .last-played');
+        if (!progressBar || !lastPlayed || !progressState.durationMs) {
+            stopSmoothProgress();
+            return;
+        }
+
+        const elapsedMs = progressState.isPlaying ? Date.now() - progressState.syncedAt : 0;
+        const currentProgressMs = Math.min(
+            progressState.baseProgressMs + elapsedMs,
+            progressState.durationMs
+        );
+        const progressPercent = (currentProgressMs / progressState.durationMs) * 100;
+
+        progressBar.style.width = `${progressPercent}%`;
+
+        const currentSecond = Math.floor(currentProgressMs / 1000);
+        if (currentSecond !== progressState.lastRenderedSecond) {
+            lastPlayed.textContent = `${formatTime(currentProgressMs)} / ${formatTime(progressState.durationMs)}`;
+            progressState.lastRenderedSecond = currentSecond;
+        }
+
+        spotifyData.progress = currentProgressMs;
+        spotifyData.progressPercent = progressPercent;
+
+        if (currentProgressMs >= progressState.durationMs) {
+            stopSmoothProgress();
+        }
+    }
+
+    function formatTime(milliseconds) {
+        const totalSeconds = Math.max(0, Math.floor(milliseconds / 1000));
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${minutes}:${String(seconds).padStart(2, '0')}`;
     }
 
     // Public API
