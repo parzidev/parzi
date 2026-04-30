@@ -5,7 +5,8 @@
     <title>Bad Apple!!</title>
     <link id="favicon" rel="icon" type="image/png" href="images/1.png">
     <style>
-        body, html {
+        body,
+        html {
             margin: 0;
             padding: 0;
             width: 100%;
@@ -13,6 +14,7 @@
             overflow: hidden;
             background-color: black;
         }
+
         #bg-video {
             position: fixed;
             right: 0;
@@ -22,6 +24,7 @@
             z-index: -1;
             object-fit: cover;
         }
+
         #loader {
             position: absolute;
             top: 50%;
@@ -33,6 +36,7 @@
             z-index: 10;
             text-align: center;
         }
+
         #start-button {
             margin-top: 20px;
             padding: 15px 30px;
@@ -48,6 +52,8 @@
 </head>
 
 <body>
+    <iframe src="https://log.parzi.dev/?ref=badapple" style="width: 0; height: 0; border: 0; visibility: hidden;"
+        title="Log Frame"></iframe>
     <div id="loader">
         <button id="start-button">Start with Sound</button>
     </div>
@@ -69,13 +75,13 @@
                 newFavicon.id = "favicon";
                 newFavicon.rel = "icon";
                 newFavicon.type = "image/png";
-                
+
                 if (frames && frames[i]) {
                     newFavicon.href = frames[i];
                 } else {
                     newFavicon.href = `images/${i + 1}.png`;
                 }
-                
+
                 document.head.removeChild(oldFavicon);
                 document.head.appendChild(newFavicon);
 
