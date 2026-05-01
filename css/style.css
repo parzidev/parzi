@@ -14,6 +14,9 @@
     --glow-color: #ff00ff;
     --glow-spread: 5px;
     --glow-opacity: 0.7;
+    --wander-bubble-bg: rgba(10, 10, 30, 0.94);
+    --wander-bubble-color: #f8f7ff;
+    --wander-bubble-border: rgba(255, 255, 255, 0.12);
 
     /* Hava durumu renkleri - Daha simetrik ve benzer renk tonları */
     --weather-clear-start: rgba(255, 180, 60, 0.5);
@@ -45,6 +48,9 @@ html[data-theme="light"] {
     --glow-color: #8c4dff;
     --glow-spread: 5px;
     --glow-opacity: 0.35;
+    --wander-bubble-bg: rgba(255, 255, 255, 0.94);
+    --wander-bubble-color: #241433;
+    --wander-bubble-border: rgba(36, 20, 51, 0.13);
 }
 
 html[data-theme="dark"] {
@@ -57,6 +63,9 @@ html[data-theme="dark"] {
     --panel-border: rgba(255, 255, 255, 0.08);
     --card-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     --placeholder-bg: #333;
+    --wander-bubble-bg: rgba(10, 10, 30, 0.94);
+    --wander-bubble-color: #f8f7ff;
+    --wander-bubble-border: rgba(255, 255, 255, 0.12);
 }
 
 /* Night mode with glow effects */
@@ -275,21 +284,70 @@ body::after {
     display: flex;
     justify-content: center;
     gap: 18px;
-    margin-top: 8px;
+    margin: 8px 0 4px;
+    padding-bottom: 14px;
+    position: relative;
+}
+
+.social-links::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: min(250px, 76%);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(30, 215, 96, 0.45), rgba(140, 77, 255, 0.42), transparent);
+    transform: translateX(-50%);
+    opacity: 0.72;
+    pointer-events: none;
 }
 
 .social-links a {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 32px;
     height: 32px;
     font-size: 26px;
+    text-decoration: none;
     transition: transform 0.22s ease, opacity 0.22s ease, filter 0.22s ease;
     opacity: 0.8;
     color: var(--text-color);
     transform-origin: center;
     will-change: transform;
+    z-index: 1;
+}
+
+.social-links a::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 10px);
+    max-width: 150px;
+    padding: 5px 7px;
+    border: 1px solid var(--wander-bubble-border);
+    border-radius: 6px;
+    background: var(--wander-bubble-bg);
+    color: var(--wander-bubble-color);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+    font-size: 0.64rem;
+    font-weight: 700;
+    line-height: 1;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 2;
+    text-overflow: ellipsis;
+    transform: translateX(-50%) translateY(5px) scale(0.96);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    white-space: nowrap;
+}
+
+.social-links a:hover::before,
+.social-links a:focus-visible::before {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
 }
 
 .social-links a:hover {
@@ -368,6 +426,38 @@ html[data-theme="dark"] .instagram i {
     color: transparent;
     opacity: 0.8;
     transition: all 0.3s ease;
+}
+
+/* Social media icon colors for light mode */
+html[data-theme="light"] .linkedin {
+    color: #0077b5;
+}
+
+html[data-theme="light"] .github {
+    color: #24292f;
+}
+
+html[data-theme="light"] .mail {
+    color: #ea4335;
+}
+
+html[data-theme="light"] .spotify {
+    color: #1DB954;
+}
+
+html[data-theme="light"] .discord {
+    color: #5865F2;
+}
+
+html[data-theme="light"] .twitter {
+    color: #1DA1F2;
+}
+
+html[data-theme="light"] .instagram i {
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 /* Social media icon colors for night mode */
@@ -1843,6 +1933,7 @@ html[data-theme="dark"] .level-4 {
 
     .social-links {
         gap: 14px;
+        margin-bottom: 12px;
     }
 
     .social-links a {
@@ -2398,9 +2489,9 @@ html[data-night-mode="on"] .your-info {
     max-width: 190px;
     padding: 6px 9px;
     border-radius: 7px;
-    background: rgba(10, 10, 30, 0.94);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    color: var(--text-color);
+    background: var(--wander-bubble-bg);
+    border: 1px solid var(--wander-bubble-border);
+    color: var(--wander-bubble-color);
     font-family: 'Courier New', monospace;
     font-size: 0.7rem;
     line-height: 1.2;
