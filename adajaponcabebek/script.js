@@ -5,6 +5,7 @@ const streakEl = document.getElementById('streak');
 const highScoreEl = document.getElementById('high-score');
 const totalCorrectEl = document.getElementById('total-correct');
 const appTitle = document.getElementById('app-title');
+const appThemeToggle = document.getElementById('app-theme-toggle');
 const statsContainer = document.getElementById('stats-container');
 
 // Containers
@@ -17,6 +18,7 @@ const reviewGrid = document.getElementById('review-grid');
 const storyContainer = document.getElementById('story-container');
 const storyCounter = document.getElementById('story-counter');
 const storyTitle = document.getElementById('story-title');
+const storyTitleKana = document.getElementById('story-title-kana');
 const storyJapanese = document.getElementById('story-japanese');
 const storyTranslation = document.getElementById('story-translation');
 const storyWords = document.getElementById('story-words');
@@ -26,6 +28,18 @@ const storyLineCount = document.getElementById('story-line-count');
 const storyProgressBar = document.getElementById('story-progress-bar');
 const storyShortTab = document.getElementById('story-short-tab');
 const storyLongTab = document.getElementById('story-long-tab');
+const storyReadProgress = document.getElementById('story-read-progress');
+const storyFavoriteStatus = document.getElementById('story-favorite-status');
+const storyReadToggle = document.getElementById('story-read-toggle');
+const storyFavoriteToggle = document.getElementById('story-favorite-toggle');
+const storyFuriganaToggle = document.getElementById('story-furigana-toggle');
+const storySettingsToggle = document.getElementById('story-settings-toggle');
+const storySettings = document.getElementById('story-settings');
+const storyWordDetail = document.getElementById('story-word-detail');
+const storyWordDetailJp = document.getElementById('story-word-detail-jp');
+const storyWordDetailReading = document.getElementById('story-word-detail-reading');
+const storyWordDetailTr = document.getElementById('story-word-detail-tr');
+const storyWordDetailExample = document.getElementById('story-word-detail-example');
 
 let currentMode = null; // 'hiragana', 'katakana', 'kanji'
 let currentDataSet = [];
@@ -41,9 +55,17 @@ let isSpeedMode = false;
 let mistakes = JSON.parse(localStorage.getItem('mistakes')) || [];
 let currentStoryIndex = 0;
 let currentStoryLength = 'short';
-let storyTranslationVisible = false;
+let revealedTranslationLines = new Set();
+let selectedStoryWordIndex = null;
+let storySettingsVisible = false;
 let storyDataLoaded = false;
 let storyDataLoading = null;
+const storyReadStorageKey = 'adaStoryRead';
+const storyFavoriteStorageKey = 'adaStoryFavorites';
+const storySettingsStorageKey = 'adaStoryReadingSettings';
+let readStoryIds = loadStoredList(storyReadStorageKey);
+let favoriteStoryIds = loadStoredList(storyFavoriteStorageKey);
+let readingSettings = loadReadingSettings();
 const storyGroups = {
     short: [],
     long: []
@@ -63,6 +85,7 @@ const storyMeta = {
 
 // Initialize
 function init() {
+    applyReadingSettings();
     showMenu();
 }
 
@@ -118,7 +141,7 @@ async function showStories(event, length = 'short', resetIndex = false) {
     reviewContainer.style.display = 'none';
     storyContainer.style.display = 'flex';
     appTitle.textContent = storyMeta[currentStoryLength].title;
-    storyTranslationVisible = false;
+    revealedTranslationLines.clear();
     updateStoryTabs();
     renderStory();
 }
@@ -166,7 +189,8 @@ async function setStoryLength(length) {
 
     currentStoryLength = nextLength;
     currentStoryIndex = 0;
-    storyTranslationVisible = false;
+    revealedTranslationLines.clear();
+    selectedStoryWordIndex = null;
     await loadStoryGroups();
     appTitle.textContent = storyMeta[currentStoryLength].title;
     updateStoryTabs();
@@ -184,44 +208,85 @@ function renderStory() {
 
     const japaneseLines = Array.isArray(story.japanese) ? story.japanese : [];
     const turkishLines = Array.isArray(story.turkish) ? story.turkish : [];
+    const furiganaLines = Array.isArray(story.furigana) ? story.furigana : [];
     const words = Array.isArray(story.words) ? story.words : [];
     const progress = stories.length > 0 ? ((currentStoryIndex + 1) / stories.length) * 100 : 0;
     const titleParts = [story.japaneseTitle, story.title].filter(Boolean);
-    const translationDisplay = storyTranslationVisible ? 'grid' : 'none';
+    const showFurigana = readingSettings.furigana === 'show';
+    const storyId = getStoryId(story, currentStoryIndex, currentStoryLength);
+    const isRead = readStoryIds.includes(storyId);
+    const isFavorite = favoriteStoryIds.includes(storyId);
+    const readCount = getReadCount(stories);
 
     storySectionLabel.textContent = storyMeta[currentStoryLength].label;
     storyCounter.textContent = `${currentStoryIndex + 1} / ${stories.length}`;
     storyLineCount.textContent = `${japaneseLines.length} cümle`;
+    storyReadProgress.textContent = `Okundu ${readCount} / ${stories.length}`;
+    storyFavoriteStatus.textContent = isFavorite ? 'Favori' : 'Favori değil';
     storyProgressBar.style.width = `${progress}%`;
     storyTitle.textContent = titleParts.join(' · ') || 'Story';
+    storyTitleKana.textContent = story.japaneseTitleKana || '';
+    storyTitleKana.hidden = !story.japaneseTitleKana || !showFurigana;
     storyJapanese.innerHTML = japaneseLines.map((line, index) => `
-        <p><span>${index + 1}</span>${escapeHtml(line)}</p>
+        <button type="button" class="story-line ${revealedTranslationLines.has(index) ? 'revealed' : ''}"
+            onclick="toggleLineTranslation(${index})" aria-expanded="${revealedTranslationLines.has(index)}">
+            <span class="story-line-number">${index + 1}</span>
+            <span class="story-line-content">
+                <span class="story-line-jp">${renderJapaneseLine(line, furiganaLines[index], showFurigana)}</span>
+                ${revealedTranslationLines.has(index) ? `<span class="story-line-tr">${escapeHtml(turkishLines[index] || '')}</span>` : ''}
+            </span>
+        </button>
     `).join('');
-    storyTranslation.innerHTML = turkishLines.map((line, index) => `
-        <p><span>${index + 1}</span>${escapeHtml(line)}</p>
+    storyTranslation.innerHTML = '';
+    storyTranslation.hidden = true;
+    storyTranslation.style.display = 'none';
+    storyTranslationToggle.textContent = revealedTranslationLines.size > 0 ? 'Çevirileri Kapat' : 'Cümleye Tıkla';
+    storyTranslationToggle.classList.toggle('active', revealedTranslationLines.size > 0);
+    storyTranslationToggle.setAttribute('aria-expanded', String(revealedTranslationLines.size > 0));
+    storyReadToggle.textContent = isRead ? 'Okundu' : 'Okundu İşaretle';
+    storyReadToggle.classList.toggle('active', isRead);
+    storyFavoriteToggle.textContent = isFavorite ? 'Favoride' : 'Favori';
+    storyFavoriteToggle.classList.toggle('active', isFavorite);
+    storyFuriganaToggle.textContent = showFurigana ? 'Furigana Açık' : 'Furigana Kapalı';
+    storyFuriganaToggle.classList.toggle('active', showFurigana);
+    storyWords.innerHTML = words.map((word, index) => `
+        <button type="button" class="story-word ${selectedStoryWordIndex === index ? 'active' : ''}"
+            onclick="selectStoryWord(${index})">
+            <strong>${escapeHtml(word.jp)}</strong>
+            ${word.kana ? `<small>${escapeHtml(word.kana)}</small>` : ''}
+            ${escapeHtml(word.tr)}
+        </button>
     `).join('');
-    storyTranslation.hidden = !storyTranslationVisible;
-    storyTranslation.style.display = translationDisplay;
-    storyTranslationToggle.textContent = storyTranslationVisible ? 'Türkçeyi Gizle' : 'Türkçesini Göster';
-    storyTranslationToggle.setAttribute('aria-expanded', String(storyTranslationVisible));
-    storyWords.innerHTML = words.map(word => `
-        <span class="story-word"><strong>${escapeHtml(word.jp)}</strong> ${escapeHtml(word.tr)}</span>
-    `).join('');
+    renderSelectedStoryWord(words, japaneseLines);
+    renderStorySettings();
 }
 
 function renderEmptyStory() {
     storySectionLabel.textContent = storyMeta[currentStoryLength].label;
     storyCounter.textContent = '0 / 0';
     storyLineCount.textContent = '0 cümle';
+    storyReadProgress.textContent = 'Okundu 0 / 0';
+    storyFavoriteStatus.textContent = 'Favori değil';
     storyProgressBar.style.width = '0%';
     storyTitle.textContent = currentStoryLength === 'long' ? 'Uzun hikayeler hazırlanıyor' : 'Hikaye bulunamadı';
+    storyTitleKana.textContent = '';
+    storyTitleKana.hidden = true;
     storyJapanese.innerHTML = '<p class="story-empty">JSON gelince burası dolacak.</p>';
     storyTranslation.innerHTML = '';
     storyTranslation.hidden = true;
     storyTranslation.style.display = 'none';
-    storyTranslationToggle.textContent = 'Türkçesini Göster';
+    storyTranslationToggle.textContent = 'Cümleye Tıkla';
+    storyTranslationToggle.classList.remove('active');
     storyTranslationToggle.setAttribute('aria-expanded', 'false');
+    storyReadToggle.textContent = 'Okundu İşaretle';
+    storyReadToggle.classList.remove('active');
+    storyFavoriteToggle.textContent = 'Favori';
+    storyFavoriteToggle.classList.remove('active');
+    storyFuriganaToggle.textContent = 'Furigana Açık';
+    storyFuriganaToggle.classList.toggle('active', readingSettings.furigana === 'show');
     storyWords.innerHTML = '';
+    storyWordDetail.hidden = true;
+    renderStorySettings();
 }
 
 function updateStoryTabs() {
@@ -229,8 +294,20 @@ function updateStoryTabs() {
     storyLongTab.classList.toggle('active', currentStoryLength === 'long');
 }
 
-function toggleStoryTranslation() {
-    storyTranslationVisible = !storyTranslationVisible;
+function toggleLineTranslation(index) {
+    if (revealedTranslationLines.has(index)) {
+        revealedTranslationLines.delete(index);
+    } else {
+        revealedTranslationLines.add(index);
+    }
+
+    renderStory();
+}
+
+function clearStoryTranslations() {
+    if (revealedTranslationLines.size === 0) return;
+
+    revealedTranslationLines.clear();
     renderStory();
 }
 
@@ -239,7 +316,8 @@ function nextStory() {
     if (stories.length === 0) return;
 
     currentStoryIndex = (currentStoryIndex + 1) % stories.length;
-    storyTranslationVisible = false;
+    revealedTranslationLines.clear();
+    selectedStoryWordIndex = null;
     renderStory();
 }
 
@@ -248,8 +326,163 @@ function previousStory() {
     if (stories.length === 0) return;
 
     currentStoryIndex = (currentStoryIndex - 1 + stories.length) % stories.length;
-    storyTranslationVisible = false;
+    revealedTranslationLines.clear();
+    selectedStoryWordIndex = null;
     renderStory();
+}
+
+function selectStoryWord(index) {
+    selectedStoryWordIndex = selectedStoryWordIndex === index ? null : index;
+    renderStory();
+}
+
+function clearSelectedStoryWord() {
+    selectedStoryWordIndex = null;
+    renderStory();
+}
+
+function renderJapaneseLine(line, furiganaParts, showFurigana) {
+    if (!showFurigana || !Array.isArray(furiganaParts) || furiganaParts.length === 0) {
+        return escapeHtml(line);
+    }
+
+    return furiganaParts.map(part => {
+        const text = escapeHtml(part.text || '');
+        const kana = escapeHtml(part.kana || '');
+        return kana ? `<ruby>${text}<rt>${kana}</rt></ruby>` : text;
+    }).join('');
+}
+
+function renderSelectedStoryWord(words, japaneseLines) {
+    const word = words[selectedStoryWordIndex];
+    if (!word) {
+        storyWordDetail.hidden = true;
+        return;
+    }
+
+    const reading = word.reading || word.kana || word.yomi || '';
+    const example = japaneseLines.find(line => word.jp && line.includes(word.jp));
+
+    storyWordDetail.hidden = false;
+    storyWordDetailJp.textContent = word.jp || '';
+    storyWordDetailReading.textContent = reading ? ` ${reading}` : '';
+    storyWordDetailReading.hidden = !reading;
+    storyWordDetailTr.textContent = word.tr || '';
+    storyWordDetailExample.textContent = example ? `Örnek: ${example}` : '';
+    storyWordDetailExample.hidden = !example;
+}
+
+function toggleStoryRead() {
+    const story = getCurrentStory();
+    if (!story) return;
+
+    toggleStoredStoryId(readStoryIds, storyReadStorageKey, getStoryId(story, currentStoryIndex, currentStoryLength));
+    renderStory();
+}
+
+function toggleStoryFavorite() {
+    const story = getCurrentStory();
+    if (!story) return;
+
+    toggleStoredStoryId(favoriteStoryIds, storyFavoriteStorageKey, getStoryId(story, currentStoryIndex, currentStoryLength));
+    renderStory();
+}
+
+function toggleStorySettings() {
+    storySettingsVisible = !storySettingsVisible;
+    renderStorySettings();
+}
+
+function toggleTheme() {
+    setReadingSetting('theme', readingSettings.theme === 'dark' ? 'light' : 'dark');
+}
+
+function toggleFurigana() {
+    setReadingSetting('furigana', readingSettings.furigana === 'show' ? 'hide' : 'show');
+    renderStory();
+}
+
+function setReadingSetting(key, value) {
+    if (!['fontSize', 'spacing', 'theme', 'furigana'].includes(key)) return;
+
+    readingSettings[key] = value;
+    localStorage.setItem(storySettingsStorageKey, JSON.stringify(readingSettings));
+    applyReadingSettings();
+    renderStorySettings();
+}
+
+function renderStorySettings() {
+    storySettings.hidden = !storySettingsVisible;
+    storySettingsToggle.classList.toggle('active', storySettingsVisible);
+    storySettingsToggle.setAttribute('aria-expanded', String(storySettingsVisible));
+
+    storySettings.querySelectorAll('[data-setting]').forEach(button => {
+        button.classList.toggle('active', readingSettings[button.dataset.setting] === button.dataset.value);
+    });
+}
+
+function applyReadingSettings() {
+    document.body.dataset.theme = readingSettings.theme;
+    storyContainer.dataset.fontSize = readingSettings.fontSize;
+    storyContainer.dataset.spacing = readingSettings.spacing;
+    storyContainer.dataset.theme = readingSettings.theme;
+    storyContainer.dataset.furigana = readingSettings.furigana;
+    appThemeToggle.textContent = readingSettings.theme === 'dark' ? 'Aydınlık' : 'Gece';
+    appThemeToggle.setAttribute('aria-pressed', String(readingSettings.theme === 'dark'));
+}
+
+function getCurrentStory() {
+    return getStories()[currentStoryIndex];
+}
+
+function getStoryId(story, index, length) {
+    const title = story.title || story.japaneseTitle || `story-${index + 1}`;
+    return `${length}:${index}:${title}`;
+}
+
+function getReadCount(stories) {
+    return stories.reduce((count, story, index) => {
+        return count + (readStoryIds.includes(getStoryId(story, index, currentStoryLength)) ? 1 : 0);
+    }, 0);
+}
+
+function toggleStoredStoryId(list, storageKey, storyId) {
+    const existingIndex = list.indexOf(storyId);
+    if (existingIndex === -1) {
+        list.push(storyId);
+    } else {
+        list.splice(existingIndex, 1);
+    }
+
+    localStorage.setItem(storageKey, JSON.stringify(list));
+}
+
+function loadStoredList(storageKey) {
+    try {
+        const data = JSON.parse(localStorage.getItem(storageKey));
+        return Array.isArray(data) ? data : [];
+    } catch (error) {
+        return [];
+    }
+}
+
+function loadReadingSettings() {
+    try {
+        const data = JSON.parse(localStorage.getItem(storySettingsStorageKey)) || {};
+        return {
+            fontSize: ['small', 'normal', 'large'].includes(data.fontSize) ? data.fontSize : 'normal',
+            spacing: ['compact', 'normal', 'wide'].includes(data.spacing) ? data.spacing : 'normal',
+            theme: ['light', 'dark'].includes(data.theme) ? data.theme : 'light',
+            furigana: ['show', 'hide'].includes(data.furigana) ? data.furigana : 'show'
+        };
+    } catch (error) {
+        return {
+            fontSize: 'normal',
+            spacing: 'normal',
+            theme: 'light',
+            furigana: 'show'
+        };
+    }
 }
 
 function escapeHtml(value) {

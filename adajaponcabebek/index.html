@@ -22,6 +22,7 @@
     <div class="app-container">
         <header>
             <h1 id="app-title">Ada Bebek Kanji Quiz 🎀</h1>
+            <button class="theme-toggle" id="app-theme-toggle" type="button" onclick="toggleTheme()">Gece</button>
             <div class="stats-container" id="stats-container" style="display: none;">
                 <span id="score">Score: 0</span>
                 <span id="high-score">Best: 0</span>
@@ -128,19 +129,71 @@
                     <div class="story-progress-bar" id="story-progress-bar"></div>
                 </div>
                 <h2 id="story-title">Story</h2>
+                <p class="story-title-kana" id="story-title-kana"></p>
                 <div class="story-meta">
                     <span id="story-counter">1 / 1</span>
                     <span id="story-line-count">4 cümle</span>
+                    <span id="story-read-progress">Okundu 0 / 0</span>
+                    <span id="story-favorite-status">Favori değil</span>
                 </div>
                 <div class="story-japanese" id="story-japanese"></div>
                 <div class="story-tools">
                     <button class="menu-btn story-toggle-btn" id="story-translation-toggle"
-                        onclick="toggleStoryTranslation()">Türkçesini Göster</button>
+                        onclick="clearStoryTranslations()">Cümleye Tıkla</button>
+                    <button class="menu-btn story-tool-btn" id="story-read-toggle" onclick="toggleStoryRead()">Okundu</button>
+                    <button class="menu-btn story-tool-btn" id="story-favorite-toggle"
+                        onclick="toggleStoryFavorite()">Favori</button>
+                    <button class="menu-btn story-tool-btn" id="story-furigana-toggle"
+                        onclick="toggleFurigana()">Furigana</button>
+                    <button class="menu-btn story-tool-btn" id="story-settings-toggle"
+                        onclick="toggleStorySettings()">Ayarlar</button>
+                </div>
+                <div class="story-settings" id="story-settings" hidden>
+                    <div class="story-setting-row">
+                        <span>Yazı</span>
+                        <div class="story-setting-options">
+                            <button type="button" data-setting="fontSize" data-value="small"
+                                onclick="setReadingSetting('fontSize', 'small')">Küçük</button>
+                            <button type="button" data-setting="fontSize" data-value="normal"
+                                onclick="setReadingSetting('fontSize', 'normal')">Normal</button>
+                            <button type="button" data-setting="fontSize" data-value="large"
+                                onclick="setReadingSetting('fontSize', 'large')">Büyük</button>
+                        </div>
+                    </div>
+                    <div class="story-setting-row">
+                        <span>Aralık</span>
+                        <div class="story-setting-options">
+                            <button type="button" data-setting="spacing" data-value="compact"
+                                onclick="setReadingSetting('spacing', 'compact')">Sık</button>
+                            <button type="button" data-setting="spacing" data-value="normal"
+                                onclick="setReadingSetting('spacing', 'normal')">Rahat</button>
+                            <button type="button" data-setting="spacing" data-value="wide"
+                                onclick="setReadingSetting('spacing', 'wide')">Geniş</button>
+                        </div>
+                    </div>
+                    <div class="story-setting-row">
+                        <span>Tema</span>
+                        <div class="story-setting-options">
+                            <button type="button" data-setting="theme" data-value="light"
+                                onclick="setReadingSetting('theme', 'light')">Açık</button>
+                            <button type="button" data-setting="theme" data-value="dark"
+                                onclick="setReadingSetting('theme', 'dark')">Gece</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="story-translation" id="story-translation" hidden></div>
                 <div class="story-words-panel">
                     <span class="story-words-title">Kelimeler</span>
                     <div class="story-words" id="story-words"></div>
+                    <div class="story-word-detail" id="story-word-detail" hidden>
+                        <div>
+                            <strong id="story-word-detail-jp"></strong>
+                            <span id="story-word-detail-reading"></span>
+                        </div>
+                        <p id="story-word-detail-tr"></p>
+                        <small id="story-word-detail-example"></small>
+                        <button type="button" onclick="clearSelectedStoryWord()">Kapat</button>
+                    </div>
                 </div>
             </article>
             <div class="story-actions">

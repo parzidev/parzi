@@ -2,6 +2,7 @@
   {
     "title": "Little Cat",
     "japaneseTitle": "ちいさい ねこ",
+    "japaneseTitleKana": "ちいさい ねこ",
     "japanese": [
       "わたしは ねこを みました。",
       "ねこは ちいさいです。",
@@ -22,24 +23,78 @@
       "Kedi miyav diye ses çıkarır.",
       "Ben çok mutluyum."
     ],
+    "furigana": [
+      [
+        {
+          "text": "わたしは ねこを みました。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ねこは ちいさいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ねこは しろいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ねこは にわに います。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしは ねこに みずを あげます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ねこは みずを のみます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ねこは にゃあと なきます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしは とても うれしいです。",
+          "kana": ""
+        }
+      ]
+    ],
     "words": [
       {
         "jp": "ねこ",
-        "tr": "kedi"
+        "tr": "kedi",
+        "kana": "ねこ"
       },
       {
         "jp": "みず",
-        "tr": "su"
+        "tr": "su",
+        "kana": "みず"
       },
       {
         "jp": "にわ",
-        "tr": "bahçe"
+        "tr": "bahçe",
+        "kana": "にわ"
       }
     ]
   },
   {
     "title": "Star Night",
     "japaneseTitle": "ほしの よる",
+    "japaneseTitleKana": "ほしの よる",
     "japanese": [
       "よるに そらを みます。",
       "そらは くらいです。",
@@ -60,24 +115,78 @@
       "Yıldızlar pırıl pırıl parlar.",
       "Gece çok güzeldir."
     ],
+    "furigana": [
+      [
+        {
+          "text": "よるに そらを みます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "そらは くらいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ほしが たくさん あります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "おおきい ほしも あります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしは ほしを かぞえます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ひとつ、ふたつ、みっつ。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ほしは きらきら ひかります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "よるは とても きれいです。",
+          "kana": ""
+        }
+      ]
+    ],
     "words": [
       {
         "jp": "ほし",
-        "tr": "yıldız"
+        "tr": "yıldız",
+        "kana": "ほし"
       },
       {
         "jp": "そら",
-        "tr": "gökyüzü"
+        "tr": "gökyüzü",
+        "kana": "そら"
       },
       {
         "jp": "よる",
-        "tr": "gece"
+        "tr": "gece",
+        "kana": "よる"
       }
     ]
   },
   {
     "title": "Rainy Walk",
     "japaneseTitle": "あめの さんぽ",
+    "japaneseTitleKana": "あめの さんぽ",
     "japanese": [
       "きょうは あめです。",
       "わたしは かさを もちます。",
@@ -98,24 +207,78 @@
       "Yağmurun sesi pıt pıttır.",
       "Yürüyüş eğlencelidir."
     ],
+    "furigana": [
+      [
+        {
+          "text": "きょうは あめです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしは かさを もちます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "あおい かさです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "みちに みずが あります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしは ゆっくり あるきます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "いぬも さんぽを しています。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "あめの おとは ぽつぽつです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "さんぽは たのしいです。",
+          "kana": ""
+        }
+      ]
+    ],
     "words": [
       {
         "jp": "あめ",
-        "tr": "yağmur"
+        "tr": "yağmur",
+        "kana": "あめ"
       },
       {
         "jp": "かさ",
-        "tr": "şemsiye"
+        "tr": "şemsiye",
+        "kana": "かさ"
       },
       {
         "jp": "みち",
-        "tr": "yol"
+        "tr": "yol",
+        "kana": "みち"
       }
     ]
   },
   {
     "title": "Park Friends",
     "japaneseTitle": "こうえんの ともだち",
+    "japaneseTitleKana": "こうえんの ともだち",
     "japanese": [
       "わたしは こうえんに いきます。",
       "ともだちも きます。",
@@ -136,24 +299,78 @@
       "Gökyüzü mavidir.",
       "Park eğlencelidir."
     ],
+    "furigana": [
+      [
+        {
+          "text": "わたしは こうえんに いきます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ともだちも きます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしたちは すべりだいで あそびます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "つぎに ぶらんこに のります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ともだちは わらいます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしも わらいます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "そらは あおいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "こうえんは たのしいです。",
+          "kana": ""
+        }
+      ]
+    ],
     "words": [
       {
         "jp": "こうえん",
-        "tr": "park"
+        "tr": "park",
+        "kana": "こうえん"
       },
       {
         "jp": "ともだち",
-        "tr": "arkadaş"
+        "tr": "arkadaş",
+        "kana": "ともだち"
       },
       {
         "jp": "そら",
-        "tr": "gökyüzü"
+        "tr": "gökyüzü",
+        "kana": "そら"
       }
     ]
   },
   {
     "title": "School Bag",
     "japaneseTitle": "がっこうの かばん",
+    "japaneseTitleKana": "がっこうの かばん",
     "japanese": [
       "あさに がっこうへ いきます。",
       "わたしの かばんは あかいです。",
@@ -174,24 +391,78 @@
       "Bugün hiragana yazarız.",
       "Okulu severim."
     ],
+    "furigana": [
+      [
+        {
+          "text": "あさに がっこうへ いきます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしの かばんは あかいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "かばんに ほんが あります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "えんぴつも あります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "せんせいは おはようと いいます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしも おはようと いいます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "きょうは ひらがなを かきます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "がっこうは すきです。",
+          "kana": ""
+        }
+      ]
+    ],
     "words": [
       {
         "jp": "がっこう",
-        "tr": "okul"
+        "tr": "okul",
+        "kana": "がっこう"
       },
       {
         "jp": "かばん",
-        "tr": "çanta"
+        "tr": "çanta",
+        "kana": "かばん"
       },
       {
         "jp": "ほん",
-        "tr": "kitap"
+        "tr": "kitap",
+        "kana": "ほん"
       }
     ]
   },
   {
     "title": "Red Apple",
     "japaneseTitle": "あかい りんご",
+    "japaneseTitleKana": "あかい りんご",
     "japanese": [
       "つくえに りんごが あります。",
       "りんごは あかいです。",
@@ -212,24 +483,78 @@
       "Annem de elma yer.",
       "Herkes gülümser."
     ],
+    "furigana": [
+      [
+        {
+          "text": "つくえに りんごが あります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "りんごは あかいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "りんごは まるいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしは りんごを あらいます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "りんごを ひとつ たべます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "りんごは あまいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "おかあさんも りんごを たべます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "みんな にこにこです。",
+          "kana": ""
+        }
+      ]
+    ],
     "words": [
       {
         "jp": "りんご",
-        "tr": "elma"
+        "tr": "elma",
+        "kana": "りんご"
       },
       {
         "jp": "あかい",
-        "tr": "kırmızı"
+        "tr": "kırmızı",
+        "kana": "あかい"
       },
       {
         "jp": "あまい",
-        "tr": "tatlı"
+        "tr": "tatlı",
+        "kana": "あまい"
       }
     ]
   },
   {
     "title": "Blue Toy Car",
     "japaneseTitle": "あおい おもちゃの くるま",
+    "japaneseTitleKana": "あおい おもちゃの くるま",
     "japanese": [
       "ぼくは おもちゃを もちます。",
       "それは くるまです。",
@@ -250,24 +575,78 @@
       "Arkadaşım da bakıyor.",
       "Biz eğleniyoruz."
     ],
+    "furigana": [
+      [
+        {
+          "text": "ぼくは おもちゃを もちます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "それは くるまです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "くるまは あおいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "くるまは ちいさいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ぼくは ゆかで あそびます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "くるまは ぶーんと はしります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ともだちも みています。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ぼくたちは たのしいです。",
+          "kana": ""
+        }
+      ]
+    ],
     "words": [
       {
         "jp": "おもちゃ",
-        "tr": "oyuncak"
+        "tr": "oyuncak",
+        "kana": "おもちゃ"
       },
       {
         "jp": "くるま",
-        "tr": "araba"
+        "tr": "araba",
+        "kana": "くるま"
       },
       {
         "jp": "あおい",
-        "tr": "mavi"
+        "tr": "mavi",
+        "kana": "あおい"
       }
     ]
   },
   {
     "title": "Rabbit and Carrot",
     "japaneseTitle": "うさぎと にんじん",
+    "japaneseTitleKana": "うさぎと にんじん",
     "japanese": [
       "うさぎが はらに います。",
       "うさぎは しろいです。",
@@ -288,24 +667,78 @@
       "Havuçtan biraz yer.",
       "Tavşan mutlu görünüyor."
     ],
+    "furigana": [
+      [
+        {
+          "text": "うさぎが はらに います。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "うさぎは しろいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしは にんじんを もちます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "にんじんは ながいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "うさぎは にんじんを みます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "うさぎは ちかくに きます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "にんじんを すこし たべます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "うさぎは うれしそうです。",
+          "kana": ""
+        }
+      ]
+    ],
     "words": [
       {
         "jp": "うさぎ",
-        "tr": "tavşan"
+        "tr": "tavşan",
+        "kana": "うさぎ"
       },
       {
         "jp": "にんじん",
-        "tr": "havuç"
+        "tr": "havuç",
+        "kana": "にんじん"
       },
       {
         "jp": "しろい",
-        "tr": "beyaz"
+        "tr": "beyaz",
+        "kana": "しろい"
       }
     ]
   },
   {
     "title": "Morning Bread",
     "japaneseTitle": "あさの パン",
+    "japaneseTitleKana": "あさの パン",
     "japanese": [
       "あさです。",
       "わたしは だいどころに いきます。",
@@ -326,24 +759,78 @@
       "Babam gülümser.",
       "Güzel bir sabahtır."
     ],
+    "furigana": [
+      [
+        {
+          "text": "あさです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしは だいどころに いきます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "つくえに パンが あります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "パンは あたたかいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしは パンを たべます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ぎゅうにゅうも のみます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "おとうさんは にこにこです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "いい あさです。",
+          "kana": ""
+        }
+      ]
+    ],
     "words": [
       {
         "jp": "あさ",
-        "tr": "sabah"
+        "tr": "sabah",
+        "kana": "あさ"
       },
       {
         "jp": "パン",
-        "tr": "ekmek"
+        "tr": "ekmek",
+        "kana": "パン"
       },
       {
         "jp": "ぎゅうにゅう",
-        "tr": "süt"
+        "tr": "süt",
+        "kana": "ぎゅうにゅう"
       }
     ]
   },
   {
     "title": "Small Fish",
     "japaneseTitle": "ちいさい さかな",
+    "japaneseTitleKana": "ちいさい さかな",
     "japanese": [
       "いけに さかなが います。",
       "さかなは ちいさいです。",
@@ -364,24 +851,78 @@
       "Arkadaşım da balığı izler.",
       "Gölet huzurludur."
     ],
+    "furigana": [
+      [
+        {
+          "text": "いけに さかなが います。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "さかなは ちいさいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "さかなは すいすい およぎます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "みずは きれいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしは しずかに みます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "さかなは くるりと まわります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ともだちも さかなを みます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "いけは へいわです。",
+          "kana": ""
+        }
+      ]
+    ],
     "words": [
       {
         "jp": "さかな",
-        "tr": "balık"
+        "tr": "balık",
+        "kana": "さかな"
       },
       {
         "jp": "いけ",
-        "tr": "gölet"
+        "tr": "gölet",
+        "kana": "いけ"
       },
       {
         "jp": "みず",
-        "tr": "su"
+        "tr": "su",
+        "kana": "みず"
       }
     ]
   },
   {
     "title": "Happy Umbrella",
     "japaneseTitle": "にこにこ かさ",
+    "japaneseTitleKana": "にこにこ かさ",
     "japanese": [
       "あめが ふっています。",
       "わたしの かさは きいろいです。",
@@ -402,24 +943,78 @@
       "Pon pon diye ses çıkar.",
       "Şemsiye ile birlikte eve dönerim."
     ],
+    "furigana": [
+      [
+        {
+          "text": "あめが ふっています。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしの かさは きいろいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "かさに かおが あります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "かおは にこにこです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしは かさを さします。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "あめは かさに あたります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ぽんぽんと おとが します。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "かさと いっしょに かえります。",
+          "kana": ""
+        }
+      ]
+    ],
     "words": [
       {
         "jp": "かさ",
-        "tr": "şemsiye"
+        "tr": "şemsiye",
+        "kana": "かさ"
       },
       {
         "jp": "きいろい",
-        "tr": "sarı"
+        "tr": "sarı",
+        "kana": "きいろい"
       },
       {
         "jp": "かお",
-        "tr": "yüz"
+        "tr": "yüz",
+        "kana": "かお"
       }
     ]
   },
   {
     "title": "Tiny Mouse",
     "japaneseTitle": "ちいさい ねずみ",
+    "japaneseTitleKana": "ちいさい ねずみ",
     "japanese": [
       "へやに ねずみが います。",
       "ねずみは とても ちいさいです。",
@@ -440,24 +1035,78 @@
       "Fare evine döner.",
       "Oda sessizdir."
     ],
+    "furigana": [
+      [
+        {
+          "text": "へやに ねずみが います。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ねずみは とても ちいさいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ねずみは チーズを みます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "チーズは きいろいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ねずみは そっと あるきます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "チーズを すこし たべます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ねずみは うちへ かえります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "へやは しずかです。",
+          "kana": ""
+        }
+      ]
+    ],
     "words": [
       {
         "jp": "ねずみ",
-        "tr": "fare"
+        "tr": "fare",
+        "kana": "ねずみ"
       },
       {
         "jp": "チーズ",
-        "tr": "peynir"
+        "tr": "peynir",
+        "kana": "チーズ"
       },
       {
         "jp": "へや",
-        "tr": "oda"
+        "tr": "oda",
+        "kana": "へや"
       }
     ]
   },
   {
     "title": "Flower Garden",
     "japaneseTitle": "はなの にわ",
+    "japaneseTitleKana": "はなの にわ",
     "japanese": [
       "にわに はなが あります。",
       "あかい はなです。",
@@ -478,24 +1127,78 @@
       "Biraz rüzgar eser.",
       "Bahçe çok güzeldir."
     ],
+    "furigana": [
+      [
+        {
+          "text": "にわに はなが あります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "あかい はなです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "しろい はなも あります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしは はなを みます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ちょうちょが きます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ちょうちょは はなの うえに います。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "かぜが すこし ふきます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "にわは とても きれいです。",
+          "kana": ""
+        }
+      ]
+    ],
     "words": [
       {
         "jp": "はな",
-        "tr": "çiçek"
+        "tr": "çiçek",
+        "kana": "はな"
       },
       {
         "jp": "にわ",
-        "tr": "bahçe"
+        "tr": "bahçe",
+        "kana": "にわ"
       },
       {
         "jp": "ちょうちょ",
-        "tr": "kelebek"
+        "tr": "kelebek",
+        "kana": "ちょうちょ"
       }
     ]
   },
   {
     "title": "Snow Day",
     "japaneseTitle": "ゆきの ひ",
+    "japaneseTitleKana": "ゆきの ひ",
     "japanese": [
       "きょうは ゆきです。",
       "そとは しろいです。",
@@ -516,24 +1219,78 @@
       "Küçük bir kardan adam yaparım.",
       "Kış eğlencelidir."
     ],
+    "furigana": [
+      [
+        {
+          "text": "きょうは ゆきです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "そとは しろいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしは ぼうしを かぶります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "てぶくろも します。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "そとで ゆきを さわります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ゆきは つめたいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ちいさい ゆきだるまを つくります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ふゆは たのしいです。",
+          "kana": ""
+        }
+      ]
+    ],
     "words": [
       {
         "jp": "ゆき",
-        "tr": "kar"
+        "tr": "kar",
+        "kana": "ゆき"
       },
       {
         "jp": "ぼうし",
-        "tr": "şapka"
+        "tr": "şapka",
+        "kana": "ぼうし"
       },
       {
         "jp": "ふゆ",
-        "tr": "kış"
+        "tr": "kış",
+        "kana": "ふゆ"
       }
     ]
   },
   {
     "title": "Friend Ball",
     "japaneseTitle": "ともだちの ボール",
+    "japaneseTitleKana": "ともだちの ボール",
     "japanese": [
       "ともだちが ボールを もちます。",
       "ボールは まるいです。",
@@ -554,24 +1311,78 @@
       "Biraz yoruluruz.",
       "Ama çok eğlencelidir."
     ],
+    "furigana": [
+      [
+        {
+          "text": "ともだちが ボールを もちます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ボールは まるいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ボールは あかいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ともだちは ボールを なげます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしは ボールを とります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしたちは こうえんで あそびます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "すこし つかれます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "でも とても たのしいです。",
+          "kana": ""
+        }
+      ]
+    ],
     "words": [
       {
         "jp": "ともだち",
-        "tr": "arkadaş"
+        "tr": "arkadaş",
+        "kana": "ともだち"
       },
       {
         "jp": "ボール",
-        "tr": "top"
+        "tr": "top",
+        "kana": "ボール"
       },
       {
         "jp": "こうえん",
-        "tr": "park"
+        "tr": "park",
+        "kana": "こうえん"
       }
     ]
   },
   {
     "title": "Sleepy Bear",
     "japaneseTitle": "ねむい くま",
+    "japaneseTitleKana": "ねむい くま",
     "japanese": [
       "くまが もりに います。",
       "くまは おおきいです。",
@@ -592,24 +1403,78 @@
       "Kuş hafifçe öter.",
       "Ayı mışıl mışıl uyur."
     ],
+    "furigana": [
+      [
+        {
+          "text": "くまが もりに います。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "くまは おおきいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "でも こわくないです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "くまは ねむいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "くまは きの したに すわります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "めを ゆっくり とじます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "とりが ちいさく なきます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "くまは すやすや ねます。",
+          "kana": ""
+        }
+      ]
+    ],
     "words": [
       {
         "jp": "くま",
-        "tr": "ayı"
+        "tr": "ayı",
+        "kana": "くま"
       },
       {
         "jp": "もり",
-        "tr": "orman"
+        "tr": "orman",
+        "kana": "もり"
       },
       {
         "jp": "ねむい",
-        "tr": "uykulu"
+        "tr": "uykulu",
+        "kana": "ねむい"
       }
     ]
   },
   {
     "title": "Moon Window",
     "japaneseTitle": "まどの つき",
+    "japaneseTitleKana": "まどの つき",
     "japanese": [
       "よるに まどを あけます。",
       "そらに つきが あります。",
@@ -630,24 +1495,78 @@
       "İyi geceler derim.",
       "Güzel bir rüya görürüm."
     ],
+    "furigana": [
+      [
+        {
+          "text": "よるに まどを あけます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "そらに つきが あります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "つきは まるいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "つきは しずかに ひかります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしは ベッドに すわります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ぬいぐるみも いっしょです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "おやすみと いいます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "いい ゆめを みます。",
+          "kana": ""
+        }
+      ]
+    ],
     "words": [
       {
         "jp": "つき",
-        "tr": "ay"
+        "tr": "ay",
+        "kana": "つき"
       },
       {
         "jp": "まど",
-        "tr": "pencere"
+        "tr": "pencere",
+        "kana": "まど"
       },
       {
         "jp": "ゆめ",
-        "tr": "rüya"
+        "tr": "rüya",
+        "kana": "ゆめ"
       }
     ]
   },
   {
     "title": "Sweet Orange",
     "japaneseTitle": "あまい みかん",
+    "japaneseTitleKana": "あまい みかん",
     "japanese": [
       "かごに みかんが あります。",
       "みかんは オレンジいろです。",
@@ -668,24 +1587,78 @@
       "Mandalina tatlıdır.",
       "Tekrar yemek isterim."
     ],
+    "furigana": [
+      [
+        {
+          "text": "かごに みかんが あります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "みかんは オレンジいろです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしは みかんを ひとつ とります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "てで かわを むきます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "みかんは いい においです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ひとくち たべます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "みかんは あまいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "また たべたいです。",
+          "kana": ""
+        }
+      ]
+    ],
     "words": [
       {
         "jp": "みかん",
-        "tr": "mandalina"
+        "tr": "mandalina",
+        "kana": "みかん"
       },
       {
         "jp": "かご",
-        "tr": "sepet"
+        "tr": "sepet",
+        "kana": "かご"
       },
       {
         "jp": "あまい",
-        "tr": "tatlı"
+        "tr": "tatlı",
+        "kana": "あまい"
       }
     ]
   },
   {
     "title": "School Bus",
     "japaneseTitle": "がっこうの バス",
+    "japaneseTitleKana": "がっこうの バス",
     "japanese": [
       "あさに バスが きます。",
       "バスは きいろいです。",
@@ -706,24 +1679,78 @@
       "Hemen okula varırız.",
       "Hep birlikte günaydın deriz."
     ],
+    "furigana": [
+      [
+        {
+          "text": "あさに バスが きます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "バスは きいろいです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしは バスに のります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ともだちも バスに のります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "まどから そとを みます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "きが たくさん あります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "すぐに がっこうに つきます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "みんなで おはようと いいます。",
+          "kana": ""
+        }
+      ]
+    ],
     "words": [
       {
         "jp": "バス",
-        "tr": "otobüs"
+        "tr": "otobüs",
+        "kana": "バス"
       },
       {
         "jp": "がっこう",
-        "tr": "okul"
+        "tr": "okul",
+        "kana": "がっこう"
       },
       {
         "jp": "まど",
-        "tr": "pencere"
+        "tr": "pencere",
+        "kana": "まど"
       }
     ]
   },
   {
     "title": "Picnic Lunch",
     "japaneseTitle": "ピクニックの おべんとう",
+    "japaneseTitleKana": "ピクニックの おべんとう",
     "japanese": [
       "きょうは ピクニックです。",
       "わたしは おべんとうを もちます。",
@@ -744,24 +1771,78 @@
       "Yumurta da vardır.",
       "Dışarıda yemek lezzetlidir."
     ],
+    "furigana": [
+      [
+        {
+          "text": "きょうは ピクニックです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしは おべんとうを もちます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "こうえんに いきます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "くさの うえに すわります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "おべんとうを あけます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "おにぎりが あります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "たまごも あります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "そとで たべると おいしいです。",
+          "kana": ""
+        }
+      ]
+    ],
     "words": [
       {
         "jp": "ピクニック",
-        "tr": "piknik"
+        "tr": "piknik",
+        "kana": "ピクニック"
       },
       {
         "jp": "おべんとう",
-        "tr": "yemek kutusu"
+        "tr": "yemek kutusu",
+        "kana": "おべんとう"
       },
       {
         "jp": "おにぎり",
-        "tr": "pirinç topu"
+        "tr": "pirinç topu",
+        "kana": "おにぎり"
       }
     ]
   },
   {
     "title": "Toy Train",
     "japaneseTitle": "おもちゃの でんしゃ",
+    "japaneseTitleKana": "おもちゃの でんしゃ",
     "japanese": [
       "へやに でんしゃが あります。",
       "これは おもちゃの でんしゃです。",
@@ -782,24 +1863,78 @@
       "Ayı peluşu trene biner.",
       "Trencilik oyunu eğlencelidir."
     ],
+    "furigana": [
+      [
+        {
+          "text": "へやに でんしゃが あります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "これは おもちゃの でんしゃです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "でんしゃは みどりです。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "せんろも あります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしは でんしゃを うごかします。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "でんしゃは がたんごとんと いきます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "くまの ぬいぐるみが のります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "でんしゃごっこは たのしいです。",
+          "kana": ""
+        }
+      ]
+    ],
     "words": [
       {
         "jp": "でんしゃ",
-        "tr": "tren"
+        "tr": "tren",
+        "kana": "でんしゃ"
       },
       {
         "jp": "おもちゃ",
-        "tr": "oyuncak"
+        "tr": "oyuncak",
+        "kana": "おもちゃ"
       },
       {
         "jp": "へや",
-        "tr": "oda"
+        "tr": "oda",
+        "kana": "へや"
       }
     ]
   },
   {
     "title": "Kind Friend",
     "japaneseTitle": "やさしい ともだち",
+    "japaneseTitleKana": "やさしい ともだち",
     "japanese": [
       "わたしは えんぴつを わすれます。",
       "がっこうで こまります。",
@@ -820,18 +1955,71 @@
       "Birlikte harf yazarız.",
       "Arkadaşım çok naziktir."
     ],
+    "furigana": [
+      [
+        {
+          "text": "わたしは えんぴつを わすれます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "がっこうで こまります。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ともだちが きます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ともだちは えんぴつを くれます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "わたしは ありがとうと いいます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ともだちは にこにこします。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "いっしょに じを かきます。",
+          "kana": ""
+        }
+      ],
+      [
+        {
+          "text": "ともだちは とても やさしいです。",
+          "kana": ""
+        }
+      ]
+    ],
     "words": [
       {
         "jp": "ともだち",
-        "tr": "arkadaş"
+        "tr": "arkadaş",
+        "kana": "ともだち"
       },
       {
         "jp": "えんぴつ",
-        "tr": "kalem"
+        "tr": "kalem",
+        "kana": "えんぴつ"
       },
       {
         "jp": "やさしい",
-        "tr": "nazik"
+        "tr": "nazik",
+        "kana": "やさしい"
       }
     ]
   }
