@@ -14,6 +14,18 @@ const trainingContainer = document.getElementById('training-container');
 const trainingGrid = document.getElementById('training-grid');
 const reviewContainer = document.getElementById('review-container');
 const reviewGrid = document.getElementById('review-grid');
+const storyContainer = document.getElementById('story-container');
+const storyCounter = document.getElementById('story-counter');
+const storyTitle = document.getElementById('story-title');
+const storyJapanese = document.getElementById('story-japanese');
+const storyTranslation = document.getElementById('story-translation');
+const storyWords = document.getElementById('story-words');
+const storyTranslationToggle = document.getElementById('story-translation-toggle');
+const storySectionLabel = document.getElementById('story-section-label');
+const storyLineCount = document.getElementById('story-line-count');
+const storyProgressBar = document.getElementById('story-progress-bar');
+const storyShortTab = document.getElementById('story-short-tab');
+const storyLongTab = document.getElementById('story-long-tab');
 
 let currentMode = null; // 'hiragana', 'katakana', 'kanji'
 let currentDataSet = [];
@@ -27,6 +39,27 @@ let retryQueue = []; // Stores { item: obj, readyAt: questionCount }
 let questionCount = 0;
 let isSpeedMode = false;
 let mistakes = JSON.parse(localStorage.getItem('mistakes')) || [];
+let currentStoryIndex = 0;
+let currentStoryLength = 'short';
+let storyTranslationVisible = false;
+let storyDataLoaded = false;
+let storyDataLoading = null;
+const storyGroups = {
+    short: [],
+    long: []
+};
+const storyMeta = {
+    short: {
+        file: 'kisa.json',
+        label: 'Kısa Hikaye',
+        title: 'Kısa Japonca Hikayeler 🎀'
+    },
+    long: {
+        file: 'uzun.json',
+        label: 'Uzun Hikaye',
+        title: 'Uzun Japonca Hikayeler 🎀'
+    }
+};
 
 // Initialize
 function init() {
@@ -39,6 +72,7 @@ function showMenu() {
     trainingContainer.style.display = 'none';
     statsContainer.style.display = 'none';
     reviewContainer.style.display = 'none';
+    storyContainer.style.display = 'none';
     appTitle.textContent = "Ada Bebek Kanji Quiz 🎀";
     currentMode = null;
     isSpeedMode = false;
@@ -63,8 +97,168 @@ function showReview() {
     trainingContainer.style.display = 'none';
     statsContainer.style.display = 'none';
     reviewContainer.style.display = 'flex';
+    storyContainer.style.display = 'none';
     appTitle.textContent = "Yanlışlar 📖";
     renderReview();
+}
+
+async function showStories(event, length = 'short', resetIndex = false) {
+    if (event) event.stopPropagation();
+
+    currentStoryLength = getStoryLength(length);
+    await loadStoryGroups();
+
+    const stories = getStories();
+    if (resetIndex || currentStoryIndex >= stories.length) currentStoryIndex = 0;
+
+    menuContainer.style.display = 'none';
+    quizContainer.style.display = 'none';
+    trainingContainer.style.display = 'none';
+    statsContainer.style.display = 'none';
+    reviewContainer.style.display = 'none';
+    storyContainer.style.display = 'flex';
+    appTitle.textContent = storyMeta[currentStoryLength].title;
+    storyTranslationVisible = false;
+    updateStoryTabs();
+    renderStory();
+}
+
+function getStoryLength(length) {
+    return length === 'long' ? 'long' : 'short';
+}
+
+async function loadStoryGroups() {
+    if (storyDataLoaded) return;
+    if (storyDataLoading) return storyDataLoading;
+
+    storyDataLoading = Promise.all([
+        readStoryJson(storyMeta.short.file),
+        readStoryJson(storyMeta.long.file)
+    ]).then(([shortStories, longStories]) => {
+        const fallbackStories = typeof miniStories !== 'undefined' ? miniStories : [];
+        storyGroups.short = shortStories.length > 0 ? shortStories : fallbackStories;
+        storyGroups.long = longStories;
+        storyDataLoaded = true;
+    });
+
+    return storyDataLoading;
+}
+
+async function readStoryJson(fileName) {
+    try {
+        const response = await fetch(fileName, { cache: 'no-store' });
+        if (!response.ok) return [];
+
+        const data = await response.json();
+        return Array.isArray(data) ? data : [];
+    } catch (error) {
+        return [];
+    }
+}
+
+function getStories(length = currentStoryLength) {
+    return storyGroups[getStoryLength(length)] || [];
+}
+
+async function setStoryLength(length) {
+    const nextLength = getStoryLength(length);
+    if (nextLength === currentStoryLength) return;
+
+    currentStoryLength = nextLength;
+    currentStoryIndex = 0;
+    storyTranslationVisible = false;
+    await loadStoryGroups();
+    appTitle.textContent = storyMeta[currentStoryLength].title;
+    updateStoryTabs();
+    renderStory();
+}
+
+function renderStory() {
+    const stories = getStories();
+    const story = stories[currentStoryIndex];
+
+    if (!story) {
+        renderEmptyStory();
+        return;
+    }
+
+    const japaneseLines = Array.isArray(story.japanese) ? story.japanese : [];
+    const turkishLines = Array.isArray(story.turkish) ? story.turkish : [];
+    const words = Array.isArray(story.words) ? story.words : [];
+    const progress = stories.length > 0 ? ((currentStoryIndex + 1) / stories.length) * 100 : 0;
+    const titleParts = [story.japaneseTitle, story.title].filter(Boolean);
+    const translationDisplay = storyTranslationVisible ? 'grid' : 'none';
+
+    storySectionLabel.textContent = storyMeta[currentStoryLength].label;
+    storyCounter.textContent = `${currentStoryIndex + 1} / ${stories.length}`;
+    storyLineCount.textContent = `${japaneseLines.length} cümle`;
+    storyProgressBar.style.width = `${progress}%`;
+    storyTitle.textContent = titleParts.join(' · ') || 'Story';
+    storyJapanese.innerHTML = japaneseLines.map((line, index) => `
+        <p><span>${index + 1}</span>${escapeHtml(line)}</p>
+    `).join('');
+    storyTranslation.innerHTML = turkishLines.map((line, index) => `
+        <p><span>${index + 1}</span>${escapeHtml(line)}</p>
+    `).join('');
+    storyTranslation.hidden = !storyTranslationVisible;
+    storyTranslation.style.display = translationDisplay;
+    storyTranslationToggle.textContent = storyTranslationVisible ? 'Türkçeyi Gizle' : 'Türkçesini Göster';
+    storyTranslationToggle.setAttribute('aria-expanded', String(storyTranslationVisible));
+    storyWords.innerHTML = words.map(word => `
+        <span class="story-word"><strong>${escapeHtml(word.jp)}</strong> ${escapeHtml(word.tr)}</span>
+    `).join('');
+}
+
+function renderEmptyStory() {
+    storySectionLabel.textContent = storyMeta[currentStoryLength].label;
+    storyCounter.textContent = '0 / 0';
+    storyLineCount.textContent = '0 cümle';
+    storyProgressBar.style.width = '0%';
+    storyTitle.textContent = currentStoryLength === 'long' ? 'Uzun hikayeler hazırlanıyor' : 'Hikaye bulunamadı';
+    storyJapanese.innerHTML = '<p class="story-empty">JSON gelince burası dolacak.</p>';
+    storyTranslation.innerHTML = '';
+    storyTranslation.hidden = true;
+    storyTranslation.style.display = 'none';
+    storyTranslationToggle.textContent = 'Türkçesini Göster';
+    storyTranslationToggle.setAttribute('aria-expanded', 'false');
+    storyWords.innerHTML = '';
+}
+
+function updateStoryTabs() {
+    storyShortTab.classList.toggle('active', currentStoryLength === 'short');
+    storyLongTab.classList.toggle('active', currentStoryLength === 'long');
+}
+
+function toggleStoryTranslation() {
+    storyTranslationVisible = !storyTranslationVisible;
+    renderStory();
+}
+
+function nextStory() {
+    const stories = getStories();
+    if (stories.length === 0) return;
+
+    currentStoryIndex = (currentStoryIndex + 1) % stories.length;
+    storyTranslationVisible = false;
+    renderStory();
+}
+
+function previousStory() {
+    const stories = getStories();
+    if (stories.length === 0) return;
+
+    currentStoryIndex = (currentStoryIndex - 1 + stories.length) % stories.length;
+    storyTranslationVisible = false;
+    renderStory();
+}
+
+function escapeHtml(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }
 
 function renderReview() {
@@ -159,6 +353,7 @@ function startQuiz(mode, event, speedMode = false) {
     trainingContainer.style.display = 'none';
     statsContainer.style.display = 'flex';
     reviewContainer.style.display = 'none';
+    storyContainer.style.display = 'none';
 
     // Update Title
     const titles = {
@@ -201,6 +396,7 @@ function startTraining(mode, event) {
     trainingContainer.style.display = 'flex';
     statsContainer.style.display = 'none';
     reviewContainer.style.display = 'none';
+    storyContainer.style.display = 'none';
 
     const titles = {
         'hiragana': 'Hiragana Training',

@@ -114,6 +114,57 @@ h1 {
     justify-content: center;
 }
 
+.story-menu-card {
+    align-items: stretch;
+    cursor: default;
+}
+
+.story-menu-card h2,
+.story-menu-card p {
+    align-self: center;
+}
+
+.story-choice-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    width: 100%;
+    margin-top: 0.35rem;
+}
+
+.story-choice-btn {
+    min-height: 74px;
+    padding: 0.75rem;
+    border: 2px solid #fff;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0.2rem;
+    text-align: left;
+    box-shadow: 0 4px 0 rgba(93, 64, 55, 0.12);
+}
+
+.story-choice-btn span {
+    font-size: 1.1rem;
+}
+
+.story-choice-btn small {
+    color: rgba(93, 64, 55, 0.72);
+    font-size: 0.78rem;
+}
+
+.short-story-btn {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.long-story-btn {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
 .menu-btn {
     padding: 0.5rem 1rem;
     border-radius: 10px;
@@ -288,6 +339,228 @@ h1 {
     font-size: 0.8rem;
     color: var(--secondary-color);
     margin-top: 0.2rem;
+}
+
+/* Story Mode Styles */
+.story-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    width: 100%;
+}
+
+.story-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.story-mode-switch {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    background: #fff;
+    border: 2px solid #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 10px rgba(93, 64, 55, 0.08);
+}
+
+.story-mode-btn {
+    min-width: 74px;
+    padding: 0.55rem 0.8rem;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text-color);
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.story-mode-btn.active {
+    background: var(--text-color);
+    color: #fff;
+}
+
+.story-card {
+    background: #fffdfd;
+    border: 3px solid #fff;
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.95rem;
+}
+
+.story-topline {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    color: #00796b;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.story-progress {
+    height: 8px;
+    overflow: hidden;
+    background: #fce4ec;
+    border-radius: 999px;
+}
+
+.story-progress-bar {
+    width: 0%;
+    height: 100%;
+    background: #4db6ac;
+    border-radius: inherit;
+    transition: width 0.25s ease;
+}
+
+.story-card h2 {
+    color: var(--ribbon-color);
+    font-size: 1.45rem;
+    line-height: 1.25;
+}
+
+.story-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.story-meta span {
+    padding: 0.3rem 0.55rem;
+    border-radius: 999px;
+    background: #fff8e1;
+    color: #8d6e00;
+    border: 1px solid #ffecb3;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.story-japanese,
+.story-translation {
+    display: grid;
+    gap: 0.65rem;
+    line-height: 1.75;
+}
+
+.story-japanese {
+    font-size: 1.18rem;
+    font-weight: 700;
+}
+
+.story-japanese p,
+.story-translation p {
+    display: grid;
+    grid-template-columns: 1.8rem 1fr;
+    gap: 0.65rem;
+    align-items: start;
+    padding: 0.7rem 0.8rem;
+    border-radius: 14px;
+}
+
+.story-japanese p {
+    background: #fff8f8;
+    border: 1px solid #ffe4ec;
+}
+
+.story-translation p {
+    background: #fbfff5;
+    border: 1px solid #dcedc8;
+}
+
+.story-japanese p span,
+.story-translation p span {
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    color: var(--secondary-color);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.story-translation {
+    padding: 1rem;
+    border-radius: 18px;
+    background: #f1f8e9;
+    border: 2px dashed #aed581;
+    font-size: 1rem;
+}
+
+.story-translation[hidden] {
+    display: none;
+}
+
+.story-tools {
+    display: grid;
+}
+
+.story-toggle-btn {
+    width: 100%;
+    background-color: var(--text-color);
+    color: white;
+    min-height: 46px;
+}
+
+.story-words-panel {
+    display: grid;
+    gap: 0.6rem;
+    padding-top: 0.2rem;
+}
+
+.story-words-title {
+    color: #00796b;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.story-words {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.story-word {
+    padding: 0.35rem 0.6rem;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid #e0f2f1;
+    color: var(--text-color);
+    font-size: 0.85rem;
+    box-shadow: 0 2px 0 #b2dfdb;
+}
+
+.story-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.story-nav-btn {
+    min-height: 46px;
+    background: #fff;
+    color: var(--text-color);
+    border: 2px solid #fff;
+    box-shadow: 0 4px 0 rgba(93, 64, 55, 0.12);
+}
+
+.story-nav-btn.primary {
+    background: var(--accent-color);
+    color: #fff;
+}
+
+.story-empty {
+    grid-template-columns: 1fr;
+    color: var(--secondary-color);
+    text-align: center;
 }
 
 /* Review Mode Styles */
@@ -520,6 +793,54 @@ footer {
 
     .feedback-text {
         font-size: 1.2rem;
+    }
+
+    .story-choice-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .story-choice-btn {
+        min-height: 60px;
+    }
+
+    .story-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .story-mode-switch {
+        width: 100%;
+    }
+
+    .story-card {
+        padding: 1rem;
+        border-radius: 18px;
+    }
+
+    .story-card h2 {
+        font-size: 1.2rem;
+    }
+
+    .story-japanese {
+        font-size: 1.05rem;
+    }
+
+    .story-japanese p,
+    .story-translation p {
+        grid-template-columns: 1.55rem 1fr;
+        gap: 0.5rem;
+        padding: 0.65rem;
+    }
+
+    .story-japanese p span,
+    .story-translation p span {
+        width: 1.55rem;
+        height: 1.55rem;
+        font-size: 0.72rem;
+    }
+
+    .story-actions {
+        grid-template-columns: 1fr;
     }
 
     /* Mobile Training Grid Optimization */

@@ -1,0 +1,1982 @@
+[
+  {
+    "title": "A Morning at School",
+    "japaneseTitle": "学校の 朝",
+    "japanese": [
+      "私は 今日 早く 起きます。",
+      "外の 空は 明るいです。",
+      "母は 台所で 朝ごはんを 作ります。",
+      "私は ごはんと 卵を 食べます。",
+      "水を 飲んで、かばんを 持ちます。",
+      "家の 前で 友達を 待ちます。",
+      "友達は 笑顔で 来ます。",
+      "私たちは 一緒に 学校へ 行きます。",
+      "道で 小さい 犬を 見ます。",
+      "犬は しっぽを 振ります。",
+      "学校の 門に 先生が います。",
+      "先生は おはようと 言います。",
+      "私たちも 大きな 声で あいさつします。",
+      "教室で 本を 出します。",
+      "一時間目は 日本語です。",
+      "私は 新しい 漢字を 書きます。",
+      "友達は きれいな 字を 書きます。",
+      "休み時間に 水を 飲みます。",
+      "今日の 学校は とても 楽しいです。",
+      "明日も 元気に 学校へ 行きたいです。"
+    ],
+    "turkish": [
+      "Ben bugün erken kalkarım.",
+      "Dışarıdaki gökyüzü aydınlıktır.",
+      "Annem mutfakta kahvaltı hazırlar.",
+      "Ben pilav ve yumurta yerim.",
+      "Su içerim ve çantamı alırım.",
+      "Evin önünde arkadaşımı beklerim.",
+      "Arkadaşım gülümseyerek gelir.",
+      "Biz birlikte okula gideriz.",
+      "Yolda küçük bir köpek görürüz.",
+      "Köpek kuyruğunu sallar.",
+      "Okul kapısında öğretmen vardır.",
+      "Öğretmen günaydın der.",
+      "Biz de yüksek sesle selam veririz.",
+      "Sınıfta kitabımı çıkarırım.",
+      "Birinci ders Japoncadır.",
+      "Ben yeni kanji yazarım.",
+      "Arkadaşım güzel harfler yazar.",
+      "Teneffüste su içerim.",
+      "Bugünkü okul çok eğlencelidir.",
+      "Yarın da neşeyle okula gitmek isterim."
+    ],
+    "words": [
+      {
+        "jp": "学校",
+        "tr": "okul"
+      },
+      {
+        "jp": "今日",
+        "tr": "bugün"
+      },
+      {
+        "jp": "明日",
+        "tr": "yarın"
+      },
+      {
+        "jp": "友達",
+        "tr": "arkadaş"
+      },
+      {
+        "jp": "先生",
+        "tr": "öğretmen"
+      },
+      {
+        "jp": "教室",
+        "tr": "sınıf"
+      },
+      {
+        "jp": "本",
+        "tr": "kitap"
+      },
+      {
+        "jp": "朝ごはん",
+        "tr": "kahvaltı"
+      },
+      {
+        "jp": "犬",
+        "tr": "köpek"
+      },
+      {
+        "jp": "漢字",
+        "tr": "kanji"
+      }
+    ]
+  },
+  {
+    "title": "The Cat at Home",
+    "japaneseTitle": "家の 猫",
+    "japanese": [
+      "私の 家に 白い 猫が います。",
+      "猫の 名前は しろです。",
+      "しろは 朝 まどの 近くに 座ります。",
+      "私は しろに おはようと 言います。",
+      "しろは 小さい 声で 鳴きます。",
+      "父は 猫の 水を かえます。",
+      "母は 猫の ごはんを 入れます。",
+      "しろは ゆっくり 食べます。",
+      "私は 学校へ 行く 前に しろを なでます。",
+      "しろは 目を 細く します。",
+      "夕方、私は 家へ 帰ります。",
+      "しろは 玄関で 私を 待っています。",
+      "私は ただいまと 言います。",
+      "しろは 私の 足の 近くを 歩きます。",
+      "私は 宿題を します。",
+      "しろは 机の 下で 眠ります。",
+      "夜、私は 本を 読みます。",
+      "しろも そばで 静かに います。",
+      "家の 中は とても あたたかいです。",
+      "私は しろと 家が 大好きです。"
+    ],
+    "turkish": [
+      "Benim evimde beyaz bir kedi vardır.",
+      "Kedinin adı Shiro'dur.",
+      "Shiro sabah pencerenin yanında oturur.",
+      "Ben Shiro'ya günaydın derim.",
+      "Shiro küçük bir sesle miyavlar.",
+      "Babam kedinin suyunu değiştirir.",
+      "Annem kedinin mamasını koyar.",
+      "Shiro yavaşça yer.",
+      "Ben okula gitmeden önce Shiro'yu okşarım.",
+      "Shiro gözlerini kısar.",
+      "Akşamüstü eve dönerim.",
+      "Shiro girişte beni bekler.",
+      "Ben geldim derim.",
+      "Shiro ayaklarımın yanında yürür.",
+      "Ben ödev yaparım.",
+      "Shiro masanın altında uyur.",
+      "Gece kitap okurum.",
+      "Shiro da yanımda sessizce durur.",
+      "Evin içi çok sıcaktır.",
+      "Ben Shiro'yu ve evimi çok severim."
+    ],
+    "words": [
+      {
+        "jp": "家",
+        "tr": "ev"
+      },
+      {
+        "jp": "猫",
+        "tr": "kedi"
+      },
+      {
+        "jp": "名前",
+        "tr": "isim"
+      },
+      {
+        "jp": "朝",
+        "tr": "sabah"
+      },
+      {
+        "jp": "水",
+        "tr": "su"
+      },
+      {
+        "jp": "食べる",
+        "tr": "yemek"
+      },
+      {
+        "jp": "帰る",
+        "tr": "dönmek"
+      },
+      {
+        "jp": "玄関",
+        "tr": "giriş"
+      },
+      {
+        "jp": "宿題",
+        "tr": "ödev"
+      },
+      {
+        "jp": "夜",
+        "tr": "gece"
+      }
+    ]
+  },
+  {
+    "title": "Rainy Park",
+    "japaneseTitle": "雨の 公園",
+    "japanese": [
+      "今日は 朝から 雨です。",
+      "空は 少し 暗いです。",
+      "私は 青い かさを 持ちます。",
+      "弟も 小さい かさを 持ちます。",
+      "母と 一緒に 公園へ 行きます。",
+      "道に 水たまりが あります。",
+      "弟は 水たまりを 見て 笑います。",
+      "公園には 人が 少ないです。",
+      "木の 葉は 雨で ぬれています。",
+      "花も 静かに 立っています。",
+      "私は 赤い 花を 見ます。",
+      "花の 上に 小さい 雨の しずくが あります。",
+      "母は きれいですねと 言います。",
+      "私たちは ベンチに 座りません。",
+      "ベンチは ぬれています。",
+      "少し 歩いて、家へ 帰ります。",
+      "家で あたたかい お茶を 飲みます。",
+      "弟は 今日の 公園の 話を します。",
+      "雨の日も 楽しい ことが あります。",
+      "明日は 晴れると いいです。"
+    ],
+    "turkish": [
+      "Bugün sabahtan beri yağmur var.",
+      "Gökyüzü biraz karanlıktır.",
+      "Ben mavi bir şemsiye taşırım.",
+      "Kardeşim de küçük bir şemsiye taşır.",
+      "Annemle birlikte parka gideriz.",
+      "Yolda su birikintileri vardır.",
+      "Kardeşim su birikintisini görüp güler.",
+      "Parkta az insan vardır.",
+      "Ağaçların yaprakları yağmurla ıslanmıştır.",
+      "Çiçekler de sessizce durur.",
+      "Ben kırmızı bir çiçek görürüm.",
+      "Çiçeğin üstünde küçük yağmur damlaları vardır.",
+      "Annem çok güzel der.",
+      "Biz banka oturmayız.",
+      "Bank ıslanmıştır.",
+      "Biraz yürüyüp eve döneriz.",
+      "Evde sıcak çay içeriz.",
+      "Kardeşim bugünkü parkı anlatır.",
+      "Yağmurlu günde de eğlenceli şeyler vardır.",
+      "Yarın hava açık olsa güzel olur."
+    ],
+    "words": [
+      {
+        "jp": "雨",
+        "tr": "yağmur"
+      },
+      {
+        "jp": "空",
+        "tr": "gökyüzü"
+      },
+      {
+        "jp": "公園",
+        "tr": "park"
+      },
+      {
+        "jp": "水たまり",
+        "tr": "su birikintisi"
+      },
+      {
+        "jp": "木",
+        "tr": "ağaç"
+      },
+      {
+        "jp": "葉",
+        "tr": "yaprak"
+      },
+      {
+        "jp": "花",
+        "tr": "çiçek"
+      },
+      {
+        "jp": "家",
+        "tr": "ev"
+      },
+      {
+        "jp": "お茶",
+        "tr": "çay"
+      },
+      {
+        "jp": "明日",
+        "tr": "yarın"
+      }
+    ]
+  },
+  {
+    "title": "Lunch with Friends",
+    "japaneseTitle": "友達と 昼ごはん",
+    "japanese": [
+      "今日は 学校で お弁当を 食べます。",
+      "私は 朝、母と お弁当を 作りました。",
+      "お弁当の 中に ごはんが あります。",
+      "卵と 野菜も あります。",
+      "昼休みに 友達が 私の 机へ 来ます。",
+      "友達は 赤い 箱を 持っています。",
+      "箱の 中に サンドイッチが あります。",
+      "私たちは 一緒に 食べます。",
+      "私は 卵を 一つ 食べます。",
+      "友達は サンドイッチを 半分 くれます。",
+      "私は ありがとうと 言います。",
+      "先生も 教室で 昼ごはんを 食べます。",
+      "先生は みんなに 水を 飲んでくださいと 言います。",
+      "私たちは 水を 飲みます。",
+      "昼ごはんの 後で、少し 話します。",
+      "友達は 昨日 見た 犬の 話を します。",
+      "私は 家の 猫の 話を します。",
+      "みんな 笑って 聞きます。",
+      "お弁当の 時間は すぐ 終わります。",
+      "でも 心は とても あたたかいです。"
+    ],
+    "turkish": [
+      "Bugün okulda öğle yemeği kutusu yerim.",
+      "Sabah annemle öğle yemeği kutusu hazırladım.",
+      "Kutunun içinde pilav vardır.",
+      "Yumurta ve sebze de vardır.",
+      "Öğle arasında arkadaşım masama gelir.",
+      "Arkadaşım kırmızı bir kutu taşır.",
+      "Kutunun içinde sandviç vardır.",
+      "Biz birlikte yeriz.",
+      "Ben bir yumurta yerim.",
+      "Arkadaşım sandviçin yarısını bana verir.",
+      "Ben teşekkür ederim derim.",
+      "Öğretmen de sınıfta öğle yemeği yer.",
+      "Öğretmen herkese lütfen su için der.",
+      "Biz su içeriz.",
+      "Öğle yemeğinden sonra biraz konuşuruz.",
+      "Arkadaşım dün gördüğü köpekten bahseder.",
+      "Ben evdeki kedimden bahsederim.",
+      "Herkes gülerek dinler.",
+      "Öğle yemeği zamanı hemen biter.",
+      "Ama içimiz çok sıcaktır."
+    ],
+    "words": [
+      {
+        "jp": "昼ごはん",
+        "tr": "öğle yemeği"
+      },
+      {
+        "jp": "お弁当",
+        "tr": "yemek kutusu"
+      },
+      {
+        "jp": "卵",
+        "tr": "yumurta"
+      },
+      {
+        "jp": "野菜",
+        "tr": "sebze"
+      },
+      {
+        "jp": "友達",
+        "tr": "arkadaş"
+      },
+      {
+        "jp": "先生",
+        "tr": "öğretmen"
+      },
+      {
+        "jp": "教室",
+        "tr": "sınıf"
+      },
+      {
+        "jp": "水",
+        "tr": "su"
+      },
+      {
+        "jp": "昨日",
+        "tr": "dün"
+      },
+      {
+        "jp": "猫",
+        "tr": "kedi"
+      }
+    ]
+  },
+  {
+    "title": "A Small Shopping Trip",
+    "japaneseTitle": "小さい 買い物",
+    "japanese": [
+      "土曜日に 私は 母と 店へ 行きます。",
+      "店は 家から 近いです。",
+      "道で たくさんの 車を 見ます。",
+      "母は 手を つないで 歩きます。",
+      "店の 前に 大きな りんごの 絵が あります。",
+      "私は りんごが 好きです。",
+      "店の 中は 明るいです。",
+      "まず 牛乳を 買います。",
+      "次に パンを 買います。",
+      "母は 野菜も 見ます。",
+      "私は 赤い トマトを かごに 入れます。",
+      "店の 人は やさしいです。",
+      "店の 人は こんにちはと 言います。",
+      "私は 小さい 声で こんにちはと 言います。",
+      "母は お金を 払います。",
+      "私は 袋を 一つ 持ちます。",
+      "袋は 少し 重いです。",
+      "家へ 帰って、パンを 食べます。",
+      "牛乳も 飲みます。",
+      "買い物は いい 勉強に なります。"
+    ],
+    "turkish": [
+      "Cumartesi annemle dükkana giderim.",
+      "Dükkan eve yakındır.",
+      "Yolda çok araba görürüz.",
+      "Annem elimden tutup yürür.",
+      "Dükkanın önünde büyük bir elma resmi vardır.",
+      "Ben elmayı severim.",
+      "Dükkanın içi aydınlıktır.",
+      "Önce süt alırız.",
+      "Sonra ekmek alırız.",
+      "Annem sebzelere de bakar.",
+      "Ben kırmızı domatesi sepete koyarım.",
+      "Dükkan çalışanı naziktir.",
+      "Dükkan çalışanı merhaba der.",
+      "Ben küçük bir sesle merhaba derim.",
+      "Annem para öder.",
+      "Ben bir poşet taşırım.",
+      "Poşet biraz ağırdır.",
+      "Eve dönüp ekmek yeriz.",
+      "Süt de içeriz.",
+      "Alışveriş iyi bir öğrenme olur."
+    ],
+    "words": [
+      {
+        "jp": "土曜日",
+        "tr": "cumartesi"
+      },
+      {
+        "jp": "店",
+        "tr": "dükkan"
+      },
+      {
+        "jp": "買い物",
+        "tr": "alışveriş"
+      },
+      {
+        "jp": "車",
+        "tr": "araba"
+      },
+      {
+        "jp": "牛乳",
+        "tr": "süt"
+      },
+      {
+        "jp": "パン",
+        "tr": "ekmek"
+      },
+      {
+        "jp": "野菜",
+        "tr": "sebze"
+      },
+      {
+        "jp": "お金",
+        "tr": "para"
+      },
+      {
+        "jp": "袋",
+        "tr": "poşet"
+      },
+      {
+        "jp": "勉強",
+        "tr": "öğrenme, ders çalışma"
+      }
+    ]
+  },
+  {
+    "title": "The Lost Pencil",
+    "japaneseTitle": "なくした 鉛筆",
+    "japanese": [
+      "月曜日の 朝、私は 学校へ 行きます。",
+      "今日の 一時間目は 算数です。",
+      "私は かばんを 開けます。",
+      "でも 鉛筆が ありません。",
+      "私は 少し 困ります。",
+      "机の 中を 見ます。",
+      "本の 下も 見ます。",
+      "鉛筆は どこにも ありません。",
+      "友達が 私の 顔を 見ます。",
+      "友達は どうしたのと 聞きます。",
+      "私は 鉛筆が ないと 言います。",
+      "友達は 自分の 鉛筆を 一本 くれます。",
+      "私は ありがとうと 言います。",
+      "先生は やさしく 笑います。",
+      "授業の 後で、私は もう 一度 かばんを 見ます。",
+      "小さい ポケットに 鉛筆が あります。",
+      "私は びっくりします。",
+      "友達に 鉛筆を 返します。",
+      "友達は 大丈夫と 言います。",
+      "私は 物を よく 見ると 決めます。"
+    ],
+    "turkish": [
+      "Pazartesi sabahı okula giderim.",
+      "Bugünkü birinci ders matematiktir.",
+      "Ben çantamı açarım.",
+      "Ama kalemim yoktur.",
+      "Biraz zor durumda kalırım.",
+      "Sıranın içine bakarım.",
+      "Kitabın altına da bakarım.",
+      "Kalem hiçbir yerde yoktur.",
+      "Arkadaşım yüzüme bakar.",
+      "Arkadaşım ne oldu diye sorar.",
+      "Ben kalemim yok derim.",
+      "Arkadaşım kendi kaleminden bir tane verir.",
+      "Ben teşekkür ederim derim.",
+      "Öğretmen nazikçe gülümser.",
+      "Dersten sonra çantama bir kez daha bakarım.",
+      "Küçük cepte kalem vardır.",
+      "Ben şaşırırım.",
+      "Arkadaşıma kalemi geri veririm.",
+      "Arkadaşım sorun değil der.",
+      "Ben eşyalarıma iyi bakmaya karar veririm."
+    ],
+    "words": [
+      {
+        "jp": "月曜日",
+        "tr": "pazartesi"
+      },
+      {
+        "jp": "朝",
+        "tr": "sabah"
+      },
+      {
+        "jp": "学校",
+        "tr": "okul"
+      },
+      {
+        "jp": "算数",
+        "tr": "matematik"
+      },
+      {
+        "jp": "鉛筆",
+        "tr": "kalem"
+      },
+      {
+        "jp": "机",
+        "tr": "sıra, masa"
+      },
+      {
+        "jp": "友達",
+        "tr": "arkadaş"
+      },
+      {
+        "jp": "先生",
+        "tr": "öğretmen"
+      },
+      {
+        "jp": "授業",
+        "tr": "ders"
+      },
+      {
+        "jp": "返す",
+        "tr": "geri vermek"
+      }
+    ]
+  },
+  {
+    "title": "A Dog in the Street",
+    "japaneseTitle": "道の 犬",
+    "japanese": [
+      "夕方、私は 父と 散歩します。",
+      "空は オレンジ色です。",
+      "道の 近くに 小さい 犬が います。",
+      "犬は 白くて かわいいです。",
+      "犬は 首に 青い ひもを しています。",
+      "でも 近くに 人が いません。",
+      "私は 父に 犬を 見てと 言います。",
+      "父は ゆっくり 犬に 近づきます。",
+      "犬は こわがって いません。",
+      "犬は 父の 手を においます。",
+      "ひもに 名前が 書いてあります。",
+      "名前の 下に 電話番号が あります。",
+      "父は その 番号に 電話します。",
+      "少し 後で 女の 人が 来ます。",
+      "女の 人は 犬の 名前を 呼びます。",
+      "犬は うれしそうに 走ります。",
+      "女の 人は ありがとうございますと 言います。",
+      "私は とても 安心します。",
+      "帰り道、父は よい ことを したねと 言います。",
+      "私は 心が あたたかく なります。"
+    ],
+    "turkish": [
+      "Akşamüstü babamla yürüyüş yaparım.",
+      "Gökyüzü turuncu renktedir.",
+      "Yolun yanında küçük bir köpek vardır.",
+      "Köpek beyaz ve sevimlidir.",
+      "Köpeğin boynunda mavi bir tasma vardır.",
+      "Ama yakınında kimse yoktur.",
+      "Ben babama köpeğe bak derim.",
+      "Babam yavaşça köpeğe yaklaşır.",
+      "Köpek korkmaz.",
+      "Köpek babamın elini koklar.",
+      "Tasmada adı yazılıdır.",
+      "Adın altında telefon numarası vardır.",
+      "Babam o numarayı arar.",
+      "Biraz sonra bir kadın gelir.",
+      "Kadın köpeğin adını çağırır.",
+      "Köpek mutlu görünerek koşar.",
+      "Kadın teşekkür ederim der.",
+      "Ben çok rahatlarım.",
+      "Dönüş yolunda babam iyi bir şey yaptın der.",
+      "Benim içim ısınır."
+    ],
+    "words": [
+      {
+        "jp": "夕方",
+        "tr": "akşamüstü"
+      },
+      {
+        "jp": "父",
+        "tr": "baba"
+      },
+      {
+        "jp": "散歩",
+        "tr": "yürüyüş"
+      },
+      {
+        "jp": "空",
+        "tr": "gökyüzü"
+      },
+      {
+        "jp": "道",
+        "tr": "yol"
+      },
+      {
+        "jp": "犬",
+        "tr": "köpek"
+      },
+      {
+        "jp": "名前",
+        "tr": "isim"
+      },
+      {
+        "jp": "電話",
+        "tr": "telefon"
+      },
+      {
+        "jp": "安心",
+        "tr": "rahatlama"
+      },
+      {
+        "jp": "帰り道",
+        "tr": "dönüş yolu"
+      }
+    ]
+  },
+  {
+    "title": "A Sunny Sunday",
+    "japaneseTitle": "晴れた 日曜日",
+    "japanese": [
+      "日曜日の 朝、空は とても 青いです。",
+      "私は いつもより 少し 遅く 起きます。",
+      "母は 窓を 開けます。",
+      "外から 鳥の 声が 聞こえます。",
+      "父は 新聞を 読んでいます。",
+      "私は 台所で 水を 飲みます。",
+      "朝ごはんに パンと 果物を 食べます。",
+      "今日の 果物は みかんです。",
+      "みかんは 甘くて おいしいです。",
+      "朝ごはんの 後で、家族で 公園へ 行きます。",
+      "公園には 子どもが たくさん います。",
+      "私は ボールで 遊びます。",
+      "弟は すべり台で 遊びます。",
+      "母は 花の 写真を 撮ります。",
+      "父は ベンチで 私たちを 見ます。",
+      "昼に みんなで おにぎりを 食べます。",
+      "水も たくさん 飲みます。",
+      "午後、家へ 帰ります。",
+      "私は 少し 眠く なります。",
+      "晴れた 日曜日は とても 気持ちが いいです。"
+    ],
+    "turkish": [
+      "Pazar sabahı gökyüzü çok mavidir.",
+      "Ben her zamankinden biraz geç kalkarım.",
+      "Annem pencereyi açar.",
+      "Dışarıdan kuş sesi duyulur.",
+      "Babam gazete okuyor.",
+      "Ben mutfakta su içerim.",
+      "Kahvaltıda ekmek ve meyve yerim.",
+      "Bugünkü meyve mandalinadır.",
+      "Mandalina tatlı ve lezzetlidir.",
+      "Kahvaltıdan sonra ailece parka gideriz.",
+      "Parkta çok çocuk vardır.",
+      "Ben topla oynarım.",
+      "Kardeşim kaydırakta oynar.",
+      "Annem çiçeklerin fotoğrafını çeker.",
+      "Babam bankta bizi izler.",
+      "Öğlen hep birlikte onigiri yeriz.",
+      "Bol bol su da içeriz.",
+      "Öğleden sonra eve döneriz.",
+      "Ben biraz uykulu olurum.",
+      "Güneşli pazar çok güzel hissettirir."
+    ],
+    "words": [
+      {
+        "jp": "日曜日",
+        "tr": "pazar"
+      },
+      {
+        "jp": "晴れる",
+        "tr": "hava açmak"
+      },
+      {
+        "jp": "家族",
+        "tr": "aile"
+      },
+      {
+        "jp": "公園",
+        "tr": "park"
+      },
+      {
+        "jp": "子ども",
+        "tr": "çocuk"
+      },
+      {
+        "jp": "遊ぶ",
+        "tr": "oynamak"
+      },
+      {
+        "jp": "花",
+        "tr": "çiçek"
+      },
+      {
+        "jp": "写真",
+        "tr": "fotoğraf"
+      },
+      {
+        "jp": "おにぎり",
+        "tr": "pirinç topu"
+      },
+      {
+        "jp": "午後",
+        "tr": "öğleden sonra"
+      }
+    ]
+  },
+  {
+    "title": "Library Day",
+    "japaneseTitle": "図書館の 日",
+    "japanese": [
+      "今日は 先生と 図書館へ 行きます。",
+      "図書館は 学校の となりに あります。",
+      "中は とても 静かです。",
+      "私は 小さい 声で 話します。",
+      "友達も 静かに 歩きます。",
+      "本だなには 本が たくさん あります。",
+      "私は 動物の 本を 見つけます。",
+      "その 本には 猫と 犬の 絵が あります。",
+      "友達は 星の 本を 選びます。",
+      "先生は 日本の 昔話を 持っています。",
+      "私たちは 机に 座ります。",
+      "私は 動物の 本を 読みます。",
+      "知らない 言葉が あります。",
+      "先生に 言葉の 意味を 聞きます。",
+      "先生は やさしく 説明します。",
+      "私は ノートに 新しい 言葉を 書きます。",
+      "友達も 星の 名前を 書きます。",
+      "図書館の 時間は 静かで 楽しいです。",
+      "帰る 前に 本を 一冊 借ります。",
+      "家で また 読みたいです。"
+    ],
+    "turkish": [
+      "Bugün öğretmenle kütüphaneye gideriz.",
+      "Kütüphane okulun yanındadır.",
+      "İçerisi çok sessizdir.",
+      "Ben alçak sesle konuşurum.",
+      "Arkadaşım da sessizce yürür.",
+      "Kitap raflarında çok kitap vardır.",
+      "Ben hayvanlar hakkında bir kitap bulurum.",
+      "O kitapta kedi ve köpek resimleri vardır.",
+      "Arkadaşım yıldızlar hakkında bir kitap seçer.",
+      "Öğretmen Japon eski masallarını tutuyor.",
+      "Biz masaya otururuz.",
+      "Ben hayvan kitabını okurum.",
+      "Bilmediğim kelimeler vardır.",
+      "Öğretmene kelimenin anlamını sorarım.",
+      "Öğretmen nazikçe açıklar.",
+      "Ben deftere yeni kelimeyi yazarım.",
+      "Arkadaşım da yıldızların adlarını yazar.",
+      "Kütüphane zamanı sessiz ve eğlencelidir.",
+      "Dönmeden önce bir kitap ödünç alırım.",
+      "Evde tekrar okumak isterim."
+    ],
+    "words": [
+      {
+        "jp": "図書館",
+        "tr": "kütüphane"
+      },
+      {
+        "jp": "先生",
+        "tr": "öğretmen"
+      },
+      {
+        "jp": "本だな",
+        "tr": "kitap rafı"
+      },
+      {
+        "jp": "動物",
+        "tr": "hayvan"
+      },
+      {
+        "jp": "猫",
+        "tr": "kedi"
+      },
+      {
+        "jp": "犬",
+        "tr": "köpek"
+      },
+      {
+        "jp": "星",
+        "tr": "yıldız"
+      },
+      {
+        "jp": "意味",
+        "tr": "anlam"
+      },
+      {
+        "jp": "説明",
+        "tr": "açıklama"
+      },
+      {
+        "jp": "借りる",
+        "tr": "ödünç almak"
+      }
+    ]
+  },
+  {
+    "title": "The New Student",
+    "japaneseTitle": "新しい 学生",
+    "japanese": [
+      "今日、私たちの 教室に 新しい 学生が 来ます。",
+      "先生は みんなに 静かに してと 言います。",
+      "新しい 学生は ドアの 前に 立ちます。",
+      "名前は あきらです。",
+      "あきらさんは 少し 緊張しています。",
+      "先生は あきらさんを 私の となりに 座らせます。",
+      "私は 小さい 声で よろしくと 言います。",
+      "あきらさんも よろしくと 言います。",
+      "一時間目に 私たちは 日本語を 勉強します。",
+      "あきらさんは ひらがなを 上手に 読みます。",
+      "私は 漢字を 少し 教えます。",
+      "休み時間に 友達が 集まります。",
+      "みんなで 好きな 食べ物を 話します。",
+      "あきらさんは カレーが 好きです。",
+      "私は りんごが 好きです。",
+      "昼休みに 一緒に お弁当を 食べます。",
+      "あきらさんは だんだん 笑顔に なります。",
+      "帰る 時、また 明日と 言います。",
+      "新しい 友達が できました。",
+      "私は とても うれしいです。"
+    ],
+    "turkish": [
+      "Bugün sınıfımıza yeni bir öğrenci gelir.",
+      "Öğretmen herkese sessiz olun der.",
+      "Yeni öğrenci kapının önünde durur.",
+      "Adı Akira'dır.",
+      "Akira biraz heyecanlıdır.",
+      "Öğretmen Akira'yı benim yanıma oturtur.",
+      "Ben küçük bir sesle memnun oldum derim.",
+      "Akira da memnun oldum der.",
+      "Birinci derste Japonca çalışırız.",
+      "Akira hiraganayı güzel okur.",
+      "Ben biraz kanji öğretirim.",
+      "Teneffüste arkadaşlar toplanır.",
+      "Hep birlikte sevdiğimiz yemekleri konuşuruz.",
+      "Akira curry sever.",
+      "Ben elma severim.",
+      "Öğle arasında birlikte yemek kutusu yeriz.",
+      "Akira yavaş yavaş gülümsemeye başlar.",
+      "Eve dönerken yarın görüşürüz deriz.",
+      "Yeni bir arkadaş edindim.",
+      "Ben çok mutluyum."
+    ],
+    "words": [
+      {
+        "jp": "新しい",
+        "tr": "yeni"
+      },
+      {
+        "jp": "学生",
+        "tr": "öğrenci"
+      },
+      {
+        "jp": "教室",
+        "tr": "sınıf"
+      },
+      {
+        "jp": "名前",
+        "tr": "isim"
+      },
+      {
+        "jp": "緊張",
+        "tr": "heyecan, gerginlik"
+      },
+      {
+        "jp": "日本語",
+        "tr": "Japonca"
+      },
+      {
+        "jp": "漢字",
+        "tr": "kanji"
+      },
+      {
+        "jp": "休み時間",
+        "tr": "teneffüs"
+      },
+      {
+        "jp": "食べ物",
+        "tr": "yiyecek"
+      },
+      {
+        "jp": "笑顔",
+        "tr": "gülümseme"
+      }
+    ]
+  },
+  {
+    "title": "The Star Notebook",
+    "japaneseTitle": "星の ノート",
+    "japanese": [
+      "私は 新しい ノートを 買いました。",
+      "ノートの 表紙に 星の 絵が あります。",
+      "青い 空に 金色の 星が あります。",
+      "私は その ノートが とても 好きです。",
+      "学校で 先生に 見せます。",
+      "先生は きれいな ノートですねと 言います。",
+      "友達も 星を 見て かわいいと 言います。",
+      "今日の 授業で 新しい 言葉を 書きます。",
+      "私は 一ページ目に 今日と 書きます。",
+      "次に 天気と 書きます。",
+      "今日の 天気は 晴れです。",
+      "私は 晴れの 漢字を 練習します。",
+      "友達は 雨の 漢字を 練習します。",
+      "休み時間に ノートを 閉じます。",
+      "でも 星の 表紙を また 見ます。",
+      "星は 小さいけれど 明るいです。",
+      "私は 夜の 空を 思い出します。",
+      "家へ 帰って、宿題も その ノートに 書きます。",
+      "ノートは 私の 勉強の 友達です。",
+      "明日も たくさん 書きたいです。"
+    ],
+    "turkish": [
+      "Ben yeni bir defter aldım.",
+      "Defterin kapağında yıldız resmi vardır.",
+      "Mavi gökyüzünde altın renkli yıldızlar vardır.",
+      "Ben o defteri çok severim.",
+      "Okulda öğretmene gösteririm.",
+      "Öğretmen ne güzel defter der.",
+      "Arkadaşım da yıldıza bakıp sevimli der.",
+      "Bugünkü derste yeni kelimeler yazarım.",
+      "İlk sayfaya bugün yazarım.",
+      "Sonra hava durumu yazarım.",
+      "Bugünkü hava güneşlidir.",
+      "Ben güneşli/açık hava kanjisini çalışırım.",
+      "Arkadaşım yağmur kanjisini çalışır.",
+      "Teneffüste defteri kapatırım.",
+      "Ama yıldızlı kapağa tekrar bakarım.",
+      "Yıldız küçük ama parlaktır.",
+      "Ben gece gökyüzünü hatırlarım.",
+      "Eve dönüp ödevi de o deftere yazarım.",
+      "Defter benim öğrenme arkadaşımdır.",
+      "Yarın da çok yazmak isterim."
+    ],
+    "words": [
+      {
+        "jp": "星",
+        "tr": "yıldız"
+      },
+      {
+        "jp": "ノート",
+        "tr": "defter"
+      },
+      {
+        "jp": "表紙",
+        "tr": "kapak"
+      },
+      {
+        "jp": "空",
+        "tr": "gökyüzü"
+      },
+      {
+        "jp": "学校",
+        "tr": "okul"
+      },
+      {
+        "jp": "言葉",
+        "tr": "kelime"
+      },
+      {
+        "jp": "天気",
+        "tr": "hava durumu"
+      },
+      {
+        "jp": "晴れ",
+        "tr": "açık, güneşli hava"
+      },
+      {
+        "jp": "雨",
+        "tr": "yağmur"
+      },
+      {
+        "jp": "宿題",
+        "tr": "ödev"
+      }
+    ]
+  },
+  {
+    "title": "Cooking Curry",
+    "japaneseTitle": "カレーを 作る 日",
+    "japanese": [
+      "今日は 家で カレーを 作ります。",
+      "母は 台所で 野菜を 洗います。",
+      "私は じゃがいもを 持ちます。",
+      "父は にんじんを 切ります。",
+      "弟は 玉ねぎを 見て 泣きそうです。",
+      "母は 気をつけてねと 言います。",
+      "私は 小さい 皿を 出します。",
+      "なべの 中に 野菜を 入れます。",
+      "水も 入れます。",
+      "しばらく 待つと、いい においが します。",
+      "私は おなかが すきます。",
+      "父は ごはんを よそいます。",
+      "母は カレーを かけます。",
+      "弟は 早く 食べたいと 言います。",
+      "みんなで いただきますと 言います。",
+      "カレーは あたたかいです。",
+      "野菜は やわらかいです。",
+      "私は 水を 飲みます。",
+      "食べた 後で、皿を 洗います。",
+      "家族で 作る ごはんは とても おいしいです。"
+    ],
+    "turkish": [
+      "Bugün evde curry yaparız.",
+      "Annem mutfakta sebzeleri yıkar.",
+      "Ben patates tutarım.",
+      "Babam havucu keser.",
+      "Kardeşim soğana bakıp ağlayacak gibi olur.",
+      "Annem dikkat et der.",
+      "Ben küçük tabakları çıkarırım.",
+      "Tencerenin içine sebzeleri koyarız.",
+      "Su da koyarız.",
+      "Bir süre bekleyince güzel bir koku gelir.",
+      "Benim karnım acıkır.",
+      "Babam pilav koyar.",
+      "Annem curry döker.",
+      "Kardeşim hemen yemek istiyorum der.",
+      "Hep birlikte afiyetle yiyelim deriz.",
+      "Curry sıcaktır.",
+      "Sebzeler yumuşaktır.",
+      "Ben su içerim.",
+      "Yedikten sonra tabakları yıkarım.",
+      "Ailece yapılan yemek çok lezzetlidir."
+    ],
+    "words": [
+      {
+        "jp": "家",
+        "tr": "ev"
+      },
+      {
+        "jp": "作る",
+        "tr": "yapmak"
+      },
+      {
+        "jp": "台所",
+        "tr": "mutfak"
+      },
+      {
+        "jp": "野菜",
+        "tr": "sebze"
+      },
+      {
+        "jp": "父",
+        "tr": "baba"
+      },
+      {
+        "jp": "母",
+        "tr": "anne"
+      },
+      {
+        "jp": "水",
+        "tr": "su"
+      },
+      {
+        "jp": "食べる",
+        "tr": "yemek"
+      },
+      {
+        "jp": "皿",
+        "tr": "tabak"
+      },
+      {
+        "jp": "家族",
+        "tr": "aile"
+      }
+    ]
+  },
+  {
+    "title": "A Walk to the River",
+    "japaneseTitle": "川までの 散歩",
+    "japanese": [
+      "今日は 風が すずしいです。",
+      "私は 祖父と 川まで 歩きます。",
+      "家から 川までは 少し 遠いです。",
+      "でも 道は 静かです。",
+      "道の そばに 花が 咲いています。",
+      "祖父は 白い 花を 見ます。",
+      "私は 黄色い 花を 見ます。",
+      "川の 音が 少し 聞こえます。",
+      "私たちは ゆっくり 歩きます。",
+      "川に 着くと、水が きらきら しています。",
+      "小さい 魚が 泳いでいます。",
+      "私は 魚を 指で 数えます。",
+      "一匹、二匹、三匹 います。",
+      "祖父は 昔の 話を します。",
+      "子どもの 時、よく この 川で 遊んだそうです。",
+      "私は その 話を 静かに 聞きます。",
+      "少し 休んで、水を 飲みます。",
+      "空には 白い 雲が あります。",
+      "帰り道、私は また 来たいと 言います。",
+      "祖父は 笑って うなずきます。"
+    ],
+    "turkish": [
+      "Bugün rüzgar serindir.",
+      "Ben dedemle nehre kadar yürürüm.",
+      "Evden nehre kadar biraz uzaktır.",
+      "Ama yol sessizdir.",
+      "Yol kenarında çiçekler açmıştır.",
+      "Dedem beyaz çiçeğe bakar.",
+      "Ben sarı çiçeğe bakarım.",
+      "Nehrin sesi biraz duyulur.",
+      "Biz yavaşça yürürüz.",
+      "Nehre varınca su parıldar.",
+      "Küçük balıklar yüzüyor.",
+      "Ben balıkları parmağımla sayarım.",
+      "Bir, iki, üç balık vardır.",
+      "Dedem eski bir hikaye anlatır.",
+      "Çocukken bu nehirde sıkça oynarmış.",
+      "Ben o hikayeyi sessizce dinlerim.",
+      "Biraz dinlenip su içeriz.",
+      "Gökyüzünde beyaz bulutlar vardır.",
+      "Dönüş yolunda tekrar gelmek istiyorum derim.",
+      "Dedem gülerek başını sallar."
+    ],
+    "words": [
+      {
+        "jp": "風",
+        "tr": "rüzgar"
+      },
+      {
+        "jp": "祖父",
+        "tr": "dede"
+      },
+      {
+        "jp": "川",
+        "tr": "nehir"
+      },
+      {
+        "jp": "道",
+        "tr": "yol"
+      },
+      {
+        "jp": "花",
+        "tr": "çiçek"
+      },
+      {
+        "jp": "水",
+        "tr": "su"
+      },
+      {
+        "jp": "魚",
+        "tr": "balık"
+      },
+      {
+        "jp": "泳ぐ",
+        "tr": "yüzmek"
+      },
+      {
+        "jp": "昔",
+        "tr": "eski zaman"
+      },
+      {
+        "jp": "雲",
+        "tr": "bulut"
+      }
+    ]
+  },
+  {
+    "title": "Cleaning the Classroom",
+    "japaneseTitle": "教室の そうじ",
+    "japanese": [
+      "金曜日の 午後、教室を そうじします。",
+      "先生は みんなに 仕事を 分けます。",
+      "私は 机を ふきます。",
+      "友達は 黒板を きれいに します。",
+      "別の 友達は 床を はきます。",
+      "教室には 小さい ごみが あります。",
+      "私は ごみを 見つけて 拾います。",
+      "窓の 近くに 花が あります。",
+      "私は 花の そばも きれいに します。",
+      "先生は よく できましたと 言います。",
+      "私たちは うれしく なります。",
+      "そうじの 後で、教室は 明るく 見えます。",
+      "机も まっすぐ 並んでいます。",
+      "黒板には 今日の 漢字が 書いてあります。",
+      "私は その 漢字を もう 一度 読みます。",
+      "友達も 一緒に 読みます。",
+      "帰る 前に 窓を 閉めます。",
+      "先生に さようならと 言います。",
+      "きれいな 教室は 気持ちが いいです。",
+      "月曜日に また ここで 勉強します。"
+    ],
+    "turkish": [
+      "Cuma öğleden sonra sınıfı temizleriz.",
+      "Öğretmen herkese iş dağıtır.",
+      "Ben sıraları silerim.",
+      "Arkadaşım tahtayı temizler.",
+      "Başka bir arkadaşım yeri süpürür.",
+      "Sınıfta küçük çöpler vardır.",
+      "Ben çöp bulup alırım.",
+      "Pencerenin yanında çiçek vardır.",
+      "Ben çiçeğin yanını da temizlerim.",
+      "Öğretmen iyi yaptınız der.",
+      "Biz mutlu oluruz.",
+      "Temizlikten sonra sınıf aydınlık görünür.",
+      "Sıralar da düzgün dizilmiştir.",
+      "Tahtada bugünün kanjisi yazılıdır.",
+      "Ben o kanjiyi bir kez daha okurum.",
+      "Arkadaşım da birlikte okur.",
+      "Dönmeden önce pencereyi kapatırız.",
+      "Öğretmene hoşça kal deriz.",
+      "Temiz sınıf iyi hissettirir.",
+      "Pazartesi yine burada ders çalışacağız."
+    ],
+    "words": [
+      {
+        "jp": "金曜日",
+        "tr": "cuma"
+      },
+      {
+        "jp": "午後",
+        "tr": "öğleden sonra"
+      },
+      {
+        "jp": "教室",
+        "tr": "sınıf"
+      },
+      {
+        "jp": "先生",
+        "tr": "öğretmen"
+      },
+      {
+        "jp": "机",
+        "tr": "sıra, masa"
+      },
+      {
+        "jp": "黒板",
+        "tr": "tahta"
+      },
+      {
+        "jp": "床",
+        "tr": "zemin"
+      },
+      {
+        "jp": "窓",
+        "tr": "pencere"
+      },
+      {
+        "jp": "漢字",
+        "tr": "kanji"
+      },
+      {
+        "jp": "勉強",
+        "tr": "ders çalışma"
+      }
+    ]
+  },
+  {
+    "title": "A Letter to Grandma",
+    "japaneseTitle": "祖母への 手紙",
+    "japanese": [
+      "今日は 祖母に 手紙を 書きます。",
+      "祖母は 遠い 町に 住んでいます。",
+      "私は 白い 紙を 出します。",
+      "机の 上に 鉛筆を 置きます。",
+      "まず、祖母へと 書きます。",
+      "次に、私は 元気ですと 書きます。",
+      "学校の ことも 書きます。",
+      "新しい 友達が できたと 書きます。",
+      "先生は やさしいですと 書きます。",
+      "家の 猫も 元気ですと 書きます。",
+      "猫は 毎日 よく 食べます。",
+      "私は 少し 絵も 描きます。",
+      "絵には 家と 花が あります。",
+      "母は 手紙を 見て 笑います。",
+      "とても いい 手紙だねと 言います。",
+      "私は 封筒に 手紙を 入れます。",
+      "父と 一緒に ポストへ 行きます。",
+      "赤い ポストに 手紙を 入れます。",
+      "祖母が 読む 日を 思います。",
+      "私は 返事が とても 楽しみです。"
+    ],
+    "turkish": [
+      "Bugün büyükanneme mektup yazarım.",
+      "Büyükannem uzak bir şehirde yaşıyor.",
+      "Ben beyaz kağıt çıkarırım.",
+      "Masanın üstüne kalem koyarım.",
+      "Önce büyükanneme diye yazarım.",
+      "Sonra ben iyiyim diye yazarım.",
+      "Okuldan da bahsederim.",
+      "Yeni bir arkadaş edindim diye yazarım.",
+      "Öğretmen naziktir diye yazarım.",
+      "Evdeki kedi de iyi diye yazarım.",
+      "Kedi her gün iyi yer.",
+      "Ben biraz resim de çizerim.",
+      "Resimde ev ve çiçek vardır.",
+      "Annem mektuba bakıp gülümser.",
+      "Çok güzel bir mektup der.",
+      "Ben mektubu zarfa koyarım.",
+      "Babamla birlikte posta kutusuna giderim.",
+      "Kırmızı posta kutusuna mektubu atarım.",
+      "Büyükannemin okuyacağı günü düşünürüm.",
+      "Cevabı çok merakla beklerim."
+    ],
+    "words": [
+      {
+        "jp": "祖母",
+        "tr": "büyükanne"
+      },
+      {
+        "jp": "手紙",
+        "tr": "mektup"
+      },
+      {
+        "jp": "町",
+        "tr": "şehir, kasaba"
+      },
+      {
+        "jp": "紙",
+        "tr": "kağıt"
+      },
+      {
+        "jp": "鉛筆",
+        "tr": "kalem"
+      },
+      {
+        "jp": "学校",
+        "tr": "okul"
+      },
+      {
+        "jp": "友達",
+        "tr": "arkadaş"
+      },
+      {
+        "jp": "猫",
+        "tr": "kedi"
+      },
+      {
+        "jp": "封筒",
+        "tr": "zarf"
+      },
+      {
+        "jp": "返事",
+        "tr": "cevap"
+      }
+    ]
+  },
+  {
+    "title": "The Fruit Basket",
+    "japaneseTitle": "果物の かご",
+    "japanese": [
+      "台所の 机に 果物の かごが あります。",
+      "かごの 中に りんごが あります。",
+      "みかんと バナナも あります。",
+      "私は 赤い りんごを 見ます。",
+      "弟は 黄色い バナナを 取ります。",
+      "母は みかんを 二つ 取ります。",
+      "私たちは 果物を 洗います。",
+      "水が 冷たくて 気持ちいいです。",
+      "母は りんごを 小さく 切ります。",
+      "私は 皿を 並べます。",
+      "弟は フォークを 持って 来ます。",
+      "みんなで 果物を 食べます。",
+      "りんごは 甘いです。",
+      "みかんは 少し すっぱいです。",
+      "バナナは やわらかいです。",
+      "父も 台所に 来ます。",
+      "父は りんごを 一つ 食べます。",
+      "果物を 食べると 元気に なります。",
+      "かごは だんだん 空に なります。",
+      "明日 また 果物を 買いたいです。"
+    ],
+    "turkish": [
+      "Mutfak masasının üstünde meyve sepeti vardır.",
+      "Sepetin içinde elma vardır.",
+      "Mandalina ve muz da vardır.",
+      "Ben kırmızı elmaya bakarım.",
+      "Kardeşim sarı muzu alır.",
+      "Annem iki mandalina alır.",
+      "Biz meyveleri yıkarız.",
+      "Su soğuk ve iyi hissettirir.",
+      "Annem elmayı küçük küçük keser.",
+      "Ben tabakları dizerim.",
+      "Kardeşim çatal getirir.",
+      "Hep birlikte meyve yeriz.",
+      "Elma tatlıdır.",
+      "Mandalina biraz ekşidir.",
+      "Muz yumuşaktır.",
+      "Babam da mutfağa gelir.",
+      "Babam bir elma yer.",
+      "Meyve yiyince enerjik oluruz.",
+      "Sepet yavaş yavaş boşalır.",
+      "Yarın yine meyve almak isterim."
+    ],
+    "words": [
+      {
+        "jp": "台所",
+        "tr": "mutfak"
+      },
+      {
+        "jp": "果物",
+        "tr": "meyve"
+      },
+      {
+        "jp": "かご",
+        "tr": "sepet"
+      },
+      {
+        "jp": "りんご",
+        "tr": "elma"
+      },
+      {
+        "jp": "みかん",
+        "tr": "mandalina"
+      },
+      {
+        "jp": "水",
+        "tr": "su"
+      },
+      {
+        "jp": "皿",
+        "tr": "tabak"
+      },
+      {
+        "jp": "甘い",
+        "tr": "tatlı"
+      },
+      {
+        "jp": "父",
+        "tr": "baba"
+      },
+      {
+        "jp": "明日",
+        "tr": "yarın"
+      }
+    ]
+  },
+  {
+    "title": "The Small Adventure in the Park",
+    "japaneseTitle": "公園の 小さい 冒険",
+    "japanese": [
+      "放課後、私は 友達と 公園へ 行きます。",
+      "公園には 大きな 木が あります。",
+      "木の 下に 古い 箱が あります。",
+      "私たちは 箱を 見て びっくりします。",
+      "友達は これは 何かなと 言います。",
+      "私は ゆっくり 箱を 開けます。",
+      "箱の 中に 小さい 地図が あります。",
+      "地図には 花の 絵が あります。",
+      "私たちは 地図を 持って 歩きます。",
+      "すべり台の 近くに 赤い 花が あります。",
+      "地図の 花と 同じです。",
+      "花の そばに 小さい 石が あります。",
+      "石の 下に 紙が あります。",
+      "紙には よく 見つけましたと 書いてあります。",
+      "私たちは 笑います。",
+      "これは 誰かの 遊びだったようです。",
+      "紙を 箱に 戻します。",
+      "箱も 木の 下に 戻します。",
+      "次の 子どもも 楽しめます。",
+      "小さい 冒険は とても 楽しかったです。"
+    ],
+    "turkish": [
+      "Okuldan sonra arkadaşımla parka giderim.",
+      "Parkta büyük bir ağaç vardır.",
+      "Ağacın altında eski bir kutu vardır.",
+      "Biz kutuyu görüp şaşırırız.",
+      "Arkadaşım bu ne acaba der.",
+      "Ben yavaşça kutuyu açarım.",
+      "Kutunun içinde küçük bir harita vardır.",
+      "Haritada çiçek resmi vardır.",
+      "Biz haritayı alıp yürürüz.",
+      "Kaydırağın yanında kırmızı bir çiçek vardır.",
+      "Haritadaki çiçekle aynıdır.",
+      "Çiçeğin yanında küçük bir taş vardır.",
+      "Taşın altında kağıt vardır.",
+      "Kağıtta iyi buldunuz yazıyor.",
+      "Biz güleriz.",
+      "Bu birinin oyunu gibi görünür.",
+      "Kağıdı kutuya geri koyarız.",
+      "Kutuyu da ağacın altına geri koyarız.",
+      "Sonraki çocuk da eğlenebilir.",
+      "Küçük macera çok eğlenceliydi."
+    ],
+    "words": [
+      {
+        "jp": "放課後",
+        "tr": "okuldan sonra"
+      },
+      {
+        "jp": "公園",
+        "tr": "park"
+      },
+      {
+        "jp": "木",
+        "tr": "ağaç"
+      },
+      {
+        "jp": "箱",
+        "tr": "kutu"
+      },
+      {
+        "jp": "地図",
+        "tr": "harita"
+      },
+      {
+        "jp": "花",
+        "tr": "çiçek"
+      },
+      {
+        "jp": "石",
+        "tr": "taş"
+      },
+      {
+        "jp": "紙",
+        "tr": "kağıt"
+      },
+      {
+        "jp": "子ども",
+        "tr": "çocuk"
+      },
+      {
+        "jp": "冒険",
+        "tr": "macera"
+      }
+    ]
+  },
+  {
+    "title": "A Day with Snow",
+    "japaneseTitle": "雪の 一日",
+    "japanese": [
+      "朝、私は 窓の 外を 見ます。",
+      "外は 真っ白です。",
+      "雪が 静かに 降っています。",
+      "私は 大きな 声で 母を 呼びます。",
+      "母も 窓から 外を 見ます。",
+      "今日は あたたかい 服を 着てねと 言います。",
+      "私は 帽子を かぶります。",
+      "手袋も します。",
+      "学校へ 行く 道は 白いです。",
+      "友達は 雪を 見て 笑います。",
+      "私たちは ゆっくり 歩きます。",
+      "学校の 庭に 雪が たくさん あります。",
+      "休み時間に 小さい 雪だるまを 作ります。",
+      "雪だるまに 石の 目を つけます。",
+      "先生も 庭に 来ます。",
+      "先生は かわいいですねと 言います。",
+      "午後、雪は 少し やみます。",
+      "家へ 帰って あたたかい お茶を 飲みます。",
+      "手は 冷たいけれど、心は あたたかいです。",
+      "雪の 一日は 特別です。"
+    ],
+    "turkish": [
+      "Sabah pencereden dışarı bakarım.",
+      "Dışarısı bembeyazdır.",
+      "Kar sessizce yağıyor.",
+      "Ben yüksek sesle annemi çağırırım.",
+      "Annem de pencereden dışarı bakar.",
+      "Bugün sıcak kıyafetler giy der.",
+      "Ben şapka takarım.",
+      "Eldiven de takarım.",
+      "Okula giden yol beyazdır.",
+      "Arkadaşım karı görüp güler.",
+      "Biz yavaşça yürürüz.",
+      "Okulun bahçesinde çok kar vardır.",
+      "Teneffüste küçük bir kardan adam yaparız.",
+      "Kardan adama taştan göz takarız.",
+      "Öğretmen de bahçeye gelir.",
+      "Öğretmen çok sevimli der.",
+      "Öğleden sonra kar biraz durur.",
+      "Eve dönüp sıcak çay içerim.",
+      "Ellerim soğuk ama içim sıcaktır.",
+      "Karlı bir gün özeldir."
+    ],
+    "words": [
+      {
+        "jp": "雪",
+        "tr": "kar"
+      },
+      {
+        "jp": "一日",
+        "tr": "bir gün"
+      },
+      {
+        "jp": "窓",
+        "tr": "pencere"
+      },
+      {
+        "jp": "母",
+        "tr": "anne"
+      },
+      {
+        "jp": "服",
+        "tr": "kıyafet"
+      },
+      {
+        "jp": "帽子",
+        "tr": "şapka"
+      },
+      {
+        "jp": "手袋",
+        "tr": "eldiven"
+      },
+      {
+        "jp": "学校",
+        "tr": "okul"
+      },
+      {
+        "jp": "庭",
+        "tr": "bahçe"
+      },
+      {
+        "jp": "お茶",
+        "tr": "çay"
+      }
+    ]
+  },
+  {
+    "title": "Helping at Home",
+    "japaneseTitle": "家の 手伝い",
+    "japanese": [
+      "今日は 土曜日です。",
+      "私は 学校へ 行きません。",
+      "朝、母は 家を そうじします。",
+      "私は 手伝いたいと 言います。",
+      "母は ありがとうと 言います。",
+      "まず、私は 自分の 部屋を 片づけます。",
+      "本を 本だなに 入れます。",
+      "服を たんすに 入れます。",
+      "机の 上も きれいに します。",
+      "次に、父の ところへ 行きます。",
+      "父は 庭で 花に 水を あげています。",
+      "私は 小さい じょうろを 持ちます。",
+      "赤い 花に 水を あげます。",
+      "黄色い 花にも 水を あげます。",
+      "弟は 玄関を はきます。",
+      "家族みんなで 手伝います。",
+      "昼ごはんの 前に 家は きれいに なります。",
+      "母は みんな えらいねと 言います。",
+      "私は 少し 疲れます。",
+      "でも 家が きれいで うれしいです。"
+    ],
+    "turkish": [
+      "Bugün cumartesidir.",
+      "Ben okula gitmem.",
+      "Sabah annem evi temizler.",
+      "Ben yardım etmek istiyorum derim.",
+      "Annem teşekkür ederim der.",
+      "Önce kendi odamı toplarım.",
+      "Kitapları kitaplığa koyarım.",
+      "Kıyafetleri dolaba koyarım.",
+      "Masanın üstünü de temizlerim.",
+      "Sonra babamın yanına giderim.",
+      "Babam bahçede çiçekleri suluyor.",
+      "Ben küçük sulama kabını tutarım.",
+      "Kırmızı çiçeğe su veririm.",
+      "Sarı çiçeğe de su veririm.",
+      "Kardeşim girişi süpürür.",
+      "Ailece herkes yardım eder.",
+      "Öğle yemeğinden önce ev temiz olur.",
+      "Annem hepiniz harikasınız der.",
+      "Ben biraz yorulurum.",
+      "Ama ev temiz olduğu için mutluyum."
+    ],
+    "words": [
+      {
+        "jp": "土曜日",
+        "tr": "cumartesi"
+      },
+      {
+        "jp": "家",
+        "tr": "ev"
+      },
+      {
+        "jp": "手伝い",
+        "tr": "yardım"
+      },
+      {
+        "jp": "部屋",
+        "tr": "oda"
+      },
+      {
+        "jp": "本だな",
+        "tr": "kitaplık"
+      },
+      {
+        "jp": "服",
+        "tr": "kıyafet"
+      },
+      {
+        "jp": "机",
+        "tr": "masa"
+      },
+      {
+        "jp": "庭",
+        "tr": "bahçe"
+      },
+      {
+        "jp": "花",
+        "tr": "çiçek"
+      },
+      {
+        "jp": "水",
+        "tr": "su"
+      }
+    ]
+  },
+  {
+    "title": "The Morning Train",
+    "japaneseTitle": "朝の 電車",
+    "japanese": [
+      "今日は 父と 電車に 乗ります。",
+      "駅は 家から 歩いて 十分です。",
+      "朝の 道は 少し にぎやかです。",
+      "駅に 着くと、人が たくさん います。",
+      "父は 切符を 二枚 買います。",
+      "私は 切符を 大切に 持ちます。",
+      "電車が 来る 前に 線の 後ろで 待ちます。",
+      "黄色い 電車が ゆっくり 来ます。",
+      "ドアが 開きます。",
+      "私たちは 電車に 乗ります。",
+      "中には 学生と 会社の 人が います。",
+      "私は 窓の 近くに 立ちます。",
+      "窓から 町を 見ます。",
+      "小さい 店や 高い 建物が 見えます。",
+      "父は 次の 駅で 降りるよと 言います。",
+      "私は はいと 言います。",
+      "駅に 着いて、電車を 降ります。",
+      "父と 一緒に 店へ 行きます。",
+      "電車に 乗るのは 少し どきどきします。",
+      "でも とても 楽しい 朝です。"
+    ],
+    "turkish": [
+      "Bugün babamla trene binerim.",
+      "İstasyon evden yürüyerek on dakikadır.",
+      "Sabah yolu biraz kalabalıktır.",
+      "İstasyona varınca çok insan vardır.",
+      "Babam iki bilet alır.",
+      "Ben bileti dikkatle tutarım.",
+      "Tren gelmeden önce çizginin arkasında bekleriz.",
+      "Sarı tren yavaşça gelir.",
+      "Kapı açılır.",
+      "Biz trene bineriz.",
+      "İçeride öğrenciler ve çalışan insanlar vardır.",
+      "Ben pencerenin yanında dururum.",
+      "Pencereden şehre bakarım.",
+      "Küçük dükkanlar ve yüksek binalar görünür.",
+      "Babam sonraki istasyonda ineceğiz der.",
+      "Ben tamam derim.",
+      "İstasyona varıp trenden ineriz.",
+      "Babamla birlikte dükkana gideriz.",
+      "Trene binmek biraz heyecan vericidir.",
+      "Ama çok eğlenceli bir sabahtır."
+    ],
+    "words": [
+      {
+        "jp": "朝",
+        "tr": "sabah"
+      },
+      {
+        "jp": "電車",
+        "tr": "tren"
+      },
+      {
+        "jp": "駅",
+        "tr": "istasyon"
+      },
+      {
+        "jp": "道",
+        "tr": "yol"
+      },
+      {
+        "jp": "切符",
+        "tr": "bilet"
+      },
+      {
+        "jp": "窓",
+        "tr": "pencere"
+      },
+      {
+        "jp": "町",
+        "tr": "şehir"
+      },
+      {
+        "jp": "店",
+        "tr": "dükkan"
+      },
+      {
+        "jp": "建物",
+        "tr": "bina"
+      },
+      {
+        "jp": "降りる",
+        "tr": "inmek"
+      }
+    ]
+  },
+  {
+    "title": "The Birthday Cake",
+    "japaneseTitle": "誕生日の ケーキ",
+    "japanese": [
+      "今日は 妹の 誕生日です。",
+      "妹は 朝から とても うれしそうです。",
+      "母は 台所で ケーキを 作ります。",
+      "私は いちごを 洗います。",
+      "父は 風船を ふくらませます。",
+      "部屋に 赤い 風船と 青い 風船が あります。",
+      "妹は きれいと 言います。",
+      "昼ごはんの 後で、友達が 来ます。",
+      "友達は 小さい プレゼントを 持っています。",
+      "妹は ありがとうと 言います。",
+      "みんなで 歌を 歌います。",
+      "母は ケーキを 机に 置きます。",
+      "ケーキの 上に いちごが あります。",
+      "ろうそくも 五本 あります。",
+      "妹は ゆっくり 火を 消します。",
+      "みんなで おめでとうと 言います。",
+      "ケーキを 小さく 切って 食べます。",
+      "ケーキは 甘くて おいしいです。",
+      "妹は 今日を 忘れないと 言います。",
+      "私も とても 幸せです。"
+    ],
+    "turkish": [
+      "Bugün kız kardeşimin doğum günü.",
+      "Kız kardeşim sabahtan beri çok mutlu görünüyor.",
+      "Annem mutfakta pasta yapar.",
+      "Ben çilekleri yıkarım.",
+      "Babam balon şişirir.",
+      "Odada kırmızı ve mavi balonlar vardır.",
+      "Kız kardeşim güzel der.",
+      "Öğle yemeğinden sonra arkadaşları gelir.",
+      "Arkadaşı küçük bir hediye getirir.",
+      "Kız kardeşim teşekkür ederim der.",
+      "Hep birlikte şarkı söyleriz.",
+      "Annem pastayı masaya koyar.",
+      "Pastanın üstünde çilek vardır.",
+      "Beş mum da vardır.",
+      "Kız kardeşim yavaşça ateşi söndürür.",
+      "Herkes tebrikler der.",
+      "Pastayı küçük küçük kesip yeriz.",
+      "Pasta tatlı ve lezzetlidir.",
+      "Kız kardeşim bugünü unutmayacağım der.",
+      "Ben de çok mutluyum."
+    ],
+    "words": [
+      {
+        "jp": "妹",
+        "tr": "kız kardeş"
+      },
+      {
+        "jp": "誕生日",
+        "tr": "doğum günü"
+      },
+      {
+        "jp": "台所",
+        "tr": "mutfak"
+      },
+      {
+        "jp": "ケーキ",
+        "tr": "pasta"
+      },
+      {
+        "jp": "風船",
+        "tr": "balon"
+      },
+      {
+        "jp": "部屋",
+        "tr": "oda"
+      },
+      {
+        "jp": "友達",
+        "tr": "arkadaş"
+      },
+      {
+        "jp": "歌",
+        "tr": "şarkı"
+      },
+      {
+        "jp": "机",
+        "tr": "masa"
+      },
+      {
+        "jp": "幸せ",
+        "tr": "mutluluk"
+      }
+    ]
+  },
+  {
+    "title": "The Small Garden",
+    "japaneseTitle": "小さい 庭",
+    "japanese": [
+      "私の 家には 小さい 庭が あります。",
+      "庭には 赤い 花と 白い 花が あります。",
+      "毎朝、母は 花に 水を あげます。",
+      "今日は 私も 手伝います。",
+      "私は 青い じょうろを 持ちます。",
+      "水は 少し 重いです。",
+      "でも 私は ゆっくり 運びます。",
+      "赤い 花に 水を あげます。",
+      "白い 花にも 水を あげます。",
+      "花の そばに 小さい 虫が います。",
+      "虫は 葉の 上を 歩いています。",
+      "私は 虫を じっと 見ます。",
+      "母は 小さい 命だねと 言います。",
+      "私は 虫を さわりません。",
+      "庭の 木には 鳥が 来ます。",
+      "鳥は きれいな 声で 鳴きます。",
+      "父も 外に 出て 来ます。",
+      "父は 庭が 元気だねと 言います。",
+      "私は 庭で 深く 息を します。",
+      "小さい 庭は 私の 好きな 場所です。"
+    ],
+    "turkish": [
+      "Benim evimde küçük bir bahçe vardır.",
+      "Bahçede kırmızı ve beyaz çiçekler vardır.",
+      "Her sabah annem çiçekleri sular.",
+      "Bugün ben de yardım ederim.",
+      "Ben mavi sulama kabını tutarım.",
+      "Su biraz ağırdır.",
+      "Ama ben yavaşça taşırım.",
+      "Kırmızı çiçeğe su veririm.",
+      "Beyaz çiçeğe de su veririm.",
+      "Çiçeğin yanında küçük bir böcek vardır.",
+      "Böcek yaprağın üstünde yürüyor.",
+      "Ben böceğe dikkatle bakarım.",
+      "Annem küçük bir can der.",
+      "Ben böceğe dokunmam.",
+      "Bahçedeki ağaca kuş gelir.",
+      "Kuş güzel bir sesle öter.",
+      "Babam da dışarı çıkar.",
+      "Babam bahçe canlı görünüyor der.",
+      "Ben bahçede derin nefes alırım.",
+      "Küçük bahçe benim sevdiğim yerdir."
+    ],
+    "words": [
+      {
+        "jp": "庭",
+        "tr": "bahçe"
+      },
+      {
+        "jp": "花",
+        "tr": "çiçek"
+      },
+      {
+        "jp": "毎朝",
+        "tr": "her sabah"
+      },
+      {
+        "jp": "水",
+        "tr": "su"
+      },
+      {
+        "jp": "虫",
+        "tr": "böcek"
+      },
+      {
+        "jp": "葉",
+        "tr": "yaprak"
+      },
+      {
+        "jp": "命",
+        "tr": "can, yaşam"
+      },
+      {
+        "jp": "鳥",
+        "tr": "kuş"
+      },
+      {
+        "jp": "場所",
+        "tr": "yer"
+      },
+      {
+        "jp": "好き",
+        "tr": "sevmek"
+      }
+    ]
+  }
+]

@@ -59,6 +59,20 @@
                     <button class="menu-btn train-btn" onclick="startTraining('kanji', event)">Training</button>
                 </div>
             </div>
+            <div class="menu-card story-menu-card">
+                <h2>Mini Stories</h2>
+                <p>Kısa oku, uzunda güçlen</p>
+                <div class="story-choice-actions">
+                    <button class="menu-btn story-choice-btn short-story-btn" onclick="showStories(event, 'short', true)">
+                        <span>Kısa</span>
+                        <small>Hafif okuma</small>
+                    </button>
+                    <button class="menu-btn story-choice-btn long-story-btn" onclick="showStories(event, 'long', true)">
+                        <span>Uzun</span>
+                        <small>Kanji ağırlıklı</small>
+                    </button>
+                </div>
+            </div>
 
             <button class="menu-btn review-btn" onclick="showReview()"
                 style="margin-top: 10px; background-color: var(--text-color); color: white; padding: 1rem;">
@@ -95,6 +109,46 @@
             </div>
         </main>
 
+        <!-- Story Container -->
+        <main class="story-container" id="story-container" style="display: none;">
+            <div class="story-header">
+                <button class="back-btn" onclick="showMenu()">← Menu</button>
+                <div class="story-mode-switch" role="group" aria-label="Story length">
+                    <button class="story-mode-btn active" id="story-short-tab"
+                        onclick="setStoryLength('short')">Kısa</button>
+                    <button class="story-mode-btn" id="story-long-tab" onclick="setStoryLength('long')">Uzun</button>
+                </div>
+            </div>
+            <article class="story-card">
+                <div class="story-topline">
+                    <span id="story-section-label">Kısa Hikaye</span>
+                    <span>ミニものがたり</span>
+                </div>
+                <div class="story-progress" aria-hidden="true">
+                    <div class="story-progress-bar" id="story-progress-bar"></div>
+                </div>
+                <h2 id="story-title">Story</h2>
+                <div class="story-meta">
+                    <span id="story-counter">1 / 1</span>
+                    <span id="story-line-count">4 cümle</span>
+                </div>
+                <div class="story-japanese" id="story-japanese"></div>
+                <div class="story-tools">
+                    <button class="menu-btn story-toggle-btn" id="story-translation-toggle"
+                        onclick="toggleStoryTranslation()">Türkçesini Göster</button>
+                </div>
+                <div class="story-translation" id="story-translation" hidden></div>
+                <div class="story-words-panel">
+                    <span class="story-words-title">Kelimeler</span>
+                    <div class="story-words" id="story-words"></div>
+                </div>
+            </article>
+            <div class="story-actions">
+                <button class="menu-btn story-nav-btn" onclick="previousStory()">← Önceki</button>
+                <button class="menu-btn story-nav-btn primary" onclick="nextStory()">Sonraki →</button>
+            </div>
+        </main>
+
         <!-- Review Container -->
         <main class="review-container" id="review-container"
             style="display: none; flex-direction: column; gap: 1rem; width: 100%;">
@@ -116,6 +170,7 @@
     <script src="hiragana.js"></script>
     <script src="katagana.js"></script>
     <script src="kanji.js"></script>
+    <script src="stories.js"></script>
     <script src="script.js"></script>
 </body>
 
