@@ -1,1 +1,699 @@
-test
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Arıcı Mustafa - Doğadan gelen saf bal çeşitleri. Süzme bal, karakovan balı, petekli bal ve çiçek balı. %100 doğal, katkısız, el emeği bal.">
+  <meta name="keywords" content="doğal bal, süzme bal, karakovan balı, petekli bal, çiçek balı, organik bal, Arıcı Mustafa, Sakarya bal">
+  <title>Arıcı Mustafa | Doğadan Gelen Saf Bal</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐝</text></svg>">
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header" id="header">
+    <div class="container">
+      <a href="#" class="logo" id="logo">
+        <div class="logo-icon">🐝</div>
+        <div class="logo-text">
+          <h1>Arıcı Mustafa</h1>
+          <span>Doğal · El Emeği · Saflık</span>
+        </div>
+      </a>
+
+      <nav class="nav-links" id="nav-links">
+        <a href="#hero" class="active">Anasayfa</a>
+        <a href="#products">Ballarımız</a>
+        <a href="#story">Hakkımızda</a>
+        <a href="#values">Değerlerimiz</a>
+        <a href="#testimonials">Yorumlar</a>
+        <a href="#footer">İletişim</a>
+      </nav>
+
+      <div class="nav-right">
+        <a href="#order" class="btn-shop" id="btn-shop">
+          Sipariş Ver
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
+          </svg>
+        </a>
+
+        <button class="theme-toggle" id="theme-toggle" aria-label="Tema değiştir">
+          <div class="theme-toggle-knob" id="theme-knob">🐝</div>
+        </button>
+
+        <button class="menu-toggle" id="menu-toggle" aria-label="Menüyü aç">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">ARICI MUSTAFA</div>
+        <h2 class="hero-title">
+          Doğadan Gelen<br>
+          Saf <span>Bal</span>
+        </h2>
+        <p class="hero-description">
+          Arılarımızın emeği, doğanın cömertliği ve el işçiliğimizin zarafetiyle ürettiğimiz %100 doğal ve katkısız ballarla daha sağlıklı, daha güzel bir yaşam.
+        </p>
+        <div class="hero-buttons">
+          <a href="#order" class="btn-primary" id="btn-explore">
+            Sipariş Ver
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="20" height="20" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
+            </svg>
+          </a>
+          <a href="#story" class="btn-outline" id="btn-story">
+            Hikayemiz
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="18" height="18">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-images">
+        <img src="images/hero-honey.png" alt="Arıcı Mustafa Doğal Çiçek Balı" class="hero-img-main">
+        <img src="images/honey-varieties.png" alt="Bal Çeşitleri" class="hero-img-secondary">
+        <div class="hero-floating-badge">
+          <div class="badge-icon">🍯</div>
+          <div class="badge-text">%100<br>Doğal</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRODUCTS (ONLY HONEY) ===== -->
+  <section class="products" id="products">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">DOĞAL BAL ÇEŞİTLERİ</span>
+        <h2 class="section-title animate-on-scroll">Ballarımız</h2>
+      </div>
+
+      <div class="products-grid stagger-children">
+        <div class="product-card animate-on-scroll" id="product-cicek">
+          <div class="product-card-image">
+            <img src="images/honey-varieties.png" alt="Çiçek Balı" loading="lazy">
+            <div class="product-card-icon">🌸</div>
+          </div>
+          <div class="product-card-body">
+            <h3>Çiçek Balı</h3>
+            <p>Yöresel kır çiçeklerinden toplanan, mis kokulu ve lezzetli doğal çiçek balı.</p>
+            <a href="#order" class="product-order-btn">Sipariş Ver →</a>
+          </div>
+        </div>
+
+        <div class="product-card animate-on-scroll" id="product-suzme">
+          <div class="product-card-image">
+            <img src="images/suzme.png" alt="Süzme Bal" loading="lazy">
+            <div class="product-card-icon">🍯</div>
+          </div>
+          <div class="product-card-body">
+            <h3>Süzme Bal</h3>
+            <p>Geleneksel yöntemlerle süzülmüş, saf ve berrak doğal süzme bal.</p>
+            <a href="#order" class="product-order-btn">Sipariş Ver →</a>
+          </div>
+        </div>
+
+        <div class="product-card animate-on-scroll" id="product-karakovan">
+          <div class="product-card-image">
+            <img src="images/karakovan.png" alt="Karakovan Balı" loading="lazy">
+            <div class="product-card-icon">🪵</div>
+          </div>
+          <div class="product-card-body">
+            <h3>Karakovan Balı</h3>
+            <p>Geleneksel kütük kovanlarda üretilen, koyu ve yoğun aromalı karakovan balı.</p>
+            <a href="#order" class="product-order-btn">Sipariş Ver →</a>
+          </div>
+        </div>
+
+        <div class="product-card animate-on-scroll" id="product-petekli">
+          <div class="product-card-image">
+            <img src="images/petekli.png" alt="Petekli Bal" loading="lazy">
+            <div class="product-card-icon">🐝</div>
+          </div>
+          <div class="product-card-body">
+            <h3>Petekli Bal</h3>
+            <p>Peteğiyle birlikte sunulan, en doğal haliyle sofralarınıza gelen petekli bal.</p>
+            <a href="#order" class="product-order-btn">Sipariş Ver →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== STORY ===== -->
+  <section class="story" id="story">
+    <div class="container">
+      <div class="story-images animate-on-scroll">
+        <img src="images/beekeeper.png" alt="Arıcı Mustafa çalışırken" class="story-img-main">
+        <div class="story-img-badge">
+          <div class="badge-inner">
+            <div class="badge-text-top">EL EMEĞİ</div>
+            <div class="badge-text-main">DOĞAL<br>BAL</div>
+            <div class="badge-text-bottom">SAKARYA</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="story-content">
+        <span class="section-label">BİZİM HİKAYEMİZ</span>
+        <h2 class="section-title animate-on-scroll">Arıların İzinde,<br>Doğaya Saygıyla</h2>
+        <p class="story-text animate-on-scroll">
+          Arıcılık tutkumuzla başlayan yolculuğumuzda, doğanın dengesine zarar vermeden, anlamlıya uyum içinde çalışıyoruz. Her balımızı, geleneksel yöntemlerle ve el emeğiyle üretiyor; saf, katkısız ve doğal kalmasını sağlıyoruz.
+        </p>
+
+        <div class="story-features stagger-children">
+          <div class="story-feature animate-on-scroll">
+            <div class="story-feature-icon">🌿</div>
+            <h4>Doğadan ilham alırız</h4>
+            <p>Ballarımız doğanın sunduğu saf güzelliklerle dolu.</p>
+          </div>
+          <div class="story-feature animate-on-scroll">
+            <div class="story-feature-icon">🐝</div>
+            <h4>El emeğine değer veririz</h4>
+            <p>Her kavanozun arkasında özen, sevgi ve emek var.</p>
+          </div>
+          <div class="story-feature animate-on-scroll">
+            <div class="story-feature-icon">✨</div>
+            <h4>Güven ve şeffaflık</h4>
+            <p>Ne ürettiğimizi biliyoruz ve gururla paylaşıyoruz.</p>
+          </div>
+        </div>
+
+        <a href="#order" class="btn-secondary animate-on-scroll" id="btn-about">
+          Hemen Sipariş Ver
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="16" height="16">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== VALUES ===== -->
+  <section class="values" id="values">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">DEĞERLERİMİZ</span>
+        <h2 class="section-title animate-on-scroll">Doğal, Güvenilir, Sürdürülebilir</h2>
+      </div>
+
+      <div class="values-grid stagger-children">
+        <div class="value-card animate-on-scroll" id="value-natural">
+          <div class="value-card-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"/>
+            </svg>
+          </div>
+          <h3>Doğal Üretim</h3>
+          <p>Kimyasal katkı kullanmadan, doğal yöntemlerle bal üretiyoruz.</p>
+        </div>
+
+        <div class="value-card animate-on-scroll" id="value-handmade">
+          <div class="value-card-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 0 0-2.455 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"/>
+            </svg>
+          </div>
+          <h3>El Emeği</h3>
+          <p>Her kavanoz bal, el emeğiyle ve özenle hazırlanır.</p>
+        </div>
+
+        <div class="value-card animate-on-scroll" id="value-sustainable">
+          <div class="value-card-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12.75 3.03v.568c0 .334.148.65.405.864l1.068.89c.442.369.535 1.01.216 1.49l-.51.766a2.25 2.25 0 0 1-1.161.886l-.143.048a1.107 1.107 0 0 0-.57 1.664c.369.555.169 1.307-.427 1.605L9 13.125l.423 1.059a.956.956 0 0 1-1.652.928l-.679-.906a1.125 1.125 0 0 0-1.906.172L4.5 15.75l-.612.153M12.75 3.031a9 9 0 1 0 6.462 14.553"/>
+            </svg>
+          </div>
+          <h3>Sürdürülebilirlik</h3>
+          <p>Doğayı ve arı ekosistemini koruyarak üretim yapıyoruz.</p>
+        </div>
+
+        <div class="value-card animate-on-scroll" id="value-pure">
+          <div class="value-card-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/>
+            </svg>
+          </div>
+          <h3>Saf İçerik</h3>
+          <p>Katkısız, şekersiz, %100 saf ve doğal bal üretiyoruz.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIALS ===== -->
+  <section class="testimonials" id="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">MÜŞTERİLERİMİZ NE DİYOR?</span>
+        <h2 class="section-title animate-on-scroll">Müşteri Yorumları</h2>
+      </div>
+
+      <div class="marquee-wrapper">
+        <div class="marquee-track" id="marquee-track">
+          <!-- Original cards -->
+          <div class="testimonial-card">
+            <div class="testimonial-header">
+              <div class="testimonial-avatar">S</div>
+              <div class="testimonial-info"><h4>Selin Y.</h4><div class="testimonial-stars">★★★★★</div></div>
+            </div>
+            <p class="testimonial-text">"Balınızın tadı gerçekten harika! Doğallığı hemen anlaşılıyor. Kargolama da çok özenliydi. Güvenle tercih ediyorum."</p>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-header">
+              <div class="testimonial-avatar">M</div>
+              <div class="testimonial-info"><h4>Mehmet A.</h4><div class="testimonial-stars">★★★★★</div></div>
+            </div>
+            <p class="testimonial-text">"Karakovan balınız muhteşem. Yıllardır böyle doğal bir bal arıyordum, sonunda buldum. Teşekkürler Mustafa abi!"</p>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-header">
+              <div class="testimonial-avatar">A</div>
+              <div class="testimonial-info"><h4>Ayşe K.</h4><div class="testimonial-stars">★★★★★</div></div>
+            </div>
+            <p class="testimonial-text">"Petekli balı ailece çok sevdik. Çocuklarım kahvaltıda başka bir şey istemiyor artık. Kesinlikle tavsiye ederim!"</p>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-header">
+              <div class="testimonial-avatar">H</div>
+              <div class="testimonial-info"><h4>Hakan T.</h4><div class="testimonial-stars">★★★★★</div></div>
+            </div>
+            <p class="testimonial-text">"WhatsApp'tan sipariş verdim, ertesi gün elime ulaştı. Bal gerçekten saf ve lezzetli. Sürekli müşteriniz olacağım."</p>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-header">
+              <div class="testimonial-avatar">Z</div>
+              <div class="testimonial-info"><h4>Zeynep D.</h4><div class="testimonial-stars">★★★★★</div></div>
+            </div>
+            <p class="testimonial-text">"Süzme balınızı hediye olarak aldım, alan da veren de çok memnun kaldı. Paketleme de çok güzel ve özenli."</p>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-header">
+              <div class="testimonial-avatar">E</div>
+              <div class="testimonial-info"><h4>Emre B.</h4><div class="testimonial-stars">★★★★★</div></div>
+            </div>
+            <p class="testimonial-text">"Marketten aldığım ballarla kıyaslanamaz. Tadı, kokusu, kıvamı bambaşka. Artık sadece Arıcı Mustafa'dan alıyorum."</p>
+          </div>
+          <!-- Duplicated for seamless loop -->
+          <div class="testimonial-card">
+            <div class="testimonial-header">
+              <div class="testimonial-avatar">S</div>
+              <div class="testimonial-info"><h4>Selin Y.</h4><div class="testimonial-stars">★★★★★</div></div>
+            </div>
+            <p class="testimonial-text">"Balınızın tadı gerçekten harika! Doğallığı hemen anlaşılıyor. Kargolama da çok özenliydi. Güvenle tercih ediyorum."</p>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-header">
+              <div class="testimonial-avatar">M</div>
+              <div class="testimonial-info"><h4>Mehmet A.</h4><div class="testimonial-stars">★★★★★</div></div>
+            </div>
+            <p class="testimonial-text">"Karakovan balınız muhteşem. Yıllardır böyle doğal bir bal arıyordum, sonunda buldum. Teşekkürler Mustafa abi!"</p>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-header">
+              <div class="testimonial-avatar">A</div>
+              <div class="testimonial-info"><h4>Ayşe K.</h4><div class="testimonial-stars">★★★★★</div></div>
+            </div>
+            <p class="testimonial-text">"Petekli balı ailece çok sevdik. Çocuklarım kahvaltıda başka bir şey istemiyor artık. Kesinlikle tavsiye ederim!"</p>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-header">
+              <div class="testimonial-avatar">H</div>
+              <div class="testimonial-info"><h4>Hakan T.</h4><div class="testimonial-stars">★★★★★</div></div>
+            </div>
+            <p class="testimonial-text">"WhatsApp'tan sipariş verdim, ertesi gün elime ulaştı. Bal gerçekten saf ve lezzetli. Sürekli müşteriniz olacağım."</p>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-header">
+              <div class="testimonial-avatar">Z</div>
+              <div class="testimonial-info"><h4>Zeynep D.</h4><div class="testimonial-stars">★★★★★</div></div>
+            </div>
+            <p class="testimonial-text">"Süzme balınızı hediye olarak aldım, alan da veren de çok memnun kaldı. Paketleme de çok güzel ve özenli."</p>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-header">
+              <div class="testimonial-avatar">E</div>
+              <div class="testimonial-info"><h4>Emre B.</h4><div class="testimonial-stars">★★★★★</div></div>
+            </div>
+            <p class="testimonial-text">"Marketten aldığım ballarla kıyaslanamaz. Tadı, kokusu, kıvamı bambaşka. Artık sadece Arıcı Mustafa'dan alıyorum."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== WHATSAPP ORDER SECTION ===== -->
+  <section class="order" id="order">
+    <div class="container">
+      <div class="order-wrapper animate-on-scroll">
+        <div class="order-content">
+          <div class="order-icon">🍯</div>
+          <h2>WhatsApp ile Sipariş Ver</h2>
+          <p>Bal çeşidini, miktarını ve şehrinizi seçin. WhatsApp üzerinden hızlıca sipariş mesajınız hazırlansın!</p>
+        </div>
+
+        <div class="order-form" id="order-form">
+          <div class="form-group">
+            <label for="honey-type">Bal Çeşidi</label>
+            <select id="honey-type">
+              <option value="">Bal çeşidi seçin</option>
+              <option value="Çiçek Balı">🌸 Çiçek Balı</option>
+              <option value="Süzme Bal">🍯 Süzme Bal</option>
+              <option value="Karakovan Balı">🪵 Karakovan Balı</option>
+              <option value="Petekli Bal">🐝 Petekli Bal</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="honey-weight">Miktar</label>
+            <select id="honey-weight">
+              <option value="">Miktar seçin</option>
+              <option value="500 gr">500 gr</option>
+              <option value="1 kg">1 kg</option>
+              <option value="2 kg">2 kg</option>
+              <option value="3 kg">3 kg</option>
+              <option value="5 kg">5 kg</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="honey-city">Şehir</label>
+            <select id="honey-city">
+              <option value="">Şehrinizi seçin</option>
+              <option value="Adana">Adana</option>
+              <option value="Adıyaman">Adıyaman</option>
+              <option value="Afyonkarahisar">Afyonkarahisar</option>
+              <option value="Ağrı">Ağrı</option>
+              <option value="Aksaray">Aksaray</option>
+              <option value="Amasya">Amasya</option>
+              <option value="Ankara">Ankara</option>
+              <option value="Antalya">Antalya</option>
+              <option value="Ardahan">Ardahan</option>
+              <option value="Artvin">Artvin</option>
+              <option value="Aydın">Aydın</option>
+              <option value="Balıkesir">Balıkesir</option>
+              <option value="Bartın">Bartın</option>
+              <option value="Batman">Batman</option>
+              <option value="Bayburt">Bayburt</option>
+              <option value="Bilecik">Bilecik</option>
+              <option value="Bingöl">Bingöl</option>
+              <option value="Bitlis">Bitlis</option>
+              <option value="Bolu">Bolu</option>
+              <option value="Burdur">Burdur</option>
+              <option value="Bursa">Bursa</option>
+              <option value="Çanakkale">Çanakkale</option>
+              <option value="Çankırı">Çankırı</option>
+              <option value="Çorum">Çorum</option>
+              <option value="Denizli">Denizli</option>
+              <option value="Diyarbakır">Diyarbakır</option>
+              <option value="Düzce">Düzce</option>
+              <option value="Edirne">Edirne</option>
+              <option value="Elazığ">Elazığ</option>
+              <option value="Erzincan">Erzincan</option>
+              <option value="Erzurum">Erzurum</option>
+              <option value="Eskişehir">Eskişehir</option>
+              <option value="Gaziantep">Gaziantep</option>
+              <option value="Giresun">Giresun</option>
+              <option value="Gümüşhane">Gümüşhane</option>
+              <option value="Hakkari">Hakkari</option>
+              <option value="Hatay">Hatay</option>
+              <option value="Iğdır">Iğdır</option>
+              <option value="Isparta">Isparta</option>
+              <option value="İstanbul">İstanbul</option>
+              <option value="İzmir">İzmir</option>
+              <option value="Kahramanmaraş">Kahramanmaraş</option>
+              <option value="Karabük">Karabük</option>
+              <option value="Karaman">Karaman</option>
+              <option value="Kars">Kars</option>
+              <option value="Kastamonu">Kastamonu</option>
+              <option value="Kayseri">Kayseri</option>
+              <option value="Kilis">Kilis</option>
+              <option value="Kırıkkale">Kırıkkale</option>
+              <option value="Kırklareli">Kırklareli</option>
+              <option value="Kırşehir">Kırşehir</option>
+              <option value="Kocaeli">Kocaeli</option>
+              <option value="Konya">Konya</option>
+              <option value="Kütahya">Kütahya</option>
+              <option value="Malatya">Malatya</option>
+              <option value="Manisa">Manisa</option>
+              <option value="Mardin">Mardin</option>
+              <option value="Mersin">Mersin</option>
+              <option value="Muğla">Muğla</option>
+              <option value="Muş">Muş</option>
+              <option value="Nevşehir">Nevşehir</option>
+              <option value="Niğde">Niğde</option>
+              <option value="Ordu">Ordu</option>
+              <option value="Osmaniye">Osmaniye</option>
+              <option value="Rize">Rize</option>
+              <option value="Sakarya">Sakarya</option>
+              <option value="Samsun">Samsun</option>
+              <option value="Şanlıurfa">Şanlıurfa</option>
+              <option value="Siirt">Siirt</option>
+              <option value="Sinop">Sinop</option>
+              <option value="Şırnak">Şırnak</option>
+              <option value="Sivas">Sivas</option>
+              <option value="Tekirdağ">Tekirdağ</option>
+              <option value="Tokat">Tokat</option>
+              <option value="Trabzon">Trabzon</option>
+              <option value="Tunceli">Tunceli</option>
+              <option value="Uşak">Uşak</option>
+              <option value="Van">Van</option>
+              <option value="Yalova">Yalova</option>
+              <option value="Yozgat">Yozgat</option>
+              <option value="Zonguldak">Zonguldak</option>
+            </select>
+          </div>
+
+          <!-- Preview message -->
+          <div class="order-preview" id="order-preview" style="display:none;">
+            <p id="preview-text"></p>
+          </div>
+
+          <button type="button" class="btn-whatsapp" id="btn-whatsapp" onclick="sendWhatsApp()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            WhatsApp ile Sipariş Gönder
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer-main">
+        <div class="footer-brand">
+          <a href="#" class="logo">
+            <div class="logo-icon">🐝</div>
+            <div class="logo-text">
+              <h1>Arıcı Mustafa</h1>
+              <span>Doğal · El Emeği · Saflık</span>
+            </div>
+          </a>
+          <p>Doğadan gelen saf balları, el emeğiyle sizlere ulaştırıyoruz.</p>
+          <div class="footer-social">
+            <a href="#" aria-label="Instagram">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            </a>
+            <a href="#" aria-label="Facebook">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a href="https://wa.me/905550103993" aria-label="WhatsApp">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-column">
+          <h4>Hızlı Linkler</h4>
+          <ul>
+            <li><a href="#hero">Anasayfa</a></li>
+            <li><a href="#products">Ballarımız</a></li>
+            <li><a href="#story">Hakkımızda</a></li>
+            <li><a href="#values">Değerlerimiz</a></li>
+            <li><a href="#testimonials">Yorumlar</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h4>Bal Çeşitleri</h4>
+          <ul>
+            <li><a href="#order">Çiçek Balı</a></li>
+            <li><a href="#order">Süzme Bal</a></li>
+            <li><a href="#order">Karakovan Balı</a></li>
+            <li><a href="#order">Petekli Bal</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h4>İletişim</h4>
+          <div class="footer-contact-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/>
+            </svg>
+            <p>Çamlıca Mah. An. Sok. No:7<br>Sapanca / Sakarya</p>
+          </div>
+          <div class="footer-contact-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"/>
+            </svg>
+            <p>0555 010 39 93</p>
+          </div>
+          <div class="footer-contact-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"/>
+            </svg>
+            <p>info@aricimustafa.com</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2024 Arıcı Mustafa. Tüm hakları saklıdır.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Gizlilik Politikası</a>
+          <a href="#">Kullanım Şartları</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+
+  <!-- ===== SCRIPTS ===== -->
+  <script>
+    // ===== THEME SYSTEM =====
+    function getSystemTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      const knob = document.getElementById('theme-knob');
+      if (knob) knob.textContent = theme === 'dark' ? '🌙' : '🐝';
+      localStorage.setItem('theme', theme);
+    }
+
+    // Initialize theme: localStorage > system preference
+    const savedTheme = localStorage.getItem('theme');
+    setTheme(savedTheme || getSystemTheme());
+
+    // Listen for system theme changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      if (!localStorage.getItem('theme')) {
+        setTheme(e.matches ? 'dark' : 'light');
+      }
+    });
+
+    // Toggle button
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    // ===== HEADER SCROLL =====
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // ===== SMOOTH SCROLL =====
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    // ===== ACTIVE NAV LINK =====
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 100) current = s.id;
+      });
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+      });
+    });
+
+    // ===== SCROLL ANIMATIONS =====
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+
+    // ===== MOBILE MENU =====
+    document.getElementById('menu-toggle').addEventListener('click', () => {
+      const nav = document.getElementById('nav-links');
+      nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    // ===== ORDER FORM =====
+    const honeyType = document.getElementById('honey-type');
+    const honeyWeight = document.getElementById('honey-weight');
+    const honeyCity = document.getElementById('honey-city');
+    const orderPreview = document.getElementById('order-preview');
+    const previewText = document.getElementById('preview-text');
+
+    function updatePreview() {
+      const type = honeyType.value;
+      const weight = honeyWeight.value;
+      const city = honeyCity.value;
+
+      if (type || weight || city) {
+        let msg = 'Merhaba, ';
+        if (weight && type) msg += `${weight} ${type} almak istiyorum.`;
+        else if (type) msg += `${type} almak istiyorum.`;
+        else if (weight) msg += `${weight} bal almak istiyorum.`;
+        if (city) msg += ` Şehrim: ${city}.`;
+        previewText.textContent = `📱 "${msg}"`;
+        orderPreview.style.display = 'block';
+      } else {
+        orderPreview.style.display = 'none';
+      }
+    }
+
+    honeyType.addEventListener('change', updatePreview);
+    honeyWeight.addEventListener('change', updatePreview);
+    honeyCity.addEventListener('change', updatePreview);
+
+    function sendWhatsApp() {
+      const type = honeyType.value;
+      const weight = honeyWeight.value;
+      const city = honeyCity.value;
+
+      if (!type) { alert('Lütfen bal çeşidi seçin.'); honeyType.focus(); return; }
+      if (!weight) { alert('Lütfen miktar seçin.'); honeyWeight.focus(); return; }
+      if (!city) { alert('Lütfen şehrinizi seçin.'); honeyCity.focus(); return; }
+
+      const message = `Merhaba, ${weight} ${type} almak istiyorum. Şehrim: ${city}.`;
+      window.open(`https://wa.me/905550103993?text=${encodeURIComponent(message)}`, '_blank');
+    }
+  </script>
+
+</body>
+</html>
