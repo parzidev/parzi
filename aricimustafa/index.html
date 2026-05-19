@@ -584,7 +584,7 @@
 
   <style>
     .flying-bee {
-      position: fixed;
+      position: absolute;
       z-index: 9999;
       pointer-events: none;
       font-size: 1.8rem;
@@ -593,7 +593,7 @@
 
     .bee-body {
       position: relative;
-      animation: beeBob 1.2s ease-in-out infinite alternate;
+      animation: beeBob 1.4s ease-in-out infinite alternate;
     }
 
     .bee-emoji { display: block; line-height: 1; }
@@ -617,7 +617,6 @@
       animation: wingFlap 0.09s ease-in-out infinite alternate-reverse;
     }
 
-    /* When landed, stop wings and bobbing */
     .flying-bee.landed .bee-body { animation: none; }
     .flying-bee.landed .bee-wing { animation: none; opacity: 0.3; }
 
@@ -757,99 +756,135 @@
       const bee = document.getElementById('flying-bee');
       if (!bee) return;
 
-      // Landing targets — bee will fly to edges of these elements
-      const landingSelectors = [
-        '.product-card', '.value-card', '.testimonial-card',
-        '.hero-floating-badge', '.story-img-badge', '.order-icon',
-        '.logo-icon', '.hero-img-main', '.story-img-main'
+      // Honey images are priority targets
+      const honeySelectors = [
+        '.product-card-image img',
+        '.hero-img-main',
+        '.hero-img-secondary',
+        '.story-img-main'
       ];
 
-      let beeX = window.innerWidth * 0.3;
-      let beeY = window.innerHeight * 0.2;
+      // Other landing spots
+      const otherSelectors = [
+        '.product-card', '.value-card',
+        '.hero-floating-badge', '.story-img-badge',
+        '.order-icon', '.logo-icon'
+      ];
+
+      // Helper: get absolute page position of an element
+      function getPageRect(el) {
+        const r = el.getBoundingClientRect();
+        return {
+          left: r.left + window.scrollX,
+          top: r.top + window.scrollY,
+          right: r.right + window.scrollX,
+          bottom: r.bottom + window.scrollY,
+          width: r.width,
+          height: r.height
+        };
+      }
+
+      let beeX = window.innerWidth * 0.4;
+      let beeY = window.scrollY + window.innerHeight * 0.3;
       bee.style.left = beeX + 'px';
       bee.style.top = beeY + 'px';
 
-      function getRandomLandingSpot() {
+      function getTarget() {
         const w = window.innerWidth;
-        const h = window.innerHeight;
-        // Keep bee in center 60% of screen
-        const marginX = w * 0.2;
-        const marginY = h * 0.2;
+        const scrollY = window.scrollY;
+        const viewTop = scrollY;
+        const viewBottom = scrollY + window.innerHeight;
+        const marginX = w * 0.15;
 
-        const els = [];
-        landingSelectors.forEach(sel => {
+        // Collect visible honey images (priority)
+        const honeyEls = [];
+        honeySelectors.forEach(sel => {
           document.querySelectorAll(sel).forEach(el => {
             const r = el.getBoundingClientRect();
-            // Only land on elements that are within the center zone
-            if (r.left > marginX * 0.5 && r.right < w - marginX * 0.5 &&
-                r.top > marginY * 0.5 && r.bottom < h - marginY * 0.5) {
-              els.push(el);
-            }
+            if (r.top < window.innerHeight && r.bottom > 0) honeyEls.push(el);
           });
         });
 
-        if (els.length > 0 && Math.random() < 0.5) {
-          const el = els[Math.floor(Math.random() * els.length)];
-          const rect = el.getBoundingClientRect();
-          const edge = Math.floor(Math.random() * 4);
-          let x, y;
-          switch(edge) {
-            case 0: x = rect.left + Math.random() * rect.width; y = rect.top - 10; break;
-            case 1: x = rect.right + 5; y = rect.top + Math.random() * rect.height * 0.5; break;
-            case 2: x = rect.left + Math.random() * rect.width; y = rect.bottom - 5; break;
-            default: x = rect.left - 20; y = rect.top + Math.random() * rect.height * 0.5;
-          }
-          return { x: Math.max(marginX, Math.min(x, w - marginX)), y: Math.max(marginY, Math.min(y, h - marginY)), land: true };
+        // Collect visible other elements
+        const otherEls = [];
+        otherSelectors.forEach(sel => {
+          document.querySelectorAll(sel).forEach(el => {
+            const r = el.getBoundingClientRect();
+            if (r.top < window.innerHeight && r.bottom > 0) otherEls.push(el);
+          });
+        });
+
+        const roll = Math.random();
+
+        // 40% fly to honey, 25% fly to other elements, 35% random center area
+        if (honeyEls.length > 0 && roll < 0.4) {
+          const el = honeyEls[Math.floor(Math.random() * honeyEls.length)];
+          const pr = getPageRect(el);
+          return {
+            x: pr.left + pr.width * (0.2 + Math.random() * 0.6),
+            y: pr.top + pr.height * (0.1 + Math.random() * 0.4),
+            land: true
+          };
         }
 
-        // Random spot in center zone
+        if (otherEls.length > 0 && roll < 0.65) {
+          const el = otherEls[Math.floor(Math.random() * otherEls.length)];
+          const pr = getPageRect(el);
+          const edge = Math.floor(Math.random() * 3);
+          let x, y;
+          if (edge === 0) { x = pr.left + Math.random() * pr.width; y = pr.top - 8; }
+          else if (edge === 1) { x = pr.right + 4; y = pr.top + Math.random() * pr.height * 0.4; }
+          else { x = pr.left + Math.random() * pr.width; y = pr.bottom - 4; }
+          return {
+            x: Math.max(marginX, Math.min(x, w - marginX)),
+            y: Math.max(viewTop + 80, Math.min(y, viewBottom - 60)),
+            land: true
+          };
+        }
+
+        // Random spot in center of visible area
         return {
           x: marginX + Math.random() * (w - marginX * 2),
-          y: marginY + Math.random() * (h - marginY * 2),
+          y: viewTop + 100 + Math.random() * (window.innerHeight - 200),
           land: false
         };
       }
 
       function flyTo() {
-        const target = getRandomLandingSpot();
+        const target = getTarget();
         const dx = target.x - beeX;
         const dy = target.y - beeY;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        // Slower, smoother — 8-14 seconds per flight
-        const duration = Math.max(5000, Math.min(12000, distance * 12));
+        // Smooth & slow: 6-14 seconds
+        const duration = Math.max(4000, Math.min(14000, distance * 10));
 
-        // Flip bee based on horizontal direction
-        const scaleX = dx < 0 ? -1 : 1;
-        bee.style.transform = `scaleX(${scaleX})`;
+        // Flip direction
+        bee.style.transform = dx < 0 ? 'scaleX(-1)' : 'scaleX(1)';
 
-        // Remove landed state — wings start flapping again
         bee.classList.remove('landed');
 
-        // Smooth transition
-        bee.style.transition = `left ${duration}ms cubic-bezier(0.25, 0.1, 0.25, 1), top ${duration}ms cubic-bezier(0.4, 0.0, 0.2, 1)`;
+        bee.style.transition = `left ${duration}ms cubic-bezier(0.25, 0.1, 0.25, 1), top ${duration}ms cubic-bezier(0.3, 0.0, 0.2, 1)`;
         bee.style.left = target.x + 'px';
         bee.style.top = target.y + 'px';
 
         beeX = target.x;
         beeY = target.y;
 
-        let nextDelay = duration + 300;
+        let nextDelay = duration + 400;
 
-        // If landing on an element, pause and stop wings
         if (target.land) {
-          const landPause = 2000 + Math.random() * 4000;
+          const landPause = 2500 + Math.random() * 4000;
           setTimeout(() => bee.classList.add('landed'), duration);
           nextDelay += landPause;
-        } else if (Math.random() < 0.15) {
-          // Occasionally hover in place
-          nextDelay += 1000 + Math.random() * 2000;
+        } else if (Math.random() < 0.2) {
+          nextDelay += 1500 + Math.random() * 2000;
         }
 
         setTimeout(flyTo, nextDelay);
       }
 
-      setTimeout(flyTo, 1500);
+      setTimeout(flyTo, 1200);
     })();
   </script>
 
