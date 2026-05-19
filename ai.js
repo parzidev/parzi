@@ -1,49 +1,50 @@
 // Chat bot functionality for Parzi AI
 async function sendMessage(message, sessionId = null) {
-  try {
-    const response = await fetch('https://ai.parzi.dev/api/v1/chat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        message: message,
-        session_id: sessionId
-      }),
-    });
-    
-    const data = await response.json();
-    
-    if (data.success) {
-      console.log('Yanıt:', data.message);
-      return {
-        message: data.message,
-        sessionId: data.session_id
-      };
-    } else {
-      console.error('Hata:', data.error);
-      return null;
+    try {
+        const response = await fetch('https://ai.parzi.dev/api/v1/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                message: message,
+                session_id: sessionId
+            }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            console.log('Yanıt:', data.message);
+            return {
+                message: data.message,
+                sessionId: data.session_id
+            };
+
+        } else {
+            console.error('Hata:', data.error);
+            return null;
+        }
+    } catch (error) {
+        console.error('API hatası:', error);
+        return null;
     }
-  } catch (error) {
-    console.error('API hatası:', error);
-    return null;
-  }
 }
 
 // Initialize chat when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Create chat interface
     createChatInterface();
-    
+
     const messages = document.getElementById('messages');
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
     const toggleChat = document.getElementById('toggle-chat');
     const chatContainer = document.querySelector('.chat-container');
     let currentSessionId = null;
-    
+
     // Toggle chat visibility
-    toggleChat.addEventListener('click', function() {
+    toggleChat.addEventListener('click', function () {
         chatContainer.classList.toggle('chat-minimized');
         const icon = toggleChat.querySelector('i');
         if (chatContainer.classList.contains('chat-minimized')) {
@@ -52,31 +53,31 @@ document.addEventListener('DOMContentLoaded', function() {
             icon.className = 'fas fa-chevron-up';
         }
     });
-    
+
     // Send message function
     async function handleSendMessage() {
         const message = userInput.value.trim();
         if (!message) return;
-        
+
         // Add user message to chat
         addMessage(message, 'user');
         userInput.value = '';
-        
+
         // Show typing indicator
         const typingIndicator = document.createElement('div');
         typingIndicator.className = 'message bot typing';
         typingIndicator.innerHTML = '<div class="message-content">...</div>';
         messages.appendChild(typingIndicator);
         messages.scrollTop = messages.scrollHeight;
-        
+
         // Send to API
         const response = await sendMessage(message, currentSessionId);
-        
+
         // Remove typing indicator
         if (typingIndicator.parentNode) {
             typingIndicator.parentNode.removeChild(typingIndicator);
         }
-        
+
         if (response) {
             // Add bot response to chat
             addMessage(response.message, 'bot');
@@ -85,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
             addMessage('Üzgünüm, bir hata oluştu. Lütfen tekrar deneyin.', 'bot');
         }
     }
-    
+
     // Add message to chat
     function addMessage(text, sender) {
         const messageDiv = document.createElement('div');
@@ -94,10 +95,10 @@ document.addEventListener('DOMContentLoaded', function() {
         messages.appendChild(messageDiv);
         messages.scrollTop = messages.scrollHeight;
     }
-    
+
     // Event listeners
     sendButton.addEventListener('click', handleSendMessage);
-    userInput.addEventListener('keypress', function(e) {
+    userInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             handleSendMessage();
         }
@@ -130,7 +131,7 @@ function createChatInterface() {
             </div>
         </div>
     `;
-    
+
     // Create style element
     const styleElement = document.createElement('style');
     styleElement.textContent = `
@@ -241,7 +242,7 @@ function createChatInterface() {
             display: none;
         }
     `;
-    
+
     // Add elements to document
     document.head.appendChild(styleElement);
     document.body.appendChild(chatContainer);
