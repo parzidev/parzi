@@ -1,0 +1,19 @@
+# Arıcı Mustafa - robots.txt
+User-agent: *
+Allow: /
+Disallow:
+
+# Sitemap
+Sitemap: https://aricimustafa.com/sitemap.xml
+
+# Google
+User-agent: Googlebot
+Allow: /
+
+# Bing
+User-agent: Bingbot
+Allow: /
+
+# Yandex
+User-agent: Yandex
+Allow: /
