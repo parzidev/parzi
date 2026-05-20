@@ -126,6 +126,80 @@
     }
   }
   </script>
+
+  <!-- SEO: FAQPage Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Arıcı Mustafa'nın balları gerçekten doğal mı?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Evet, tüm ballarımız %100 doğal ve katkısızdır. Hiçbir şeker, katkı maddesi veya koruyucu kullanmıyoruz. Yozgat yaylalarında doğal yöntemlerle üretilir."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Hangi bal çeşitlerini satıyorsunuz?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Çiçek balı, süzme bal, karakovan balı ve petekli bal olmak üzere 4 çeşit doğal bal satıyoruz."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Nasıl sipariş verebilirim?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "WhatsApp üzerinden sipariş verebilirsiniz. Sitemizden bal çeşidi, miktar ve şehir seçerek hazır sipariş mesajını gönderebilirsiniz. Numara: 0555 010 39 93"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Türkiye'nin her yerine kargo yapıyor musunuz?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Evet, tüm Türkiye'ye kargo ile gönderim yapıyoruz. Ballar özenle paketlenerek güvenli şekilde adresinize ulaştırılır."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Karakovan balı ile süzme bal arasındaki fark nedir?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Karakovan balı geleneksel kütük kovanlarda üretilir, daha koyu ve yoğun aromalıdır. Süzme bal ise modern kovanlarda üretilip süzülerek elde edilir, daha berrak ve hafif tatlıdır."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Sahte bal ile gerçek bal nasıl ayırt edilir?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Gerçek doğal bal zamanla kristalleşir — bu doğallık göstergesidir. Su testinde dibe çöker, kağıt üzerinde ıslatmaz. Arıcı Mustafa balları %100 saf olup doğal yöntemlerle üretilir."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Balların raf ömrü ne kadar?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Doğru koşullarda saklanan doğal bal bozulmaz. Oda sıcaklığında, güneş ışığından uzak ve ağzı kapalı şekilde yıllarca saklanabilir."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Toptan bal alabilir miyim?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Evet, toptan satış da yapıyoruz. Toptan sipariş için WhatsApp'tan bize ulaşabilirsiniz. Özel fiyatlandırma uygulanır."
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 
@@ -148,7 +222,7 @@
       <a href="#" class="logo" id="logo">
         <div class="logo-icon">🐝</div>
         <div class="logo-text">
-          <h1>Arıcı Mustafa</h1>
+          <span>Arıcı Mustafa</span>
           <span>Doğal · El Emeği · Saflık</span>
         </div>
       </a>
@@ -159,6 +233,7 @@
         <a href="#story">Hakkımızda</a>
         <a href="#values">Değerlerimiz</a>
         <a href="#testimonials">Yorumlar</a>
+        <a href="#faq">SSS</a>
         <a href="#footer">İletişim</a>
       </nav>
       
@@ -200,10 +275,10 @@
           <span class="hero-badge-icon">🍯</span>
           ARICI MUSTAFA · YOZGAT'TAN
         </div>
-        <h2 class="hero-title">
+        <h1 class="hero-title">
           Kovandan<br>
           Kavanoza <span>Saf Bal</span>
-        </h2>
+        </h1>
         <p class="hero-description">
           25 yıllık arıcılık geleneğiyle Yozgat yaylalarından sofralarınıza — hiçbir katkı maddesi kullanmadan, arıların doğal emeğiyle üretilen %100 saf ballar.
         </p>
@@ -242,7 +317,7 @@
       </div>
 
       <div class="hero-images">
-        <img src="images/hero-honey.png" alt="Yozgat doğal bal satın al - Arıcı Mustafa saf çiçek balı" class="hero-img-main">
+        <img src="images/hero-honey.png" alt="Yozgat doğal bal satın al - Arıcı Mustafa saf çiçek balı" class="hero-img-main" fetchpriority="high">
         <img src="images/honey-varieties.png" alt="Doğal bal çeşitleri - süzme bal, karakovan balı, petekli bal" class="hero-img-secondary">
         <div class="hero-floating-badge">
           <div class="badge-icon">🐝</div>
@@ -316,7 +391,7 @@
   <section class="story" id="story">
     <div class="container">
       <div class="story-images animate-on-scroll">
-        <img src="images/beekeeper.png" alt="Arıcı Mustafa çalışırken" class="story-img-main">
+        <img src="images/beekeeper.png" alt="Yozgat arıcı Mustafa doğal bal üretimi - kovan başında çalışırken" class="story-img-main">
         <div class="story-img-badge">
           <div class="badge-inner">
             <div class="badge-text-top">EL EMEĞİ</div>
@@ -648,6 +723,68 @@
             WhatsApp ile Sipariş Gönder
           </button>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SSS (FAQ) ===== -->
+  <section class="faq" id="faq">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">SIKÇA SORULAN SORULAR</span>
+        <h2 class="section-title animate-on-scroll">Merak Edilenler</h2>
+      </div>
+
+      <div class="faq-list">
+        <details class="faq-item animate-on-scroll">
+          <summary>Arıcı Mustafa'ın balları gerçekten doğal mı?</summary>
+          <p>Evet, tüm ballarımız %100 doğal ve katkısızdır. Hiçbir şeker, katkı maddesi veya koruyucu kullanmıyoruz. Yozgat yaylalarında doğal yöntemlerle üretilir ve hiçbir ısıl işlem görmeden kavanozlanır.</p>
+        </details>
+
+        <details class="faq-item animate-on-scroll">
+          <summary>Hangi bal çeşitlerini satıyorsunuz?</summary>
+          <p>Çiçek balı, süzme bal, karakovan balı ve petekli bal olmak üzere 4 çeşit doğal bal satıyoruz. Her biri Yozgat’ın farklı yaylalarından toplanır.</p>
+        </details>
+
+        <details class="faq-item animate-on-scroll">
+          <summary>Nasıl sipariş verebilirim?</summary>
+          <p>WhatsApp üzerinden sipariş verebilirsiniz. Sitemizden bal çeşidi, miktar ve şehir seçerek hazır sipariş mesajını WhatsApp’a gönderebilirsiniz. Numaramız: 0555 010 39 93</p>
+        </details>
+
+        <details class="faq-item animate-on-scroll">
+          <summary>Türkiye'nin her yerine kargo yapıyor musunuz?</summary>
+          <p>Evet, tüm Türkiye’ye kargo ile gönderim yapıyoruz. Ballar özenle paketlenerek güvenli şekilde adresinize ulaştırılır.</p>
+        </details>
+
+        <details class="faq-item animate-on-scroll">
+          <summary>Bal fiyatları ne kadar?</summary>
+          <p>Bal fiyatlarımız çeşide ve miktara göre değişmektedir. Güncel fiyat bilgisi için WhatsApp’tan iletişime geçebilirsiniz: 0555 010 39 93</p>
+        </details>
+
+        <details class="faq-item animate-on-scroll">
+          <summary>Karakovan balı ile süzme bal arasındaki fark nedir?</summary>
+          <p>Karakovan balı geleneksel kütük kovanlarda üretilir, daha koyu ve yoğun aromalıdır. Süzme bal ise modern kovanlarda üretilip süzülerek elde edilir, daha berrak ve hafif tatlıdır. Her ikisi de %100 doğaldır.</p>
+        </details>
+
+        <details class="faq-item animate-on-scroll">
+          <summary>Ballarınızın raf ömrü ne kadar?</summary>
+          <p>Doğru koşullarda saklanan doğal bal bozulmaz. Oda sıcaklığında, doğrudan güneş ışığından uzak ve ağzı kapalı şekilde yıllarca saklanabilir. Kristalleşme doğallık göstergesidir.</p>
+        </details>
+
+        <details class="faq-item animate-on-scroll">
+          <summary>Sahte bal ile gerçek bal nasıl ayırt edilir?</summary>
+          <p>Gerçek doğal bal zamanla kristalleşir — bu doğallık göstergesidir. Su testinde dibe çöker, kağıt üzerinde ıslatmaz. Arıcı Mustafa balları %100 saf olup doğal yöntemlerle üretilir.</p>
+        </details>
+
+        <details class="faq-item animate-on-scroll">
+          <summary>Balları nereden topluyorsunuz?</summary>
+          <p>Ballarımız Yozgat’ın temiz yaylalarında, doğal kır çiçeklerinin bol olduğu bölgelerde arılarımız tarafından toplanır. 25 yıllık deneyimimizle en verimli bölgeleri biliyoruz.</p>
+        </details>
+
+        <details class="faq-item animate-on-scroll">
+          <summary>Toptan bal alabilir miyim?</summary>
+          <p>Evet, toptan satış da yapıyoruz. Toptan sipariş için WhatsApp’tan bize ulaşabilirsiniz. Özel fiyatlandırma uygulanır.</p>
+        </details>
       </div>
     </div>
   </section>
