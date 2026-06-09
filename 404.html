@@ -1,132 +1,2638 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 Not Found</title>
-    <link rel="icon" type="image/png" href="icons/404-error.png">
+    <title>404 - Sayfa Bulunamadı | System Error</title>
+    <meta name="description" content="404 - Aradığınız sayfa bulunamadı. Sistem hatası tespit edildi.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
-        ::-moz-selection {
-            background: #b3d4fc;
-            text-shadow: none;
-        }
+    /* ═══════════════════════════════════════════════════════════
+       404 PAGE — BSOD + HACKER + BOSS FIGHT THEME
+       ═══════════════════════════════════════════════════════════ */
 
-        ::selection {
-            background: #b3d4fc;
-            text-shadow: none;
-        }
-        .action-text {
-            margin-top: 40px;
-            color: #FFF;
-        }
-        html {
-            padding: 30px 10px;
-            font-size: 20px;
-            line-height: 1.4;
-            color: #737373;
-            background: #0001AB;
-            -webkit-text-size-adjust: 100%;
-            -ms-text-size-adjust: 100%;
-        }
+    *, *::before, *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-        body {
-            max-width: 800px;
-            padding: 30px 20px 50px;
-            border-radius: 4px;
-            margin: 0 auto;                
-            background: #0001AB;
-            font-family: Lucida, monospace;
-        }
+    :root {
+        --bsod-bg: #0a0e27;
+        --bsod-blue: #0078d7;
+        --bsod-accent: #00d4ff;
+        --neon-green: #00ff41;
+        --neon-cyan: #00ffd5;
+        --neon-red: #ff0040;
+        --neon-orange: #ff6600;
+        --neon-purple: #b347ff;
+        --neon-pink: #ff47ab;
+        --text-primary: #e0e8ff;
+        --text-secondary: #8892b0;
+        --text-dim: #4a5568;
+        --terminal-bg: rgba(0, 10, 30, 0.85);
+        --glass-bg: rgba(0, 30, 80, 0.25);
+        --glass-border: rgba(0, 120, 215, 0.3);
+        --danger-gradient: linear-gradient(135deg, #ff0040, #ff6600);
+        --boss-gradient: linear-gradient(135deg, #ff0040, #b347ff);
+        --victory-gradient: linear-gradient(135deg, #00ff41, #00ffd5);
+        --font-mono: 'Share Tech Mono', monospace;
+        --font-pixel: 'Press Start 2P', monospace;
+    }
 
-        h1 {
-            margin: 0 10px;
-            font-size: 50px;
-            text-align: center;
-            background-color: #FFF;
-            color: #0001AB;
-        }
+    html, body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bsod-bg);
+        font-family: var(--font-mono);
+        color: var(--text-primary);
+        cursor: default;
+    }
 
-        h1 span {
-            color: #bbb;
-        }
+    /* ── Matrix Rain Canvas ───────────────────────────── */
+    #matrix-rain {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: 0;
+        opacity: 0.12;
+    }
 
-        h3 {
-            margin: 1.5em 0 0.5em;
-        }
+    /* ── CRT Overlay ──────────────────────────────────── */
+    .crt-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: 1000;
+        pointer-events: none;
+        background: repeating-linear-gradient(
+            0deg,
+            rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 1px,
+            transparent 1px, transparent 3px
+        );
+    }
+    .crt-overlay::after {
+        content: '';
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.4) 100%);
+    }
 
-        p {
-            margin: 1em 0;
-            color: #FFF;
-        }
+    /* ── Glitch Overlay ───────────────────────────────── */
+    .glitch-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: 999;
+        pointer-events: none;
+        opacity: 0;
+        mix-blend-mode: screen;
+    }
+    .glitch-overlay.active {
+        animation: glitchFlash 0.15s ease-out;
+    }
+    @keyframes glitchFlash {
+        0%  { opacity: 0.6; background: var(--neon-cyan); }
+        50% { opacity: 0.3; background: var(--neon-red); }
+        100%{ opacity: 0; }
+    }
 
-        ul {
-            padding: 0 0 0 40px;
-            margin: 1em 0;
-            color: #FFF;
-        }
+    /* ── BSOD Container ──────────────────────────────── */
+    .bsod-container {
+        position: relative;
+        z-index: 10;
+        width: 100%; height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: center;
-        }
+    /* ── BSOD Screen ─────────────────────────────────── */
+    .bsod-screen {
+        width: 90%; max-width: 860px;
+        padding: 2.5rem;
+        animation: fadeInUp 0.8s ease-out;
+    }
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
 
-        p a {
-            color: orange;
-            text-decoration: none;
-            text-transform: uppercase;
-        }
+    /* ── BSOD Header ─────────────────────────────────── */
+    .bsod-header {
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+        margin-bottom: 2rem;
+    }
+    .bsod-title-badge {
+        font-size: 4rem;
+        color: var(--bsod-accent);
+        text-shadow: 0 0 20px var(--bsod-accent), 0 0 40px var(--bsod-blue);
+        animation: sadFacePulse 3s ease-in-out infinite;
+    }
+    @keyframes sadFacePulse {
+        0%, 100% { text-shadow: 0 0 20px var(--bsod-accent), 0 0 40px var(--bsod-blue); }
+        50%      { text-shadow: 0 0 30px var(--neon-cyan), 0 0 60px var(--bsod-accent); }
+    }
+    .bsod-title {
+        font-family: var(--font-pixel);
+        font-size: clamp(0.7rem, 2vw, 1.1rem);
+        color: var(--text-primary);
+        letter-spacing: 2px;
+        text-shadow: 0 0 10px rgba(0,212,255,0.5);
+    }
 
-        .error-icon {
-            display: block;
-            width: 120px;
-            height: 120px;
-            margin: 20px auto;
-        }
+    /* ── Glitch Text Effect ──────────────────────────── */
+    .glitch-text {
+        position: relative;
+        display: inline-block;
+    }
+    .glitch-text::before,
+    .glitch-text::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+    }
+    .glitch-text::before {
+        color: var(--neon-red);
+        animation: glitch-1 2s infinite linear alternate-reverse;
+        clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+    }
+    .glitch-text::after {
+        color: var(--neon-cyan);
+        animation: glitch-2 2s infinite linear alternate-reverse;
+        clip-path: polygon(0 66%, 100% 66%, 100% 100%, 0 100%);
+    }
+    @keyframes glitch-1 {
+        0%, 90% { transform: translate(0); }
+        91% { transform: translate(-3px, 1px); }
+        93% { transform: translate(3px, -1px); }
+        95% { transform: translate(-2px, 2px); }
+        97% { transform: translate(2px, -2px); }
+        100%{ transform: translate(0); }
+    }
+    @keyframes glitch-2 {
+        0%, 90% { transform: translate(0); }
+        92% { transform: translate(3px, 1px); }
+        94% { transform: translate(-3px, -1px); }
+        96% { transform: translate(2px, -2px); }
+        98% { transform: translate(-2px, 2px); }
+        100%{ transform: translate(0); }
+    }
 
-        /* Blinking cursor styles */
-        .cursor {
-            display: inline-block;
-            width: 10px; /* Adjust width as needed */
-            height: 1.2em; /* Match line height */
-            background-color: orange; /* Cursor color */
-            margin-left: 5px;
-            animation: blink 1s step-end infinite;
-            vertical-align: bottom; /* Align with text baseline */
-        }
+    /* ── BSOD Info ───────────────────────────────────── */
+    .bsod-info { margin-bottom: 2rem; }
+    .bsod-info .typewriter {
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+        line-height: 1.8;
+        min-height: 1.8em;
+    }
 
-        @keyframes blink {
-            from, to { background-color: transparent }
-            50% { background-color: orange; }
-        }
+    /* ── Error Code Section ──────────────────────────── */
+    .error-code-section {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+    }
+    .error-code-box {
+        flex: 1; min-width: 180px;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 8px;
+        padding: 1rem 1.2rem;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+    }
+    .error-code-box:hover {
+        border-color: var(--bsod-accent);
+        box-shadow: 0 0 20px rgba(0,212,255,0.15);
+        transform: translateY(-2px);
+    }
+    .error-label {
+        display: block;
+        font-size: 0.65rem;
+        font-family: var(--font-pixel);
+        color: var(--text-dim);
+        letter-spacing: 2px;
+        margin-bottom: 0.5rem;
+    }
+    .error-value {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: var(--bsod-accent);
+    }
+    .status-danger {
+        color: var(--neon-red);
+        text-shadow: 0 0 10px rgba(255,0,64,0.5);
+        animation: dangerPulse 1.5s ease-in-out infinite;
+    }
+    @keyframes dangerPulse {
+        0%, 100% { opacity: 1; }
+        50%      { opacity: 0.5; }
+    }
+    .threat-level {
+        font-family: var(--font-mono);
+        font-size: 0.9rem;
+        color: var(--neon-orange);
+        text-shadow: 0 0 8px rgba(255,102,0,0.5);
+    }
+
+    /* ── Progress Section ────────────────────────────── */
+    .progress-section { margin-bottom: 2rem; }
+    .progress-label {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+    }
+    .progress-bar-container {
+        width: 100%; height: 6px;
+        background: rgba(255,255,255,0.08);
+        border-radius: 3px;
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+    }
+    .progress-bar {
+        height: 100%; width: 0%;
+        background: linear-gradient(90deg, var(--bsod-blue), var(--bsod-accent), var(--neon-cyan));
+        border-radius: 3px;
+        transition: width 0.3s ease;
+        box-shadow: 0 0 10px var(--bsod-accent);
+    }
+    .progress-sublabel {
+        font-size: 0.7rem;
+        color: var(--text-dim);
+        font-style: italic;
+    }
+
+    /* ── Terminal Output ─────────────────────────────── */
+    .terminal-output {
+        background: var(--terminal-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 10px;
+        overflow: hidden;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .terminal-header {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 14px;
+        background: rgba(0,0,0,0.4);
+        border-bottom: 1px solid var(--glass-border);
+    }
+    .terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .terminal-dot.red    { background: #ff5f57; }
+    .terminal-dot.yellow { background: #febc2e; }
+    .terminal-dot.green  { background: #28c840; }
+    .terminal-title {
+        margin-left: 8px;
+        font-size: 0.7rem;
+        color: var(--text-dim);
+        letter-spacing: 1px;
+    }
+    .terminal-body {
+        padding: 1rem 1.2rem;
+        max-height: 200px;
+        overflow-y: auto;
+        font-size: 0.8rem;
+        line-height: 1.7;
+    }
+    .terminal-body::-webkit-scrollbar { width: 4px; }
+    .terminal-body::-webkit-scrollbar-track { background: transparent; }
+    .terminal-body::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 2px; }
+    .terminal-line {
+        opacity: 0;
+        animation: terminalFadeIn 0.3s ease forwards;
+    }
+    @keyframes terminalFadeIn {
+        from { opacity: 0; transform: translateX(-10px); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+    .terminal-line .prompt { color: var(--neon-green); }
+    .terminal-line .cmd     { color: var(--bsod-accent); }
+    .terminal-line .warning { color: var(--neon-orange); }
+    .terminal-line .error   { color: var(--neon-red); }
+    .terminal-line .success { color: var(--neon-green); }
+    .terminal-line .info    { color: var(--text-dim); }
+
+    .hidden { display: none !important; }
+
+    /* ═══════════════════════════════════════════════════
+       BOSS FIGHT SCREEN
+       ═══════════════════════════════════════════════════ */
+    .boss-fight-screen {
+        width: 100%; height: 100%;
+        display: flex;
+        flex-direction: column;
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    /* ── Boss HUD ────────────────────────────────────── */
+    .boss-hud {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 2rem;
+        background: rgba(0,0,0,0.6);
+        border-bottom: 2px solid var(--neon-red);
+        backdrop-filter: blur(10px);
+        flex-shrink: 0;
+    }
+    .boss-info {
+        min-width: min(420px, 50vw);
+    }
+    .boss-name {
+        font-family: var(--font-pixel);
+        font-size: clamp(0.55rem, 1.5vw, 0.8rem);
+        color: var(--neon-red);
+        text-shadow: 0 0 10px rgba(255,0,64,0.6);
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+    .boss-meta {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        margin-bottom: 0.5rem;
+        flex-wrap: wrap;
+    }
+    .boss-phase {
+        font-family: var(--font-pixel);
+        font-size: clamp(0.45rem, 1vw, 0.58rem);
+        color: var(--neon-purple);
+        border: 1px solid rgba(179,71,255,0.4);
+        border-radius: 999px;
+        padding: 0.35rem 0.55rem;
+        background: rgba(179,71,255,0.12);
+        box-shadow: 0 0 14px rgba(179,71,255,0.18);
+        white-space: nowrap;
+    }
+    .boss-hp-container {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+    }
+    .boss-hp-bar {
+        width: clamp(150px, 30vw, 350px);
+        height: 16px;
+        background: rgba(255,255,255,0.08);
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid rgba(255,0,64,0.3);
+        position: relative;
+    }
+    .boss-hp-fill {
+        width: 100%; height: 100%;
+        background: var(--danger-gradient);
+        border-radius: 7px;
+        transition: width 0.3s ease;
+        position: relative;
+        box-shadow: 0 0 15px rgba(255,0,64,0.4);
+    }
+    .boss-hp-fill::after {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 50%;
+        background: rgba(255,255,255,0.2);
+        border-radius: 7px 7px 0 0;
+    }
+    .boss-hp-text {
+        font-size: 0.7rem;
+        font-family: var(--font-pixel);
+        color: var(--neon-red);
+        white-space: nowrap;
+    }
+    .player-info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.42rem;
+        min-width: 210px;
+    }
+    .player-score,
+    .player-combo,
+    .player-power,
+    .player-firewall,
+    .heat-label {
+        font-family: var(--font-pixel);
+        font-size: clamp(0.5rem, 1.2vw, 0.7rem);
+        white-space: nowrap;
+    }
+    .player-score {
+        color: var(--neon-cyan);
+        text-shadow: 0 0 10px rgba(0,255,213,0.5);
+    }
+    .player-combo {
+        color: var(--neon-orange);
+        text-shadow: 0 0 10px rgba(255,102,0,0.5);
+    }
+    .player-power {
+        color: var(--neon-green);
+        text-shadow: 0 0 10px rgba(0,255,65,0.45);
+    }
+    .player-firewall {
+        color: var(--neon-purple);
+        text-shadow: 0 0 10px rgba(179,71,255,0.45);
+    }
+    .weapon-heat {
+        width: 100%;
+        min-width: 180px;
+    }
+    .heat-label {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.6rem;
+        color: var(--text-secondary);
+        margin-bottom: 0.35rem;
+    }
+    .heat-bar {
+        height: 8px;
+        overflow: hidden;
+        border-radius: 999px;
+        border: 1px solid rgba(255,102,0,0.35);
+        background: rgba(255,255,255,0.08);
+    }
+    .heat-fill {
+        width: 0%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--neon-cyan), var(--neon-orange), var(--neon-red));
+        box-shadow: 0 0 14px rgba(255,102,0,0.4);
+        transition: width 0.18s ease;
+    }
+    .system-integrity {
+        width: min(260px, 28vw);
+        min-width: 160px;
+    }
+    .integrity-label {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.7rem;
+        margin-bottom: 0.45rem;
+        font-family: var(--font-pixel);
+        font-size: clamp(0.45rem, 1vw, 0.58rem);
+        color: var(--text-secondary);
+    }
+    .integrity-bar {
+        height: 10px;
+        border: 1px solid rgba(0,255,213,0.35);
+        border-radius: 999px;
+        overflow: hidden;
+        background: rgba(255,255,255,0.08);
+    }
+    .integrity-fill {
+        width: 100%;
+        height: 100%;
+        background: var(--victory-gradient);
+        border-radius: inherit;
+        box-shadow: 0 0 14px rgba(0,255,213,0.35);
+        transition: width 0.25s ease, background 0.25s ease;
+    }
+
+    /* ── Boss Arena ──────────────────────────────────── */
+    .boss-arena {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+    }
+    .boss-arena::before {
+        content: '';
+        position: absolute;
+        width: 400px; height: 400px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255,0,64,0.08) 0%, transparent 70%);
+        animation: arenaGlow 3s ease-in-out infinite;
+    }
+    .boss-arena::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image:
+            linear-gradient(rgba(0,212,255,0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0,212,255,0.05) 1px, transparent 1px);
+        background-size: 48px 48px;
+        mask-image: radial-gradient(circle at center, black 0%, transparent 76%);
+        pointer-events: none;
+        z-index: 1;
+    }
+    @keyframes arenaGlow {
+        0%, 100% { transform: scale(1);   opacity: 0.5; }
+        50%      { transform: scale(1.2); opacity: 1; }
+    }
+    .boss-entity {
+        position: absolute;
+        left: var(--boss-x, 50%);
+        top: var(--boss-y, 50%);
+        transform: translate(-50%, -50%);
+        cursor: crosshair;
+        user-select: none;
+        -webkit-user-select: none;
+        transition: left 0.32s ease, top 0.32s ease, filter 0.25s ease;
+        z-index: 20;
+    }
+    .boss-entity.phase-rush {
+        transition-duration: 0.2s;
+    }
+    .boss-entity.frozen {
+        filter: drop-shadow(0 0 24px rgba(0,255,213,0.95)) saturate(1.5);
+        transition-duration: 0.65s;
+    }
+    .boss-entity.fever-active {
+        filter: drop-shadow(0 0 24px rgba(255,102,0,0.9)) saturate(1.35);
+    }
+    @keyframes bossFloat {
+        0%, 100% { transform: translateY(0); }
+        50%      { transform: translateY(-15px); }
+    }
+    .boss-sprite {
+        position: relative;
+        width: clamp(150px, 28vw, 260px);
+        height: clamp(150px, 28vw, 260px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle, rgba(255,0,64,0.15) 0%, transparent 70%);
+        border-radius: 50%;
+        transition: transform 0.1s ease;
+        animation: bossFloat 3s ease-in-out infinite;
+    }
+    .boss-sprite:active { transform: scale(0.9); }
+    .boss-entity.shield-active .boss-sprite::after {
+        content: '';
+        position: absolute;
+        inset: -12px;
+        border: 2px solid rgba(0,255,213,0.8);
+        border-radius: 50%;
+        box-shadow: 0 0 18px rgba(0,255,213,0.7), inset 0 0 24px rgba(0,255,213,0.2);
+        animation: shieldPulse 0.8s ease-in-out infinite;
+        pointer-events: none;
+    }
+    @keyframes shieldPulse {
+        0%, 100% { transform: scale(0.96); opacity: 0.85; }
+        50%      { transform: scale(1.06); opacity: 0.45; }
+    }
+    .boss-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 0 20px rgba(255,0,64,0.6));
+        animation: bossGlitch 4s infinite;
+        pointer-events: none;
+    }
+    .boss-name-icon {
+        width: 28px;
+        height: 28px;
+        object-fit: contain;
+        vertical-align: middle;
+        margin-right: 0.45rem;
+        filter: drop-shadow(0 0 10px rgba(255,0,64,0.65));
+    }
+    .weak-spot {
+        position: absolute;
+        left: var(--weak-x, 64%);
+        top: var(--weak-y, 32%);
+        width: clamp(22px, 4vw, 34px);
+        height: clamp(22px, 4vw, 34px);
+        border: 2px solid var(--neon-green);
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(0,255,65,0.95) 0%, rgba(0,255,213,0.65) 42%, transparent 68%);
+        box-shadow: 0 0 18px var(--neon-green), 0 0 30px rgba(0,255,213,0.55);
+        transform: translate(-50%, -50%);
+        cursor: crosshair;
+        animation: weakSpotPulse 0.55s ease-in-out infinite;
+        z-index: 5;
+    }
+    @keyframes weakSpotPulse {
+        0%, 100% { transform: translate(-50%, -50%) scale(0.86); }
+        50%      { transform: translate(-50%, -50%) scale(1.18); }
+    }
+    @keyframes bossGlitch {
+        0%, 85%  { transform: translate(0); filter: drop-shadow(0 0 20px rgba(255,0,64,0.6)); }
+        86%      { transform: translate(-4px, 2px); filter: drop-shadow(0 0 25px rgba(179,71,255,0.8)); }
+        88%      { transform: translate(4px, -2px); filter: drop-shadow(0 0 25px rgba(0,255,213,0.8)); }
+        90%      { transform: translate(-2px, -3px); filter: drop-shadow(0 0 30px rgba(255,0,64,0.9)); }
+        92%      { transform: translate(3px, 1px); }
+        94%      { transform: translate(0); filter: drop-shadow(0 0 20px rgba(255,0,64,0.6)); }
+    }
+    .boss-glitch-text {
+        position: absolute;
+        font-family: var(--font-pixel);
+        font-size: clamp(0.6rem, 1.5vw, 1rem);
+        color: var(--neon-red);
+        opacity: 0.6;
+        text-shadow: 0 0 10px var(--neon-red);
+        animation: boss404 2s infinite;
+        top: -10px; right: -20px;
+    }
+    @keyframes boss404 {
+        0%, 70%  { opacity: 0; }
+        75%      { opacity: 0.8; transform: translate(-3px, 2px); }
+        80%      { opacity: 0.4; transform: translate(3px, -2px); }
+        85%      { opacity: 0.6; transform: translate(0); }
+        100%     { opacity: 0; }
+    }
+    .boss-shadow {
+        width: clamp(110px, 20vw, 190px);
+        height: 14px;
+        background: rgba(0,0,0,0.4);
+        border-radius: 50%;
+        margin: 10px auto 0;
+        animation: shadowPulse 3s ease-in-out infinite;
+        filter: blur(4px);
+    }
+    @keyframes shadowPulse {
+        0%, 100% { transform: scaleX(1);   opacity: 0.6; }
+        50%      { transform: scaleX(0.7); opacity: 0.3; }
+    }
+
+    /* ── Player Core & Projectiles ───────────────────── */
+    .player-core {
+        position: absolute;
+        left: 50%;
+        top: 78%;
+        width: clamp(34px, 6vw, 48px);
+        height: clamp(34px, 6vw, 48px);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 32;
+        pointer-events: none;
+        filter: drop-shadow(0 0 16px rgba(0,255,213,0.75));
+    }
+    .player-core::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: radial-gradient(circle, #ffffff 0 12%, var(--neon-cyan) 13% 38%, rgba(0,212,255,0.18) 39% 66%, transparent 67%);
+        border: 2px solid rgba(0,255,213,0.85);
+        box-shadow: 0 0 18px rgba(0,255,213,0.75), inset 0 0 16px rgba(0,10,30,0.8);
+    }
+    .player-core::after {
+        content: '';
+        position: absolute;
+        inset: -10px;
+        border: 1px solid rgba(0,255,213,0.4);
+        border-left-color: transparent;
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: playerSpin 1.4s linear infinite;
+    }
+    .player-core.invulnerable::after {
+        border-color: rgba(0,255,65,0.95);
+        box-shadow: 0 0 20px rgba(0,255,65,0.65);
+    }
+    @keyframes playerSpin {
+        to { transform: rotate(360deg); }
+    }
+    .debug-shot,
+    .enemy-shot {
+        position: absolute;
+        left: 0;
+        top: 0;
+        border-radius: 50%;
+        pointer-events: none;
+        transform: translate(-50%, -50%);
+        z-index: 29;
+    }
+    .debug-shot {
+        width: 10px;
+        height: 10px;
+        background: radial-gradient(circle, #ffffff 0 20%, var(--neon-cyan) 21% 64%, transparent 65%);
+        box-shadow: 0 0 14px rgba(0,255,213,0.9);
+    }
+    .debug-shot.big {
+        width: 16px;
+        height: 16px;
+        background: radial-gradient(circle, #ffffff 0 18%, var(--neon-green) 19% 62%, transparent 63%);
+        box-shadow: 0 0 18px rgba(0,255,65,0.95);
+    }
+    .enemy-shot {
+        width: 14px;
+        height: 14px;
+        background: radial-gradient(circle, #ffffff 0 10%, var(--neon-red) 11% 58%, transparent 59%);
+        box-shadow: 0 0 18px rgba(255,0,64,0.9);
+        z-index: 31;
+    }
+    .enemy-shot.shard {
+        width: 18px;
+        height: 18px;
+        border-radius: 5px;
+        background: linear-gradient(135deg, var(--neon-red), var(--neon-purple));
+        box-shadow: 0 0 18px rgba(179,71,255,0.95);
+    }
+    .warning-ring {
+        position: absolute;
+        width: 74px;
+        height: 74px;
+        border-radius: 50%;
+        border: 2px solid rgba(255,102,0,0.75);
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        z-index: 18;
+        animation: warningRing 0.75s ease-out forwards;
+    }
+    @keyframes warningRing {
+        0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+        30%  { opacity: 1; }
+        100% { opacity: 0; transform: translate(-50%, -50%) scale(1.4); }
+    }
+
+    /* ── Boss Instructions ───────────────────────────── */
+    .boss-instructions {
+        padding: 1rem;
+        text-align: center;
+        flex-shrink: 0;
+    }
+    .blink-text {
+        font-family: var(--font-pixel);
+        font-size: clamp(0.5rem, 1.3vw, 0.75rem);
+        color: var(--neon-orange);
+        text-shadow: 0 0 15px rgba(255,102,0,0.6);
+        animation: blinkText 1s ease-in-out infinite;
+    }
+    @keyframes blinkText {
+        0%, 100% { opacity: 1; }
+        50%      { opacity: 0.3; }
+    }
+
+    /* ── Damage Numbers ──────────────────────────────── */
+    .damage-number {
+        position: absolute;
+        font-family: var(--font-pixel);
+        font-size: 1rem;
+        font-weight: bold;
+        color: var(--neon-orange);
+        text-shadow: 0 0 10px var(--neon-orange), 2px 2px 0 rgba(0,0,0,0.5);
+        pointer-events: none;
+        z-index: 100;
+        animation: damageFloat 0.8s ease-out forwards;
+    }
+    .damage-number.crit {
+        font-size: 1.4rem;
+        color: var(--neon-red);
+        text-shadow: 0 0 15px var(--neon-red), 0 0 30px var(--neon-red), 2px 2px 0 rgba(0,0,0,0.5);
+    }
+    .damage-number.weak {
+        color: var(--neon-green);
+        text-shadow: 0 0 15px var(--neon-green), 0 0 30px rgba(0,255,213,0.75), 2px 2px 0 rgba(0,0,0,0.5);
+    }
+    .damage-number.shielded {
+        color: var(--neon-cyan);
+        font-size: 0.75rem;
+    }
+    @keyframes damageFloat {
+        0%   { opacity: 1; transform: translateY(0) scale(1); }
+        50%  { opacity: 1; transform: translateY(-40px) scale(1.2); }
+        100% { opacity: 0; transform: translateY(-80px) scale(0.8); }
+    }
+
+    /* ── Arena Mechanics ─────────────────────────────── */
+    .power-up,
+    .glitch-node,
+    .data-shard {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        font-family: var(--font-pixel);
+        cursor: crosshair;
+        user-select: none;
+        -webkit-user-select: none;
+        z-index: 25;
+    }
+    .power-up {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        color: var(--bsod-bg);
+        background: rgba(0,10,30,0.18);
+        box-shadow: 0 0 18px rgba(0,255,213,0.7), inset 0 0 18px rgba(255,255,255,0.08);
+        font-size: 1rem;
+        animation: powerUpFloat 2.2s ease-in-out infinite;
+    }
+    .mechanic-img {
+        width: 112%;
+        height: 112%;
+        object-fit: contain;
+        pointer-events: none;
+        filter: drop-shadow(0 0 12px rgba(0,255,213,0.55));
+    }
+    .power-up.patch { box-shadow: 0 0 20px rgba(0,255,213,0.7); }
+    .power-up.firewall { box-shadow: 0 0 20px rgba(179,71,255,0.7); }
+    .power-up.overclock { box-shadow: 0 0 20px rgba(255,102,0,0.8); }
+    .power-up.trap { box-shadow: 0 0 20px rgba(0,212,255,0.8), inset 0 0 18px rgba(255,0,64,0.18); }
+    @keyframes powerUpFloat {
+        0%, 100% { transform: translate(-50%, -50%) translateY(0) rotate(0deg); }
+        50%      { transform: translate(-50%, -50%) translateY(-9px) rotate(8deg); }
+    }
+    .glitch-node {
+        width: clamp(58px, 9vw, 82px);
+        height: clamp(58px, 9vw, 82px);
+        border: 1px solid rgba(255,0,64,0.75);
+        border-radius: 50%;
+        color: var(--neon-red);
+        background: rgba(255,0,64,0.12);
+        box-shadow: 0 0 18px rgba(255,0,64,0.42);
+        font-size: clamp(0.48rem, 1.5vw, 0.62rem);
+        text-shadow: 0 0 8px var(--neon-red);
+        animation: glitchNodeWarn 0.42s steps(2, end) infinite;
+    }
+    .data-shard {
+        width: clamp(34px, 6vw, 48px);
+        height: clamp(34px, 6vw, 48px);
+        border-radius: 50%;
+        border: 1px solid rgba(255,71,171,0.7);
+        background: rgba(255,71,171,0.12);
+        box-shadow: 0 0 16px rgba(255,71,171,0.45);
+        animation: shardPulse 0.62s ease-in-out infinite;
+        z-index: 24;
+    }
+    .data-shard .mechanic-img {
+        width: 120%;
+        height: 120%;
+        filter: drop-shadow(0 0 10px rgba(255,0,64,0.65));
+    }
+    @keyframes shardPulse {
+        0%, 100% { transform: translate(-50%, -50%) scale(0.92) rotate(0deg); opacity: 0.82; }
+        50%      { transform: translate(-50%, -50%) scale(1.12) rotate(8deg); opacity: 1; }
+    }
+    .quarantine-burst {
+        position: absolute;
+        left: var(--burst-x, 50%);
+        top: var(--burst-y, 50%);
+        width: clamp(180px, 28vw, 320px);
+        height: clamp(180px, 28vw, 320px);
+        border: 3px solid rgba(0,255,213,0.9);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 19;
+        box-shadow: 0 0 32px rgba(0,255,213,0.8), inset 0 0 32px rgba(0,255,213,0.2);
+        animation: quarantineBurst 0.9s ease-out forwards;
+    }
+    @keyframes quarantineBurst {
+        0%   { transform: translate(-50%, -50%) scale(0.35); opacity: 0.95; }
+        100% { transform: translate(-50%, -50%) scale(1.35); opacity: 0; }
+    }
+    @keyframes glitchNodeWarn {
+        0%   { transform: translate(-50%, -50%) skewX(0deg); opacity: 0.78; }
+        50%  { transform: translate(-50%, -50%) skewX(-8deg); opacity: 1; }
+        100% { transform: translate(-50%, -50%) skewX(8deg); opacity: 0.82; }
+    }
+    .arena-alert {
+        position: absolute;
+        left: 50%;
+        top: 12%;
+        transform: translate(-50%, -50%);
+        z-index: 40;
+        max-width: min(90vw, 560px);
+        padding: 0.8rem 1rem;
+        border: 1px solid rgba(0,212,255,0.45);
+        border-radius: 8px;
+        color: var(--neon-cyan);
+        background: rgba(0,10,30,0.7);
+        box-shadow: 0 0 24px rgba(0,212,255,0.22);
+        font-family: var(--font-pixel);
+        font-size: clamp(0.52rem, 1.4vw, 0.72rem);
+        line-height: 1.6;
+        text-align: center;
+        pointer-events: none;
+        opacity: 0;
+    }
+    .arena-alert.show {
+        animation: alertPop 1.45s ease forwards;
+    }
+    .arena-alert.danger {
+        color: var(--neon-red);
+        border-color: rgba(255,0,64,0.55);
+        box-shadow: 0 0 24px rgba(255,0,64,0.28);
+    }
+    @keyframes alertPop {
+        0%   { opacity: 0; transform: translate(-50%, -70%) scale(0.92); }
+        14%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        84%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        100% { opacity: 0; transform: translate(-50%, -36%) scale(0.96); }
+    }
+
+    /* ── Click Particles ─────────────────────────────── */
+    .click-particle {
+        position: absolute;
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 50;
+        animation: particleBurst 0.6s ease-out forwards;
+    }
+    @keyframes particleBurst {
+        0%   { opacity: 1; transform: translate(0,0) scale(1); }
+        100% { opacity: 0; transform: translate(var(--px), var(--py)) scale(0); }
+    }
+
+    /* ── Boss Shake & Death ──────────────────────────── */
+    .boss-shake { animation: bossShake 0.3s ease !important; }
+    @keyframes bossShake {
+        0%, 100% { transform: translate(-50%, -50%) rotate(0); }
+        20%  { transform: translate(calc(-50% - 5px), calc(-50% - 5px)) rotate(-3deg); }
+        40%  { transform: translate(calc(-50% + 5px), calc(-50% + 5px)) rotate(3deg); }
+        60%  { transform: translate(calc(-50% - 3px), calc(-50% - 3px)) rotate(-2deg); }
+        80%  { transform: translate(calc(-50% + 3px), calc(-50% + 3px)) rotate(2deg); }
+    }
+    .boss-death { animation: bossDeath 1.5s ease-out forwards !important; }
+    @keyframes bossDeath {
+        0%   { transform: translate(-50%, -50%) scale(1);   opacity: 1;   filter: brightness(1); }
+        20%  { transform: translate(-50%, -50%) scale(1.3); filter: brightness(3); }
+        40%  { transform: translate(-50%, -50%) scale(0.8) rotate(15deg);  filter: brightness(2); }
+        60%  { transform: translate(-50%, -50%) scale(1.1) rotate(-10deg); filter: brightness(4); }
+        80%  { transform: translate(-50%, -50%) scale(0.5); opacity: 0.5; filter: brightness(2); }
+        100% { transform: translate(-50%, -50%) scale(0);   opacity: 0;   filter: brightness(0); }
+    }
+
+    /* ═══════════════════════════════════════════════════
+       VICTORY SCREEN
+       ═══════════════════════════════════════════════════ */
+    .victory-screen {
+        width: 100%; height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+    .victory-content {
+        text-align: center;
+        animation: victoryFadeIn 1s ease-out;
+        position: relative;
+        z-index: 10;
+    }
+    @keyframes victoryFadeIn {
+        from { opacity: 0; transform: scale(0.8); }
+        to   { opacity: 1; transform: scale(1); }
+    }
+    .victory-title {
+        font-family: var(--font-pixel);
+        font-size: clamp(1rem, 3vw, 1.8rem);
+        color: var(--neon-green);
+        text-shadow: 0 0 20px var(--neon-green), 0 0 40px var(--neon-green);
+        margin-bottom: 0.8rem;
+        letter-spacing: 3px;
+    }
+    .victory-subtitle {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        margin-bottom: 2.5rem;
+    }
+    .victory-stats {
+        display: flex;
+        gap: 1.2rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 2.5rem;
+    }
+    .stat-box {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 10px;
+        padding: 1.2rem 1.8rem;
+        min-width: 140px;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+    }
+    .stat-box:hover {
+        border-color: var(--neon-green);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,255,65,0.15);
+    }
+    .stat-label {
+        display: block;
+        font-size: 0.6rem;
+        font-family: var(--font-pixel);
+        color: var(--text-dim);
+        letter-spacing: 2px;
+        margin-bottom: 0.5rem;
+    }
+    .stat-value {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: var(--neon-cyan);
+        text-shadow: 0 0 10px rgba(0,255,213,0.5);
+    }
+    .stat-restored {
+        color: var(--neon-green);
+        text-shadow: 0 0 10px rgba(0,255,65,0.5);
+    }
+
+    /* ── Victory Actions ─────────────────────────────── */
+    .victory-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .btn-home, .btn-restart {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.8rem 1.8rem;
+        border-radius: 8px;
+        font-family: var(--font-mono);
+        font-size: 0.9rem;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+        position: relative;
+        overflow: hidden;
+    }
+    .btn-home {
+        background: linear-gradient(135deg, rgba(0,255,65,0.15), rgba(0,255,213,0.15));
+        border: 1px solid var(--neon-green);
+        color: var(--neon-green);
+    }
+    .btn-home:hover {
+        background: linear-gradient(135deg, rgba(0,255,65,0.3), rgba(0,255,213,0.3));
+        box-shadow: 0 0 25px rgba(0,255,65,0.3);
+        transform: translateY(-2px);
+    }
+    .btn-restart {
+        background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(0,120,215,0.15));
+        border: 1px solid var(--bsod-accent);
+        color: var(--bsod-accent);
+    }
+    .btn-restart:hover {
+        background: linear-gradient(135deg, rgba(0,212,255,0.3), rgba(0,120,215,0.3));
+        box-shadow: 0 0 25px rgba(0,212,255,0.3);
+        transform: translateY(-2px);
+    }
+    .btn-icon { font-size: 1.1rem; }
+
+    /* ── Victory Particles ───────────────────────────── */
+    .victory-particles {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+    }
+    .victory-particle {
+        position: absolute;
+        width: 4px; height: 4px;
+        border-radius: 50%;
+        animation: victoryParticle 3s ease-out infinite;
+    }
+    @keyframes victoryParticle {
+        0%   { opacity: 1; transform: translateY(100vh) scale(1); }
+        50%  { opacity: 0.8; }
+        100% { opacity: 0; transform: translateY(-20vh) scale(0); }
+    }
+
+    /* ═══════════════════════════════════════════════════
+       RESPONSIVE
+       ═══════════════════════════════════════════════════ */
+    @media (max-width: 640px) {
+        .bsod-screen { padding: 1.5rem; }
+        .bsod-header { flex-direction: column; text-align: center; }
+        .bsod-title-badge { font-size: 3rem; }
+        .error-code-section { flex-direction: column; }
+        .boss-hud { flex-direction: column; align-items: stretch; gap: 0.7rem; padding: 0.8rem 1rem; }
+        .boss-info { min-width: 0; }
+        .boss-hp-container { align-items: flex-start; flex-direction: column; gap: 0.45rem; }
+        .boss-hp-bar { width: 100%; }
+        .player-info { flex-direction: row; align-items: center; justify-content: space-between; gap: 0.6rem; min-width: 0; flex-wrap: wrap; }
+        .system-integrity { width: 100%; }
+        .weapon-heat { min-width: 100%; }
+        .power-up { width: 52px; height: 52px; }
+        .boss-sprite { width: clamp(138px, 44vw, 210px); height: clamp(138px, 44vw, 210px); }
+        .victory-stats { flex-direction: column; align-items: center; }
+        .victory-actions { flex-direction: column; align-items: center; }
+    }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>404 Not found</h1>
-        <p>Sorry, but the page you were trying to view does not exist.</p>
-        <p>There could be a lot of reasons behind this:</p>
-        <ul>
-            <li>You are an <code>all-time</code> unlucky person, thus.</li>
-            <li>God doesn't love you at all, thus.</li>
-            <li>Doomsday is here, servers are dying, thus.</li>
-            <li>You killed a kitten recently, thus.</li>
-            <li>You mistyped a <strong>URL</strong>, thus.</li>
-            <li>You followed an <strong>OLD, DEAD, BROKEN</strong> URL, thus.</li>
-            <li>Or you are just missing Windows Blue Screen, thus.</li>
-        </ul>
-        <div class="action-text">
-            Press <a href="javascript:window.history.back()">BACK</a> to return to previous page
-            or <a href="/">HOMEPAGE</a> to restart from beginning<span class="cursor"></span>
+    <!-- Matrix Rain Canvas -->
+    <canvas id="matrix-rain"></canvas>
+
+    <!-- CRT Scanline Overlay -->
+    <div class="crt-overlay"></div>
+
+    <!-- Glitch Overlay -->
+    <div class="glitch-overlay" id="glitch-overlay"></div>
+
+    <!-- Main BSOD Content -->
+    <div class="bsod-container" id="bsod-container">
+        <!-- Phase 1: BSOD Screen -->
+        <div class="bsod-screen" id="bsod-screen">
+            <div class="bsod-header">
+                <span class="bsod-title-badge">:(</span>
+                <h1 class="bsod-title" id="bsod-title">CRITICAL_PAGE_NOT_FOUND</h1>
+            </div>
+
+            <div class="bsod-info">
+                <p class="typewriter" id="typewriter-1"></p>
+                <p class="typewriter" id="typewriter-2"></p>
+            </div>
+
+            <div class="error-code-section">
+                <div class="error-code-box">
+                    <span class="error-label">ERROR CODE</span>
+                    <span class="error-value glitch-text" data-text="0x00000404">0x00000404</span>
+                </div>
+                <div class="error-code-box">
+                    <span class="error-label">STATUS</span>
+                    <span class="error-value status-danger">PAGE_DESTROYED</span>
+                </div>
+                <div class="error-code-box">
+                    <span class="error-label">THREAT LEVEL</span>
+                    <span class="error-value threat-level">████████░░ 80%</span>
+                </div>
+            </div>
+
+            <div class="progress-section" id="progress-section">
+                <p class="progress-label">Sistem hatayı analiz ediyor... <span id="progress-percent">0</span>%</p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                <p class="progress-sublabel" id="progress-sublabel">Hata kaynağı tespit ediliyor...</p>
+            </div>
+
+            <div class="terminal-output" id="terminal-output">
+                <div class="terminal-header">
+                    <span class="terminal-dot red"></span>
+                    <span class="terminal-dot yellow"></span>
+                    <span class="terminal-dot green"></span>
+                    <span class="terminal-title">system_diagnostic.exe</span>
+                </div>
+                <div class="terminal-body" id="terminal-body"></div>
+            </div>
+        </div>
+
+        <!-- Phase 2: Boss Fight -->
+        <div class="boss-fight-screen hidden" id="boss-fight-screen">
+            <div class="boss-hud">
+                <div class="boss-info">
+                    <div class="boss-meta">
+                        <span class="boss-name">
+                            <img src="images/404-game/bug-boss.png" alt="" class="boss-name-icon">
+                            ERROR_404_BUG
+                        </span>
+                        <span class="boss-phase" id="boss-phase">PHASE 1: TRACE</span>
+                    </div>
+                    <div class="boss-hp-container">
+                        <div class="boss-hp-bar" id="boss-hp-bar">
+                            <div class="boss-hp-fill" id="boss-hp-fill"></div>
+                        </div>
+                        <span class="boss-hp-text" id="boss-hp-text">HP: 404 / 404</span>
+                    </div>
+                </div>
+                <div class="system-integrity">
+                    <div class="integrity-label">
+                        <span>SYSTEM</span>
+                        <span id="integrity-text">100%</span>
+                    </div>
+                    <div class="integrity-bar">
+                        <div class="integrity-fill" id="integrity-fill"></div>
+                    </div>
+                </div>
+                <div class="player-info">
+                    <span class="player-score">SKOR: <span id="score">0</span></span>
+                    <span class="player-combo">COMBO: <span id="combo">x1</span></span>
+                    <span class="player-power">POWER: <span id="power-status">READY</span></span>
+                    <span class="player-firewall">FW: <span id="firewall-charges">0</span></span>
+                    <div class="weapon-heat">
+                        <div class="heat-label">
+                            <span>HEAT</span>
+                            <span id="heat-text">0%</span>
+                        </div>
+                        <div class="heat-bar">
+                            <div class="heat-fill" id="heat-fill"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="boss-arena" id="boss-arena">
+                <div class="arena-alert" id="arena-alert"></div>
+                <div class="player-core" id="player-core" aria-hidden="true"></div>
+                <div class="boss-entity" id="boss-entity">
+                    <div class="boss-sprite" id="boss-sprite">
+                        <img src="images/404-game/bug-boss.png" alt="" class="boss-image" id="boss-image" draggable="false">
+                        <div class="boss-glitch-text">404</div>
+                        <button class="weak-spot hidden" id="weak-spot" type="button" aria-label="Zayıf noktaya vur"></button>
+                    </div>
+                    <div class="boss-shadow"></div>
+                </div>
+            </div>
+
+            <div class="boss-instructions">
+                <p class="blink-text">DEBUG CORE ONLINE</p>
+            </div>
+
+            <div class="damage-numbers" id="damage-numbers"></div>
+        </div>
+
+        <!-- Phase 3: Victory Screen -->
+        <div class="victory-screen hidden" id="victory-screen">
+            <div class="victory-content">
+                <h2 class="victory-title glitch-text" data-text="SYSTEM RESTORED">SYSTEM RESTORED</h2>
+                <p class="victory-subtitle">Bug başarıyla yok edildi!</p>
+                <div class="victory-stats">
+                    <div class="stat-box">
+                        <span class="stat-label">TOPLAM SKOR</span>
+                        <span class="stat-value" id="final-score">0</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">MAX COMBO</span>
+                        <span class="stat-value" id="final-combo">x1</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">SISTEM</span>
+                        <span class="stat-value" id="final-integrity">100%</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">RANK</span>
+                        <span class="stat-value" id="final-rank">CLEAN</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">DURUM</span>
+                        <span class="stat-value stat-restored">RESTORED ✓</span>
+                    </div>
+                </div>
+                <div class="victory-actions">
+                    <a href="/" class="btn-home" id="btn-home">
+                        <span class="btn-icon">🏠</span>
+                        <span>Ana Sayfaya Dön</span>
+                    </a>
+                    <button class="btn-restart" id="btn-restart" onclick="location.reload()">
+                        <span class="btn-icon">🔄</span>
+                        <span>Tekrar Oyna</span>
+                    </button>
+                </div>
+            </div>
+            <div class="victory-particles" id="victory-particles"></div>
         </div>
     </div>
 
+    <script>
+    /* ═══════════════════════════════════════════════════════════
+       404 PAGE — INTERACTIVE SCRIPT
+       Phases: BSOD Intro → Boss Fight → Victory
+       ═══════════════════════════════════════════════════════════ */
+
+    // ── Audio Engine (Web Audio API) ─────────────────────
+    class SFX {
+        constructor() { this.ctx = null; this.initialized = false; }
+        init() {
+            if (this.initialized) return;
+            try {
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                this.initialized = true;
+            } catch (e) { console.warn('Web Audio not supported'); }
+        }
+        play(type) {
+            if (!this.ctx) return;
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            const now = this.ctx.currentTime;
+            switch (type) {
+                case 'hit':
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(300, now);
+                    osc.frequency.exponentialRampToValueAtTime(100, now + 0.1);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+                    osc.start(now); osc.stop(now + 0.15);
+                    break;
+                case 'crit':
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(600, now);
+                    osc.frequency.exponentialRampToValueAtTime(150, now + 0.2);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                    osc.start(now); osc.stop(now + 0.25);
+                    break;
+                case 'terminal':
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(800, now);
+                    osc.frequency.exponentialRampToValueAtTime(400, now + 0.05);
+                    gain.gain.setValueAtTime(0.05, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+                    osc.start(now); osc.stop(now + 0.08);
+                    break;
+                case 'progress':
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.linearRampToValueAtTime(880, now + 0.1);
+                    gain.gain.setValueAtTime(0.06, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+                    osc.start(now); osc.stop(now + 0.15);
+                    break;
+                case 'powerup':
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(520, now);
+                    osc.frequency.linearRampToValueAtTime(1040, now + 0.12);
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                    osc.start(now); osc.stop(now + 0.2);
+                    break;
+                case 'shield':
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(180, now);
+                    osc.frequency.linearRampToValueAtTime(320, now + 0.18);
+                    gain.gain.setValueAtTime(0.09, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+                    osc.start(now); osc.stop(now + 0.28);
+                    break;
+                case 'alert':
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(140, now);
+                    osc.frequency.linearRampToValueAtTime(90, now + 0.16);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+                    osc.start(now); osc.stop(now + 0.22);
+                    break;
+                case 'trap':
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(240, now);
+                    osc.frequency.linearRampToValueAtTime(960, now + 0.18);
+                    gain.gain.setValueAtTime(0.14, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+                    osc.start(now); osc.stop(now + 0.32);
+                    break;
+                case 'overheat':
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(110, now);
+                    osc.frequency.linearRampToValueAtTime(70, now + 0.22);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                    osc.start(now); osc.stop(now + 0.3);
+                    break;
+                case 'victory':
+                    [523, 659, 784, 1047].forEach((freq, i) => {
+                        const o = this.ctx.createOscillator();
+                        const g = this.ctx.createGain();
+                        o.connect(g); g.connect(this.ctx.destination);
+                        o.type = 'square';
+                        o.frequency.setValueAtTime(freq, now + i * 0.15);
+                        g.gain.setValueAtTime(0.1, now + i * 0.15);
+                        g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.15 + 0.3);
+                        o.start(now + i * 0.15); o.stop(now + i * 0.15 + 0.3);
+                    });
+                    break;
+                case 'bossDeath':
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(200, now);
+                    osc.frequency.exponentialRampToValueAtTime(30, now + 1);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+                    osc.start(now); osc.stop(now + 1.2);
+                    break;
+            }
+        }
+    }
+    const sfx = new SFX();
+
+    // ── Matrix Rain ──────────────────────────────────────
+    class MatrixRain {
+        constructor(canvas) {
+            this.canvas = canvas;
+            this.ctx = canvas.getContext('2d');
+            this.chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン404ERR'.split('');
+            this.fontSize = 14;
+            this.columns = 0;
+            this.drops = [];
+            this.resize();
+            window.addEventListener('resize', () => this.resize());
+        }
+        resize() {
+            this.canvas.width = window.innerWidth;
+            this.canvas.height = window.innerHeight;
+            this.columns = Math.floor(this.canvas.width / this.fontSize);
+            this.drops = Array(this.columns).fill(1).map(() => Math.random() * -50);
+        }
+        draw() {
+            this.ctx.fillStyle = 'rgba(10, 14, 39, 0.06)';
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            this.ctx.font = `${this.fontSize}px monospace`;
+            for (let i = 0; i < this.drops.length; i++) {
+                const char = this.chars[Math.floor(Math.random() * this.chars.length)];
+                const x = i * this.fontSize;
+                const y = this.drops[i] * this.fontSize;
+                const brightness = Math.random();
+                if (brightness > 0.95) this.ctx.fillStyle = '#00d4ff';
+                else if (brightness > 0.85) this.ctx.fillStyle = '#0078d7';
+                else this.ctx.fillStyle = `rgba(0, 120, 215, ${0.3 + Math.random() * 0.4})`;
+                this.ctx.fillText(char, x, y);
+                if (y > this.canvas.height && Math.random() > 0.975) this.drops[i] = 0;
+                this.drops[i]++;
+            }
+        }
+        start() {
+            const loop = () => { this.draw(); requestAnimationFrame(loop); };
+            loop();
+        }
+    }
+
+    // ── Typewriter Effect ────────────────────────────────
+    function typeWriter(element, text, speed = 30) {
+        return new Promise(resolve => {
+            let i = 0;
+            element.textContent = '';
+            const timer = setInterval(() => {
+                element.textContent += text[i];
+                i++;
+                if (i >= text.length) { clearInterval(timer); resolve(); }
+            }, speed);
+        });
+    }
+
+    // ── Terminal Lines ───────────────────────────────────
+    const terminalLines = [
+        { prompt: '>', cmd: ' scan --target=requested_page', delay: 400 },
+        { text: '  Bağlantı kuruluyor...', class: 'info', delay: 600 },
+        { text: '  [UYARI] Sayfa bulunamıyor!', class: 'warning', delay: 500 },
+        { prompt: '>', cmd: ' traceroute page.html', delay: 400 },
+        { text: '  Hop 1: gateway... OK', class: 'info', delay: 300 },
+        { text: '  Hop 2: server... OK', class: 'info', delay: 300 },
+        { text: '  Hop 3: page... TIMEOUT', class: 'error', delay: 500 },
+        { prompt: '>', cmd: ' diagnose --deep', delay: 400 },
+        { text: '  Hata kaynağı tespit edildi: ERROR_404_BUG', class: 'error', delay: 600 },
+        { text: '  [!] Bu bir BUG! Manuel müdahale gerekiyor.', class: 'warning', delay: 500 },
+        { text: '  [SİSTEM] Boss Fight modu başlatılıyor...', class: 'success', delay: 800 },
+    ];
+
+    function addTerminalLine(line) {
+        const body = document.getElementById('terminal-body');
+        const el = document.createElement('div');
+        el.classList.add('terminal-line');
+        if (line.prompt) el.innerHTML = `<span class="prompt">${line.prompt}</span><span class="cmd">${line.cmd}</span>`;
+        else el.innerHTML = `<span class="${line.class}">${line.text}</span>`;
+        body.appendChild(el);
+        body.scrollTop = body.scrollHeight;
+        sfx.play('terminal');
+    }
+
+    // ── Progress Bar Animation ───────────────────────────
+    function animateProgress() {
+        return new Promise(resolve => {
+            const bar = document.getElementById('progress-bar');
+            const percentEl = document.getElementById('progress-percent');
+            const sublabel = document.getElementById('progress-sublabel');
+            const messages = [
+                { at: 15, text: 'Dosya sistemi taranıyor...' },
+                { at: 35, text: 'Kayıp sayfa aranıyor...' },
+                { at: 55, text: 'Hata kaynağı izleniyor...' },
+                { at: 75, text: 'Tehdit analizi yapılıyor...' },
+                { at: 90, text: 'BUG tespit edildi! Müdahale hazırlanıyor...' },
+            ];
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 3 + 1;
+                if (progress > 100) progress = 100;
+                bar.style.width = progress + '%';
+                percentEl.textContent = Math.floor(progress);
+                const msg = messages.find(m => m.at <= progress && m.at > progress - 4);
+                if (msg) { sublabel.textContent = msg.text; sfx.play('progress'); }
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    sublabel.textContent = 'Analiz tamamlandı. Bug yok edilmeyi bekliyor!';
+                    resolve();
+                }
+            }, 80);
+        });
+    }
+
+    // ── Phase 1: BSOD Intro ─────────────────────────────
+    async function runBSODPhase() {
+        const tw1 = document.getElementById('typewriter-1');
+        const tw2 = document.getElementById('typewriter-2');
+        await typeWriter(tw1, 'Sisteminiz kritik bir hatayla karşılaştı. Aradığınız sayfa yok edilmiş.', 25);
+        await new Promise(r => setTimeout(r, 300));
+        await typeWriter(tw2, 'Hata kodu: 0x00000404 — PAGE_NOT_FOUND_EXCEPTION', 20);
+        await new Promise(r => setTimeout(r, 500));
+        const progressPromise = animateProgress();
+        await new Promise(r => setTimeout(r, 1500));
+        for (const line of terminalLines) {
+            await new Promise(r => setTimeout(r, line.delay));
+            addTerminalLine(line);
+        }
+        await progressPromise;
+        await new Promise(r => setTimeout(r, 1000));
+        triggerGlitch();
+        await new Promise(r => setTimeout(r, 400));
+        document.getElementById('bsod-screen').classList.add('hidden');
+        document.getElementById('boss-fight-screen').classList.remove('hidden');
+    }
+
+    // ── Glitch Effect ────────────────────────────────────
+    function triggerGlitch() {
+        const overlay = document.getElementById('glitch-overlay');
+        overlay.classList.remove('active');
+        void overlay.offsetWidth;
+        overlay.classList.add('active');
+    }
+
+    const GAME_ASSETS = {
+        boss: 'images/404-game/bug-boss.png',
+        patch: 'images/404-game/icon-patch.png',
+        firewall: 'images/404-game/icon-firewall.png',
+        overclock: 'images/404-game/icon-overclock.png',
+        glitch: 'images/404-game/icon-glitch.png',
+        trap: 'images/404-game/icon-trap.png',
+    };
+
+    // ── Phase 2: Boss Fight ─────────────────────────────
+    class BossFight {
+        constructor() {
+            this.maxHP = 404;
+            this.currentHP = 404;
+            this.score = 0;
+            this.combo = 0;
+            this.maxCombo = 0;
+            this.lastClickTime = 0;
+            this.comboTimeout = null;
+            this.isAlive = true;
+            this.phase = 1;
+            this.integrity = 100;
+            this.weakSpotActive = false;
+            this.shielded = false;
+            this.damageBoostHits = 0;
+            this.overclockUntil = 0;
+            this.feverUntil = 0;
+            this.frozenUntil = 0;
+            this.heat = 0;
+            this.overheated = false;
+            this.firewallCharges = 0;
+            this.trapArmed = false;
+            this.emergencyLock = false;
+            this.activeGlitches = new Set();
+            this.activePowerUps = new Set();
+            this.activeShards = new Set();
+            this.activePlayerShots = new Set();
+            this.activeEnemyShots = new Set();
+            this.keys = new Set();
+            this.pointer = { x: 0, y: 0, down: false };
+            this.player = { x: 0, y: 0, radius: 22, speed: 0.42, invulnerableUntil: 0 };
+            this.nextAutoFireAt = 0;
+            this.nextBossAttackAt = 0;
+            this.attackCounter = 0;
+            this.gameLoopId = null;
+            this.lastFrameTime = 0;
+            this.frameCount = 0;
+            this.frameScheduler = (callback) => {
+                if (window.requestAnimationFrame) return window.requestAnimationFrame(callback);
+                return setTimeout(() => callback(window.performance && window.performance.now ? window.performance.now() : Date.now()), 16);
+            };
+            this.frameCanceler = (id) => {
+                if (window.cancelAnimationFrame) window.cancelAnimationFrame(id);
+                else clearTimeout(id);
+            };
+            this.startedAt = Date.now();
+            this.phaseConfig = {
+                1: { name: 'PHASE 1: TRACE', moveDelay: 1450, glitchDelay: 4800, shardDelay: 0, shieldDelay: 0 },
+                2: { name: 'PHASE 2: MUTATION', moveDelay: 980, glitchDelay: 3900, shardDelay: 4200, shieldDelay: 4700 },
+                3: { name: 'PHASE 3: PANIC MODE', moveDelay: 680, glitchDelay: 3000, shardDelay: 2800, shieldDelay: 3300 },
+            };
+            this.bossEntity = document.getElementById('boss-entity');
+            this.bossSprite = document.getElementById('boss-sprite');
+            this.weakSpot = document.getElementById('weak-spot');
+            this.hpFill = document.getElementById('boss-hp-fill');
+            this.hpText = document.getElementById('boss-hp-text');
+            this.scoreEl = document.getElementById('score');
+            this.comboEl = document.getElementById('combo');
+            this.phaseEl = document.getElementById('boss-phase');
+            this.integrityFill = document.getElementById('integrity-fill');
+            this.integrityText = document.getElementById('integrity-text');
+            this.powerStatusEl = document.getElementById('power-status');
+            this.firewallChargesEl = document.getElementById('firewall-charges');
+            this.heatFill = document.getElementById('heat-fill');
+            this.heatText = document.getElementById('heat-text');
+            this.alertEl = document.getElementById('arena-alert');
+            this.arena = document.getElementById('boss-arena');
+            this.playerCore = document.getElementById('player-core');
+            this.weakSpot.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.onHit(e);
+            });
+            this.weakSpot.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const touch = e.touches[0];
+                this.onHit({ clientX: touch.clientX, clientY: touch.clientY, target: e.target });
+            }, { passive: false });
+            this.bossEntity.addEventListener('click', (e) => this.firePulse(e));
+            this.bossEntity.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                this.firePulse({ clientX: touch.clientX, clientY: touch.clientY });
+            }, { passive: false });
+            this.arena.addEventListener('click', (e) => {
+                if (e.target === this.arena) this.firePulse(e);
+            });
+            this.arena.addEventListener('touchstart', (e) => {
+                if (e.target !== this.arena) return;
+                e.preventDefault();
+                const touch = e.touches[0];
+                this.pointer.down = true;
+                this.pointer.x = touch.clientX;
+                this.pointer.y = touch.clientY;
+                this.firePulse({ clientX: touch.clientX, clientY: touch.clientY });
+            }, { passive: false });
+            this.arena.addEventListener('touchmove', (e) => {
+                const touch = e.touches[0];
+                this.pointer.down = true;
+                this.pointer.x = touch.clientX;
+                this.pointer.y = touch.clientY;
+            }, { passive: true });
+            this.arena.addEventListener('touchend', () => { this.pointer.down = false; });
+            this.setupControls();
+            this.moveBoss(true);
+            this.placePlayer();
+            this.updateHP();
+            this.updateIntegrity();
+            this.updatePowerStatus();
+            this.updateFirewall();
+            this.updateHeat();
+            document.body.dataset.gameReady = '1';
+            this.startLoops();
+            this.showAlert('Debug core sahada. Dodge, ateş ve sistem stabilitesini koru!');
+        }
+        setupControls() {
+            this.keyDownHandler = (event) => {
+                const key = event.key.toLowerCase();
+                if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'w', 'a', 's', 'd', ' '].includes(key)) {
+                    event.preventDefault();
+                    this.keys.add(key);
+                    this.nudgePlayer(key);
+                    if (key === ' ') this.fireAtBoss(true);
+                }
+            };
+            this.keyUpHandler = (event) => {
+                this.keys.delete(event.key.toLowerCase());
+            };
+            this.pointerMoveHandler = (event) => {
+                this.pointer.x = event.clientX;
+                this.pointer.y = event.clientY;
+            };
+            this.pointerDownHandler = () => { this.pointer.down = true; };
+            this.pointerUpHandler = () => { this.pointer.down = false; };
+            window.addEventListener('keydown', this.keyDownHandler);
+            window.addEventListener('keyup', this.keyUpHandler);
+            window.addEventListener('pointermove', this.pointerMoveHandler);
+            window.addEventListener('pointerdown', this.pointerDownHandler);
+            window.addEventListener('pointerup', this.pointerUpHandler);
+        }
+        placePlayer() {
+            const rect = this.arena.getBoundingClientRect();
+            this.player.x = rect.width * 0.5;
+            this.player.y = rect.height * 0.78;
+            this.setPlayerPosition();
+        }
+        nudgePlayer(key) {
+            const rect = this.arena.getBoundingClientRect();
+            const amount = 24;
+            if (key === 'a' || key === 'arrowleft') this.player.x -= amount;
+            if (key === 'd' || key === 'arrowright') this.player.x += amount;
+            if (key === 'w' || key === 'arrowup') this.player.y -= amount;
+            if (key === 's' || key === 'arrowdown') this.player.y += amount;
+            this.player.x = Math.max(28, Math.min(rect.width - 28, this.player.x));
+            this.player.y = Math.max(30, Math.min(rect.height - 30, this.player.y));
+            this.setPlayerPosition();
+        }
+        setPlayerPosition() {
+            this.playerCore.style.left = `${this.player.x}px`;
+            this.playerCore.style.top = `${this.player.y}px`;
+            this.playerCore.classList.toggle('invulnerable', Date.now() < this.player.invulnerableUntil);
+        }
+        firePulse(e) {
+            if (!this.isAlive) return;
+            sfx.init();
+            this.fireDebugShot(e.clientX, e.clientY, true);
+        }
+        fireAtBoss(big = false) {
+            if (!this.isAlive) return;
+            const bossRect = this.bossEntity.getBoundingClientRect();
+            this.fireDebugShot(bossRect.left + bossRect.width / 2, bossRect.top + bossRect.height / 2, big);
+        }
+        fireDebugShot(targetClientX, targetClientY, big = false) {
+            if (this.overheated) {
+                this.updatePowerStatus();
+                return false;
+            }
+            const rect = this.arena.getBoundingClientRect();
+            const targetX = targetClientX - rect.left;
+            const targetY = targetClientY - rect.top;
+            const dx = targetX - this.player.x;
+            const dy = targetY - this.player.y;
+            const length = Math.hypot(dx, dy) || 1;
+            const speed = big ? 1.05 : 0.82;
+            const shot = document.createElement('div');
+            shot.classList.add('debug-shot');
+            if (big) shot.classList.add('big');
+            this.arena.appendChild(shot);
+            const data = {
+                el: shot,
+                x: this.player.x,
+                y: this.player.y,
+                vx: (dx / length) * speed,
+                vy: (dy / length) * speed,
+                speed,
+                radius: big ? 11 : 7,
+                damage: big ? 18 : 9,
+                big,
+                life: 1450,
+            };
+            this.activePlayerShots.add(data);
+            this.positionEntity(shot, data.x, data.y);
+            this.addHeat(big ? 12 : 5);
+            sfx.play(big ? 'crit' : 'hit');
+            return true;
+        }
+        positionEntity(el, x, y) {
+            el.style.left = `${x}px`;
+            el.style.top = `${y}px`;
+        }
+        onHit(e) {
+            if (!this.isAlive) return;
+            sfx.init();
+            if (this.overheated) {
+                this.showFloatingText(e.clientX || e.pageX, e.clientY || e.pageY, 'COOLING', 'shielded');
+                sfx.play('overheat');
+                return;
+            }
+            const now = Date.now();
+            const isWeakHit = this.weakSpotActive && e.target === this.weakSpot;
+            const comboWindow = this.isOverclocked() ? 1250 : 800;
+            if (now - this.lastClickTime < comboWindow) this.combo++;
+            else this.combo = 1;
+            this.lastClickTime = now;
+            if (this.combo > this.maxCombo) this.maxCombo = this.combo;
+            if (this.combo >= 10) this.activateFever();
+            clearTimeout(this.comboTimeout);
+            this.comboTimeout = setTimeout(() => {
+                this.combo = 0;
+                this.comboEl.textContent = 'x1';
+            }, comboWindow + 400);
+            const critChance = this.isOverclocked() ? 0.35 : 0.2;
+            let isCrit = isWeakHit || Math.random() < critChance;
+            let shieldedHit = false;
+            let baseDamage = Math.floor(Math.random() * 8) + 6 + this.phase;
+            const comboMultiplier = Math.min(this.combo, 12);
+            let damage = baseDamage + comboMultiplier * 2;
+            if (this.damageBoostHits > 0) {
+                damage += 10;
+                this.damageBoostHits--;
+            }
+            if (this.isFeverActive()) damage = Math.floor(damage * 1.35);
+            if (isWeakHit) {
+                damage = Math.floor(damage * 3);
+                this.hideWeakSpot();
+                this.repairIntegrity(5);
+                this.score += 220 * this.phase;
+                this.coolHeat(12);
+            } else if (this.shielded) {
+                damage = Math.max(1, Math.ceil(damage * 0.35));
+                shieldedHit = true;
+                isCrit = false;
+            } else if (isCrit) {
+                damage = Math.floor(damage * 2.4);
+            }
+            this.addHeat(this.isOverclocked() ? 11 : 7);
+            this.currentHP = Math.max(0, this.currentHP - damage);
+            this.score += damage * comboMultiplier;
+            this.updateHP();
+            this.updatePowerStatus();
+            this.comboEl.textContent = `x${Math.max(this.combo, 1)}`;
+            this.scoreEl.textContent = this.score.toLocaleString();
+            if (isCrit || isWeakHit) { sfx.play('crit'); triggerGlitch(); }
+            else if (shieldedHit) sfx.play('shield');
+            else sfx.play('hit');
+            this.showDamageNumber(e, damage, { isCrit, isWeakHit, shieldedHit });
+            this.spawnParticles(e, isWeakHit ? 16 : 8);
+            this.shakeBoss();
+            if ((this.phase >= 3 || this.combo % 4 === 0) && !this.isFrozen()) this.moveBoss();
+            if (this.currentHP <= 0) this.die();
+        }
+        isOverclocked() {
+            return Date.now() < this.overclockUntil;
+        }
+        isFeverActive() {
+            return Date.now() < this.feverUntil;
+        }
+        isFrozen() {
+            return Date.now() < this.frozenUntil;
+        }
+        updateHP() {
+            const hpPercent = (this.currentHP / this.maxHP) * 100;
+            this.hpFill.style.width = hpPercent + '%';
+            this.hpText.textContent = `HP: ${this.currentHP} / ${this.maxHP}`;
+            if (hpPercent < 25) this.hpFill.style.background = 'linear-gradient(135deg, #ff0040, #ff0000)';
+            else if (hpPercent < 50) this.hpFill.style.background = 'linear-gradient(135deg, #ff6600, #ff0040)';
+            else this.hpFill.style.background = 'var(--danger-gradient)';
+            if (hpPercent <= 34) this.setPhase(3);
+            else if (hpPercent <= 65) this.setPhase(2);
+        }
+        updateIntegrity() {
+            this.integrity = Math.max(0, Math.min(100, this.integrity));
+            this.integrityFill.style.width = this.integrity + '%';
+            this.integrityText.textContent = `${Math.round(this.integrity)}%`;
+            if (this.integrity < 35) {
+                this.integrityFill.style.background = 'linear-gradient(135deg, #ff0040, #ff6600)';
+            } else if (this.integrity < 65) {
+                this.integrityFill.style.background = 'linear-gradient(135deg, #ff6600, #00d4ff)';
+            } else {
+                this.integrityFill.style.background = 'var(--victory-gradient)';
+            }
+        }
+        updatePowerStatus() {
+            if (this.overheated) this.powerStatusEl.textContent = 'COOLING';
+            else if (this.trapArmed || this.isFrozen()) this.powerStatusEl.textContent = 'TRAP';
+            else if (this.isFeverActive()) this.powerStatusEl.textContent = 'FEVER';
+            else if (this.damageBoostHits > 0) this.powerStatusEl.textContent = `PATCH x${this.damageBoostHits}`;
+            else if (this.isOverclocked()) this.powerStatusEl.textContent = 'OVERCLOCK';
+            else this.powerStatusEl.textContent = 'READY';
+        }
+        updateFirewall() {
+            this.firewallChargesEl.textContent = this.firewallCharges;
+        }
+        updateHeat() {
+            this.heat = Math.max(0, Math.min(100, this.heat));
+            this.heatFill.style.width = this.heat + '%';
+            this.heatText.textContent = `${Math.round(this.heat)}%`;
+        }
+        addHeat(amount) {
+            if (this.isFrozen()) amount *= 0.5;
+            this.heat += amount;
+            if (this.heat >= 100 && !this.overheated) {
+                this.overheated = true;
+                this.heat = 100;
+                this.updatePowerStatus();
+                this.showAlert('OVERHEAT: Silah soğuyor, kısa süre vuramazsın!', 'danger');
+                sfx.play('overheat');
+                setTimeout(() => {
+                    this.heat = 42;
+                    this.overheated = false;
+                    this.updateHeat();
+                    this.updatePowerStatus();
+                }, 1300);
+            }
+            this.updateHeat();
+        }
+        coolHeat(amount) {
+            this.heat -= amount;
+            this.updateHeat();
+        }
+        activateFever() {
+            if (this.isFeverActive()) return;
+            this.feverUntil = Date.now() + 5200;
+            this.bossEntity.classList.add('fever-active');
+            this.showAlert('COMBO FEVER: Hasar yükseldi, heat daha hızlı doluyor!');
+            setTimeout(() => {
+                this.bossEntity.classList.remove('fever-active');
+                this.updatePowerStatus();
+            }, 5300);
+            this.updatePowerStatus();
+        }
+        flashPowerStatus(text, duration = 1500) {
+            clearTimeout(this.powerStatusTimer);
+            this.powerStatusEl.textContent = text;
+            this.powerStatusTimer = setTimeout(() => this.updatePowerStatus(), duration);
+        }
+        setPhase(nextPhase) {
+            if (nextPhase <= this.phase || !this.isAlive) return;
+            this.phase = nextPhase;
+            this.phaseEl.textContent = this.phaseConfig[this.phase].name;
+            this.bossEntity.classList.toggle('phase-rush', this.phase >= 3);
+            this.setMovementLoop();
+            this.setGlitchLoop();
+            this.setShardLoop();
+            this.setShieldLoop();
+            this.moveBoss();
+            this.showAlert(this.phase === 2 ? 'MUTATION: Bug artık kalkan açıyor!' : 'PANIC MODE: Glitch yayılımı hızlandı!', 'danger');
+            sfx.play('alert');
+            triggerGlitch();
+        }
+        showDamageNumber(e, damage, flags = {}) {
+            const prefix = flags.isWeakHit ? 'CORE ' : flags.shieldedHit ? 'SHIELD ' : flags.isCrit ? 'CRIT ' : '';
+            const classes = [
+                flags.isCrit ? 'crit' : '',
+                flags.isWeakHit ? 'weak' : '',
+                flags.shieldedHit ? 'shielded' : '',
+            ].filter(Boolean).join(' ');
+            this.showFloatingText(e.clientX || e.pageX, e.clientY || e.pageY, `${prefix}-${damage}`, classes);
+        }
+        showFloatingText(clientX, clientY, text, classes = '') {
+            const container = document.getElementById('damage-numbers');
+            const el = document.createElement('div');
+            el.classList.add('damage-number');
+            if (classes) el.classList.add(...classes.split(' '));
+            el.textContent = text;
+            const rect = this.arena.getBoundingClientRect();
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
+            el.style.left = x + (Math.random() * 40 - 20) + 'px';
+            el.style.top = y - 20 + 'px';
+            container.appendChild(el);
+            setTimeout(() => el.remove(), 800);
+        }
+        spawnParticles(e, count = 8) {
+            const colors = ['#ff0040', '#ff6600', '#00d4ff', '#b347ff', '#00ff41'];
+            const rect = this.arena.getBoundingClientRect();
+            const x = (e.clientX || e.pageX) - rect.left;
+            const y = (e.clientY || e.pageY) - rect.top;
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('click-particle');
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                const angle = (Math.PI * 2 * i) / count + Math.random() * 0.5;
+                const distance = 30 + Math.random() * 50;
+                particle.style.setProperty('--px', Math.cos(angle) * distance + 'px');
+                particle.style.setProperty('--py', Math.sin(angle) * distance + 'px');
+                this.arena.appendChild(particle);
+                setTimeout(() => particle.remove(), 600);
+            }
+        }
+        startLoops() {
+            this.setMovementLoop();
+            this.setGlitchLoop();
+            this.setShardLoop();
+            this.setShieldLoop();
+            this.startWeakSpotLoop();
+            this.powerTimer = setInterval(() => this.spawnPowerUp(), 6200);
+            this.powerStartTimer = setTimeout(() => this.spawnPowerUp(), 2600);
+            this.nextBossAttackAt = Date.now() + 1200;
+            this.nextAutoFireAt = Date.now() + 350;
+            this.lastFrameTime = window.performance && window.performance.now ? window.performance.now() : Date.now();
+            this.gameLoopId = setInterval(() => {
+                const time = window.performance && window.performance.now ? window.performance.now() : Date.now();
+                this.updateGame(time);
+            }, 16);
+            this.heatTimer = setInterval(() => {
+                const cooling = this.isOverclocked() ? 2 : 4;
+                this.coolHeat(cooling);
+                this.updatePowerStatus();
+            }, 650);
+        }
+        updateGame(time) {
+            if (!this.isAlive) return;
+            this.frameCount++;
+            if (this.frameCount % 20 === 0) document.body.dataset.gameFrames = String(this.frameCount);
+            const dt = Math.min(40, time - this.lastFrameTime);
+            this.lastFrameTime = time;
+            this.updatePlayer(dt);
+            this.updatePlayerShots(dt);
+            this.updateEnemyShots(dt);
+            this.updateCollectibleCollisions();
+            const now = Date.now();
+            if (now >= this.nextAutoFireAt) {
+                if (this.pointer.down) this.fireDebugShot(this.pointer.x, this.pointer.y, false);
+                else this.fireAtBoss(false);
+                this.nextAutoFireAt = now + (this.isOverclocked() ? 230 : 360);
+            }
+            if (now >= this.nextBossAttackAt) {
+                this.spawnBossAttack();
+                this.nextBossAttackAt = now + Math.max(620, 1450 - this.phase * 230);
+            }
+        }
+        updatePlayer(dt) {
+            const rect = this.arena.getBoundingClientRect();
+            let dx = 0;
+            let dy = 0;
+            if (this.keys.has('a') || this.keys.has('arrowleft')) dx--;
+            if (this.keys.has('d') || this.keys.has('arrowright')) dx++;
+            if (this.keys.has('w') || this.keys.has('arrowup')) dy--;
+            if (this.keys.has('s') || this.keys.has('arrowdown')) dy++;
+            if (dx === 0 && dy === 0 && this.pointer.down) {
+                const targetX = this.pointer.x - rect.left;
+                const targetY = this.pointer.y - rect.top;
+                const pdx = targetX - this.player.x;
+                const pdy = targetY - this.player.y;
+                const distance = Math.hypot(pdx, pdy);
+                if (distance > 12) {
+                    dx = pdx / distance;
+                    dy = pdy / distance;
+                }
+            } else if (dx || dy) {
+                const length = Math.hypot(dx, dy) || 1;
+                dx /= length;
+                dy /= length;
+            }
+            const speed = this.player.speed * (this.isOverclocked() ? 1.22 : 1);
+            this.player.x = Math.max(28, Math.min(rect.width - 28, this.player.x + dx * speed * dt));
+            this.player.y = Math.max(30, Math.min(rect.height - 30, this.player.y + dy * speed * dt));
+            this.setPlayerPosition();
+        }
+        updatePlayerShots(dt) {
+            const rect = this.arena.getBoundingClientRect();
+            const bossRect = this.bossEntity.getBoundingClientRect();
+            const bossX = bossRect.left - rect.left + bossRect.width / 2;
+            const bossY = bossRect.top - rect.top + bossRect.height / 2;
+            const bossRadius = Math.max(48, bossRect.width * 0.42);
+            for (const shot of [...this.activePlayerShots]) {
+                const homeDx = bossX - shot.x;
+                const homeDy = bossY - shot.y;
+                const homeLength = Math.hypot(homeDx, homeDy) || 1;
+                shot.vx = shot.vx * 0.92 + (homeDx / homeLength) * shot.speed * 0.08;
+                shot.vy = shot.vy * 0.92 + (homeDy / homeLength) * shot.speed * 0.08;
+                shot.x += shot.vx * dt;
+                shot.y += shot.vy * dt;
+                shot.life -= dt;
+                this.positionEntity(shot.el, shot.x, shot.y);
+                const out = shot.x < -40 || shot.y < -40 || shot.x > rect.width + 40 || shot.y > rect.height + 40;
+                const hit = Math.hypot(shot.x - bossX, shot.y - bossY) < bossRadius + shot.radius;
+                if (hit) {
+                    this.activePlayerShots.delete(shot);
+                    shot.el.remove();
+                    this.damageBossFromProjectile(shot.x + rect.left, shot.y + rect.top, shot.damage, shot.big);
+                } else if (out || shot.life <= 0) {
+                    this.activePlayerShots.delete(shot);
+                    shot.el.remove();
+                }
+            }
+        }
+        updateEnemyShots(dt) {
+            const rect = this.arena.getBoundingClientRect();
+            const playerClientX = rect.left + this.player.x;
+            const playerClientY = rect.top + this.player.y;
+            for (const shot of [...this.activeEnemyShots]) {
+                shot.x += shot.vx * dt;
+                shot.y += shot.vy * dt;
+                shot.life -= dt;
+                this.positionEntity(shot.el, shot.x, shot.y);
+                const out = shot.x < -50 || shot.y < -50 || shot.x > rect.width + 50 || shot.y > rect.height + 50;
+                const hit = Math.hypot(shot.x - this.player.x, shot.y - this.player.y) < this.player.radius + shot.radius;
+                if (hit) {
+                    this.activeEnemyShots.delete(shot);
+                    shot.el.remove();
+                    this.hitPlayer(shot.damage, playerClientX, playerClientY);
+                } else if (out || shot.life <= 0) {
+                    this.activeEnemyShots.delete(shot);
+                    shot.el.remove();
+                }
+            }
+        }
+        updateCollectibleCollisions() {
+            const rect = this.arena.getBoundingClientRect();
+            const check = (el, radius = 44) => {
+                const itemRect = el.getBoundingClientRect();
+                const x = itemRect.left - rect.left + itemRect.width / 2;
+                const y = itemRect.top - rect.top + itemRect.height / 2;
+                return Math.hypot(x - this.player.x, y - this.player.y) < radius;
+            };
+            for (const el of [...this.activePowerUps]) {
+                if (check(el, 48)) {
+                    const itemRect = el.getBoundingClientRect();
+                    this.collectPowerUp(el, el.powerType, {
+                        clientX: itemRect.left + itemRect.width / 2,
+                        clientY: itemRect.top + itemRect.height / 2,
+                    });
+                }
+            }
+            for (const el of [...this.activeGlitches]) {
+                if (check(el, 44)) {
+                    const itemRect = el.getBoundingClientRect();
+                    this.cleanGlitchNode(el, {
+                        clientX: itemRect.left + itemRect.width / 2,
+                        clientY: itemRect.top + itemRect.height / 2,
+                    });
+                }
+            }
+            for (const el of [...this.activeShards]) {
+                if (check(el, 38)) {
+                    const itemRect = el.getBoundingClientRect();
+                    this.cleanDataShard(el, {
+                        clientX: itemRect.left + itemRect.width / 2,
+                        clientY: itemRect.top + itemRect.height / 2,
+                    });
+                }
+            }
+        }
+        spawnBossAttack() {
+            if (!this.isAlive || this.isFrozen()) return;
+            const rect = this.arena.getBoundingClientRect();
+            const bossRect = this.bossEntity.getBoundingClientRect();
+            const x = bossRect.left - rect.left + bossRect.width / 2;
+            const y = bossRect.top - rect.top + bossRect.height / 2;
+            const playerX = this.player.x;
+            const playerY = this.player.y;
+            this.attackCounter++;
+            if (this.phase >= 2 && this.attackCounter % 3 === 0) {
+                const count = this.phase >= 3 ? 12 : 8;
+                for (let i = 0; i < count; i++) {
+                    const angle = (Math.PI * 2 * i) / count + this.attackCounter * 0.18;
+                    this.spawnEnemyShot(x, y, Math.cos(angle), Math.sin(angle), this.phase >= 3 ? 'shard' : 'normal');
+                }
+                this.spawnWarning(playerX, playerY);
+            } else {
+                const base = Math.atan2(playerY - y, playerX - x);
+                const spread = this.phase >= 3 ? [-0.28, 0, 0.28] : [0];
+                spread.forEach(offset => this.spawnEnemyShot(x, y, Math.cos(base + offset), Math.sin(base + offset), 'normal'));
+                this.spawnWarning(playerX, playerY);
+            }
+            sfx.play('alert');
+        }
+        spawnEnemyShot(x, y, dirX, dirY, kind = 'normal') {
+            const el = document.createElement('div');
+            el.classList.add('enemy-shot');
+            if (kind === 'shard') el.classList.add('shard');
+            this.arena.appendChild(el);
+            const speed = kind === 'shard' ? 0.28 + this.phase * 0.03 : 0.34 + this.phase * 0.04;
+            const shot = {
+                el,
+                x,
+                y,
+                vx: dirX * speed,
+                vy: dirY * speed,
+                radius: kind === 'shard' ? 11 : 8,
+                damage: kind === 'shard' ? 9 + this.phase * 2 : 7 + this.phase * 2,
+                life: 3600,
+            };
+            this.activeEnemyShots.add(shot);
+            this.positionEntity(el, x, y);
+        }
+        spawnWarning(x, y) {
+            const ring = document.createElement('div');
+            ring.classList.add('warning-ring');
+            this.positionEntity(ring, x, y);
+            this.arena.appendChild(ring);
+            setTimeout(() => ring.remove(), 800);
+        }
+        hitPlayer(amount, clientX, clientY) {
+            if (Date.now() < this.player.invulnerableUntil) return;
+            this.player.invulnerableUntil = Date.now() + 650;
+            this.combo = 0;
+            this.comboEl.textContent = 'x1';
+            this.damageIntegrity(amount);
+            this.showFloatingText(clientX, clientY, `CORE -${amount}`, 'shielded');
+            this.spawnParticles({ clientX, clientY }, 12);
+            triggerGlitch();
+            sfx.play('alert');
+        }
+        damageBossFromProjectile(clientX, clientY, baseDamage, big = false) {
+            const now = Date.now();
+            if (now - this.lastClickTime < 950) this.combo++;
+            else this.combo = 1;
+            this.lastClickTime = now;
+            if (this.combo > this.maxCombo) this.maxCombo = this.combo;
+            if (this.combo >= 10) this.activateFever();
+            clearTimeout(this.comboTimeout);
+            this.comboTimeout = setTimeout(() => {
+                this.combo = 0;
+                this.comboEl.textContent = 'x1';
+            }, 1300);
+            let damage = baseDamage + this.phase;
+            let isCrit = big || Math.random() < (this.isOverclocked() ? 0.22 : 0.1);
+            let shieldedHit = false;
+            if (this.damageBoostHits > 0) {
+                damage += 7;
+                this.damageBoostHits--;
+            }
+            if (this.isFeverActive()) damage = Math.floor(damage * 1.3);
+            if (this.shielded && !big) {
+                damage = Math.max(1, Math.ceil(damage * 0.4));
+                shieldedHit = true;
+                isCrit = false;
+            } else if (isCrit) {
+                damage = Math.floor(damage * 1.8);
+            }
+            this.currentHP = Math.max(0, this.currentHP - damage);
+            this.score += damage * Math.min(Math.max(this.combo, 1), 12);
+            this.updateHP();
+            this.updatePowerStatus();
+            this.comboEl.textContent = `x${Math.max(this.combo, 1)}`;
+            this.scoreEl.textContent = this.score.toLocaleString();
+            if (isCrit) sfx.play('crit');
+            else sfx.play('hit');
+            this.showFloatingText(clientX, clientY, `${shieldedHit ? 'SHIELD ' : isCrit ? 'CRIT ' : ''}-${damage}`, [
+                isCrit ? 'crit' : '',
+                shieldedHit ? 'shielded' : '',
+            ].filter(Boolean).join(' '));
+            this.spawnParticles({ clientX, clientY }, big ? 12 : 6);
+            this.shakeBoss();
+            if (this.currentHP <= 0) this.die();
+        }
+        setMovementLoop() {
+            clearInterval(this.movementTimer);
+            this.movementTimer = setInterval(() => this.moveBoss(), this.phaseConfig[this.phase].moveDelay);
+        }
+        setGlitchLoop() {
+            clearInterval(this.glitchTimer);
+            this.glitchTimer = setInterval(() => this.spawnGlitchNode(), this.phaseConfig[this.phase].glitchDelay);
+        }
+        setShardLoop() {
+            clearInterval(this.shardTimer);
+            const delay = this.phaseConfig[this.phase].shardDelay;
+            if (!delay) return;
+            this.shardTimer = setInterval(() => this.spawnDataShard(), delay);
+        }
+        setShieldLoop() {
+            clearInterval(this.shieldTimer);
+            clearTimeout(this.shieldTimeout);
+            const delay = this.phaseConfig[this.phase].shieldDelay;
+            if (!delay) return;
+            this.shieldTimer = setInterval(() => this.activateShield(), delay);
+        }
+        startWeakSpotLoop() {
+            clearTimeout(this.weakTimer);
+            const delay = Math.max(900, 2200 + Math.random() * 1600 - this.phase * 260);
+            this.weakTimer = setTimeout(() => {
+                this.showWeakSpot();
+                this.startWeakSpotLoop();
+            }, delay);
+        }
+        showWeakSpot() {
+            if (!this.isAlive || this.weakSpotActive) return;
+            this.weakSpotActive = true;
+            this.weakSpot.style.setProperty('--weak-x', `${25 + Math.random() * 50}%`);
+            this.weakSpot.style.setProperty('--weak-y', `${24 + Math.random() * 52}%`);
+            this.weakSpot.classList.remove('hidden');
+            clearTimeout(this.weakTimeout);
+            this.weakTimeout = setTimeout(() => this.hideWeakSpot(), Math.max(900, 1700 - this.phase * 160));
+        }
+        hideWeakSpot() {
+            this.weakSpotActive = false;
+            this.weakSpot.classList.add('hidden');
+            clearTimeout(this.weakTimeout);
+        }
+        activateShield() {
+            if (!this.isAlive || this.shielded) return;
+            this.shielded = true;
+            this.bossEntity.classList.add('shield-active');
+            this.showAlert('KALKAN AKTIF: Zayıf noktaya vur veya patch bekle!', 'danger');
+            sfx.play('shield');
+            this.shieldTimeout = setTimeout(() => {
+                this.shielded = false;
+                this.bossEntity.classList.remove('shield-active');
+            }, Math.max(1200, 2000 - this.phase * 180));
+        }
+        moveBoss(center = false) {
+            if (!this.isAlive || this.isFrozen()) return;
+            const x = center ? 50 : 16 + Math.random() * 68;
+            const y = center ? 50 : 18 + Math.random() * 62;
+            this.bossEntity.style.setProperty('--boss-x', `${x}%`);
+            this.bossEntity.style.setProperty('--boss-y', `${y}%`);
+        }
+        getArenaPoint() {
+            return {
+                x: 12 + Math.random() * 76,
+                y: 16 + Math.random() * 66,
+            };
+        }
+        spawnPowerUp() {
+            if (!this.isAlive || this.activePowerUps.size >= 2) return;
+            const types = [
+                { key: 'patch', src: GAME_ASSETS.patch, name: 'PATCH +DMG' },
+                { key: 'firewall', src: GAME_ASSETS.firewall, name: 'FIREWALL +SYS' },
+                { key: 'overclock', src: GAME_ASSETS.overclock, name: 'OVERCLOCK' },
+                { key: 'trap', src: GAME_ASSETS.trap, name: 'QUARANTINE TRAP' },
+            ];
+            const type = types[Math.floor(Math.random() * types.length)];
+            const point = this.getArenaPoint();
+            const el = document.createElement('button');
+            el.type = 'button';
+            el.className = `power-up ${type.key}`;
+            el.powerType = type;
+            el.setAttribute('aria-label', type.name);
+            el.innerHTML = `<img src="${type.src}" alt="" class="mechanic-img" draggable="false">`;
+            el.style.left = `${point.x}%`;
+            el.style.top = `${point.y}%`;
+            const collect = (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                this.collectPowerUp(el, type, event.touches ? event.touches[0] : event);
+            };
+            el.addEventListener('click', collect);
+            el.addEventListener('touchstart', collect, { passive: false });
+            el.expireTimer = setTimeout(() => this.removePowerUp(el), 7200);
+            this.activePowerUps.add(el);
+            this.arena.appendChild(el);
+        }
+        collectPowerUp(el, type, event) {
+            if (!this.activePowerUps.has(el)) return;
+            this.removePowerUp(el);
+            this.score += 120 * this.phase;
+            if (type.key === 'patch') {
+                this.damageBoostHits += 5;
+                this.flashPowerStatus('PATCH LOADED');
+            } else if (type.key === 'firewall') {
+                this.firewallCharges = Math.min(9, this.firewallCharges + 3);
+                this.updateFirewall();
+                this.repairIntegrity(14);
+                this.flashPowerStatus('FIREWALL');
+            } else if (type.key === 'overclock') {
+                this.overclockUntil = Date.now() + 7000;
+                this.flashPowerStatus('OVERCLOCK', 7000);
+            } else {
+                this.activateTrap();
+                this.flashPowerStatus('TRAP ARMED', 2200);
+            }
+            this.scoreEl.textContent = this.score.toLocaleString();
+            this.showFloatingText(event.clientX, event.clientY, type.name, 'weak');
+            this.spawnParticles(event, 12);
+            sfx.play('powerup');
+        }
+        removePowerUp(el) {
+            clearTimeout(el.expireTimer);
+            this.activePowerUps.delete(el);
+            el.remove();
+        }
+        activateTrap() {
+            if (!this.isAlive) return;
+            this.trapArmed = true;
+            this.frozenUntil = Date.now() + 3600;
+            this.shielded = false;
+            this.bossEntity.classList.remove('shield-active');
+            this.bossEntity.classList.add('frozen');
+            this.spawnQuarantineBurst();
+            this.clearThreats(160);
+            this.coolHeat(28);
+            this.score += 260 * this.phase;
+            this.scoreEl.textContent = this.score.toLocaleString();
+            this.showAlert('QUARANTINE TRAP: Bug donduruldu, tehditler temizlendi!');
+            sfx.play('trap');
+            clearTimeout(this.trapTimeout);
+            this.trapTimeout = setTimeout(() => {
+                this.trapArmed = false;
+                this.bossEntity.classList.remove('frozen');
+                this.updatePowerStatus();
+            }, 3600);
+        }
+        spawnQuarantineBurst() {
+            const burst = document.createElement('div');
+            burst.classList.add('quarantine-burst');
+            burst.style.setProperty('--burst-x', this.bossEntity.style.getPropertyValue('--boss-x') || '50%');
+            burst.style.setProperty('--burst-y', this.bossEntity.style.getPropertyValue('--boss-y') || '50%');
+            this.arena.appendChild(burst);
+            setTimeout(() => burst.remove(), 950);
+        }
+        clearThreats(scoreEach = 0) {
+            const threats = [...this.activeGlitches, ...this.activeShards];
+            threats.forEach(el => {
+                clearTimeout(el.expireTimer);
+                el.remove();
+            });
+            this.score += threats.length * scoreEach;
+            this.activeGlitches.clear();
+            this.activeShards.clear();
+        }
+        spawnGlitchNode() {
+            if (!this.isAlive || this.activeGlitches.size >= this.phase + 1) return;
+            const point = this.getArenaPoint();
+            const el = document.createElement('button');
+            el.type = 'button';
+            el.className = 'glitch-node';
+            el.setAttribute('aria-label', 'Glitch temizle');
+            el.innerHTML = `<img src="${GAME_ASSETS.glitch}" alt="" class="mechanic-img" draggable="false">`;
+            el.style.left = `${point.x}%`;
+            el.style.top = `${point.y}%`;
+            const cleanup = (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                this.cleanGlitchNode(el, event.touches ? event.touches[0] : event);
+            };
+            el.addEventListener('click', cleanup);
+            el.addEventListener('touchstart', cleanup, { passive: false });
+            el.expireTimer = setTimeout(() => {
+                if (!this.activeGlitches.has(el)) return;
+                this.activeGlitches.delete(el);
+                el.remove();
+                this.damageIntegrity(5 + this.phase * 3);
+                this.showAlert('GLITCH SIZDI: Sistem stabilitesi düştü!', 'danger');
+                triggerGlitch();
+                sfx.play('alert');
+            }, Math.max(1800, 3400 - this.phase * 250));
+            this.activeGlitches.add(el);
+            this.arena.appendChild(el);
+        }
+        spawnDataShard() {
+            if (!this.isAlive || this.activeShards.size >= this.phase + 1) return;
+            const point = this.getArenaPoint();
+            const el = document.createElement('button');
+            el.type = 'button';
+            el.className = 'data-shard';
+            el.setAttribute('aria-label', 'Data shard temizle');
+            el.innerHTML = `<img src="${GAME_ASSETS.glitch}" alt="" class="mechanic-img" draggable="false">`;
+            el.style.left = `${point.x}%`;
+            el.style.top = `${point.y}%`;
+            const cleanup = (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                this.cleanDataShard(el, event.touches ? event.touches[0] : event);
+            };
+            el.addEventListener('click', cleanup);
+            el.addEventListener('touchstart', cleanup, { passive: false });
+            el.expireTimer = setTimeout(() => {
+                if (!this.activeShards.has(el)) return;
+                this.activeShards.delete(el);
+                el.remove();
+                this.damageIntegrity(4 + this.phase * 2);
+                this.addHeat(10);
+                this.showAlert('DATA SHARD PATLADI: Heat ve sistem hasarı!', 'danger');
+                sfx.play('alert');
+            }, Math.max(1200, 2400 - this.phase * 260));
+            this.activeShards.add(el);
+            this.arena.appendChild(el);
+        }
+        cleanGlitchNode(el, event) {
+            if (!this.activeGlitches.has(el)) return;
+            clearTimeout(el.expireTimer);
+            this.activeGlitches.delete(el);
+            el.remove();
+            this.score += 90 * this.phase;
+            this.combo = Math.max(this.combo, 1) + 1;
+            this.maxCombo = Math.max(this.maxCombo, this.combo);
+            this.scoreEl.textContent = this.score.toLocaleString();
+            this.comboEl.textContent = `x${this.combo}`;
+            this.showFloatingText(event.clientX, event.clientY, `PATCHED +${90 * this.phase}`, 'weak');
+            this.spawnParticles(event, 10);
+            sfx.play('hit');
+        }
+        cleanDataShard(el, event) {
+            if (!this.activeShards.has(el)) return;
+            clearTimeout(el.expireTimer);
+            this.activeShards.delete(el);
+            el.remove();
+            const bonus = 65 * this.phase;
+            this.score += bonus;
+            this.coolHeat(10);
+            this.scoreEl.textContent = this.score.toLocaleString();
+            this.showFloatingText(event.clientX, event.clientY, `DATA +${bonus}`, 'weak');
+            this.spawnParticles(event, 8);
+            sfx.play('hit');
+        }
+        registerMiss(e) {
+            if (!this.isAlive) return;
+            this.combo = 0;
+            this.comboEl.textContent = 'x1';
+            this.damageIntegrity(1);
+            this.showFloatingText(e.clientX, e.clientY, 'MISS', 'shielded');
+        }
+        damageIntegrity(amount) {
+            if (amount > 0 && this.firewallCharges > 0) {
+                this.firewallCharges--;
+                this.updateFirewall();
+                this.showAlert('FIREWALL BLOK: Sistem hasarı emildi!');
+                sfx.play('shield');
+                return;
+            }
+            this.integrity -= amount;
+            this.updateIntegrity();
+            if (this.integrity <= 0 && !this.emergencyLock) this.emergencyReboot();
+        }
+        repairIntegrity(amount) {
+            this.integrity += amount;
+            this.updateIntegrity();
+        }
+        emergencyReboot() {
+            this.emergencyLock = true;
+            this.combo = 0;
+            this.comboEl.textContent = 'x1';
+            this.score = Math.max(0, this.score - 404);
+            this.scoreEl.textContent = this.score.toLocaleString();
+            this.showAlert('EMERGENCY REBOOT: Kombo sıfırlandı, skor cezası!', 'danger');
+            for (let i = 0; i < 4; i++) setTimeout(() => triggerGlitch(), i * 150);
+            setTimeout(() => {
+                this.integrity = 38;
+                this.updateIntegrity();
+                this.emergencyLock = false;
+            }, 900);
+        }
+        showAlert(text, tone = 'info') {
+            this.alertEl.textContent = text;
+            this.alertEl.classList.toggle('danger', tone === 'danger');
+            this.alertEl.classList.remove('show');
+            void this.alertEl.offsetWidth;
+            this.alertEl.classList.add('show');
+        }
+        shakeBoss() {
+            this.bossEntity.classList.remove('boss-shake');
+            void this.bossEntity.offsetWidth;
+            this.bossEntity.classList.add('boss-shake');
+            setTimeout(() => this.bossEntity.classList.remove('boss-shake'), 300);
+        }
+        die() {
+            this.isAlive = false;
+            this.clearTimers();
+            sfx.play('bossDeath');
+            this.bossEntity.classList.add('boss-death');
+            for (let i = 0; i < 5; i++) setTimeout(() => triggerGlitch(), i * 200);
+            setTimeout(() => {
+                document.getElementById('boss-fight-screen').classList.add('hidden');
+                this.showVictory();
+            }, 2000);
+        }
+        showVictory() {
+            const victoryScreen = document.getElementById('victory-screen');
+            victoryScreen.classList.remove('hidden');
+            document.getElementById('final-score').textContent = this.score.toLocaleString();
+            document.getElementById('final-combo').textContent = `x${this.maxCombo}`;
+            document.getElementById('final-integrity').textContent = `${Math.round(this.integrity)}%`;
+            document.getElementById('final-rank').textContent = this.getRank();
+            this.spawnVictoryParticles();
+            setTimeout(() => sfx.play('victory'), 500);
+        }
+        getRank() {
+            const score = this.score + this.integrity * 10 + this.maxCombo * 25;
+            if (score > 4500 && this.integrity >= 80) return 'S++';
+            if (score > 3200 && this.integrity >= 60) return 'S';
+            if (score > 2200) return 'A';
+            if (score > 1400) return 'B';
+            return 'C';
+        }
+        clearTimers() {
+            clearTimeout(this.comboTimeout);
+            clearTimeout(this.weakTimer);
+            clearTimeout(this.weakTimeout);
+            clearTimeout(this.shieldTimeout);
+            clearTimeout(this.powerStartTimer);
+            clearTimeout(this.powerStatusTimer);
+            clearTimeout(this.trapTimeout);
+            clearInterval(this.movementTimer);
+            clearInterval(this.glitchTimer);
+            clearInterval(this.shardTimer);
+            clearInterval(this.shieldTimer);
+            clearInterval(this.powerTimer);
+            clearInterval(this.heatTimer);
+            clearInterval(this.gameLoopId);
+            window.removeEventListener('keydown', this.keyDownHandler);
+            window.removeEventListener('keyup', this.keyUpHandler);
+            window.removeEventListener('pointermove', this.pointerMoveHandler);
+            window.removeEventListener('pointerdown', this.pointerDownHandler);
+            window.removeEventListener('pointerup', this.pointerUpHandler);
+            this.activeGlitches.forEach(el => el.remove());
+            this.activeShards.forEach(el => el.remove());
+            this.activePowerUps.forEach(el => this.removePowerUp(el));
+            this.activePlayerShots.forEach(shot => shot.el.remove());
+            this.activeEnemyShots.forEach(shot => shot.el.remove());
+            this.activeGlitches.clear();
+            this.activeShards.clear();
+            this.activePlayerShots.clear();
+            this.activeEnemyShots.clear();
+            this.hideWeakSpot();
+        }
+        spawnVictoryParticles() {
+            const container = document.getElementById('victory-particles');
+            const colors = ['#00ff41', '#00ffd5', '#00d4ff', '#b347ff', '#ff47ab'];
+            for (let i = 0; i < 40; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('victory-particle');
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.animationDelay = Math.random() * 3 + 's';
+                particle.style.animationDuration = (2 + Math.random() * 3) + 's';
+                particle.style.width = (2 + Math.random() * 5) + 'px';
+                particle.style.height = particle.style.width;
+                container.appendChild(particle);
+            }
+        }
+    }
+
+    // ── Initialize Everything ────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+        const matrixCanvas = document.getElementById('matrix-rain');
+        const matrix = new MatrixRain(matrixCanvas);
+        matrix.start();
+        document.addEventListener('click', () => sfx.init(), { once: true });
+        document.addEventListener('touchstart', () => sfx.init(), { once: true });
+        const startBossFight = () => {
+            document.getElementById('bsod-screen').classList.add('hidden');
+            document.getElementById('boss-fight-screen').classList.remove('hidden');
+            try {
+                window.__current404Game = new BossFight();
+            } catch (error) {
+                console.error('BossFight init failed:', error);
+                document.getElementById('arena-alert').textContent = 'GAME INIT ERROR';
+                document.getElementById('arena-alert').classList.add('show', 'danger');
+            }
+        };
+        if (new URLSearchParams(window.location.search).has('fight')) startBossFight();
+        else runBSODPhase().then(startBossFight);
+    });
+    </script>
+
+    <!-- Tracking & Analytics -->
     <iframe id="log-frame" style="width: 0; height: 0; border: 0; visibility: hidden;" title="Log Frame"></iframe>
-	<script>
+    <script>
       const pathname = window.location.pathname;
       const pageId = (pathname.split('/').pop() || '404').replace('.html', '');
       document.getElementById('log-frame').src = `https://log.parzi.dev/?ref=${encodeURIComponent(pageId)}`;
-	    </script>
+    </script>
     <script src="js/ip.js"></script>
-    <script src="js/blocksehir.js"></script></body>
+    <script src="js/blocksehir.js"></script>
+</body>
 </html>
