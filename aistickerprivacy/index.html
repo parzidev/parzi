@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <script>document.documentElement.classList.remove('no-js');document.documentElement.classList.add('js');</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy Policy | StickerAI - Chibi Maker</title>
+  <meta name="description" content="Privacy Policy for StickerAI - Chibi Maker, the iOS chibi sticker app published by Parzi.">
+  <link rel="canonical" href="https://parzi.dev/aistickerprivacy/">
+  <link rel="icon" type="image/png" href="../assets/stickerai-logo.png">
+  <meta property="og:title" content="Privacy Policy | StickerAI - Chibi Maker">
+  <meta property="og:description" content="Privacy information for StickerAI - Chibi Maker by Parzi.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://parzi.dev/aistickerprivacy/">
+  <meta property="og:image" content="https://parzi.dev/assets/stickerai-logo.png">
+  <meta name="theme-color" content="#f7f2ff">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #fffafd;
+      --bg-soft: #f6f4ff;
+      --surface: rgba(255, 255, 255, 0.78);
+      --surface-strong: #ffffff;
+      --text: #171321;
+      --muted: #665f77;
+      --border: rgba(67, 46, 99, 0.15);
+      --accent: #7c3aed;
+      --accent-pink: #ec4899;
+      --accent-blue: #38bdf8;
+      --gradient: linear-gradient(135deg, #7c3aed 0%, #ec4899 48%, #38bdf8 100%);
+      --gradient-soft: linear-gradient(135deg, rgba(124, 58, 237, 0.16), rgba(236, 72, 153, 0.14), rgba(56, 189, 248, 0.14));
+      --radius-lg: 30px;
+      --radius-md: 22px;
+      --shadow: 0 24px 70px rgba(49, 27, 95, 0.16);
+      --shadow-soft: 0 14px 40px rgba(49, 27, 95, 0.1);
+      --max-width: 1200px;
+      --read-width: 860px;
+      --header-height: 76px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --bg: #11101a;
+        --bg-soft: #181526;
+        --surface: rgba(30, 27, 45, 0.78);
+        --surface-strong: #1f1b2f;
+        --text: #f8f5ff;
+        --muted: #c6bdd7;
+        --border: rgba(230, 220, 255, 0.16);
+        --shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+        --shadow-soft: 0 14px 40px rgba(0, 0, 0, 0.24);
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: calc(var(--header-height) + 24px);
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(236, 72, 153, 0.18), transparent 32rem),
+        radial-gradient(circle at 85% 8%, rgba(56, 189, 248, 0.2), transparent 30rem),
+        linear-gradient(180deg, var(--bg), var(--bg-soft));
+      line-height: 1.7;
+      text-rendering: optimizeLegibility;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image: linear-gradient(rgba(124, 58, 237, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(124, 58, 237, 0.05) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), transparent 72%);
+    }
+
+    a { color: inherit; }
+
+    :focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--accent-blue), white 20%);
+      outline-offset: 4px;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      z-index: 100;
+      transform: translateY(-160%);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: var(--surface-strong);
+      box-shadow: var(--shadow-soft);
+      transition: transform 180ms ease;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      min-height: var(--header-height);
+      border-bottom: 1px solid var(--border);
+      background: color-mix(in srgb, var(--surface), transparent 10%);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+    }
+
+    .nav-shell {
+      width: min(100% - 32px, var(--max-width));
+      min-height: var(--header-height);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      min-width: fit-content;
+      text-decoration: none;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      flex: 0 0 auto;
+      border: 1px solid rgba(255, 255, 255, 0.62);
+      border-radius: 14px;
+      background: url("../assets/stickerai-logo.png") center / 136% no-repeat, var(--gradient-soft);
+      box-shadow: 0 10px 28px rgba(124, 58, 237, 0.22);
+    }
+
+    .brand-text { font-size: 1.04rem; }
+
+    .menu-toggle {
+      display: none;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface-strong);
+      color: var(--text);
+      box-shadow: var(--shadow-soft);
+      cursor: pointer;
+    }
+
+    .menu-icon,
+    .menu-icon::before,
+    .menu-icon::after {
+      display: block;
+      width: 18px;
+      height: 2px;
+      border-radius: 99px;
+      background: currentColor;
+      transition: transform 180ms ease, opacity 180ms ease;
+    }
+
+    .menu-icon {
+      position: relative;
+      margin: auto;
+    }
+
+    .menu-icon::before,
+    .menu-icon::after {
+      content: "";
+      position: absolute;
+      left: 0;
+    }
+
+    .menu-icon::before { transform: translateY(-6px); }
+    .menu-icon::after { transform: translateY(6px); }
+    .site-header.menu-open .menu-icon { background: transparent; }
+    .site-header.menu-open .menu-icon::before { transform: rotate(45deg); }
+    .site-header.menu-open .menu-icon::after { transform: rotate(-45deg); }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+
+    .nav-list {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 42px;
+      border-radius: 999px;
+      padding: 0 15px;
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 700;
+      transition: background 180ms ease, color 180ms ease;
+    }
+
+    .nav-link:hover,
+    .nav-link[aria-current="page"] {
+      background: var(--gradient-soft);
+      color: var(--text);
+    }
+
+    main { overflow: hidden; }
+
+    .legal-hero,
+    .legal-wrap {
+      width: min(100% - 32px, var(--read-width));
+      margin: 0 auto;
+    }
+
+    .legal-hero {
+      padding: clamp(52px, 8vw, 100px) 0 26px;
+    }
+
+    .legal-wrap {
+      padding: 0 0 clamp(64px, 9vw, 118px);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+      margin: 0 0 18px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 800;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 99px;
+      background: var(--gradient);
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 18px;
+      font-size: clamp(2.55rem, 7vw, 5.6rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 44px 0 12px;
+      font-size: clamp(1.55rem, 3vw, 2.25rem);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 28px 0 8px;
+      font-size: clamp(1.12rem, 2vw, 1.35rem);
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      color: var(--muted);
+      font-size: clamp(1.08rem, 2vw, 1.28rem);
+    }
+
+    .text-gradient {
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .legal-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: clamp(24px, 4vw, 46px);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .legal-card p,
+    .legal-card li {
+      color: var(--muted);
+    }
+
+    .legal-card strong { color: var(--text); }
+
+    .legal-card ul {
+      padding-left: 1.2rem;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+      color: var(--muted);
+    }
+
+    .pill {
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: var(--surface);
+      font-weight: 700;
+    }
+
+    .notice {
+      margin: 28px 0 0;
+      border-left: 4px solid var(--accent-pink);
+      padding-left: 18px;
+    }
+
+    .footer {
+      border-top: 1px solid var(--border);
+      background: color-mix(in srgb, var(--surface), transparent 8%);
+    }
+
+    .footer-inner {
+      width: min(100% - 32px, var(--max-width));
+      margin: 0 auto;
+      padding: 34px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      color: var(--muted);
+    }
+
+    .footer strong { color: var(--text); }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .footer-links a:hover { color: var(--text); }
+
+    @media (max-width: 720px) {
+      .nav-shell { position: relative; }
+
+      .menu-toggle {
+        display: grid;
+        place-items: center;
+      }
+
+      .js .site-nav {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        width: min(320px, calc(100vw - 32px));
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        padding: 10px;
+        background: var(--surface-strong);
+        box-shadow: var(--shadow);
+        opacity: 0;
+        transform: translateY(-8px);
+        pointer-events: none;
+        transition: opacity 180ms ease, transform 180ms ease;
+      }
+
+      .js .site-header.menu-open .site-nav {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+
+      .nav-list {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .nav-link {
+        justify-content: center;
+        width: 100%;
+      }
+
+      .no-js .nav-shell {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 14px 0;
+      }
+
+      .no-js .menu-toggle { display: none; }
+      .no-js .site-nav { width: 100%; }
+
+      .footer-inner {
+        align-items: stretch;
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" data-header>
+    <div class="nav-shell">
+      <a class="brand" href="https://parzi.dev/aistickermarketing/" aria-label="StickerAI home">
+        <span class="brand-logo" aria-hidden="true"></span>
+        <span class="brand-text">StickerAI</span>
+      </a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-navigation" data-menu-toggle>
+        <span class="menu-icon" aria-hidden="true"></span>
+        <span class="sr-only">Open navigation</span>
+      </button>
+      <nav class="site-nav" id="site-navigation" aria-label="Primary navigation" data-menu>
+        <ul class="nav-list">
+          <li><a class="nav-link" href="https://parzi.dev/aistickermarketing/">Home</a></li>
+          <li><a class="nav-link" href="https://parzi.dev/aistickersupport/">Support</a></li>
+          <li><a class="nav-link" href="https://parzi.dev/aistickerprivacy/" aria-current="page">Privacy</a></li>
+          <li><a class="nav-link" href="https://parzi.dev/aistickerterms/">Terms</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="legal-hero" aria-labelledby="privacy-title">
+      <p class="eyebrow">Privacy Policy</p>
+      <h1 id="privacy-title">Privacy for <span class="text-gradient">StickerAI - Chibi Maker</span>.</h1>
+      <p class="lead">This Privacy Policy explains how Parzi handles information related to StickerAI - Chibi Maker and the official StickerAI pages.</p>
+      <div class="meta">
+        <span class="pill">Last updated: June 14, 2026</span>
+        <span class="pill">Publisher: Parzi</span>
+        <span class="pill">Contact: support@parzi.dev</span>
+      </div>
+    </section>
+
+    <section class="legal-wrap">
+      <article class="legal-card">
+        <p><strong>StickerAI - Chibi Maker</strong> is an iOS app published by Parzi. If you have questions about this Privacy Policy, contact <a href="mailto:support@parzi.dev">support@parzi.dev</a>.</p>
+
+        <h2>1. Information You Provide</h2>
+        <p>StickerAI may process information you choose to provide while using the app, such as prompts, images, sticker ideas, feedback, or support messages. Do not upload content that you do not have permission to use.</p>
+
+        <h2>2. App Content and AI Processing</h2>
+        <p>When you ask StickerAI to create chibi-style stickers, the app may need to process the content you provide so the requested sticker can be generated or displayed. Processing may occur on your device or through service providers that help operate app features.</p>
+
+        <h2>3. Support Communications</h2>
+        <p>If you contact Parzi for support, we may receive your email address and the information you include in your message. This information is used to respond to your request and improve support quality.</p>
+
+        <h2>4. App Store and Device Information</h2>
+        <p>Apple may provide Parzi with app analytics, purchase reporting, crash information, or similar operational data according to your Apple settings and Apple's policies. Purchases, refunds, and subscriptions are managed by Apple.</p>
+
+        <h2>5. How Information Is Used</h2>
+        <ul>
+          <li>To provide, maintain, and improve StickerAI - Chibi Maker.</li>
+          <li>To generate or display requested chibi sticker content.</li>
+          <li>To respond to support requests sent to <a href="mailto:support@parzi.dev">support@parzi.dev</a>.</li>
+          <li>To protect the app, users, and Parzi from misuse, abuse, or technical issues.</li>
+          <li>To comply with applicable legal, platform, and safety obligations.</li>
+        </ul>
+
+        <h2>6. Sharing</h2>
+        <p>Parzi does not sell personal information. Information may be shared with service providers that help operate StickerAI, with Apple for App Store-related functionality, or when required to comply with law, enforce terms, or protect rights and safety.</p>
+
+        <h2>7. Data Retention</h2>
+        <p>Information is kept only as long as reasonably needed for the purposes described in this Privacy Policy, unless a longer period is required for legal, security, or operational reasons.</p>
+
+        <h2>8. Your Choices</h2>
+        <p>You can choose what content you provide to StickerAI. You may also manage Apple App Store subscriptions, purchases, and privacy settings through your Apple account and iOS device settings.</p>
+
+        <h2>9. Children</h2>
+        <p>StickerAI - Chibi Maker is not intended for children under the age required by applicable law to use online services without parental consent. If you believe a child has provided personal information, contact <a href="mailto:support@parzi.dev">support@parzi.dev</a>.</p>
+
+        <h2>10. International Use</h2>
+        <p>StickerAI may be available in multiple regions. Information may be processed in countries other than where you live, subject to applicable legal protections.</p>
+
+        <h2>11. Changes to This Policy</h2>
+        <p>Parzi may update this Privacy Policy from time to time. The latest version will be posted at <a href="https://parzi.dev/aistickerprivacy/">https://parzi.dev/aistickerprivacy/</a>.</p>
+
+        <h2>12. Contact</h2>
+        <p>For privacy questions, contact Parzi at <a href="mailto:support@parzi.dev">support@parzi.dev</a>.</p>
+
+        <p class="notice">This page applies to StickerAI - Chibi Maker and should be read together with the <a href="https://parzi.dev/aistickerterms/">Terms of Use</a>.</p>
+      </article>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>
+        <strong>StickerAI - Chibi Maker</strong>
+        <div>Published by Parzi. Contact <a href="mailto:support@parzi.dev">support@parzi.dev</a>.</div>
+      </div>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="https://parzi.dev/aistickermarketing/">Marketing</a>
+        <a href="https://parzi.dev/aistickersupport/">Support</a>
+        <a href="https://parzi.dev/aistickerprivacy/">Privacy Policy</a>
+        <a href="https://parzi.dev/aistickerterms/">Terms of Use</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const header = document.querySelector("[data-header]");
+      const toggle = document.querySelector("[data-menu-toggle]");
+      const menu = document.querySelector("[data-menu]");
+      if (!header || !toggle || !menu) return;
+
+      const setOpen = (isOpen) => {
+        header.classList.toggle("menu-open", isOpen);
+        toggle.setAttribute("aria-expanded", String(isOpen));
+        toggle.querySelector(".sr-only").textContent = isOpen ? "Close navigation" : "Open navigation";
+      };
+
+      toggle.addEventListener("click", () => {
+        setOpen(!header.classList.contains("menu-open"));
+      });
+
+      menu.addEventListener("click", (event) => {
+        if (event.target.closest("a")) setOpen(false);
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") setOpen(false);
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!header.classList.contains("menu-open")) return;
+        if (!header.contains(event.target)) setOpen(false);
+      });
+    })();
+  </script>
+</body>
+</html>
