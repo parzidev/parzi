@@ -1,132 +1,1251 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 Not Found</title>
-    <link rel="icon" type="image/png" href="icons/404-error.png">
-    <style>
-        ::-moz-selection {
-            background: #b3d4fc;
-            text-shadow: none;
-        }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>404 - Page Not Found</title>
+  <link rel="icon" type="image/png" href="icons/404-error.png">
+  <style>
+    :root {
+      --desktop: #008080;
+      --window: #c0c0c0;
+      --window-light: #ffffff;
+      --window-mid: #dfdfdf;
+      --window-dark: #808080;
+      --window-black: #0a0a0a;
+      --title-left: #000080;
+      --title-right: #1084d0;
+      --text: #111111;
+      --focus: #f7d14a;
+      --font: "MS Sans Serif", Tahoma, Geneva, Verdana, sans-serif;
+      --mono: "Lucida Console", "Courier New", monospace;
+    }
 
-        ::selection {
-            background: #b3d4fc;
-            text-shadow: none;
-        }
-        .action-text {
-            margin-top: 40px;
-            color: #FFF;
-        }
-        html {
-            padding: 30px 10px;
-            font-size: 20px;
-            line-height: 1.4;
-            color: #737373;
-            background: #0001AB;
-            -webkit-text-size-adjust: 100%;
-            -ms-text-size-adjust: 100%;
-        }
+    * {
+      box-sizing: border-box;
+    }
 
-        body {
-            max-width: 800px;
-            padding: 30px 20px 50px;
-            border-radius: 4px;
-            margin: 0 auto;                
-            background: #0001AB;
-            font-family: Lucida, monospace;
-        }
+    html,
+    body {
+      width: 100%;
+      min-width: 320px;
+      min-height: 100%;
+      margin: 0;
+    }
 
-        h1 {
-            margin: 0 10px;
-            font-size: 50px;
-            text-align: center;
-            background-color: #FFF;
-            color: #0001AB;
-        }
+    body {
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 20% 18%, rgba(255, 255, 255, 0.12), transparent 11rem),
+        radial-gradient(circle at 80% 8%, rgba(255, 255, 255, 0.09), transparent 13rem),
+        linear-gradient(135deg, #007777, var(--desktop));
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.35;
+      image-rendering: pixelated;
+    }
 
-        h1 span {
-            color: #bbb;
-        }
+    a {
+      color: inherit;
+    }
 
-        h3 {
-            margin: 1.5em 0 0.5em;
-        }
+    button {
+      font: inherit;
+    }
 
-        p {
-            margin: 1em 0;
-            color: #FFF;
-        }
+    :focus-visible {
+      outline: 2px dotted var(--window-black);
+      outline-offset: 3px;
+    }
 
-        ul {
-            padding: 0 0 0 40px;
-            margin: 1em 0;
-            color: #FFF;
-        }
+    .desktop {
+      position: relative;
+      min-height: 100svh;
+      padding: 22px 22px 64px;
+    }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: center;
-        }
+    .desktop-icons {
+      display: grid;
+      gap: 18px;
+      width: 92px;
+    }
 
-        p a {
-            color: orange;
-            text-decoration: none;
-            text-transform: uppercase;
-        }
+    .desktop-icon {
+      display: grid;
+      justify-items: center;
+      gap: 7px;
+      width: 82px;
+      border: 0;
+      padding: 2px;
+      background: transparent;
+      color: #ffffff;
+      font: 700 12px var(--font);
+      text-align: center;
+      text-shadow: 1px 1px #003f3f;
+      text-decoration: none;
+      cursor: pointer;
+    }
 
-        .error-icon {
-            display: block;
-            width: 120px;
-            height: 120px;
-            margin: 20px auto;
-        }
+    .desktop-icon:hover span:last-child,
+    .desktop-icon:focus-visible span:last-child {
+      background: #000080;
+      outline: 1px dotted #ffffff;
+      outline-offset: 2px;
+    }
 
-        /* Blinking cursor styles */
-        .cursor {
-            display: inline-block;
-            width: 10px; /* Adjust width as needed */
-            height: 1.2em; /* Match line height */
-            background-color: orange; /* Cursor color */
-            margin-left: 5px;
-            animation: blink 1s step-end infinite;
-            vertical-align: bottom; /* Align with text baseline */
-        }
+    .pixel-icon {
+      position: relative;
+      width: 38px;
+      height: 34px;
+      filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.35));
+    }
 
-        @keyframes blink {
-            from, to { background-color: transparent }
-            50% { background-color: orange; }
-        }
-    </style>
+    .pixel-icon::before,
+    .pixel-icon::after {
+      content: "";
+      position: absolute;
+    }
+
+    .icon-computer::before {
+      inset: 2px 4px 9px;
+      border: 2px solid #1d1d1d;
+      background: linear-gradient(#d7efff 0 70%, #2c7cc0 70%);
+      box-shadow: inset -2px -2px #6c6c6c, inset 2px 2px #ffffff;
+    }
+
+    .icon-computer::after {
+      left: 12px;
+      right: 12px;
+      bottom: 1px;
+      height: 8px;
+      border: 2px solid #1d1d1d;
+      background: #c0c0c0;
+      box-shadow: inset 1px 1px #ffffff;
+    }
+
+    .icon-folder::before {
+      left: 2px;
+      right: 2px;
+      bottom: 3px;
+      height: 24px;
+      border: 2px solid #5f4b00;
+      background: #f5c542;
+      box-shadow: inset 2px 2px #ffeaa0, inset -2px -2px #b78200;
+    }
+
+    .icon-folder::after {
+      left: 6px;
+      top: 2px;
+      width: 17px;
+      height: 8px;
+      border: 2px solid #5f4b00;
+      border-bottom: 0;
+      background: #ffd965;
+    }
+
+    .icon-warning::before {
+      left: 5px;
+      top: 1px;
+      width: 28px;
+      height: 28px;
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+      background: #ffd447;
+      border: 2px solid #111111;
+    }
+
+    .icon-warning::after {
+      left: 18px;
+      top: 10px;
+      width: 4px;
+      height: 15px;
+      background: #111111;
+      box-shadow: 0 18px #111111;
+    }
+
+    .window {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: min(680px, calc(100vw - 32px));
+      border: 2px solid var(--window-light);
+      border-right-color: var(--window-black);
+      border-bottom-color: var(--window-black);
+      background: var(--window);
+      box-shadow:
+        inset 1px 1px var(--window-mid),
+        inset -1px -1px var(--window-dark),
+        10px 12px 0 rgba(0, 0, 0, 0.22);
+      transform: translate(-50%, -50%);
+    }
+
+    .window.is-minimized,
+    .window.is-closed {
+      display: none;
+    }
+
+    .window.is-maximized {
+      position: fixed;
+      top: 14px;
+      right: 14px;
+      bottom: 56px;
+      left: 14px;
+      z-index: 3;
+      width: auto;
+      transform: none;
+    }
+
+    .window.is-maximized .window-body {
+      max-height: calc(100svh - 124px);
+      overflow: auto;
+    }
+
+    .title-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 3px;
+      min-height: 28px;
+      padding: 3px 4px 3px 9px;
+      background: linear-gradient(90deg, var(--title-left), var(--title-right));
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .title-actions {
+      display: flex;
+      gap: 3px;
+    }
+
+    .title-button {
+      display: grid;
+      place-items: center;
+      width: 21px;
+      height: 21px;
+      padding: 0;
+      border: 2px solid var(--window-light);
+      border-right-color: var(--window-black);
+      border-bottom-color: var(--window-black);
+      background: var(--window);
+      color: #111111;
+      font: 900 13px/1 var(--mono);
+      cursor: pointer;
+    }
+
+    .title-button:active {
+      border-color: var(--window-black);
+      border-right-color: var(--window-light);
+      border-bottom-color: var(--window-light);
+    }
+
+    .window-body {
+      padding: clamp(18px, 4vw, 34px);
+    }
+
+    .message-grid {
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .dialog-icon {
+      display: grid;
+      place-items: center;
+      width: 54px;
+      height: 54px;
+      border: 2px solid var(--window-light);
+      border-right-color: var(--window-dark);
+      border-bottom-color: var(--window-dark);
+      background: var(--window-mid);
+    }
+
+    .dialog-icon .pixel-icon {
+      width: 34px;
+      height: 32px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 6vw, 54px);
+      line-height: 0.95;
+      letter-spacing: 0;
+    }
+
+    .subhead {
+      margin: 0 0 18px;
+      font-size: clamp(16px, 2.5vw, 20px);
+      font-weight: 700;
+    }
+
+    .details {
+      display: grid;
+      gap: 10px;
+      margin: 18px 0;
+      border: 2px solid var(--window-dark);
+      border-right-color: var(--window-light);
+      border-bottom-color: var(--window-light);
+      padding: 14px;
+      background: #ffffff;
+      font-family: var(--mono);
+      font-size: clamp(13px, 2vw, 15px);
+    }
+
+    .details p {
+      margin: 0;
+    }
+
+    .path {
+      display: inline-block;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      color: #000080;
+      font-weight: 700;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .win-button {
+      min-width: 118px;
+      border: 2px solid var(--window-light);
+      border-right-color: var(--window-black);
+      border-bottom-color: var(--window-black);
+      padding: 8px 14px;
+      background: var(--window);
+      color: #111111;
+      font: 700 14px var(--font);
+      text-align: center;
+      text-decoration: none;
+      box-shadow: inset 1px 1px var(--window-mid), inset -1px -1px var(--window-dark);
+      cursor: pointer;
+    }
+
+    .win-button:active {
+      border-color: var(--window-black);
+      border-right-color: var(--window-light);
+      border-bottom-color: var(--window-light);
+      padding: 9px 13px 7px 15px;
+      box-shadow: inset 1px 1px var(--window-dark);
+    }
+
+    .status-line {
+      margin: 16px 0 0;
+      color: #333333;
+      font-size: 13px;
+    }
+
+    .taskbar {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 42px;
+      border-top: 2px solid var(--window-light);
+      background: var(--window);
+      padding: 4px;
+      box-shadow: inset 0 1px var(--window-mid);
+    }
+
+    .start-menu {
+      position: fixed;
+      bottom: 42px;
+      left: 4px;
+      z-index: 7;
+      display: none;
+      width: min(280px, calc(100vw - 8px));
+      border: 2px solid var(--window-light);
+      border-right-color: var(--window-black);
+      border-bottom-color: var(--window-black);
+      background: var(--window);
+      box-shadow: inset 1px 1px var(--window-mid), inset -1px -1px var(--window-dark), 7px 8px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .start-menu.is-open {
+      display: grid;
+      grid-template-columns: 38px 1fr;
+    }
+
+    .start-strip {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 10px 0;
+      background: linear-gradient(180deg, #000080, #1084d0);
+      color: #ffffff;
+      font-weight: 900;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      letter-spacing: 0;
+    }
+
+    .start-items {
+      padding: 4px;
+    }
+
+    .start-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      min-height: 36px;
+      border: 0;
+      padding: 6px 8px;
+      background: transparent;
+      color: #111111;
+      font: 700 14px var(--font);
+      text-align: left;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .start-item:hover,
+    .start-item:focus-visible {
+      background: #000080;
+      color: #ffffff;
+      outline: 0;
+    }
+
+    .start-item-mark {
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border: 1px solid var(--window-dark);
+      background: #ffffff;
+      color: #000080;
+      font: 900 13px var(--mono);
+    }
+
+    .start-button,
+    .task-button,
+    .weather-button,
+    .clock {
+      border: 2px solid var(--window-light);
+      border-right-color: var(--window-black);
+      border-bottom-color: var(--window-black);
+      background: var(--window);
+      box-shadow: inset 1px 1px var(--window-mid), inset -1px -1px var(--window-dark);
+      font-weight: 700;
+    }
+
+    .start-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      height: 32px;
+      padding: 0 10px;
+      color: #111111;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .start-button[aria-expanded="true"],
+    .task-button.is-active {
+      border-color: var(--window-black);
+      border-right-color: var(--window-light);
+      border-bottom-color: var(--window-light);
+      box-shadow: inset 1px 1px var(--window-dark);
+    }
+
+    .start-mark {
+      width: 16px;
+      height: 16px;
+      background:
+        linear-gradient(90deg, #f44336 0 50%, #4caf50 50%),
+        linear-gradient(#2196f3 0 50%, #ffc107 50%);
+      background-blend-mode: screen;
+      box-shadow: 1px 1px #ffffff;
+    }
+
+    .task-button {
+      flex: 1;
+      max-width: 280px;
+      height: 32px;
+      padding: 6px 10px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      color: #111111;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .task-button.is-dimmed {
+      color: #555555;
+      font-style: italic;
+    }
+
+    .weather-button {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-width: 168px;
+      max-width: 270px;
+      height: 32px;
+      padding: 6px 10px;
+      color: #111111;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .weather-button[aria-expanded="true"] {
+      border-color: var(--window-black);
+      border-right-color: var(--window-light);
+      border-bottom-color: var(--window-light);
+      box-shadow: inset 1px 1px var(--window-dark);
+    }
+
+    .weather-mark {
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      width: 18px;
+      height: 18px;
+      border: 1px solid #404040;
+      background: #d7efff;
+      color: #000080;
+      font: 900 11px var(--mono);
+    }
+
+    .weather-summary {
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font-size: 12px;
+    }
+
+    .weather-popup {
+      position: fixed;
+      right: 98px;
+      bottom: 42px;
+      z-index: 7;
+      display: none;
+      width: min(360px, calc(100vw - 8px));
+      border: 2px solid var(--window-light);
+      border-right-color: var(--window-black);
+      border-bottom-color: var(--window-black);
+      background: var(--window);
+      box-shadow: inset 1px 1px var(--window-mid), inset -1px -1px var(--window-dark), 7px 8px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .weather-popup.is-open {
+      display: block;
+    }
+
+    .weather-popup-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin: 3px;
+      min-height: 24px;
+      padding: 3px 6px;
+      background: linear-gradient(90deg, var(--title-left), var(--title-right));
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .weather-popup-body {
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      font-size: 13px;
+    }
+
+    .weather-main {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 12px;
+      align-items: center;
+      border: 2px solid var(--window-dark);
+      border-right-color: var(--window-light);
+      border-bottom-color: var(--window-light);
+      padding: 10px;
+      background: #ffffff;
+    }
+
+    .weather-temp {
+      display: grid;
+      place-items: center;
+      min-height: 50px;
+      border: 2px solid var(--window-light);
+      border-right-color: var(--window-dark);
+      border-bottom-color: var(--window-dark);
+      background: #d7efff;
+      color: #000080;
+      font: 900 22px var(--mono);
+    }
+
+    .weather-location {
+      margin: 0 0 4px;
+      font-weight: 900;
+    }
+
+    .weather-description {
+      margin: 0;
+      color: #333333;
+      text-transform: capitalize;
+    }
+
+    .weather-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .weather-stat {
+      border: 2px solid var(--window-dark);
+      border-right-color: var(--window-light);
+      border-bottom-color: var(--window-light);
+      padding: 7px;
+      background: #ffffff;
+      min-width: 0;
+    }
+
+    .weather-stat span {
+      display: block;
+      color: #555555;
+      font-size: 11px;
+      margin-bottom: 2px;
+    }
+
+    .weather-stat strong {
+      display: block;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font-size: 13px;
+    }
+
+    .weather-note {
+      margin: 0;
+      color: #333333;
+      font-size: 12px;
+    }
+
+    .weather-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .clock {
+      min-width: 88px;
+      height: 32px;
+      border-color: var(--window-dark);
+      border-right-color: var(--window-light);
+      border-bottom-color: var(--window-light);
+      padding: 7px 9px 0;
+      text-align: center;
+      font-size: 13px;
+      color: #111111;
+      cursor: pointer;
+    }
+
+    .clock-popup {
+      position: fixed;
+      right: 4px;
+      bottom: 42px;
+      z-index: 7;
+      display: none;
+      width: min(260px, calc(100vw - 8px));
+      border: 2px solid var(--window-light);
+      border-right-color: var(--window-black);
+      border-bottom-color: var(--window-black);
+      padding: 12px;
+      background: var(--window);
+      box-shadow: inset 1px 1px var(--window-mid), inset -1px -1px var(--window-dark), 7px 8px 0 rgba(0, 0, 0, 0.2);
+      font-size: 13px;
+    }
+
+    .clock-popup.is-open {
+      display: block;
+    }
+
+    .clock-popup strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .scanline {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 4;
+      opacity: 0.08;
+      background: repeating-linear-gradient(180deg, transparent 0 3px, #000000 4px 5px);
+      mix-blend-mode: multiply;
+    }
+
+    @media (max-width: 680px) {
+      .desktop {
+        padding: 16px 14px 72px;
+      }
+
+      .desktop-icons {
+        grid-template-columns: repeat(3, 82px);
+        width: auto;
+      }
+
+      .window {
+        position: static;
+        width: 100%;
+        margin-top: 26px;
+        transform: none;
+      }
+
+      .window.is-maximized {
+        position: static;
+        width: 100%;
+        margin-top: 26px;
+      }
+
+      .message-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .button-row {
+        justify-content: stretch;
+      }
+
+      .win-button {
+        flex: 1 1 150px;
+      }
+
+      .start-button {
+        padding: 0 8px;
+      }
+
+      .task-button {
+        min-width: 0;
+        max-width: none;
+        padding: 7px 8px;
+        font-size: 12px;
+      }
+
+      .weather-button {
+        min-width: 112px;
+        max-width: 150px;
+        padding: 7px 8px;
+      }
+
+      .weather-summary {
+        font-size: 11px;
+      }
+
+      .weather-popup {
+        right: 4px;
+        left: 4px;
+        width: auto;
+      }
+
+      .weather-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .clock {
+        min-width: 72px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>404 Not found</h1>
-        <p>Sorry, but the page you were trying to view does not exist.</p>
-        <p>There could be a lot of reasons behind this:</p>
-        <ul>
-            <li>You are an <code>all-time</code> unlucky person, thus.</li>
-            <li>God doesn't love you at all, thus.</li>
-            <li>Doomsday is here, servers are dying, thus.</li>
-            <li>You killed a kitten recently, thus.</li>
-            <li>You mistyped a <strong>URL</strong>, thus.</li>
-            <li>You followed an <strong>OLD, DEAD, BROKEN</strong> URL, thus.</li>
-            <li>Or you are just missing Windows Blue Screen, thus.</li>
-        </ul>
-        <div class="action-text">
-            Press <a href="javascript:window.history.back()">BACK</a> to return to previous page
-            or <a href="/">HOMEPAGE</a> to restart from beginning<span class="cursor"></span>
-        </div>
-    </div>
+  <main class="desktop" aria-labelledby="error-title">
+    <nav class="desktop-icons" aria-label="Desktop shortcuts">
+      <a class="desktop-icon" href="/" aria-label="Go to homepage">
+        <span class="pixel-icon icon-computer" aria-hidden="true"></span>
+        <span>My Site</span>
+      </a>
+      <a class="desktop-icon" href="javascript:window.history.back()" aria-label="Go back">
+        <span class="pixel-icon icon-folder" aria-hidden="true"></span>
+        <span>Back</span>
+      </a>
+      <button class="desktop-icon" type="button" data-action="restore" aria-label="Open 404 error window">
+        <span class="pixel-icon icon-warning"></span>
+        <span>404.txt</span>
+      </button>
+    </nav>
 
-    <iframe id="log-frame" style="width: 0; height: 0; border: 0; visibility: hidden;" title="Log Frame"></iframe>
-	<script>
-      const pathname = window.location.pathname;
-      const pageId = (pathname.split('/').pop() || '404').replace('.html', '');
-      document.getElementById('log-frame').src = `https://log.parzi.dev/?ref=${encodeURIComponent(pageId)}`;
-	    </script>
-    <script src="js/ip.js"></script>
-    <script src="js/blocksehir.js"></script></body>
+    <section class="window" role="dialog" aria-labelledby="error-title" aria-describedby="error-description" data-window>
+      <div class="title-bar">
+        <span>Windows 98 - parzi.dev</span>
+        <span class="title-actions">
+          <button class="title-button" type="button" data-action="minimize" aria-label="Minimize window">_</button>
+          <button class="title-button" type="button" data-action="maximize" aria-label="Maximize window">□</button>
+          <button class="title-button" type="button" data-action="close" aria-label="Close window">×</button>
+        </span>
+      </div>
+      <div class="window-body">
+        <div class="message-grid">
+          <div class="dialog-icon" aria-hidden="true">
+            <span class="pixel-icon icon-warning"></span>
+          </div>
+          <div>
+            <h1 id="error-title">404 Not Found</h1>
+            <p class="subhead" id="error-description">The page could not be opened because the shortcut points to nowhere.</p>
+            <div class="details" aria-label="Error details">
+              <p><strong>Address:</strong> <span class="path" id="missing-path">/unknown</span></p>
+              <p><strong>Status:</strong> Missing file or outdated link.</p>
+              <p><strong>Fix:</strong> Return to the previous page or restart from the homepage.</p>
+            </div>
+            <div class="button-row">
+              <a class="win-button" href="javascript:window.history.back()">Back</a>
+              <a class="win-button" href="/">Homepage</a>
+            </div>
+            <p class="status-line">Tip: Press <strong>Esc</strong> for Back or <strong>Enter</strong> for Homepage.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="start-menu" id="start-menu" aria-label="Start menu" data-start-menu hidden>
+    <div class="start-strip">parzi.dev</div>
+    <div class="start-items">
+      <a class="start-item" href="/">
+        <span class="start-item-mark" aria-hidden="true">⌂</span>
+        <span>Homepage</span>
+      </a>
+      <button class="start-item" type="button" data-action="back">
+        <span class="start-item-mark" aria-hidden="true">←</span>
+        <span>Back</span>
+      </button>
+      <button class="start-item" type="button" data-action="restore">
+        <span class="start-item-mark" aria-hidden="true">!</span>
+        <span>Open 404.txt</span>
+      </button>
+      <button class="start-item" type="button" data-action="reload">
+        <span class="start-item-mark" aria-hidden="true">↻</span>
+        <span>Refresh</span>
+      </button>
+      <button class="start-item" type="button" data-action="refresh-weather">
+        <span class="start-item-mark" aria-hidden="true">W</span>
+        <span>Refresh weather</span>
+      </button>
+    </div>
+  </nav>
+
+  <footer class="taskbar" aria-label="Windows taskbar">
+    <button class="start-button" type="button" aria-expanded="false" aria-controls="start-menu" data-start-button>
+      <span class="start-mark" aria-hidden="true"></span>
+      <span>Start</span>
+    </button>
+    <button class="task-button is-active" type="button" data-action="toggle-window">404 Not Found - parzi.dev</button>
+    <button class="weather-button" type="button" aria-label="Open local weather" aria-expanded="false" aria-controls="weather-popup" data-weather-button>
+      <span class="weather-mark" aria-hidden="true">WX</span>
+      <span class="weather-summary" data-weather-summary>Weather loading...</span>
+    </button>
+    <button class="clock" type="button" id="clock" aria-label="Open system time" aria-expanded="false" aria-controls="clock-popup" data-clock-button>--:--</button>
+  </footer>
+  <aside class="weather-popup" id="weather-popup" data-weather-popup hidden>
+    <div class="weather-popup-title">
+      <span>Local Weather</span>
+      <button class="title-button" type="button" data-action="toggle-weather" aria-label="Close weather">×</button>
+    </div>
+    <div class="weather-popup-body">
+      <div class="weather-main">
+        <div class="weather-temp" data-weather-temp>--°</div>
+        <div>
+          <p class="weather-location" data-weather-location>Finding location...</p>
+          <p class="weather-description" data-weather-description>Using IP-based location</p>
+        </div>
+      </div>
+      <div class="weather-grid" aria-label="Weather details">
+        <div class="weather-stat">
+          <span>Feels</span>
+          <strong data-weather-feels>--</strong>
+        </div>
+        <div class="weather-stat">
+          <span>Humidity</span>
+          <strong data-weather-humidity>--</strong>
+        </div>
+        <div class="weather-stat">
+          <span>Wind</span>
+          <strong data-weather-wind>--</strong>
+        </div>
+      </div>
+      <p class="weather-note" data-weather-note>IP location can be approximate.</p>
+      <div class="weather-actions">
+        <button class="win-button" type="button" data-action="refresh-weather">Refresh</button>
+      </div>
+    </div>
+  </aside>
+  <aside class="clock-popup" id="clock-popup" data-clock-popup hidden>
+    <strong>System time</strong>
+    <span id="clock-detail">Loading...</span>
+  </aside>
+  <div class="scanline" aria-hidden="true"></div>
+
+  <iframe id="log-frame" style="width: 0; height: 0; border: 0; visibility: hidden;" title="Log Frame"></iframe>
+  <script>
+    const pathname = window.location.pathname;
+    const pageId = (pathname.split('/').pop() || '404').replace('.html', '');
+    const missingPath = document.getElementById('missing-path');
+    const clock = document.getElementById('clock');
+    const clockDetail = document.getElementById('clock-detail');
+    const clockPopup = document.querySelector('[data-clock-popup]');
+    const clockButton = document.querySelector('[data-clock-button]');
+    const errorWindow = document.querySelector('[data-window]');
+    const startButton = document.querySelector('[data-start-button]');
+    const startMenu = document.querySelector('[data-start-menu]');
+    const taskButton = document.querySelector('[data-action="toggle-window"]');
+    const weatherButton = document.querySelector('[data-weather-button]');
+    const weatherPopup = document.querySelector('[data-weather-popup]');
+    const weatherSummary = document.querySelector('[data-weather-summary]');
+    const weatherTemp = document.querySelector('[data-weather-temp]');
+    const weatherLocation = document.querySelector('[data-weather-location]');
+    const weatherDescription = document.querySelector('[data-weather-description]');
+    const weatherFeels = document.querySelector('[data-weather-feels]');
+    const weatherHumidity = document.querySelector('[data-weather-humidity]');
+    const weatherWind = document.querySelector('[data-weather-wind]');
+    const weatherNote = document.querySelector('[data-weather-note]');
+    const WEATHER_API_KEY = 'bc9ee4dc966affd2c33c7358511d1510';
+    const IPINFO_TOKEN = 'c8d8f13b5d6a0d';
+
+    if (window.location.protocol === 'file:') {
+      document.querySelectorAll('a[href="/"]').forEach((link) => {
+        link.setAttribute('href', 'index.html');
+      });
+    }
+
+    missingPath.textContent = pathname || '/';
+    document.getElementById('log-frame').src = `https://log.parzi.dev/?ref=${encodeURIComponent(pageId)}`;
+
+    const updateClock = () => {
+      const now = new Date();
+      clock.textContent = new Intl.DateTimeFormat(undefined, {
+        hour: '2-digit',
+        minute: '2-digit'
+      }).format(now);
+
+      clockDetail.textContent = new Intl.DateTimeFormat(undefined, {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      }).format(now);
+    };
+
+    const setStartMenu = (isOpen) => {
+      startMenu.hidden = !isOpen;
+      startMenu.classList.toggle('is-open', isOpen);
+      startButton.setAttribute('aria-expanded', String(isOpen));
+    };
+
+    const setClockPopup = (isOpen) => {
+      clockPopup.hidden = !isOpen;
+      clockPopup.classList.toggle('is-open', isOpen);
+      clockButton.setAttribute('aria-expanded', String(isOpen));
+    };
+
+    const setWeatherPopup = (isOpen) => {
+      weatherPopup.hidden = !isOpen;
+      weatherPopup.classList.toggle('is-open', isOpen);
+      weatherButton.setAttribute('aria-expanded', String(isOpen));
+    };
+
+    const syncTaskbar = () => {
+      const hidden = errorWindow.classList.contains('is-minimized') || errorWindow.classList.contains('is-closed');
+      taskButton.classList.toggle('is-active', !hidden);
+      taskButton.classList.toggle('is-dimmed', hidden);
+      taskButton.textContent = hidden ? '404 Not Found - minimized' : '404 Not Found - parzi.dev';
+    };
+
+    const restoreWindow = () => {
+      errorWindow.classList.remove('is-minimized', 'is-closed');
+      syncTaskbar();
+    };
+
+    const minimizeWindow = () => {
+      errorWindow.classList.add('is-minimized');
+      errorWindow.classList.remove('is-closed');
+      syncTaskbar();
+    };
+
+    const toggleMaximize = () => {
+      restoreWindow();
+      errorWindow.classList.toggle('is-maximized');
+    };
+
+    const closeWindow = () => {
+      errorWindow.classList.add('is-closed');
+      errorWindow.classList.remove('is-minimized', 'is-maximized');
+      syncTaskbar();
+    };
+
+    const goBack = () => {
+      window.history.back();
+    };
+
+    const runAction = (action) => {
+      if (action !== 'toggle-start') setStartMenu(false);
+      if (action !== 'toggle-clock') setClockPopup(false);
+      if (action !== 'toggle-weather') setWeatherPopup(false);
+
+      if (action === 'minimize') minimizeWindow();
+      if (action === 'maximize') toggleMaximize();
+      if (action === 'close') closeWindow();
+      if (action === 'restore') restoreWindow();
+      if (action === 'back') goBack();
+      if (action === 'reload') window.location.reload();
+      if (action === 'refresh-weather') {
+        setWeatherPopup(true);
+        loadLocalWeather();
+      }
+      if (action === 'toggle-window') {
+        const hidden = errorWindow.classList.contains('is-minimized') || errorWindow.classList.contains('is-closed');
+        hidden ? restoreWindow() : minimizeWindow();
+      }
+      if (action === 'toggle-start') setStartMenu(!startMenu.classList.contains('is-open'));
+      if (action === 'toggle-clock') setClockPopup(!clockPopup.classList.contains('is-open'));
+      if (action === 'toggle-weather') setWeatherPopup(!weatherPopup.classList.contains('is-open'));
+    };
+
+    const formatWind = (metersPerSecond) => `${Math.round((metersPerSecond || 0) * 3.6)} km/h`;
+
+    const setWeatherLoading = () => {
+      weatherSummary.textContent = 'Weather loading...';
+      weatherTemp.textContent = '--°';
+      weatherLocation.textContent = 'Finding location...';
+      weatherDescription.textContent = 'Using IP-based location';
+      weatherFeels.textContent = '--';
+      weatherHumidity.textContent = '--';
+      weatherWind.textContent = '--';
+      weatherNote.textContent = 'IP location can be approximate.';
+    };
+
+    const setWeatherError = (message) => {
+      weatherSummary.textContent = 'Weather unavailable';
+      weatherTemp.textContent = '--°';
+      weatherLocation.textContent = 'Location unavailable';
+      weatherDescription.textContent = message || 'Could not load weather';
+      weatherFeels.textContent = '--';
+      weatherHumidity.textContent = '--';
+      weatherWind.textContent = '--';
+      weatherNote.textContent = 'Try Refresh from the Start menu or weather popup.';
+    };
+
+    const fetchJson = async (url) => {
+      const response = await fetch(url, { cache: 'no-store' });
+      const data = await response.json();
+
+      if (!response.ok || (data.cod && !['200', 200].includes(data.cod))) {
+        throw new Error(data.message || `Request failed: ${response.status}`);
+      }
+
+      return data;
+    };
+
+    const fetchProviderJson = async (url) => {
+      const response = await fetch(url, { cache: 'no-store' });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || data.reason || `Location request failed: ${response.status}`);
+      }
+
+      return data;
+    };
+
+    const normalizeLocation = (location) => {
+      if (!location || (!location.city && location.lat === null && location.lon === null)) {
+        throw new Error('No usable IP location');
+      }
+
+      return location;
+    };
+
+    const getLocationFromGeoJs = async () => {
+      const data = await fetchProviderJson('https://get.geojs.io/v1/ip/geo.json');
+      const lat = Number(data.latitude);
+      const lon = Number(data.longitude);
+
+      return normalizeLocation({
+        ip: data.ip || '',
+        city: data.city || '',
+        region: data.region || '',
+        country: data.country_code || data.country || '',
+        lat: Number.isFinite(lat) ? lat : null,
+        lon: Number.isFinite(lon) ? lon : null
+      });
+    };
+
+    const getLocationFromIpWhoIs = async () => {
+      const data = await fetchProviderJson('https://ipwho.is/');
+      if (data.success === false) throw new Error(data.message || 'ipwho.is failed');
+
+      return normalizeLocation({
+        ip: data.ip || '',
+        city: data.city || '',
+        region: data.region || '',
+        country: data.country_code || data.country || '',
+        lat: Number.isFinite(data.latitude) ? data.latitude : null,
+        lon: Number.isFinite(data.longitude) ? data.longitude : null
+      });
+    };
+
+    const getLocationFromIpInfo = async () => {
+      const data = await fetchProviderJson(`https://ipinfo.io/json?token=${IPINFO_TOKEN}`);
+      const [lat, lon] = String(data.loc || '').split(',').map(Number);
+
+      return normalizeLocation({
+        ip: data.ip || '',
+        city: data.city || '',
+        region: data.region || '',
+        country: data.country || '',
+        lat: Number.isFinite(lat) ? lat : null,
+        lon: Number.isFinite(lon) ? lon : null
+      });
+    };
+
+    const getLocationFromIpApi = async () => {
+      const data = await fetchProviderJson('https://ipapi.co/json/');
+      if (data.error) throw new Error(data.message || data.reason || 'ipapi.co failed');
+
+      return normalizeLocation({
+        ip: data.ip || '',
+        city: data.city || '',
+        region: data.region || '',
+        country: data.country_code || data.country_name || '',
+        lat: Number.isFinite(data.latitude) ? data.latitude : null,
+        lon: Number.isFinite(data.longitude) ? data.longitude : null
+      });
+    };
+
+    const getIpLocation = async () => {
+      const providers = [
+        getLocationFromGeoJs,
+        getLocationFromIpWhoIs,
+        getLocationFromIpInfo,
+        getLocationFromIpApi
+      ];
+      const errors = [];
+
+      for (const provider of providers) {
+        try {
+          return await provider();
+        } catch (error) {
+          errors.push(error.message);
+        }
+      }
+
+      throw new Error(errors[0] || 'IP location unavailable');
+    };
+
+    const buildWeatherUrl = (location) => {
+      if (location.lat !== null && location.lon !== null) {
+        return `https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&appid=${WEATHER_API_KEY}&units=metric&lang=tr`;
+      }
+
+      if (location.city) {
+        return `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location.city)}&appid=${WEATHER_API_KEY}&units=metric&lang=tr`;
+      }
+
+      throw new Error('No usable IP location');
+    };
+
+    const updateWeatherUI = (location, data) => {
+      const temp = Math.round(data.main.temp);
+      const feels = Math.round(data.main.feels_like);
+      const humidity = data.main.humidity;
+      const wind = formatWind(data.wind && data.wind.speed);
+      const description = data.weather && data.weather[0] ? data.weather[0].description : 'hava durumu';
+      const place = [location.city || data.name, location.region, location.country].filter(Boolean).join(', ');
+
+      weatherSummary.textContent = `${location.city || data.name || 'Local'} ${temp}°`;
+      weatherTemp.textContent = `${temp}°`;
+      weatherLocation.textContent = place || data.name || 'Local weather';
+      weatherDescription.textContent = description;
+      weatherFeels.textContent = `${feels}°`;
+      weatherHumidity.textContent = `${humidity}%`;
+      weatherWind.textContent = wind;
+      weatherNote.textContent = location.ip ? 'Based on IP location. Approximate city-level result.' : 'Based on IP location.';
+    };
+
+    const loadLocalWeather = async () => {
+      try {
+        setWeatherLoading();
+        const location = await getIpLocation();
+        const weather = await fetchJson(buildWeatherUrl(location));
+        updateWeatherUI(location, weather);
+      } catch (error) {
+        console.error('404 weather error:', error);
+        setWeatherError(error.message);
+      }
+    };
+
+    updateClock();
+    setInterval(updateClock, 30000);
+    syncTaskbar();
+    loadLocalWeather();
+    setInterval(loadLocalWeather, 10 * 60 * 1000);
+
+    startButton.addEventListener('click', () => runAction('toggle-start'));
+    clockButton.addEventListener('click', () => runAction('toggle-clock'));
+    weatherButton.addEventListener('click', () => runAction('toggle-weather'));
+
+    document.addEventListener('click', (event) => {
+      const actionTarget = event.target.closest('[data-action]');
+      if (actionTarget) {
+        runAction(actionTarget.dataset.action);
+        return;
+      }
+
+      if (!event.target.closest('[data-start-menu], [data-start-button]')) {
+        setStartMenu(false);
+      }
+
+      if (!event.target.closest('[data-clock-popup], [data-clock-button]')) {
+        setClockPopup(false);
+      }
+
+      if (!event.target.closest('[data-weather-popup], [data-weather-button]')) {
+        setWeatherPopup(false);
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        if (startMenu.classList.contains('is-open') || clockPopup.classList.contains('is-open') || weatherPopup.classList.contains('is-open')) {
+          setStartMenu(false);
+          setClockPopup(false);
+          setWeatherPopup(false);
+          return;
+        }
+
+        goBack();
+      }
+
+      if (event.key === 'Enter') {
+        window.location.href = '/';
+      }
+    });
+  </script>
+  <script src="js/ip.js"></script>
+  <script src="js/blocksehir.js"></script>
+</body>
 </html>
