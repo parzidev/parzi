@@ -1,6 +1,6 @@
 
 const apiKey = 'bc9ee4dc966affd2c33c7358511d1510';
-const city = 'lüleburgaz';
+const city = 'arnavutköy';
 
 async function getWeather() {
     try {
