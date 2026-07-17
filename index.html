@@ -312,15 +312,38 @@
         </div>
     </div>
 
-    <!-- Modüler JavaScript dosyaları -->
-     <script src="https://log.parzi.dev/tracker.js"></script>
 
-     <script>
-    document.querySelector('a.instagram')?.addEventListener('click', function () {
-        LogParzi.track('social_link_click', {
-            platform: 'instagram',
-            account: '@parzi.dev',
-            destination: this.href
+
+<script
+    src="https://log.parzi.dev/tracker.js?v=20260717"
+    onload="console.log('LogParzi yüklendi:', window.LogParzi)"
+    onerror="console.error('tracker.js yüklenemedi')">
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const socialLinks = {
+            linkedin: { platform: 'linkedin', account: 'parzi' },
+            github: { platform: 'github', account: '@parzidev' },
+            mail: { platform: 'email', account: 'me@parzi.dev' },
+            spotify: { platform: 'spotify', account: 'Parzi' },
+            discord: { platform: 'discord', account: 'parzidev' },
+            twitter: { platform: 'twitter', account: '@parzidev' },
+            instagram: { platform: 'instagram', account: '@parzi.dev' }
+        };
+
+        Object.entries(socialLinks).forEach(([className, properties]) => {
+            document.querySelector(`a.${className}`)?.addEventListener('click', function () {
+                if (!window.LogParzi) {
+                    console.error('LogParzi bulunamadı');
+                    return;
+                }
+
+                LogParzi.track('social_link_click', {
+                    ...properties,
+                    destination: this.href
+                });
+            });
         });
     });
 </script>
