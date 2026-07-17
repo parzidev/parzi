@@ -313,6 +313,18 @@
     </div>
 
     <!-- Modüler JavaScript dosyaları -->
+     <script src="https://log.parzi.dev/tracker.js"></script>
+
+     <script>
+    document.querySelector('a.instagram')?.addEventListener('click', function () {
+        LogParzi.track('social_link_click', {
+            platform: 'instagram',
+            account: '@parzi.dev',
+            destination: this.href
+        });
+    });
+</script>
+
     <script src="js/age.js"></script>
     <script src="js/time.js"></script>
     <script src="js/theme.js"></script>
