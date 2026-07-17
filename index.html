@@ -332,18 +332,34 @@
             instagram: { platform: 'instagram', account: '@parzi.dev' }
         };
 
-        Object.entries(socialLinks).forEach(([className, properties]) => {
-            document.querySelector(`a.${className}`)?.addEventListener('click', function () {
-                if (!window.LogParzi) {
-                    console.error('LogParzi bulunamadı');
-                    return;
-                }
+        function trackSocialLink(link, properties, openMethod) {
+            if (!window.LogParzi) {
+                console.error('LogParzi bulunamadı');
+                return;
+            }
 
-                LogParzi.track('social_link_click', {
-                    ...properties,
-                    destination: this.href
-                });
+            LogParzi.track('social_link_click', {
+                ...properties,
+                destination: link.href,
+                ...(openMethod ? { open_method: openMethod } : {})
             });
+        }
+
+        Object.entries(socialLinks).forEach(([className, properties]) => {
+            const link = document.querySelector(`a.${className}`);
+
+            link?.addEventListener('click', function () {
+                const openMethod = className === 'instagram' ? 'normal' : null;
+                trackSocialLink(this, properties, openMethod);
+            });
+
+            if (className === 'instagram') {
+                link?.addEventListener('auxclick', function (event) {
+                    if (event.button === 1) {
+                        trackSocialLink(this, properties, 'middle_click');
+                    }
+                });
+            }
         });
     });
 </script>
