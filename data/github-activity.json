@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "username": "parzidev",
+  "source": "github-graphql",
+  "generated_at": "2026-07-17T01:26:11.032Z",
+  "range": {
+    "from": "2025-08-01",
+    "to": "2026-07-17"
+  },
+  "contributions": {
+    "total": 205,
+    "restricted": 0,
+    "months": [
+      {
+        "key": "2025-08",
+        "name": "Aug",
+        "year": 2025,
+        "count": 35,
+        "level": 3
+      },
+      {
+        "key": "2025-09",
+        "name": "Sep",
+        "year": 2025,
+        "count": 15,
+        "level": 2
+      },
+      {
+        "key": "2025-10",
+        "name": "Oct",
+        "year": 2025,
+        "count": 20,
+        "level": 2
+      },
+      {
+        "key": "2025-11",
+        "name": "Nov",
+        "year": 2025,
+        "count": 57,
+        "level": 4
+      },
+      {
+        "key": "2025-12",
+        "name": "Dec",
+        "year": 2025,
+        "count": 14,
+        "level": 1
+      },
+      {
+        "key": "2026-01",
+        "name": "Jan",
+        "year": 2026,
+        "count": 6,
+        "level": 1
+      },
+      {
+        "key": "2026-02",
+        "name": "Feb",
+        "year": 2026,
+        "count": 7,
+        "level": 1
+      },
+      {
+        "key": "2026-03",
+        "name": "Mar",
+        "year": 2026,
+        "count": 9,
+        "level": 1
+      },
+      {
+        "key": "2026-04",
+        "name": "Apr",
+        "year": 2026,
+        "count": 9,
+        "level": 1
+      },
+      {
+        "key": "2026-05",
+        "name": "May",
+        "year": 2026,
+        "count": 7,
+        "level": 1
+      },
+      {
+        "key": "2026-06",
+        "name": "Jun",
+        "year": 2026,
+        "count": 17,
+        "level": 2
+      },
+      {
+        "key": "2026-07",
+        "name": "Jul",
+        "year": 2026,
+        "count": 9,
+        "level": 1
+      }
+    ],
+    "best_day": {
+      "date": "2025-11-26",
+      "count": 20
+    },
+    "last_contribution_date": "2026-07-17"
+  },
+  "stats": {
+    "stars": 3,
+    "public_repositories": 16,
+    "top_language": "Python",
+    "latest_repository": {
+      "name": "parzival",
+      "pushed_at": "2026-07-17T01:07:32Z"
+    }
+  }
+}

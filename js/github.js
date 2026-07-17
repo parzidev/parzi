@@ -1,117 +1,176 @@
-// GitHub modülü
-const githubModule = (function() {
-    // Özel değişkenler
+// GitHub activity module. Data is generated from GitHub GraphQL by GitHub Actions.
+const githubModule = (function () {
     const githubUsername = 'parzidev';
-    const monthLetters = ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const rawDataUrl = `https://raw.githubusercontent.com/${githubUsername}/parzival/main/data/github-activity.json`;
 
-    // Modül başlatma
     function init() {
-        initGitHubCalendar();
-        setFallbackStats();
-        fetchGitHubStats();
+        showLoadingState();
+        fetchGitHubActivity();
         return this;
     }
 
-    // GitHub Calendar'ı başlat
-    function initGitHubCalendar() {
+    async function fetchGitHubActivity() {
+        try {
+            const data = await fetchFirstValidActivity(getActivityDataUrls());
+            renderActivity(data);
+        } catch (error) {
+            console.warn('GitHub activity could not be loaded:', error.message);
+            showUnavailableState();
+        }
+    }
+
+    function getActivityDataUrls() {
+        const sameOriginUrl = new URL('data/github-activity.json', window.location.href).toString();
+        const cacheBucket = Math.floor(Date.now() / (5 * 60 * 1000));
+        const freshRawUrl = `${rawDataUrl}?v=${cacheBucket}`;
+        const isLocal = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname)
+            || window.location.protocol === 'file:';
+
+        return isLocal ? [sameOriginUrl, freshRawUrl] : [freshRawUrl, sameOriginUrl];
+    }
+
+    async function fetchFirstValidActivity(urls) {
+        let lastError = new Error('No GitHub activity source was available.');
+
+        for (const url of urls) {
+            try {
+                const response = await fetch(url, {
+                    cache: 'no-store',
+                    headers: { Accept: 'application/json' }
+                });
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const data = await response.json();
+                validateActivityData(data);
+                return data;
+            } catch (error) {
+                lastError = error;
+            }
+        }
+
+        throw lastError;
+    }
+
+    function validateActivityData(data) {
+        if (data?.schema_version !== 1) throw new Error('Unsupported GitHub activity schema.');
+        if (data.username !== githubUsername) throw new Error('Unexpected GitHub activity user.');
+        if (!Array.isArray(data.contributions?.months) || data.contributions.months.length === 0) {
+            throw new Error('GitHub activity months are missing.');
+        }
+    }
+
+    function renderActivity(data) {
+        renderCalendar(data.contributions.months.slice(-12));
+        updateRange(data.contributions.months.slice(-12));
+
+        const bestDay = data.contributions.best_day;
+        const bestDayLabel = bestDay
+            ? `best day: ${formatNumber(bestDay.count)} on ${formatShortDate(bestDay.date)}`
+            : 'no contribution days yet';
+        const latestLabel = data.contributions.last_contribution_date
+            ? `last activity ${formatRelativeDate(data.contributions.last_contribution_date)}`
+            : 'no recent activity';
+
+        updateGithubCard({
+            stars: formatNumber(data.stats?.stars || 0),
+            main: formatNumber(data.contributions.total || 0),
+            label: 'contributions',
+            focus: bestDayLabel,
+            latest: latestLabel
+        });
+    }
+
+    function renderCalendar(months) {
         const calendarContainer = document.getElementById('github-calendar');
         if (!calendarContainer) return;
 
-        // Statik bir calendar göster
-        calendarContainer.innerHTML = createStaticCalendar();
-    }
+        const calendar = document.createElement('div');
+        calendar.className = 'static-calendar';
 
-    // Statik bir calendar HTML'i oluştur
-    function createStaticCalendar() {
-        // Son 12 ay için 2 satır, her satırda 6 ay
-        let html = '<div class="static-calendar">';
-        const currentDate = new Date();
+        for (let index = 0; index < months.length; index += 6) {
+            const row = document.createElement('div');
+            row.className = 'calendar-row';
 
-        // 2 satır oluştur
-        for (let row = 0; row < 2; row++) {
-            html += '<div class="calendar-row">';
+            months.slice(index, index + 6).forEach(month => {
+                const level = Math.max(0, Math.min(4, Number(month.level) || 0));
+                const contributionCount = Number(month.count) || 0;
+                const tooltip = `${month.name} ${month.year}: ${formatNumber(contributionCount)} ${pluralize('contribution', contributionCount)}`;
+                const monthElement = document.createElement('div');
+                const initial = document.createElement('span');
 
-            // Her satırda 6 ay
-            for (let i = 0; i < 6; i++) {
-                // Ay hesaplama: soldan sağa eski aydan yeni aya doğru
-                const monthOffset = 11 - (i + (row * 6));
-                const monthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - monthOffset, 1);
-                const monthIndex = monthDate.getMonth();
-                const year = monthDate.getFullYear().toString().substr(-2); // Son iki basamak (23, 24 vb.)
+                monthElement.className = `calendar-month level-${level}`;
+                monthElement.dataset.month = month.name;
+                monthElement.dataset.tooltip = tooltip;
+                monthElement.setAttribute('role', 'img');
+                monthElement.setAttribute('aria-label', tooltip);
 
-                // Deterministik seviye: her refresh'te zıplamasın.
-                const level = getActivityLevel(monthDate, monthOffset);
+                initial.className = 'month-initial';
+                initial.textContent = String(month.name || '').charAt(0);
+                monthElement.appendChild(initial);
+                row.appendChild(monthElement);
+            });
 
-                // Tooltip metni
-                const tooltipText = `${monthNames[monthIndex]}'${year} activity`;
-
-                // Ay kutucuğu - Sadece ay harfi (J, F, M, ...)
-                html += `<div class="calendar-month level-${level}" data-month="${monthNames[monthIndex]}" data-tooltip="${tooltipText}">
-                    <span class="month-initial">${monthLetters[monthIndex]}</span>
-                </div>`;
-            }
-
-            html += '</div>';
+            calendar.appendChild(row);
         }
 
-        html += '</div>';
-        return html;
+        calendarContainer.replaceChildren(calendar);
     }
 
-    function getActivityLevel(monthDate, monthOffset) {
-        const seed = githubUsername.length + monthDate.getMonth() * 7 + monthDate.getFullYear() + monthOffset * 3;
-        return seed % 5;
+    function updateRange(months) {
+        const rangeElement = document.getElementById('github-activity-range');
+        if (!rangeElement || months.length === 0) return;
+
+        const first = months[0];
+        const last = months.at(-1);
+        rangeElement.textContent = `${first.name} ${first.year} – ${last.name} ${last.year}`;
     }
 
-    function setFallbackStats() {
+    function showLoadingState() {
+        setCalendarMessage('Loading real activity…');
+        updateRangeText('GitHub GraphQL');
         updateGithubCard({
-            stars: 12,
-            main: 'Projects',
-            label: 'experiments & tools',
-            focus: 'JavaScript + Python',
+            stars: '—',
+            main: '—',
+            label: 'contributions',
+            focus: 'loading activity',
+            latest: 'from GitHub'
+        });
+    }
+
+    function showUnavailableState() {
+        setCalendarMessage('Activity unavailable', true);
+        updateRangeText('try again later');
+        updateGithubCard({
+            stars: '—',
+            main: '—',
+            label: 'activity unavailable',
+            focus: 'no cached data',
             latest: 'open profile'
         });
     }
 
-    async function fetchGitHubStats() {
-        try {
-            const response = await fetch(`https://api.github.com/users/${githubUsername}/repos?per_page=100&sort=pushed`, {
-                headers: { Accept: 'application/vnd.github+json' }
-            });
+    function setCalendarMessage(text, isError = false) {
+        const calendarContainer = document.getElementById('github-calendar');
+        if (!calendarContainer) return;
 
-            if (!response.ok) {
-                throw new Error(`GitHub API error: ${response.status}`);
-            }
+        const message = document.createElement('div');
+        message.className = `github-calendar-message${isError ? ' is-error' : ''}`;
+        message.textContent = text;
+        calendarContainer.replaceChildren(message);
+    }
 
-            const repos = await response.json();
-            const visibleRepos = repos.filter(repo => !repo.archived);
-            const sourceRepos = visibleRepos.filter(repo => !repo.fork);
-            const displayRepos = sourceRepos.length ? sourceRepos : visibleRepos;
-            const latestRepo = displayRepos[0];
-            const totalStars = visibleRepos.reduce((total, repo) => total + repo.stargazers_count, 0);
-            const topLanguage = getTopLanguage(displayRepos);
-
-            updateGithubCard({
-                stars: totalStars,
-                main: String(displayRepos.length || visibleRepos.length || 'Projects'),
-                label: displayRepos.length ? 'public repos' : 'experiments & tools',
-                focus: topLanguage ? `${topLanguage} focus` : 'JavaScript + Python',
-                latest: latestRepo ? `updated ${formatRelativeDate(latestRepo.pushed_at)}` : 'open profile'
-            });
-        } catch (error) {
-            console.warn('GitHub stats could not be loaded:', error.message);
-        }
+    function updateRangeText(text) {
+        const rangeElement = document.getElementById('github-activity-range');
+        if (rangeElement) rangeElement.textContent = text;
     }
 
     function updateGithubCard({ stars, main, label, focus, latest }) {
         const starsElement = document.getElementById('stars-count');
-        if (starsElement) {
-            starsElement.textContent = String(stars);
-        }
+        if (starsElement) starsElement.textContent = String(stars);
 
         const mainElement = document.getElementById('github-total-contributions');
-        if (mainElement) mainElement.textContent = main;
+        if (mainElement) mainElement.textContent = String(main);
 
         const labelElement = document.getElementById('github-stat-label');
         if (labelElement) labelElement.textContent = label;
@@ -123,35 +182,35 @@ const githubModule = (function() {
         if (latestElement) latestElement.textContent = latest;
     }
 
-    function getTopLanguage(repos) {
-        const languageCounts = repos.reduce((counts, repo) => {
-            if (repo.language) {
-                counts[repo.language] = (counts[repo.language] || 0) + 1;
-            }
-            return counts;
-        }, {});
-
-        return Object.entries(languageCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || '';
-    }
-
     function formatRelativeDate(dateValue) {
-        const date = new Date(dateValue);
+        const date = new Date(`${dateValue}T12:00:00Z`);
         if (Number.isNaN(date.getTime())) return 'recently';
 
         const now = new Date();
-        const diffMs = now - date;
-        const diffDays = Math.max(0, Math.floor(diffMs / 86400000));
+        const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+        const activityDate = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+        const diffDays = Math.max(0, Math.floor((today - activityDate) / 86400000));
 
         if (diffDays === 0) return 'today';
         if (diffDays === 1) return 'yesterday';
         if (diffDays < 7) return `${diffDays}d ago`;
         if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
-
-        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        return formatShortDate(dateValue);
     }
 
-    // Public API
-    return {
-        init: init
-    };
+    function formatShortDate(dateValue) {
+        const date = new Date(`${dateValue}T12:00:00Z`);
+        if (Number.isNaN(date.getTime())) return 'recently';
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+    }
+
+    function formatNumber(value) {
+        return Number(value || 0).toLocaleString('en-US');
+    }
+
+    function pluralize(word, count) {
+        return count === 1 ? word : `${word}s`;
+    }
+
+    return { init };
 })();

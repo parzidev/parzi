@@ -1459,7 +1459,7 @@ html[data-night-mode="on"] .server-bar {
     border: 1px solid var(--panel-border);
 }
 
-/* Statik calendar için stiller */
+/* GitHub GraphQL verisinden üretilen aylık contribution özeti */
 .static-calendar {
     display: flex;
     flex-direction: column;
@@ -1479,13 +1479,26 @@ html[data-night-mode="on"] .server-bar {
     height: 24px;
     border-radius: 6px;
     transition: transform 0.2s ease, filter 0.2s ease;
-    cursor: pointer;
+    cursor: default;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.github-calendar-message {
+    min-height: 54px;
+    display: grid;
+    place-items: center;
+    color: var(--muted-text);
+    font-size: 0.72rem;
+    text-align: center;
+}
+
+.github-calendar-message.is-error {
+    color: #ff8b8b;
 }
 
 .month-initial {

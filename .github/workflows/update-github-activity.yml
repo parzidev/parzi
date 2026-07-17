@@ -1,0 +1,48 @@
+name: Update GitHub activity
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */6 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-github-activity
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Test activity transformer
+        run: node --test tests/github-activity.test.mjs
+
+      - name: Fetch real GitHub activity
+        env:
+          GITHUB_TOKEN: ${{ secrets.PROFILE_GITHUB_TOKEN || github.token }}
+          GITHUB_USERNAME: parzidev
+        run: node scripts/update-github-activity.mjs
+
+      - name: Commit changed activity data
+        run: |
+          if git diff --quiet -- data/github-activity.json; then
+            echo "GitHub activity data is unchanged."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/github-activity.json
+          git commit -m "chore: update GitHub activity data"
+          git push
