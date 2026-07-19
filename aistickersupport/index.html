@@ -17,24 +17,24 @@
   <style>
     :root {
       color-scheme: light;
-      --bg: #fffafd;
-      --bg-soft: #f6f4ff;
+      --bg: #fff7fb;
+      --bg-soft: #f5f0ff;
       --surface: rgba(255, 255, 255, 0.78);
       --surface-strong: #ffffff;
-      --text: #171321;
-      --muted: #665f77;
-      --border: rgba(67, 46, 99, 0.15);
-      --accent: #7c3aed;
-      --accent-pink: #ec4899;
-      --accent-blue: #38bdf8;
-      --accent-warm: #f9a8d4;
-      --gradient: linear-gradient(135deg, #7c3aed 0%, #ec4899 48%, #38bdf8 100%);
-      --gradient-soft: linear-gradient(135deg, rgba(124, 58, 237, 0.16), rgba(236, 72, 153, 0.14), rgba(56, 189, 248, 0.14));
-      --radius-lg: 30px;
-      --radius-md: 22px;
+      --text: #30243d;
+      --muted: #756681;
+      --border: rgba(142, 99, 166, 0.2);
+      --accent: #9b5de5;
+      --accent-pink: #ff6fb5;
+      --accent-blue: #72d8e8;
+      --accent-warm: #ffd5e7;
+      --gradient: linear-gradient(135deg, #9b5de5 0%, #ff79b0 52%, #72d8e8 100%);
+      --gradient-soft: linear-gradient(135deg, rgba(155, 93, 229, 0.17), rgba(255, 121, 176, 0.17), rgba(114, 216, 232, 0.16));
+      --radius-lg: 38px;
+      --radius-md: 26px;
       --radius-sm: 14px;
-      --shadow: 0 24px 70px rgba(49, 27, 95, 0.16);
-      --shadow-soft: 0 14px 40px rgba(49, 27, 95, 0.1);
+      --shadow: 0 24px 70px rgba(104, 61, 132, 0.16);
+      --shadow-soft: 0 14px 40px rgba(104, 61, 132, 0.1);
       --max-width: 1200px;
       --read-width: 860px;
       --header-height: 76px;
@@ -517,6 +517,65 @@
       .button { width: 100%; }
     }
 
+    /* Cute sticker theme */
+    body {
+      position: relative;
+      isolation: isolate;
+      font-family: ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 8% 12%, rgba(255, 166, 205, 0.3), transparent 24rem),
+        radial-gradient(circle at 91% 9%, rgba(141, 226, 238, 0.28), transparent 24rem),
+        radial-gradient(circle at 65% 64%, rgba(190, 155, 245, 0.18), transparent 30rem),
+        linear-gradient(180deg, var(--bg), var(--bg-soft));
+    }
+
+    body::before {
+      z-index: 0;
+      background-image: radial-gradient(circle, rgba(155, 93, 229, 0.13) 1.5px, transparent 1.7px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.72), transparent 78%);
+    }
+
+    main,
+    .footer { position: relative; z-index: 1; }
+
+    .cute-sprinkles { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; color: var(--accent-pink); font-weight: 900; }
+    .cute-sprinkles span { position: absolute; opacity: 0.26; animation: sticker-float 6s ease-in-out infinite; }
+    .cute-sprinkles span:nth-child(1) { top: 15%; left: 3%; font-size: 2rem; transform: rotate(-12deg); }
+    .cute-sprinkles span:nth-child(2) { top: 32%; right: 3%; font-size: 2.6rem; color: var(--accent); animation-delay: -1.5s; }
+    .cute-sprinkles span:nth-child(3) { top: 68%; left: 5%; font-size: 2.2rem; color: var(--accent-blue); animation-delay: -3s; }
+    .cute-sprinkles span:nth-child(4) { top: 82%; right: 6%; font-size: 1.8rem; animation-delay: -4.5s; }
+
+    .site-header { padding-top: 10px; border-bottom: 0; background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; }
+    .nav-shell { min-height: 62px; border: 2px solid rgba(255, 255, 255, 0.72); border-radius: 24px; padding: 0 12px 0 10px; background: color-mix(in srgb, var(--surface-strong), transparent 10%); box-shadow: 0 10px 0 rgba(155, 93, 229, 0.08), var(--shadow-soft); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); }
+    .brand-logo { border: 3px solid white; border-radius: 18px; box-shadow: 0 5px 0 rgba(155, 93, 229, 0.16), 0 12px 28px rgba(155, 93, 229, 0.2); transform: rotate(-4deg); transition: transform 180ms ease; }
+    .brand:hover .brand-logo { transform: rotate(2deg) scale(1.04); }
+    .brand-text::after { content: " ♡"; color: var(--accent-pink); }
+    .nav-link { font-weight: 850; }
+    .nav-list li:last-child .nav-link { background: var(--gradient); color: white; box-shadow: 0 4px 0 rgba(113, 67, 145, 0.22); }
+
+    h1, h2, h3, .brand-text { font-family: ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", sans-serif; }
+    h1, h2 { letter-spacing: -0.035em; }
+    .eyebrow { border: 2px solid rgba(255, 111, 181, 0.22); background: color-mix(in srgb, var(--surface-strong), #fff0f7 18%); color: var(--accent-pink); box-shadow: 0 5px 0 rgba(255, 111, 181, 0.1); transform: rotate(-1deg); }
+    .eyebrow::before { content: "✦"; width: auto; height: auto; background: none; color: var(--accent-pink); }
+
+    .button { min-height: 54px; border-width: 2px; box-shadow: 0 6px 0 rgba(113, 67, 145, 0.18), var(--shadow-soft); }
+    .button:hover { transform: translateY(-3px) rotate(-0.5deg); }
+    .page-icon { border: 4px solid rgba(255, 255, 255, 0.88); border-radius: 42px; box-shadow: 0 9px 0 rgba(255, 111, 181, 0.12), var(--shadow); transform: rotate(3deg); }
+
+    .card { border: 2px solid rgba(155, 93, 229, 0.13); box-shadow: 0 7px 0 rgba(155, 93, 229, 0.08), var(--shadow-soft); transition: transform 180ms ease, box-shadow 180ms ease; }
+    .card:nth-child(3n + 1) { background: color-mix(in srgb, var(--surface-strong), #fff0f7 16%); }
+    .card:nth-child(3n + 2) { background: color-mix(in srgb, var(--surface-strong), #f2edff 18%); }
+    .card:nth-child(3n) { background: color-mix(in srgb, var(--surface-strong), #edfbfd 18%); }
+    .card:hover { transform: translateY(-5px) rotate(-0.35deg); box-shadow: 0 11px 0 rgba(155, 93, 229, 0.1), var(--shadow); }
+    .icon { border: 2px solid rgba(155, 93, 229, 0.12); border-radius: 17px 17px 13px 17px; box-shadow: 0 4px 0 rgba(155, 93, 229, 0.1); transform: rotate(-3deg); }
+    .panel { border: 3px solid rgba(255, 255, 255, 0.72); box-shadow: 0 10px 0 rgba(155, 93, 229, 0.08), var(--shadow); }
+    .legal-list li::marker { color: var(--accent-pink); }
+    .footer { border-top: 2px dashed rgba(155, 93, 229, 0.2); }
+    .footer-links a:hover { color: var(--accent-pink); }
+
+    @keyframes sticker-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
+
     @media (prefers-reduced-motion: reduce) {
       *,
       *::before,
@@ -530,6 +589,7 @@
   </style>
 </head>
 <body>
+  <div class="cute-sprinkles" aria-hidden="true"><span>✦</span><span>♡</span><span>✿</span><span>★</span></div>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header" data-header>
     <div class="nav-shell">
