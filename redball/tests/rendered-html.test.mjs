@@ -18,4 +18,6 @@ test("oyun 10 bölüm, kayıt ve dokunmatik kontrol içerir", async () => {
   assert.match(source, /localStorage\.setItem\("kizil-zipla-progress"/);
   assert.match(source, /onPointerDown/);
   assert.match(source, /requestAnimationFrame/);
+  assert.match(source, /const JUMP_SPEED = 840/);
+  assert.ok((840 ** 2) / (2 * 1900) > 180, "zıplama yüksekliği ilk bölüm basamaklarına yetmeli");
 });

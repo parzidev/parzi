@@ -25,6 +25,7 @@ const VIEW_W = 1280;
 const VIEW_H = 720;
 const BALL_R = 27;
 const GRAVITY = 1900;
+const JUMP_SPEED = 840;
 
 const themes: Theme[] = [
   { sky: ["#76d8ff", "#e7fbff"], hill: "#6ac77a", far: "#a5e2a8", ground: "#8a542d", grass: "#49ac55", accent: "#ffd646" },
@@ -224,7 +225,7 @@ export default function Home() {
         const c = controls.current;
         const dir = (c.right ? 1 : 0) - (c.left ? 1 : 0);
         s.vx += dir * 1450 * dt; s.vx *= Math.pow(s.grounded && !dir ? .001 : .08, dt); s.vx = Math.max(-430, Math.min(430, s.vx));
-        if (c.jumpPressed && s.grounded) { s.vy = -720; s.grounded = false; beep(360, .07); } c.jumpPressed = false;
+        if (c.jumpPressed && s.grounded) { s.vy = -JUMP_SPEED; s.grounded = false; beep(360, .07); } c.jumpPressed = false;
         s.vy = Math.min(1050, s.vy + GRAVITY * dt);
         const movingRects = (lvl.movers || []).map(m => ({ ...m, x: m.x + (m.axis === "x" ? Math.sin(s.time * m.speed + (m.phase || 0)) * m.range : 0), y: m.y + (m.axis === "y" ? Math.sin(s.time * m.speed + (m.phase || 0)) * m.range : 0) }));
         const solids = [...lvl.platforms, ...movingRects];
