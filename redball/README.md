@@ -1,7 +1,8 @@
 # Kızıl Zıpla!
 
-`https://parzi.dev/redball/` adresinde çalışan, 10 özgün bölümlü 2D platform
-oyunu. Kırmızı topu yuvarla, yıldızları topla, dikenlerden ve düşmanlardan kaç.
+`https://parzi.dev/redball/` adresinde çalışan, 5 dünya ve 50 özgün bölümlü 2D
+platform oyunu. Kırmızı topu yuvarla, zıplatan bitkileri kullan, yıldızları
+topla, dikenlerden ve düşmanlardan kaç.
 
 ## Kontroller
 
@@ -11,6 +12,7 @@ oyunu. Kırmızı topu yuvarla, yıldızları topla, dikenlerden ve düşmanlard
 - `Esc`: duraklat
 
 Dokunmatik ekranlarda yön ve zıplama düğmeleri otomatik olarak görünür.
+iPad’de Safari’den Ana Ekran’a eklenerek tam ekran ve yatay yönde oynanabilir.
 
 ## Geliştirme
 

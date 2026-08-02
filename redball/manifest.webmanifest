@@ -1,0 +1,11 @@
+{
+  "name": "Kızıl Zıpla! — 50 Bölümlük Macera",
+  "short_name": "Kızıl Zıpla!",
+  "description": "Kırmızı topu yuvarla, zıplatan bitkileri kullan ve 50 bölümü tamamla.",
+  "start_url": "/redball/",
+  "scope": "/redball/",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#10253b",
+  "theme_color": "#10253b"
+}

@@ -7,17 +7,23 @@ test("GitHub Pages paketi doğru domain ve varlıklarla hazırdır", async () =>
   assert.match(html, /<title>Kızıl Zıpla!/i);
   assert.match(html, /https:\/\/parzi\.dev\/redball\//);
   assert.match(html, /\/redball\/assets\/index-[^"']+\.js/);
-  assert.match(html, /https:\/\/parzi\.dev\/redball\/og\.png/);
-  await access(new URL("../og.png", import.meta.url));
+  assert.match(html, /https:\/\/parzi\.dev\/redball\/og-50\.png/);
+  await access(new URL("../og-50.png", import.meta.url));
 });
 
-test("oyun 10 bölüm, kayıt ve dokunmatik kontrol içerir", async () => {
+test("oyun 50 bölüm, kayıt, bitki ve iPad kontrolleri içerir", async () => {
   const source = await readFile(new URL("../src/Game.tsx", import.meta.url), "utf8");
-  const names = ["Yeşil Başlangıç", "Kütük Köprüsü", "Orman Basamakları", "Hareketli Hat", "Mor Gece", "Sıcak Vadi", "Bulut Yolu", "Hız Tüneli", "Usta Parkuru", "Altın Taç"];
-  for (const name of names) assert.match(source, new RegExp(name));
+  const levelSource = await readFile(new URL("../src/levels.ts", import.meta.url), "utf8");
+  assert.match(levelSource, /LEVEL_COUNT = 50/);
+  assert.match(levelSource, /SpringPlant/);
+  assert.match(levelSource, /analyzeSolvability/);
   assert.match(source, /localStorage\.setItem\("kizil-zipla-progress"/);
   assert.match(source, /onPointerDown/);
+  assert.match(source, /onPointerCancel/);
   assert.match(source, /requestAnimationFrame/);
-  assert.match(source, /const JUMP_SPEED = 840/);
+  assert.match(source, /spring\.power/);
   assert.ok((840 ** 2) / (2 * 1900) > 180, "zıplama yüksekliği ilk bölüm basamaklarına yetmeli");
+  const manifest = JSON.parse(await readFile(new URL("../manifest.webmanifest", import.meta.url), "utf8"));
+  assert.equal(manifest.display, "fullscreen");
+  assert.equal(manifest.orientation, "landscape");
 });
