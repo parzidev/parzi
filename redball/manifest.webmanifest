@@ -1,7 +1,7 @@
 {
-  "name": "Kızıl Zıpla! — 50 Bölümlük Macera",
-  "short_name": "Kızıl Zıpla!",
-  "description": "Kırmızı topu yuvarla, zıplatan bitkileri kullan ve 50 bölümü tamamla.",
+  "name": "REDBALL — Ada İçin 50 Bölümlük Macera",
+  "short_name": "REDBALL",
+  "description": "Ada için hazırlanan REDBALL oyununda 50 bölümü tamamla.",
   "start_url": "/redball/",
   "scope": "/redball/",
   "display": "fullscreen",

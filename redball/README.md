@@ -1,8 +1,8 @@
-# Kızıl Zıpla!
+# REDBALL
 
-`https://parzi.dev/redball/` adresinde çalışan, 5 dünya ve 50 özgün bölümlü 2D
-platform oyunu. Kırmızı topu yuvarla, zıplatan bitkileri kullan, yıldızları
-topla, dikenlerden ve düşmanlardan kaç.
+`https://parzi.dev/redball/` adresinde çalışan, Ada için hazırlanmış 5 dünya ve
+50 özgün bölümlü 2D platform oyunu. Kırmızı topu yuvarla, zıplatan bitkileri
+kullan, yıldızları topla, dikenlerden ve düşmanlardan kaç.
 
 ## Kontroller
 

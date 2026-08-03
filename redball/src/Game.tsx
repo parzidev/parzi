@@ -10,10 +10,13 @@ type GameState = {
   camera: number; stars: boolean[]; enemies: Enemy[]; lives: number; time: number;
 };
 
+const PROGRESS_KEY = "redball-progress";
+const LEGACY_PROGRESS_KEY = "kizil-zipla-progress";
+
 const initialProgress = () => {
   if (typeof window === "undefined") return { unlocked: 1, scores: Array(LEVEL_COUNT).fill(0) };
   try {
-    const raw = localStorage.getItem("kizil-zipla-progress");
+    const raw = localStorage.getItem(PROGRESS_KEY) || localStorage.getItem(LEGACY_PROGRESS_KEY);
     if (raw) {
       const saved = JSON.parse(raw) as { unlocked?: number; scores?: number[] };
       return {
@@ -87,7 +90,7 @@ export default function Home() {
     setProgress(prev => {
       const scores = [...prev.scores]; scores[levelIndex] = Math.max(scores[levelIndex] || 0, stars);
       const next = { unlocked: Math.max(prev.unlocked, Math.min(LEVEL_COUNT, levelIndex + 2)), scores };
-      localStorage.setItem("kizil-zipla-progress", JSON.stringify(next)); return next;
+      localStorage.setItem(PROGRESS_KEY, JSON.stringify(next)); return next;
     });
   }, [levelIndex]);
 
@@ -205,9 +208,9 @@ export default function Home() {
         <section className="menu-screen">
           <div className="menu-cloud cloud-one" /><div className="menu-cloud cloud-two" />
           <div className="hero-copy">
-            <p className="eyebrow">50 BÖLÜMLÜ MACERA</p>
-            <h1>KIZIL<br /><span>ZIPLA!</span></h1>
-            <p className="intro">Minik kahramanımızı yuvarla, dikenlerden kaç ve altın tacın yolunu aç.</p>
+            <p className="eyebrow">ADA İÇİN 50 BÖLÜMLÜ MACERA</p>
+            <h1>RED<br /><span>BALL</span></h1>
+            <p className="intro">Ada, minik kahramanımızı yuvarla, dikenlerden kaç ve altın tacın yolunu aç.</p>
             <div className="menu-actions">
               <button className="primary-button" onClick={() => startLevel(Math.min(progress.unlocked - 1, LEVEL_COUNT - 1))}><span>▶</span> MACERAYA BAŞLA</button>
               <button className="secondary-button" onClick={() => setScreen("levels")}>BÖLÜMLER</button>
@@ -247,7 +250,27 @@ export default function Home() {
           <div className="rotate-hint">↻ iPad’i yatay çevirirsen oyun alanı genişler.</div>
           <div className="touch-controls" aria-label="Dokunmatik kontroller"><div><button aria-label="Sola git" onPointerDown={() => touch("left", true)} onPointerUp={() => touch("left", false)} onPointerCancel={() => touch("left", false)} onPointerLeave={() => touch("left", false)}>←</button><button aria-label="Sağa git" onPointerDown={() => touch("right", true)} onPointerUp={() => touch("right", false)} onPointerCancel={() => touch("right", false)} onPointerLeave={() => touch("right", false)}>→</button></div><button aria-label="Zıpla" className="jump-button" onPointerDown={() => touch("jump", true)} onPointerUp={() => touch("jump", false)} onPointerCancel={() => touch("jump", false)} onPointerLeave={() => touch("jump", false)}>↑</button></div>
           {paused && !message && <div className="game-modal"><div className="modal-card"><span className="modal-icon">Ⅱ</span><h2>Mola verdik</h2><p>Top da biraz nefeslensin.</p><button className="primary-button small" onClick={() => setPaused(false)}>DEVAM ET</button><button className="text-button" onClick={() => resetLevel()}>Bölümü yeniden başlat</button></div></div>}
-          {message && <div className="game-modal"><div className="modal-card"><span className="modal-icon">{message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "♛" : "★") : "×"}</span><p className="eyebrow">{message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "MACERA TAMAMLANDI" : "BÖLÜM TAMAMLANDI") : "HAKLAR BİTTİ"}</p><h2>{message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "Taç senin!" : "Harika yuvarlandın!") : "Bir kez daha?"}</h2>{message === "win" && <div className="result-stars">{[0, 1, 2].map(n => <span key={n} className={n < starCount ? "earned" : ""}>★</span>)}</div>}<button className="primary-button small" onClick={() => { if (message === "win" && levelIndex < LEVEL_COUNT - 1) startLevel(levelIndex + 1); else resetLevel(); }}>{message === "win" && levelIndex < LEVEL_COUNT - 1 ? "SONRAKİ BÖLÜM" : "TEKRAR DENE"}</button><button className="text-button" onClick={() => { setScreen("levels"); setMessage(null); }}>Bölüm haritası</button></div></div>}
+          {message && (
+            <div className="game-modal">
+              <div className="modal-card">
+                <span className="modal-icon">{message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "♛" : "★") : "×"}</span>
+                <p className="eyebrow">
+                  {message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "ADA, MACERAYI TAMAMLADIN!" : "KAZANDIN ADA!") : "KAYBETTİN ADA"}
+                </p>
+                <h2>
+                  {message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "REDBALL’ın kraliçesi sensin! 👑" : "Harika oynadın sevgilim! ❤️") : "Ama benim kalbimde hep kazanıyorsun ❤️"}
+                </h2>
+                <p>
+                  {message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "Bu oyun senin için yapıldı. İyi ki varsın Ada." : "Bir bölüm daha seninle güzelleşti.") : "Hadi bir kez daha dene sevgilim."}
+                </p>
+                {message === "win" && <div className="result-stars">{[0, 1, 2].map(n => <span key={n} className={n < starCount ? "earned" : ""}>★</span>)}</div>}
+                <button className="primary-button small" onClick={() => { if (message === "win" && levelIndex < LEVEL_COUNT - 1) startLevel(levelIndex + 1); else resetLevel(); }}>
+                  {message === "win" && levelIndex < LEVEL_COUNT - 1 ? "SONRAKİ BÖLÜM, ADA" : "TEKRAR DENE ADA"}
+                </button>
+                <button className="text-button" onClick={() => { setScreen("levels"); setMessage(null); }}>Bölüm haritası</button>
+              </div>
+            </div>
+          )}
         </section>
       )}
     </main>
