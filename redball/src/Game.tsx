@@ -255,14 +255,14 @@ export default function Home() {
               <div className="modal-card">
                 <span className="modal-icon">{message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "♛" : "★") : "×"}</span>
                 <p className="eyebrow">
-                  {message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "ADA, MACERAYI TAMAMLADIN!" : "KAZANDIN ADA!") : "KAYBETTİN ADA"}
+                  {message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "MACERA TAMAMLAYAN KEDİM" : "KAZANDIN ADA!") : "KAYBETTİN ADA"}
                 </p>
                 <h2>
-                  {message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "REDBALL’ın kraliçesi sensin! 👑" : "Harika oynadın sevgilim! ❤️") : "Ama benim kalbimde hep kazanıyorsun ❤️"}
+                  {message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "ELLLERİNE SAĞLIK KEDİM BU KADAR BÖLÜM VARDI" : "Harika oynadın bebeğimmmmmm") : "SEN ÖLDÜN MÜÜÜ KIYAMAMMM"}
                 </h2>
-                <p>
-                  {message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "Bu oyun senin için yapıldı. İyi ki varsın Ada." : "Bir bölüm daha seninle güzelleşti.") : "Hadi bir kez daha dene sevgilim."}
-                </p>
+                {!(message === "win" && levelIndex === LEVEL_COUNT - 1) && (
+                  <p>{message === "win" ? "FENAAA İYİSİNNN" : "Hadi bir kez daha dene sevgilim."}</p>
+                )}
                 {message === "win" && <div className="result-stars">{[0, 1, 2].map(n => <span key={n} className={n < starCount ? "earned" : ""}>★</span>)}</div>}
                 <button className="primary-button small" onClick={() => { if (message === "win" && levelIndex < LEVEL_COUNT - 1) startLevel(levelIndex + 1); else resetLevel(); }}>
                   {message === "win" && levelIndex < LEVEL_COUNT - 1 ? "SONRAKİ BÖLÜM, ADA" : "TEKRAR DENE ADA"}

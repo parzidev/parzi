@@ -25,7 +25,12 @@ test("oyun 50 bölüm, kayıt, bitki ve iPad kontrolleri içerir", async () => {
   assert.match(source, /spring\.power/);
   assert.match(source, /KAZANDIN ADA!/);
   assert.match(source, /KAYBETTİN ADA/);
-  assert.match(source, /kalbimde hep kazanıyorsun/);
+  assert.match(source, /Harika oynadın bebeğimmmmmm/);
+  assert.match(source, /FENAAA İYİSİNNN/);
+  assert.match(source, /MACERA TAMAMLAYAN KEDİM/);
+  assert.match(source, /ELLLERİNE SAĞLIK KEDİM BU KADAR BÖLÜM VARDI/);
+  assert.match(source, /SEN ÖLDÜN MÜÜÜ KIYAMAMMM/);
+  assert.doesNotMatch(source, /Bu oyun senin için yapıldı/);
   assert.ok((840 ** 2) / (2 * 1900) > 180, "zıplama yüksekliği ilk bölüm basamaklarına yetmeli");
   const manifest = JSON.parse(await readFile(new URL("../manifest.webmanifest", import.meta.url), "utf8"));
   assert.equal(manifest.display, "fullscreen");
