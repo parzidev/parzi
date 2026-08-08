@@ -14,7 +14,7 @@ test("GitHub Pages paketi doğru domain ve varlıklarla hazırdır", async () =>
 test("oyun 50 bölüm, kayıt, bitki ve iPad kontrolleri içerir", async () => {
   const source = await readFile(new URL("../src/Game.tsx", import.meta.url), "utf8");
   const levelSource = await readFile(new URL("../src/levels.ts", import.meta.url), "utf8");
-  assert.match(levelSource, /LEVEL_COUNT = 50/);
+  assert.match(levelSource, /LEVEL_COUNT = 100/);
   assert.match(levelSource, /SpringPlant/);
   assert.match(levelSource, /analyzeSolvability/);
   assert.match(source, /const PROGRESS_KEY = "redball-progress"/);
