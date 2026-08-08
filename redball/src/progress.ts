@@ -1,8 +1,9 @@
-export type StoredProgress = { unlocked?: number; scores?: unknown[] };
-export type Progress = { unlocked: number; scores: number[] };
+export type StoredProgress = { version?: number; unlocked?: number; scores?: unknown[] };
+export type Progress = { version: number; unlocked: number; scores: number[] };
 
 export const PROGRESS_KEY = "redball-progress";
 export const LEGACY_PROGRESS_KEY = "kizil-zipla-progress";
+export const PROGRESS_VERSION = 1;
 
 type StorageLike = {
   getItem(key: string): string | null;
@@ -21,9 +22,15 @@ export function normalizeProgress(saved: StoredProgress | undefined, levelCount:
   const storedUnlocked = typeof saved?.unlocked === "number" && Number.isFinite(saved.unlocked)
     ? Math.floor(saved.unlocked)
     : unlockedFromScores;
+  const importedUnlocked = saved?.version === PROGRESS_VERSION
+    ? storedUnlocked
+    : saved
+      ? Math.min(storedUnlocked, Math.min(50, levelCount))
+      : 1;
 
   return {
-    unlocked: Math.max(1, Math.min(levelCount, Math.max(storedUnlocked, unlockedFromScores))),
+    version: PROGRESS_VERSION,
+    unlocked: Math.max(1, Math.min(levelCount, Math.max(importedUnlocked, unlockedFromScores))),
     scores,
   };
 }

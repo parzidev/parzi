@@ -36,9 +36,21 @@ test("eski oyun anahtarındaki kayıt yeni anahtara kayıpsız taşınır", () =
   assert.deepEqual(JSON.parse(storage.getItem(PROGRESS_KEY)!), progress);
 });
 
-test("100 bölümlük sürümde kaydı bulunan oyuncunun ilerlemesi de geriye gitmez", () => {
+test("kilitsiz 100 bölümlük sürümden gelen kayıtta oynanan bölüm korunur", () => {
   const storage = new MemoryStorage();
-  storage.setItem(PROGRESS_KEY, JSON.stringify({ unlocked: 76, scores: Array(75).fill(3) }));
+  storage.setItem(PROGRESS_KEY, JSON.stringify({ unlocked: 100, scores: Array(75).fill(3) }));
+  assert.equal(loadProgress(storage, 100).unlocked, 76);
+});
+
+test("kilitsiz sürümde yalnızca otomatik açılan 51–100 yeniden kilitlenir", () => {
+  const storage = new MemoryStorage();
+  storage.setItem(PROGRESS_KEY, JSON.stringify({ unlocked: 100, scores: Array(100).fill(0) }));
+  assert.equal(loadProgress(storage, 100).unlocked, 50);
+});
+
+test("yeni kilitli kayıt formatındaki ilerleme sonraki açılışlarda aynen kalır", () => {
+  const storage = new MemoryStorage();
+  storage.setItem(PROGRESS_KEY, JSON.stringify({ version: 1, unlocked: 76, scores: Array(100).fill(0) }));
   assert.equal(loadProgress(storage, 100).unlocked, 76);
 });
 

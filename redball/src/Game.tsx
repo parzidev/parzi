@@ -87,7 +87,7 @@ export default function Home() {
   const saveWin = useCallback((stars: number) => {
     setProgress(prev => {
       const scores = [...prev.scores]; scores[levelIndex] = Math.max(scores[levelIndex] || 0, stars);
-      const next = { unlocked: Math.max(prev.unlocked, Math.min(LEVEL_COUNT, levelIndex + 2)), scores };
+      const next = { ...prev, unlocked: Math.max(prev.unlocked, Math.min(LEVEL_COUNT, levelIndex + 2)), scores };
       localStorage.setItem(PROGRESS_KEY, JSON.stringify(next)); return next;
     });
   }, [levelIndex]);
