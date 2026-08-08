@@ -23,6 +23,8 @@ test("oyun 100 bölüm, yeni mekanikler, klavye ve iPad kontrolleri içerir", as
   assert.match(levelSource, /LavaPool/);
   assert.match(levelSource, /Spinner/);
   assert.match(levelSource, /analyzeSolvability/);
+  assert.match(levelSource, /redesignKeyRoute/);
+  assert.match(levelSource, /KeyChallenge/);
   assert.match(levelSource, /index < 50 \? makeLegacyLevel\(index\) : makeRedesignedLevel\(index\)/);
   assert.match(source, /loadProgress\(window\.localStorage, LEVEL_COUNT\)/);
   assert.match(source, /localStorage\.setItem\(PROGRESS_KEY/);
@@ -37,6 +39,10 @@ test("oyun 100 bölüm, yeni mekanikler, klavye ve iPad kontrolleri içerir", as
   assert.match(source, /lvl\.windZones/);
   assert.match(source, /lvl\.spinners/);
   assert.match(source, /lvl\.lava/);
+  assert.match(source, /lvl\.keyPlatform/);
+  assert.match(source, /s\.hasKey = false; setHasKey\(false\)/);
+  assert.match(source, /s\.gateCooldown/);
+  assert.match(source, /ÖNCE ANAHTARI BUL/);
   assert.match(source, /KAZANDIN ADA!/);
   assert.match(source, /KAYBETTİN ADA/);
   assert.match(source, /Harika oynadın bebeğimmmmmm/);

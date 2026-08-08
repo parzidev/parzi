@@ -9,7 +9,7 @@ type Enemy = EnemySpawn & { dir: number; dead: boolean };
 type GameState = {
   x: number; y: number; vx: number; vy: number; angle: number; grounded: boolean;
   camera: number; stars: boolean[]; enemies: Enemy[]; lives: number; time: number;
-  hasKey: boolean; crumbleTimers: number[]; portalCooldown: number; boostTimer: number; invulnerable: number;
+  hasKey: boolean; crumbleTimers: number[]; portalCooldown: number; gateCooldown: number; boostTimer: number; invulnerable: number;
 };
 
 const initialProgress = () => {
@@ -72,7 +72,7 @@ export default function Home() {
       x: lvl.start.x, y: lvl.start.y, vx: 0, vy: 0, angle: 0, grounded: false,
       camera: 0, stars: lvl.stars.map(() => false),
       enemies: lvl.enemies.map(e => ({ ...e, dir: Math.random() > .5 ? 1 : -1, dead: false })), lives: nextLives, time: 0,
-      hasKey: false, crumbleTimers: lvl.crumbles.map(() => -1), portalCooldown: 0, boostTimer: 0, invulnerable: 0,
+      hasKey: false, crumbleTimers: lvl.crumbles.map(() => -1), portalCooldown: 0, gateCooldown: 0, boostTimer: 0, invulnerable: 0,
     };
     setLives(nextLives); setStarCount(0); setHasKey(false); setMessage(null); setPaused(false);
   }, [levelIndex]);
@@ -80,7 +80,7 @@ export default function Home() {
   const startLevel = useCallback((index: number) => {
     setLevelIndex(index); setScreen("game"); setMessage(null); setPaused(false);
     const lvl = levels[index];
-    stateRef.current = { x: lvl.start.x, y: lvl.start.y, vx: 0, vy: 0, angle: 0, grounded: false, camera: 0, stars: lvl.stars.map(() => false), enemies: lvl.enemies.map(e => ({ ...e, dir: 1, dead: false })), lives: 3, time: 0, hasKey: false, crumbleTimers: lvl.crumbles.map(() => -1), portalCooldown: 0, boostTimer: 0, invulnerable: 0 };
+    stateRef.current = { x: lvl.start.x, y: lvl.start.y, vx: 0, vy: 0, angle: 0, grounded: false, camera: 0, stars: lvl.stars.map(() => false), enemies: lvl.enemies.map(e => ({ ...e, dir: 1, dead: false })), lives: 3, time: 0, hasKey: false, crumbleTimers: lvl.crumbles.map(() => -1), portalCooldown: 0, gateCooldown: 0, boostTimer: 0, invulnerable: 0 };
     setLives(3); setStarCount(0); setHasKey(false); beep(420, .07);
   }, [beep]);
 
@@ -98,7 +98,8 @@ export default function Home() {
     if (s.lives <= 0) { setMessage("lose"); return; }
     const lvl = levels[levelIndex];
     s.x = lvl.start.x; s.y = lvl.start.y; s.vx = 0; s.vy = 0; s.camera = 0;
-    s.crumbleTimers = lvl.crumbles.map(() => -1); s.portalCooldown = 0; s.boostTimer = 0; s.invulnerable = 1;
+    s.hasKey = false; setHasKey(false);
+    s.crumbleTimers = lvl.crumbles.map(() => -1); s.portalCooldown = 0; s.gateCooldown = 0; s.boostTimer = 0; s.invulnerable = 1;
   }, [beep, levelIndex, message]);
 
   const draw = useCallback((ctx: CanvasRenderingContext2D, s: GameState, lvl: Level, time: number) => {
@@ -151,6 +152,13 @@ export default function Home() {
       ctx.save(); ctx.translate(shake, 0); ctx.fillStyle = "#79634e"; ctx.fillRect(p.x, p.y, p.w, p.h); ctx.fillStyle = "#d9b674"; ctx.fillRect(p.x, p.y, p.w, 12);
       ctx.strokeStyle = "#473b34"; ctx.lineWidth = 3; for (let xx = p.x + 55; xx < p.x + p.w; xx += 90) { ctx.beginPath(); ctx.moveTo(xx, p.y + 4); ctx.lineTo(xx - 12, p.y + 28); ctx.lineTo(xx + 8, p.y + 48); ctx.stroke(); } ctx.restore();
     });
+    if (lvl.keyPlatform) {
+      const p = lvl.keyPlatform;
+      const glow = ctx.createLinearGradient(p.x, p.y, p.x + p.w, p.y); glow.addColorStop(0, "#e9a91e"); glow.addColorStop(.5, "#fff09a"); glow.addColorStop(1, "#e9a91e");
+      ctx.fillStyle = glow; ctx.fillRect(p.x, p.y, p.w, 10);
+      ctx.fillStyle = "rgba(255,210,44,.18)"; ctx.fillRect(p.x - 8, p.y - 5, p.w + 16, 34);
+      ctx.fillStyle = "#7b5110"; ctx.font = "900 11px Arial"; ctx.textAlign = "center"; ctx.fillText("ANAHTAR ODASI", p.x + p.w / 2, p.y + 20);
+    }
 
     // Speed Booster Pads
     lvl.boosters.forEach(b => {
@@ -217,6 +225,8 @@ export default function Home() {
       // Draw padlock 🔒 icon over gate
       ctx.fillStyle = "#d32f2f"; ctx.beginPath(); ctx.roundRect(gx - 14, gy + 20, 28, 22, 4); ctx.fill();
       ctx.strokeStyle = "#fff"; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(gx, gy + 20, 8, Math.PI, 0); ctx.stroke();
+      ctx.fillStyle = "rgba(119,10,25,.9)"; ctx.beginPath(); ctx.roundRect(gx - 76, gy - 70, 152, 27, 10); ctx.fill();
+      ctx.fillStyle = "#fff"; ctx.font = "900 12px Arial"; ctx.textAlign = "center"; ctx.fillText("ÖNCE ANAHTARI BUL", gx, gy - 52);
     }
 
     if (levelIndex === LEVEL_COUNT - 1) { ctx.fillStyle = "#ffd32a"; ctx.beginPath(); ctx.moveTo(gx - 28, gy - 65); ctx.lineTo(gx - 14, gy - 90); ctx.lineTo(gx, gy - 68); ctx.lineTo(gx + 15, gy - 90); ctx.lineTo(gx + 30, gy - 65); ctx.closePath(); ctx.fill(); }
@@ -239,6 +249,7 @@ export default function Home() {
       if (!paused && !message) {
         s.time += dt;
         s.portalCooldown = Math.max(0, s.portalCooldown - dt);
+        s.gateCooldown = Math.max(0, s.gateCooldown - dt);
         s.boostTimer = Math.max(0, s.boostTimer - dt);
         s.invulnerable = Math.max(0, s.invulnerable - dt);
         s.crumbleTimers = s.crumbleTimers.map((timer, i) => {
@@ -311,7 +322,7 @@ export default function Home() {
 
         // Gold Key pickup
         if (lvl.key && !s.hasKey && Math.hypot(s.x - lvl.key.x, s.y - lvl.key.y) < BALL_R + 25) {
-          s.hasKey = true; setHasKey(true); beep(880, .14, .06);
+          s.hasKey = true; s.gateCooldown = 0; setHasKey(true); beep(880, .14, .06);
         }
 
         if (s.portalCooldown <= 0) {
@@ -344,7 +355,8 @@ export default function Home() {
         // Goal reached (checked with key lock)
         if (Math.hypot(s.x - lvl.goal.x, s.y - (lvl.goal.y + 25)) < 70) {
           if (lvl.key && !s.hasKey) {
-            s.vx = -300; beep(220, .15, .05);
+            s.x = Math.min(s.x, lvl.goal.x - 82); s.vx = Math.min(s.vx, -360);
+            if (s.gateCooldown <= 0) { beep(220, .15, .05); s.gateCooldown = .65; }
           } else {
             const got = s.stars.filter(Boolean).length; saveWin(got); setMessage("win"); beep(900, .28, .06);
           }

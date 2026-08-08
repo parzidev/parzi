@@ -9,6 +9,7 @@ export type PortalPair = { a: Point; b: Point; color: string };
 export type CrumblePlatform = Box & { delay: number; respawn: number };
 export type LavaPool = Box & { wave: number; speed: number; phase?: number };
 export type Spinner = Point & { length: number; speed: number; phase?: number };
+export type KeyChallenge = "stairs" | "spring" | "lift" | "vault";
 export type Theme = { sky: string[]; hill: string; far: string; ground: string; grass: string; accent: string };
 
 export type Level = {
@@ -34,6 +35,8 @@ export type Level = {
   stars: Point[];
   enemies: EnemySpawn[];
   key?: Point;
+  keyPlatform?: Box;
+  keyChallenge?: KeyChallenge;
   gravityScale: number;
   goal: Point;
   theme: Theme;
@@ -128,6 +131,120 @@ const legacySubtitles = [
   "Zindan tuzaklarına dikkat et, yüksekten uç!",
   "Kraliyet parkurunda tüm yıldızları topla!",
 ];
+
+const overlapsX = (x: number, w: number, left: number, right: number) => x < right && x + w > left;
+
+function redesignKeyRoute(level: Level, index: number): Level {
+  if (!level.key) return level;
+
+  const desiredX = level.width * (.48 + index % 4 * .055);
+  const candidates = level.platforms.filter(platform => (
+    platform.h >= 60
+    && platform.w >= 380
+    && platform.x + platform.w / 2 >= level.width * .3
+    && platform.x + platform.w / 2 <= level.width * .8
+  ));
+  const conflictScore = (platform: Box) => {
+    const left = platform.x - 45, right = platform.x + platform.w + 45;
+    const hazards = level.spikes.filter(item => overlapsX(item.x, item.w, left, right)).length
+      + level.enemies.filter(enemy => enemy.min < right && enemy.max > left).length
+      + level.springs.filter(item => overlapsX(item.x, item.w, left, right)).length
+      + level.boosters.filter(item => overlapsX(item.x, item.w, left, right)).length
+      + level.ice.filter(item => overlapsX(item.x, item.w, left, right)).length
+      + level.windZones.filter(item => overlapsX(item.x, item.w, left, right)).length * 2
+      + level.waterZones.filter(item => overlapsX(item.x, item.w, left, right)).length * 2
+      + level.spinners.filter(spinner => spinner.x + spinner.length > left && spinner.x - spinner.length < right).length * 2
+      + level.portals.filter(portal => [portal.a, portal.b].some(point => point.x > left && point.x < right)).length * 2;
+    return hazards * 10000 + Math.abs(platform.x + platform.w / 2 - desiredX);
+  };
+  const host = [...candidates].sort((a, b) => conflictScore(a) - conflictScore(b))[0];
+  if (!host) return level;
+
+  const left = host.x - 45, right = host.x + host.w + 45;
+  const safePlatforms = level.platforms.filter(platform => (
+    platform === host || platform.h > 40 || !overlapsX(platform.x, platform.w, left, right)
+  ));
+  const cleanLevel = {
+    ...level,
+    platforms: safePlatforms,
+    spikes: level.spikes.filter(item => !overlapsX(item.x, item.w, left, right)),
+    enemies: level.enemies.filter(enemy => enemy.min >= right || enemy.max <= left),
+    springs: level.springs.filter(item => !overlapsX(item.x, item.w, left, right)),
+    boosters: level.boosters.filter(item => !overlapsX(item.x, item.w, left, right)),
+    ice: level.ice.filter(item => !overlapsX(item.x, item.w, left, right)),
+    windZones: level.windZones.filter(item => !overlapsX(item.x, item.w, left, right)),
+    waterZones: level.waterZones.filter(item => !overlapsX(item.x, item.w, left, right)),
+    spinners: level.spinners.filter(spinner => spinner.x + spinner.length <= left || spinner.x - spinner.length >= right),
+    portals: level.portals.filter(portal => [portal.a, portal.b].every(point => point.x <= left || point.x >= right)),
+  };
+  if (level.windZones.length && !cleanLevel.windZones.length) {
+    const route = cleanLevel.platforms.filter(platform => platform.h >= 60).sort((a, b) => a.x - b.x);
+    for (let i = 0; i < route.length - 1; i++) {
+      const from = route[i], to = route[i + 1];
+      const outsideKeyRoom = from.x + from.w < left - 70 || from.x > right + 70;
+      const gap = to.x - (from.x + from.w);
+      if (!outsideKeyRoom || gap < 25) continue;
+      const original = level.windZones[0];
+      cleanLevel.windZones.push({
+        x: from.x + from.w - 70,
+        y: Math.min(from.y, to.y) - 300,
+        w: gap + 140,
+        h: 300,
+        force: original.force,
+        lift: original.lift,
+      });
+      break;
+    }
+  }
+
+  const challenge = (["stairs", "spring", "lift", "vault"] as const)[index % 4];
+  const platform = (x: number, y: number, w: number): Box => ({ x: round(x, 5), y: round(y, 5), w: round(w, 5), h: 24 });
+  let keyPlatform: Box;
+
+  if (challenge === "stairs") {
+    const step = platform(host.x + 45, host.y - 92, 135);
+    keyPlatform = platform(host.x + host.w - 190, host.y - 168, 160);
+    cleanLevel.platforms.push(step, keyPlatform);
+  } else if (challenge === "spring") {
+    const spring = { x: round(host.x + 72, 5), y: host.y, w: 72, power: 1110 + Math.floor(index / 10) * 15 };
+    keyPlatform = platform(Math.min(host.x + host.w - 215, spring.x + 95), host.y - 230, 190);
+    cleanLevel.springs.push(spring);
+    cleanLevel.platforms.push(keyPlatform);
+  } else if (challenge === "lift") {
+    const liftX = host.x + 55;
+    cleanLevel.movers.push({ x: round(liftX, 5), y: host.y - 78, w: 135, h: 22, axis: "y", range: 58, speed: 1.15 + index * .006, phase: index * .37 });
+    keyPlatform = platform(host.x + host.w - 195, host.y - 168, 165);
+    cleanLevel.platforms.push(keyPlatform);
+  } else {
+    const lower = platform(host.x + host.w - 175, host.y - 102, 145);
+    keyPlatform = platform(host.x + 45, host.y - 174, 175);
+    cleanLevel.platforms.push(lower, keyPlatform);
+  }
+
+  const key = { x: keyPlatform.x + keyPlatform.w / 2, y: keyPlatform.y - 58 };
+  const stars = [...cleanLevel.stars];
+  const starIndex = stars.reduce((best, star, candidate) => (
+    Math.abs(star.x - key.x) < Math.abs(stars[best].x - key.x) ? candidate : best
+  ), 0);
+  if (stars.length) stars[starIndex] = { x: key.x, y: key.y - 88 };
+
+  const challengeCopy: Record<KeyChallenge, string> = {
+    stairs: "Altın basamakları tırman, anahtarı al ve kapıya ilerle.",
+    spring: "Zıplatan bitkiyle anahtar balkonuna çık, sonra kapıya dön.",
+    lift: "Hareketli platformu yakala, anahtarı al ve kilidi aç.",
+    vault: "Yan odadaki iki basamağı aş, anahtarı al ve kapıya ilerle.",
+  };
+
+  return {
+    ...cleanLevel,
+    key,
+    keyPlatform,
+    keyChallenge: challenge,
+    stars,
+    subtitle: challengeCopy[challenge],
+    mechanics: Array.from(new Set([...cleanLevel.mechanics, "anahtar odası"])),
+  };
+}
 
 function makeLegacyLevel(index: number): Level {
   const random = mulberry32(20260803 + index * 977);
@@ -230,7 +347,7 @@ function makeLegacyLevel(index: number): Level {
   else if (boosters.length) subtitle = "Altın ivme pistini kullan, karşıya uç!";
   const mechanics = [springs.length && "zıplatan bitki", boosters.length && "ivme pisti", movers.length && "hareketli platform", key && "anahtar"].filter(Boolean) as string[];
 
-  return {
+  return redesignKeyRoute({
     number: index + 1,
     chapter: chapterNames[chapterIndex],
     name: names[chapterIndex][stage],
@@ -256,7 +373,7 @@ function makeLegacyLevel(index: number): Level {
     gravityScale: 1,
     goal: { x: last.x + 120, y: 550 },
     theme: themes[chapterIndex],
-  };
+  }, index);
 }
 
 function makeRedesignedLevel(index: number): Level {
@@ -460,7 +577,7 @@ function makeRedesignedLevel(index: number): Level {
   if (gravityScale < .75) mechanics.push("düşük yerçekimi");
   if (!mechanics.length) mechanics.push("klasik parkur");
 
-  return {
+  return redesignKeyRoute({
     number: index + 1,
     chapter: chapterNames[chapterIndex],
     name: names[chapterIndex][stage],
@@ -486,7 +603,7 @@ function makeRedesignedLevel(index: number): Level {
     gravityScale,
     goal: { x: last.x + last.w - 105, y: last.y - 90 },
     theme: themes[chapterIndex],
-  };
+  }, index);
 }
 
 export type SolvabilityResult = { ok: boolean; reachablePlatforms: number; reason?: string };
