@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BALL_R, GRAVITY, JUMP_SPEED, LEVEL_COUNT, MAX_RUN_SPEED, VIEW_H, VIEW_W, levels } from "./levels";
 import type { EnemySpawn, Level } from "./levels";
+import { loadProgress, normalizeProgress, PROGRESS_KEY } from "./progress";
 
 type Enemy = EnemySpawn & { dir: number; dead: boolean };
 type GameState = {
@@ -11,22 +12,9 @@ type GameState = {
   hasKey: boolean; crumbleTimers: number[]; portalCooldown: number; boostTimer: number; invulnerable: number;
 };
 
-const PROGRESS_KEY = "redball-progress";
-const LEGACY_PROGRESS_KEY = "kizil-zipla-progress";
-
 const initialProgress = () => {
-  if (typeof window === "undefined") return { unlocked: LEVEL_COUNT, scores: Array(LEVEL_COUNT).fill(0) };
-  try {
-    const raw = localStorage.getItem(PROGRESS_KEY) || localStorage.getItem(LEGACY_PROGRESS_KEY);
-    if (raw) {
-      const saved = JSON.parse(raw) as { unlocked?: number; scores?: number[] };
-      return {
-        unlocked: Math.max(LEVEL_COUNT, Math.min(LEVEL_COUNT, saved.unlocked || LEVEL_COUNT)),
-        scores: Array.from({ length: LEVEL_COUNT }, (_, index) => saved.scores?.[index] || 0),
-      };
-    }
-  } catch { /* fresh start */ }
-  return { unlocked: LEVEL_COUNT, scores: Array(LEVEL_COUNT).fill(0) };
+  if (typeof window === "undefined") return normalizeProgress(undefined, LEVEL_COUNT);
+  return loadProgress(window.localStorage, LEVEL_COUNT);
 };
 
 function starPath(ctx: CanvasRenderingContext2D, x: number, y: number, r: number) {

@@ -24,7 +24,7 @@ test("oyun 100 bölüm, yeni mekanikler, klavye ve iPad kontrolleri içerir", as
   assert.match(levelSource, /Spinner/);
   assert.match(levelSource, /analyzeSolvability/);
   assert.match(levelSource, /index < 50 \? makeLegacyLevel\(index\) : makeRedesignedLevel\(index\)/);
-  assert.match(source, /const PROGRESS_KEY = "redball-progress"/);
+  assert.match(source, /loadProgress\(window\.localStorage, LEVEL_COUNT\)/);
   assert.match(source, /localStorage\.setItem\(PROGRESS_KEY/);
   assert.match(source, /onPointerDown/);
   assert.match(source, /onPointerCancel/);

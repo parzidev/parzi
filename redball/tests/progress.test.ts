@@ -1,0 +1,50 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { LEGACY_PROGRESS_KEY, PROGRESS_KEY, loadProgress, normalizeProgress } from "../src/progress.ts";
+
+class MemoryStorage {
+  data = new Map<string, string>();
+  getItem(key: string) { return this.data.get(key) ?? null; }
+  setItem(key: string, value: string) { this.data.set(key, value); }
+}
+
+test("yeni oyuncu yalnızca ilk bölüm açık başlar", () => {
+  const progress = normalizeProgress(undefined, 100);
+  assert.equal(progress.unlocked, 1);
+  assert.equal(progress.scores.length, 100);
+  assert.ok(progress.scores.every(score => score === 0));
+});
+
+test("eski 50 bölümlük kayıt açık bölümleri ve yıldızları korur", () => {
+  const storage = new MemoryStorage();
+  const oldScores = Array(50).fill(0); oldScores[0] = 3; oldScores[48] = 2;
+  storage.setItem(PROGRESS_KEY, JSON.stringify({ unlocked: 50, scores: oldScores }));
+
+  const progress = loadProgress(storage, 100);
+  assert.equal(progress.unlocked, 50);
+  assert.deepEqual(progress.scores.slice(0, 50), oldScores);
+  assert.ok(progress.scores.slice(50).every(score => score === 0));
+});
+
+test("eski oyun anahtarındaki kayıt yeni anahtara kayıpsız taşınır", () => {
+  const storage = new MemoryStorage();
+  storage.setItem(LEGACY_PROGRESS_KEY, JSON.stringify({ unlocked: 37, scores: [3, 2, 1] }));
+
+  const progress = loadProgress(storage, 100);
+  assert.equal(progress.unlocked, 37);
+  assert.deepEqual(progress.scores.slice(0, 3), [3, 2, 1]);
+  assert.deepEqual(JSON.parse(storage.getItem(PROGRESS_KEY)!), progress);
+});
+
+test("100 bölümlük sürümde kaydı bulunan oyuncunun ilerlemesi de geriye gitmez", () => {
+  const storage = new MemoryStorage();
+  storage.setItem(PROGRESS_KEY, JSON.stringify({ unlocked: 76, scores: Array(75).fill(3) }));
+  assert.equal(loadProgress(storage, 100).unlocked, 76);
+});
+
+test("bozuk yeni kayıt varsa sağlam eski kayıt yine kurtarılır", () => {
+  const storage = new MemoryStorage();
+  storage.setItem(PROGRESS_KEY, "bozuk-json");
+  storage.setItem(LEGACY_PROGRESS_KEY, JSON.stringify({ unlocked: 50, scores: [3] }));
+  assert.equal(loadProgress(storage, 100).unlocked, 50);
+});
