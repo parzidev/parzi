@@ -5,30 +5,44 @@ import test from "node:test";
 test("GitHub Pages paketi doğru domain ve varlıklarla hazırdır", async () => {
   const html = await readFile(new URL("../.pages-build/index.html", import.meta.url), "utf8");
   assert.match(html, /<title>REDBALL/i);
+  assert.match(html, /Ada İçin 100 Bölümlük Macera/);
   assert.match(html, /https:\/\/parzi\.dev\/redball\//);
   assert.match(html, /\/redball\/assets\/index-[^"']+\.js/);
-  assert.match(html, /https:\/\/parzi\.dev\/redball\/og-redball\.png/);
-  await access(new URL("../og-redball.png", import.meta.url));
+  assert.match(html, /https:\/\/parzi\.dev\/redball\/og-redball-100\.png/);
+  await access(new URL("../og-redball-100.png", import.meta.url));
 });
 
-test("oyun 50 bölüm, kayıt, bitki ve iPad kontrolleri içerir", async () => {
+test("oyun 100 bölüm, yeni mekanikler, klavye ve iPad kontrolleri içerir", async () => {
   const source = await readFile(new URL("../src/Game.tsx", import.meta.url), "utf8");
   const levelSource = await readFile(new URL("../src/levels.ts", import.meta.url), "utf8");
   assert.match(levelSource, /LEVEL_COUNT = 100/);
   assert.match(levelSource, /SpringPlant/);
+  assert.match(levelSource, /CrumblePlatform/);
+  assert.match(levelSource, /PortalPair/);
+  assert.match(levelSource, /WaterZone/);
+  assert.match(levelSource, /LavaPool/);
+  assert.match(levelSource, /Spinner/);
   assert.match(levelSource, /analyzeSolvability/);
+  assert.match(levelSource, /index < 50 \? makeLegacyLevel\(index\) : makeRedesignedLevel\(index\)/);
   assert.match(source, /const PROGRESS_KEY = "redball-progress"/);
   assert.match(source, /localStorage\.setItem\(PROGRESS_KEY/);
   assert.match(source, /onPointerDown/);
   assert.match(source, /onPointerCancel/);
   assert.match(source, /requestAnimationFrame/);
+  assert.match(source, /addEventListener\("keydown"/);
+  assert.match(source, /visibilitychange/);
   assert.match(source, /spring\.power/);
+  assert.match(source, /lvl\.portals/);
+  assert.match(source, /lvl\.waterZones/);
+  assert.match(source, /lvl\.windZones/);
+  assert.match(source, /lvl\.spinners/);
+  assert.match(source, /lvl\.lava/);
   assert.match(source, /KAZANDIN ADA!/);
   assert.match(source, /KAYBETTİN ADA/);
   assert.match(source, /Harika oynadın bebeğimmmmmm/);
   assert.match(source, /FENAAA İYİSİNNN/);
   assert.match(source, /MACERA TAMAMLAYAN KEDİM/);
-  assert.match(source, /ELLLERİNE SAĞLIK KEDİM BU KADAR BÖLÜM VARDI/);
+  assert.match(source, /ELLLERİNE SAĞLIK KEDİM 100 BÖLÜMÜN TAMAMINI BİTİRDİN!/);
   assert.match(source, /SEN ÖLDÜN MÜÜÜ KIYAMAMMM/);
   assert.doesNotMatch(source, /Bu oyun senin için yapıldı/);
   assert.ok((840 ** 2) / (2 * 1900) > 180, "zıplama yüksekliği ilk bölüm basamaklarına yetmeli");

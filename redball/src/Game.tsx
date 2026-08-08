@@ -8,7 +8,7 @@ type Enemy = EnemySpawn & { dir: number; dead: boolean };
 type GameState = {
   x: number; y: number; vx: number; vy: number; angle: number; grounded: boolean;
   camera: number; stars: boolean[]; enemies: Enemy[]; lives: number; time: number;
-  hasKey?: boolean;
+  hasKey: boolean; crumbleTimers: number[]; portalCooldown: number; boostTimer: number; invulnerable: number;
 };
 
 const PROGRESS_KEY = "redball-progress";
@@ -38,6 +38,13 @@ function starPath(ctx: CanvasRenderingContext2D, x: number, y: number, r: number
     if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
   }
   ctx.closePath();
+}
+
+function distanceToSegment(px: number, py: number, ax: number, ay: number, bx: number, by: number) {
+  const dx = bx - ax, dy = by - ay;
+  const lengthSquared = dx * dx + dy * dy;
+  const t = lengthSquared ? Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / lengthSquared)) : 0;
+  return Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
 }
 
 export default function Home() {
@@ -77,7 +84,7 @@ export default function Home() {
       x: lvl.start.x, y: lvl.start.y, vx: 0, vy: 0, angle: 0, grounded: false,
       camera: 0, stars: lvl.stars.map(() => false),
       enemies: lvl.enemies.map(e => ({ ...e, dir: Math.random() > .5 ? 1 : -1, dead: false })), lives: nextLives, time: 0,
-      hasKey: false,
+      hasKey: false, crumbleTimers: lvl.crumbles.map(() => -1), portalCooldown: 0, boostTimer: 0, invulnerable: 0,
     };
     setLives(nextLives); setStarCount(0); setHasKey(false); setMessage(null); setPaused(false);
   }, [levelIndex]);
@@ -85,7 +92,7 @@ export default function Home() {
   const startLevel = useCallback((index: number) => {
     setLevelIndex(index); setScreen("game"); setMessage(null); setPaused(false);
     const lvl = levels[index];
-    stateRef.current = { x: lvl.start.x, y: lvl.start.y, vx: 0, vy: 0, angle: 0, grounded: false, camera: 0, stars: lvl.stars.map(() => false), enemies: lvl.enemies.map(e => ({ ...e, dir: 1, dead: false })), lives: 3, time: 0, hasKey: false };
+    stateRef.current = { x: lvl.start.x, y: lvl.start.y, vx: 0, vy: 0, angle: 0, grounded: false, camera: 0, stars: lvl.stars.map(() => false), enemies: lvl.enemies.map(e => ({ ...e, dir: 1, dead: false })), lives: 3, time: 0, hasKey: false, crumbleTimers: lvl.crumbles.map(() => -1), portalCooldown: 0, boostTimer: 0, invulnerable: 0 };
     setLives(3); setStarCount(0); setHasKey(false); beep(420, .07);
   }, [beep]);
 
@@ -98,11 +105,12 @@ export default function Home() {
   }, [levelIndex]);
 
   const loseLife = useCallback(() => {
-    const s = stateRef.current; if (!s || message) return;
+    const s = stateRef.current; if (!s || message || s.invulnerable > 0) return;
     s.lives -= 1; setLives(s.lives); beep(120, .22, .06);
     if (s.lives <= 0) { setMessage("lose"); return; }
     const lvl = levels[levelIndex];
     s.x = lvl.start.x; s.y = lvl.start.y; s.vx = 0; s.vy = 0; s.camera = 0;
+    s.crumbleTimers = lvl.crumbles.map(() => -1); s.portalCooldown = 0; s.boostTimer = 0; s.invulnerable = 1;
   }, [beep, levelIndex, message]);
 
   const draw = useCallback((ctx: CanvasRenderingContext2D, s: GameState, lvl: Level, time: number) => {
@@ -119,6 +127,28 @@ export default function Home() {
     ctx.lineTo(VIEW_W, 720); ctx.lineTo(0, 720); ctx.fill();
 
     ctx.save(); ctx.translate(-s.camera, 0);
+    lvl.windZones.forEach(zone => {
+      ctx.fillStyle = "rgba(230,250,255,.15)"; ctx.fillRect(zone.x, zone.y, zone.w, zone.h);
+      ctx.fillStyle = "rgba(255,255,255,.62)";
+      const direction = zone.force >= 0 ? 1 : -1;
+      for (let xx = zone.x + 35; xx < zone.x + zone.w - 20; xx += 62) {
+        for (let yy = zone.y + 45; yy < zone.y + zone.h; yy += 82) {
+          ctx.beginPath(); ctx.moveTo(xx, yy); ctx.lineTo(xx + direction * 28, yy); ctx.lineTo(xx + direction * 18, yy - 8); ctx.moveTo(xx + direction * 28, yy); ctx.lineTo(xx + direction * 18, yy + 8); ctx.strokeStyle = "rgba(255,255,255,.72)"; ctx.lineWidth = 4; ctx.stroke();
+        }
+      }
+    });
+    lvl.waterZones.forEach(zone => {
+      ctx.fillStyle = "rgba(31,166,224,.32)"; ctx.fillRect(zone.x, zone.y, zone.w, zone.h);
+      ctx.strokeStyle = "rgba(188,245,255,.8)"; ctx.lineWidth = 4; ctx.beginPath();
+      for (let xx = zone.x; xx <= zone.x + zone.w; xx += 24) ctx.lineTo(xx, zone.y + Math.sin(time * 3 + xx * .04) * 5);
+      ctx.stroke();
+    });
+    lvl.lava.forEach(pool => {
+      const top = pool.y + Math.sin(time * pool.speed + (pool.phase || 0)) * pool.wave;
+      const gradient = ctx.createLinearGradient(0, top, 0, top + pool.h); gradient.addColorStop(0, "#ffd04a"); gradient.addColorStop(.2, "#ff6b22"); gradient.addColorStop(1, "#8d1714");
+      ctx.fillStyle = gradient; ctx.fillRect(pool.x, top, pool.w, pool.h);
+      ctx.fillStyle = "rgba(255,245,160,.72)"; for (let xx = pool.x + 12; xx < pool.x + pool.w; xx += 34) ctx.fillRect(xx, top + 6 + Math.sin(xx + time * 4) * 3, 15, 4);
+    });
     const movingRects = lvl.movers.map(m => ({ ...m, x: m.x + (m.axis === "x" ? Math.sin(time * m.speed + (m.phase || 0)) * m.range : 0), y: m.y + (m.axis === "y" ? Math.sin(time * m.speed + (m.phase || 0)) * m.range : 0) }));
     [...lvl.platforms, ...movingRects].forEach((p, i) => {
       ctx.fillStyle = i >= lvl.platforms.length ? "#7149aa" : lvl.theme.ground; ctx.fillRect(p.x, p.y, p.w, p.h);
@@ -126,14 +156,23 @@ export default function Home() {
       ctx.fillStyle = "rgba(255,255,255,.18)"; ctx.fillRect(p.x + 8, p.y + 5, Math.max(0, p.w - 16), 3);
       if (p.h > 40) { ctx.fillStyle = "rgba(42,25,18,.14)"; for (let xx = p.x + 22; xx < p.x + p.w; xx += 58) ctx.fillRect(xx, p.y + 34, 12, 8); }
     });
+    lvl.crumbles.forEach((p, i) => {
+      const timer = s.crumbleTimers[i] ?? -1;
+      if (timer >= p.delay && timer < p.delay + p.respawn) return;
+      const shake = timer > 0 ? Math.sin(time * 42) * Math.min(5, timer * 6) : 0;
+      ctx.save(); ctx.translate(shake, 0); ctx.fillStyle = "#79634e"; ctx.fillRect(p.x, p.y, p.w, p.h); ctx.fillStyle = "#d9b674"; ctx.fillRect(p.x, p.y, p.w, 12);
+      ctx.strokeStyle = "#473b34"; ctx.lineWidth = 3; for (let xx = p.x + 55; xx < p.x + p.w; xx += 90) { ctx.beginPath(); ctx.moveTo(xx, p.y + 4); ctx.lineTo(xx - 12, p.y + 28); ctx.lineTo(xx + 8, p.y + 48); ctx.stroke(); } ctx.restore();
+    });
 
     // Speed Booster Pads
-    if (lvl.boosters) {
-      lvl.boosters.forEach(b => {
-        ctx.fillStyle = "#ffe033"; ctx.fillRect(b.x, b.y, b.w, b.h);
-        ctx.fillStyle = "#ff9900"; for (let ax = b.x + 15; ax < b.x + b.w - 10; ax += 25) { ctx.beginPath(); ctx.moveTo(ax, b.y + 2); ctx.lineTo(ax + 12, b.y + 5); ctx.lineTo(ax, b.y + 8); ctx.fill(); }
-      });
-    }
+    lvl.boosters.forEach(b => {
+      ctx.fillStyle = "#ffe033"; ctx.fillRect(b.x, b.y, b.w, b.h);
+      ctx.fillStyle = "#ff9900"; for (let ax = b.x + 15; ax < b.x + b.w - 10; ax += 25) { ctx.beginPath(); ctx.moveTo(ax, b.y + 2); ctx.lineTo(ax + 12, b.y + 5); ctx.lineTo(ax, b.y + 8); ctx.fill(); }
+    });
+    lvl.ice.forEach(strip => {
+      ctx.fillStyle = "rgba(190,248,255,.9)"; ctx.fillRect(strip.x, strip.y, strip.w, strip.h);
+      ctx.fillStyle = "rgba(255,255,255,.8)"; for (let xx = strip.x + 12; xx < strip.x + strip.w; xx += 45) { ctx.beginPath(); ctx.moveTo(xx, strip.y + 2); ctx.lineTo(xx + 18, strip.y + strip.h - 2); ctx.lineTo(xx + 31, strip.y + 2); ctx.fill(); }
+    });
 
     lvl.springs.forEach(spring => {
       const sway = Math.sin(time * 4 + spring.x * .01) * 4;
@@ -157,6 +196,26 @@ export default function Home() {
       ctx.restore();
     }
 
+    lvl.portals.forEach((portal, pairIndex) => {
+      [portal.a, portal.b].forEach((point, side) => {
+        const pulse = 1 + Math.sin(time * 4 + pairIndex + side * Math.PI) * .08;
+        ctx.save(); ctx.translate(point.x, point.y); ctx.scale(pulse, 1);
+        ctx.shadowColor = portal.color; ctx.shadowBlur = 22;
+        ctx.strokeStyle = portal.color; ctx.lineWidth = 11; ctx.beginPath(); ctx.ellipse(0, 0, 25, 43, 0, 0, Math.PI * 2); ctx.stroke();
+        ctx.strokeStyle = "rgba(255,255,255,.82)"; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(0, 0, 13, 29, time * (side ? -1 : 1), 0, Math.PI * 1.45); ctx.stroke();
+        ctx.restore();
+      });
+    });
+
+    lvl.spinners.forEach(spinner => {
+      const angle = time * spinner.speed + (spinner.phase || 0);
+      const dx = Math.cos(angle) * spinner.length, dy = Math.sin(angle) * spinner.length;
+      ctx.strokeStyle = "#2f3440"; ctx.lineWidth = 17; ctx.lineCap = "round"; ctx.beginPath(); ctx.moveTo(spinner.x - dx, spinner.y - dy); ctx.lineTo(spinner.x + dx, spinner.y + dy); ctx.stroke();
+      ctx.strokeStyle = "#ffca36"; ctx.lineWidth = 7; ctx.beginPath(); ctx.moveTo(spinner.x - dx, spinner.y - dy); ctx.lineTo(spinner.x + dx, spinner.y + dy); ctx.stroke();
+      ctx.fillStyle = "#f04a3f"; ctx.beginPath(); ctx.arc(spinner.x, spinner.y, 17, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#fff2af"; ctx.beginPath(); ctx.arc(spinner.x - 4, spinner.y - 5, 4, 0, Math.PI * 2); ctx.fill();
+    });
+
     s.enemies.forEach(e => { if (e.dead) return; ctx.save(); ctx.translate(e.x, e.y); ctx.fillStyle = "#242a35"; ctx.rotate(time * e.dir); ctx.fillRect(-23, -23, 46, 46); ctx.fillStyle = "#f6f7fb"; ctx.fillRect(-14, -12, 9, 11); ctx.fillRect(5, -12, 9, 11); ctx.fillStyle = "#141820"; ctx.fillRect(-11, -9, 4, 5); ctx.fillRect(7, -9, 4, 5); ctx.restore(); });
 
     // Goal Portal / Locked Gate
@@ -175,7 +234,7 @@ export default function Home() {
     if (levelIndex === LEVEL_COUNT - 1) { ctx.fillStyle = "#ffd32a"; ctx.beginPath(); ctx.moveTo(gx - 28, gy - 65); ctx.lineTo(gx - 14, gy - 90); ctx.lineTo(gx, gy - 68); ctx.lineTo(gx + 15, gy - 90); ctx.lineTo(gx + 30, gy - 65); ctx.closePath(); ctx.fill(); }
     
     // Player Ball
-    ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(s.angle); ctx.shadowColor = "rgba(80,0,0,.25)"; ctx.shadowBlur = 14; ctx.shadowOffsetY = 10;
+    ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(s.angle); ctx.globalAlpha = s.invulnerable > 0 && Math.floor(time * 12) % 2 ? .35 : 1; ctx.shadowColor = "rgba(80,0,0,.25)"; ctx.shadowBlur = 14; ctx.shadowOffsetY = 10;
     const red = ctx.createRadialGradient(-9, -12, 3, 0, 0, BALL_R); red.addColorStop(0, "#ff7676"); red.addColorStop(.38, "#f13542"); red.addColorStop(1, "#b80d26"); ctx.fillStyle = red; ctx.beginPath(); ctx.arc(0, 0, BALL_R, 0, 7); ctx.fill(); ctx.shadowBlur = 0; ctx.strokeStyle = "#8f0d20"; ctx.lineWidth = 3; ctx.stroke();
     ctx.fillStyle = "white"; ctx.beginPath(); ctx.ellipse(-9, -7, 7, 9, 0, 0, 7); ctx.ellipse(9, -7, 7, 9, 0, 0, 7); ctx.fill(); ctx.fillStyle = "#20232a"; ctx.beginPath(); ctx.arc(-7, -6, 3, 0, 7); ctx.arc(11, -6, 3, 0, 7); ctx.fill(); ctx.strokeStyle = "#650918"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 4, 10, .2, Math.PI - .2); ctx.stroke(); ctx.restore();
     ctx.restore();
@@ -184,30 +243,77 @@ export default function Home() {
   useEffect(() => {
     if (screen !== "game") return;
     const canvas = canvasRef.current; const ctx = canvas?.getContext("2d"); if (!canvas || !ctx) return;
+    lastRef.current = 0;
     const tick = (now: number) => {
       const s = stateRef.current; const lvl = levels[levelIndex];
       if (!s) { rafRef.current = requestAnimationFrame(tick); return; }
       const dt = Math.min(.025, (now - (lastRef.current || now)) / 1000); lastRef.current = now;
       if (!paused && !message) {
         s.time += dt;
+        s.portalCooldown = Math.max(0, s.portalCooldown - dt);
+        s.boostTimer = Math.max(0, s.boostTimer - dt);
+        s.invulnerable = Math.max(0, s.invulnerable - dt);
+        s.crumbleTimers = s.crumbleTimers.map((timer, i) => {
+          if (timer < 0) return timer;
+          const next = timer + dt;
+          return next >= lvl.crumbles[i].delay + lvl.crumbles[i].respawn ? -1 : next;
+        });
+
         const c = controls.current;
         const dir = (c.right ? 1 : 0) - (c.left ? 1 : 0);
-        s.vx += dir * 1450 * dt; s.vx *= Math.pow(s.grounded && !dir ? .001 : .08, dt); s.vx = Math.max(-MAX_RUN_SPEED, Math.min(MAX_RUN_SPEED, s.vx));
+        const onIce = s.grounded && lvl.ice.some(strip => s.x + BALL_R > strip.x && s.x - BALL_R < strip.x + strip.w && Math.abs(s.y + BALL_R - (strip.y + strip.h)) < 14);
+        const friction = onIce ? (dir ? .38 : .6) : (s.grounded && !dir ? .001 : .08);
+        s.vx += dir * 1450 * dt; s.vx *= Math.pow(friction, dt);
+        const maxRunSpeed = s.boostTimer > 0 ? 790 : MAX_RUN_SPEED;
+        s.vx = Math.max(-maxRunSpeed, Math.min(maxRunSpeed, s.vx));
         if (c.jumpPressed && s.grounded) { s.vy = -JUMP_SPEED; s.grounded = false; beep(360, .07); } c.jumpPressed = false;
-        s.vy = Math.min(1050, s.vy + GRAVITY * dt);
+        s.vy = Math.min(1050, s.vy + GRAVITY * lvl.gravityScale * dt);
+
+        lvl.windZones.forEach(zone => {
+          if (s.x > zone.x - BALL_R && s.x < zone.x + zone.w + BALL_R && s.y > zone.y - BALL_R && s.y < zone.y + zone.h + BALL_R) {
+            s.vx += zone.force * dt; s.vy += (zone.lift || 0) * dt;
+          }
+        });
+        lvl.waterZones.forEach(zone => {
+          if (s.x > zone.x - BALL_R && s.x < zone.x + zone.w + BALL_R && s.y > zone.y && s.y < zone.y + zone.h + BALL_R) {
+            s.vy -= zone.buoyancy * 1.5 * dt;
+            s.vy *= Math.pow(.07, dt); s.vx *= Math.pow(.2, dt);
+          }
+        });
+
         const movingRects = lvl.movers.map(m => ({ ...m, x: m.x + (m.axis === "x" ? Math.sin(s.time * m.speed + (m.phase || 0)) * m.range : 0), y: m.y + (m.axis === "y" ? Math.sin(s.time * m.speed + (m.phase || 0)) * m.range : 0) }));
-        const solids = [...lvl.platforms, ...movingRects];
+        const activeCrumbles = lvl.crumbles
+          .map((platform, i) => ({ ...platform, crumbleIndex: i }))
+          .filter(platform => {
+            const timer = s.crumbleTimers[platform.crumbleIndex] ?? -1;
+            return timer < 0 || timer < platform.delay;
+          });
+        const solids = [
+          ...lvl.platforms.map(platform => ({ ...platform, crumbleIndex: -1 })),
+          ...movingRects.map(platform => ({ ...platform, crumbleIndex: -1 })),
+          ...activeCrumbles,
+        ];
         const prevX = s.x; s.x += s.vx * dt;
         solids.forEach(p => { if (s.x + BALL_R > p.x && s.x - BALL_R < p.x + p.w && s.y + BALL_R > p.y + 3 && s.y - BALL_R < p.y + p.h) { if (s.vx > 0 && prevX + BALL_R <= p.x + 8) { s.x = p.x - BALL_R; s.vx = 0; } else if (s.vx < 0 && prevX - BALL_R >= p.x + p.w - 8) { s.x = p.x + p.w + BALL_R; s.vx = 0; } } });
         const prevY = s.y; s.y += s.vy * dt; s.grounded = false;
-        solids.forEach(p => { if (s.x + BALL_R - 5 > p.x && s.x - BALL_R + 5 < p.x + p.w && s.y + BALL_R > p.y && s.y - BALL_R < p.y + p.h) { if (s.vy >= 0 && prevY + BALL_R <= p.y + 10) { s.y = p.y - BALL_R; s.vy = 0; s.grounded = true; } else if (s.vy < 0 && prevY - BALL_R >= p.y + p.h - 8) { s.y = p.y + p.h + BALL_R; s.vy = 0; } } });
+        solids.forEach(p => {
+          if (s.x + BALL_R - 5 > p.x && s.x - BALL_R + 5 < p.x + p.w && s.y + BALL_R > p.y && s.y - BALL_R < p.y + p.h) {
+            if (s.vy >= 0 && prevY + BALL_R <= p.y + 10) {
+              s.y = p.y - BALL_R; s.vy = 0; s.grounded = true;
+              if (p.crumbleIndex >= 0 && s.crumbleTimers[p.crumbleIndex] < 0) s.crumbleTimers[p.crumbleIndex] = .001;
+            } else if (s.vy < 0 && prevY - BALL_R >= p.y + p.h - 8) {
+              s.y = p.y + p.h + BALL_R; s.vy = 0;
+            }
+          }
+        });
         
         // Speed Booster collision
-        if (lvl.boosters && s.grounded) {
+        if (s.grounded) {
           const booster = lvl.boosters.find(b => s.x + BALL_R > b.x && s.x - BALL_R < b.x + b.w && Math.abs((s.y + BALL_R) - b.y) < 14);
           if (booster) {
-            s.vx = (s.vx < 0 ? -1 : 1) * Math.max(Math.abs(s.vx), 750);
-            beep(680, .06, .05);
+            const boostDirection = dir || (s.vx < 0 ? -1 : 1);
+            if (s.boostTimer <= .05) beep(680, .06, .05);
+            s.vx = boostDirection * Math.max(Math.abs(s.vx), 750); s.boostTimer = .7;
           }
         }
 
@@ -220,11 +326,32 @@ export default function Home() {
           s.hasKey = true; setHasKey(true); beep(880, .14, .06);
         }
 
+        if (s.portalCooldown <= 0) {
+          for (const portal of lvl.portals) {
+            const atA = Math.hypot(s.x - portal.a.x, s.y - portal.a.y) < BALL_R + 27;
+            const atB = Math.hypot(s.x - portal.b.x, s.y - portal.b.y) < BALL_R + 27;
+            if (atA || atB) {
+              const target = atA ? portal.b : portal.a;
+              s.x = target.x; s.y = target.y; s.portalCooldown = .8; s.grounded = false;
+              beep(620, .16, .045); break;
+            }
+          }
+        }
+
         s.x = Math.max(BALL_R, Math.min(lvl.width - BALL_R, s.x)); s.angle += s.vx * dt / BALL_R;
         lvl.stars.forEach((st, i) => { if (!s.stars[i] && Math.hypot(s.x - st.x, s.y - st.y) < BALL_R + 25) { s.stars[i] = true; const count = s.stars.filter(Boolean).length; setStarCount(count); beep(760 + count * 100, .11); } });
         s.enemies.forEach(e => { if (e.dead) return; e.x += e.dir * (e.speed || 88) * dt; if (e.x < e.min) { e.x = e.min; e.dir = 1; } if (e.x > e.max) { e.x = e.max; e.dir = -1; } const d = Math.hypot(s.x - e.x, s.y - e.y); if (d < BALL_R + 25) { if (s.vy > 110 && s.y < e.y - 8) { e.dead = true; s.vy = -570; beep(190, .08); } else loseLife(); } });
         const hitSpike = lvl.spikes.some(sp => s.x + BALL_R - 8 > sp.x && s.x - BALL_R + 8 < sp.x + sp.w && s.y + BALL_R > sp.y + 5 && s.y - BALL_R < sp.y + sp.h);
-        if (hitSpike || s.y > VIEW_H + 90) loseLife();
+        const hitLava = lvl.lava.some(pool => {
+          const top = pool.y + Math.sin(s.time * pool.speed + (pool.phase || 0)) * pool.wave;
+          return s.x + BALL_R - 5 > pool.x && s.x - BALL_R + 5 < pool.x + pool.w && s.y + BALL_R > top && s.y - BALL_R < top + pool.h;
+        });
+        const hitSpinner = lvl.spinners.some(spinner => {
+          const angle = s.time * spinner.speed + (spinner.phase || 0);
+          const dx = Math.cos(angle) * spinner.length, dy = Math.sin(angle) * spinner.length;
+          return distanceToSegment(s.x, s.y, spinner.x - dx, spinner.y - dy, spinner.x + dx, spinner.y + dy) < BALL_R + 9;
+        });
+        if (hitSpike || hitLava || hitSpinner || s.y > VIEW_H + 90) loseLife();
 
         // Goal reached (checked with key lock)
         if (Math.hypot(s.x - lvl.goal.x, s.y - (lvl.goal.y + 25)) < 70) {
@@ -239,8 +366,40 @@ export default function Home() {
       draw(ctx, s, lvl, s.time); rafRef.current = requestAnimationFrame(tick);
     };
     rafRef.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafRef.current);
+    return () => { cancelAnimationFrame(rafRef.current); lastRef.current = 0; };
   }, [beep, draw, levelIndex, loseLife, message, paused, saveWin]);
+
+  useEffect(() => {
+    if (screen !== "game") return;
+    const press = (event: KeyboardEvent) => {
+      const key = event.key.toLowerCase();
+      if (["arrowleft", "arrowright", "arrowup", "a", "d", "w", " "].includes(key)) event.preventDefault();
+      if (key === "arrowleft" || key === "a") controls.current.left = true;
+      if (key === "arrowright" || key === "d") controls.current.right = true;
+      if (key === "arrowup" || key === "w" || key === " ") {
+        if (!controls.current.jump) controls.current.jumpPressed = true;
+        controls.current.jump = true;
+      }
+      if (key === "r") resetLevel();
+      if (key === "escape") setPaused(value => !value);
+    };
+    const release = (event: KeyboardEvent) => {
+      const key = event.key.toLowerCase();
+      if (key === "arrowleft" || key === "a") controls.current.left = false;
+      if (key === "arrowright" || key === "d") controls.current.right = false;
+      if (key === "arrowup" || key === "w" || key === " ") controls.current.jump = false;
+    };
+    const releaseAll = () => { controls.current = { left: false, right: false, jump: false, jumpPressed: false }; };
+    window.addEventListener("keydown", press); window.addEventListener("keyup", release); window.addEventListener("blur", releaseAll);
+    return () => { window.removeEventListener("keydown", press); window.removeEventListener("keyup", release); window.removeEventListener("blur", releaseAll); releaseAll(); };
+  }, [resetLevel, screen]);
+
+  useEffect(() => {
+    if (screen !== "game") return;
+    const pauseWhenHidden = () => { if (document.hidden) setPaused(true); };
+    document.addEventListener("visibilitychange", pauseWhenHidden);
+    return () => document.removeEventListener("visibilitychange", pauseWhenHidden);
+  }, [screen]);
 
   const touch = (action: "left" | "right" | "jump", active: boolean) => {
     if (action === "jump") { if (active && !controls.current.jump) controls.current.jumpPressed = true; controls.current.jump = active; return; }
