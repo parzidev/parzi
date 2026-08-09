@@ -100,4 +100,12 @@ canvas { display: block; width: 100%; height: 100%; touch-action: none; user-sel
   .menu-screen { padding-top: 58px; }.hero-copy h1 { font-size: 20vw; }.intro { margin-top: 27px; font-size: 16px; }.hero-art { min-height: 330px; }.hero-ball { left: 30%; }
   .level-screen { padding: 24px 14px; }.level-header { grid-template-columns: auto 1fr; }.total-stars { grid-column: 2; width: max-content; }.level-card { grid-template-columns: 58px 1fr; padding: 13px; min-height: 92px; }.level-number { width: 52px; height: 52px; font-size: 17px; }.card-stars { grid-column: 2; margin-top: -12px; }.level-info strong { font-size: 16px; }
   .game-topbar { grid-template-columns: auto 1fr auto auto; }.game-topbar .hud-pill:first-of-type { display: none; }.game-topbar .round-button:last-child { display: none; }.hud-pill { padding: 0 11px; }.level-label strong { font-size: 14px; }.game-screen { padding-top: 72px; align-items: start; }.modal-card { padding: 31px 23px; }
+
+@keyframes cheatFall {
+  0% { transform: translateY(-60px) rotate(0deg); opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
 }
+.cheat-rain-container { position: fixed; inset: 0; pointer-events: none; z-index: 9999; overflow: hidden; }
+.cheat-emoji-item { position: absolute; top: -60px; animation: cheatFall linear infinite; user-select: none; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); }
+

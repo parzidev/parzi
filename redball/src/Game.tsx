@@ -36,6 +36,8 @@ function distanceToSegment(px: number, py: number, ax: number, ay: number, bx: n
 }
 
 const CHEAT_SEQUENCE = ["up", "up", "right", "left", "right", "left", "jump", "left", "right"];
+const CHEAT_EMOJIS = ["🐱", "😼", "🐾", "🕵️‍♂️", "⚡", "✨", "🪄", "👑", "🎭", "😻", "🐈", "🕶️"];
+
 
 export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -51,7 +53,7 @@ export default function Home() {
   const [starCount, setStarCount] = useState(0);
   const [hasKey, setHasKey] = useState(false);
   const [paused, setPaused] = useState(false);
-  const [message, setMessage] = useState<"win" | "lose" | null>(null);
+  const [message, setMessage] = useState<"win" | "lose" | "cheat" | null>(null);
   const [sound, setSound] = useState(true);
   const [progress, setProgress] = useState(initialProgress);
 
@@ -377,7 +379,25 @@ export default function Home() {
     const press = (event: KeyboardEvent) => {
       const key = event.key.toLowerCase();
       if (["arrowleft", "arrowright", "arrowup", "a", "d", "w", " "].includes(key)) event.preventDefault();
-      
+      if (event.repeat) return;
+
+      const triggerCheat = () => {
+        cheatIndexRef.current = 0;
+        if (stateRef.current) {
+          stateRef.current.stars = stateRef.current.stars.map(() => true);
+        }
+        setStarCount(3);
+        saveWin(3);
+        setMessage("cheat");
+        setPaused(false);
+        beep(900, .28, .06);
+      };
+
+      if (key === "h" || key === "9" || key === "c") {
+        triggerCheat();
+        return;
+      }
+
       const expected = CHEAT_SEQUENCE[cheatIndexRef.current];
       const matchesCheatKey = (k: string, targetAction: string): boolean => {
         if (targetAction === "up") return k === "arrowup" || k === "w";
@@ -397,15 +417,7 @@ export default function Home() {
       }
 
       if (cheatIndexRef.current === CHEAT_SEQUENCE.length) {
-        cheatIndexRef.current = 0;
-        if (stateRef.current) {
-          stateRef.current.stars = stateRef.current.stars.map(() => true);
-        }
-        setStarCount(3);
-        saveWin(3);
-        setMessage("win");
-        setPaused(false);
-        beep(900, .28, .06);
+        triggerCheat();
       }
 
       if (key === "arrowleft" || key === "a") controls.current.left = true;
@@ -491,22 +503,40 @@ export default function Home() {
           <div className="rotate-hint">↻ iPad’i yatay çevirirsen oyun alanı genişler.</div>
           <div className="touch-controls" aria-label="Dokunmatik kontroller"><div><button aria-label="Sola git" onPointerDown={() => touch("left", true)} onPointerUp={() => touch("left", false)} onPointerCancel={() => touch("left", false)} onPointerLeave={() => touch("left", false)}>←</button><button aria-label="Sağa git" onPointerDown={() => touch("right", true)} onPointerUp={() => touch("right", false)} onPointerCancel={() => touch("right", false)} onPointerLeave={() => touch("right", false)}>→</button></div><button aria-label="Zıpla" className="jump-button" onPointerDown={() => touch("jump", true)} onPointerUp={() => touch("jump", false)} onPointerCancel={() => touch("jump", false)} onPointerLeave={() => touch("jump", false)}>↑</button></div>
           {paused && !message && <div className="game-modal"><div className="modal-card"><span className="modal-icon">Ⅱ</span><h2>Mola verdik</h2><p>Top da biraz nefeslensin.</p><button className="primary-button small" onClick={() => setPaused(false)}>DEVAM ET</button><button className="text-button" onClick={() => resetLevel()}>Bölümü yeniden başlat</button></div></div>}
+          {message === "cheat" && (
+            <div className="cheat-rain-container" aria-hidden="true">
+              {Array.from({ length: 28 }).map((_, i) => (
+                <span
+                  key={i}
+                  className="cheat-emoji-item"
+                  style={{
+                    left: `${(i * 33 + 4) % 94}%`,
+                    animationDuration: `${2.2 + (i % 6) * 0.4}s`,
+                    animationDelay: `${(i % 8) * 0.25}s`,
+                    fontSize: `${1.8 + (i % 4) * 0.5}rem`,
+                  }}
+                >
+                  {CHEAT_EMOJIS[i % CHEAT_EMOJIS.length]}
+                </span>
+              ))}
+            </div>
+          )}
           {message && (
             <div className="game-modal">
               <div className="modal-card">
-                <span className="modal-icon">{message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "♛" : "★") : "×"}</span>
+                <span className="modal-icon">{(message === "win" || message === "cheat") ? (levelIndex === LEVEL_COUNT - 1 ? "♛" : "★") : "×"}</span>
                 <p className="eyebrow">
-                  {message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "MACERA TAMAMLAYAN KEDİM" : "KAZANDIN ADA!") : "KAYBETTİN ADA"}
+                  {message === "cheat" ? "HİLECİ KEDİMMM" : (message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "MACERA TAMAMLAYAN KEDİM" : "KAZANDIN ADA!") : "KAYBETTİN ADA")}
                 </p>
                 <h2>
-                  {message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "ELLLERİNE SAĞLIK KEDİM 100 BÖLÜMÜN TAMAMINI BİTİRDİN!" : "Harika oynadın bebeğimmmmmm") : "SEN ÖLDÜN MÜÜÜ KIYAMAMMM"}
+                  {message === "cheat" ? "hileci kedimmm" : (message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "ELLLERİNE SAĞLIK KEDİM 100 BÖLÜMÜN TAMAMINI BİTİRDİN!" : "Harika oynadın bebeğimmmmmm") : "SEN ÖLDÜN MÜÜÜ KIYAMAMMM")}
                 </h2>
-                {!(message === "win" && levelIndex === LEVEL_COUNT - 1) && (
-                  <p>{message === "win" ? "FENAAA İYİSİNNN" : "Hadi bir kez daha dene sevgilim."}</p>
+                {!((message === "win" || message === "cheat") && levelIndex === LEVEL_COUNT - 1) && (
+                  <p>{(message === "win" || message === "cheat") ? "FENAAA İYİSİNNN" : "Hadi bir kez daha dene sevgilim."}</p>
                 )}
-                {message === "win" && <div className="result-stars">{[0, 1, 2].map(n => <span key={n} className={n < starCount ? "earned" : ""}>★</span>)}</div>}
-                <button className="primary-button small" onClick={() => { if (message === "win" && levelIndex < LEVEL_COUNT - 1) startLevel(levelIndex + 1); else resetLevel(); }}>
-                  {message === "win" && levelIndex < LEVEL_COUNT - 1 ? "SONRAKİ BÖLÜM, ADA" : "TEKRAR DENE ADA"}
+                {(message === "win" || message === "cheat") && <div className="result-stars">{[0, 1, 2].map(n => <span key={n} className={n < starCount ? "earned" : ""}>★</span>)}</div>}
+                <button className="primary-button small" onClick={() => { if ((message === "win" || message === "cheat") && levelIndex < LEVEL_COUNT - 1) startLevel(levelIndex + 1); else resetLevel(); }}>
+                  {(message === "win" || message === "cheat") && levelIndex < LEVEL_COUNT - 1 ? "SONRAKİ BÖLÜM, ADA" : "TEKRAR DENE ADA"}
                 </button>
                 <button className="text-button" onClick={() => { setScreen("levels"); setMessage(null); }}>Bölüm haritası</button>
               </div>
