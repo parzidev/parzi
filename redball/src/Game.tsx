@@ -35,10 +35,13 @@ function distanceToSegment(px: number, py: number, ax: number, ay: number, bx: n
   return Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
 }
 
+const CHEAT_SEQUENCE = ["up", "up", "right", "left", "right", "left", "jump", "left", "right"];
+
 export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const stateRef = useRef<GameState | null>(null);
   const controls = useRef({ left: false, right: false, jump: false, jumpPressed: false });
+  const cheatIndexRef = useRef(0);
   const rafRef = useRef(0);
   const lastRef = useRef(0);
   const soundRef = useRef(true);
@@ -374,6 +377,37 @@ export default function Home() {
     const press = (event: KeyboardEvent) => {
       const key = event.key.toLowerCase();
       if (["arrowleft", "arrowright", "arrowup", "a", "d", "w", " "].includes(key)) event.preventDefault();
+      
+      const expected = CHEAT_SEQUENCE[cheatIndexRef.current];
+      const matchesCheatKey = (k: string, targetAction: string): boolean => {
+        if (targetAction === "up") return k === "arrowup" || k === "w";
+        if (targetAction === "down") return k === "arrowdown" || k === "s";
+        if (targetAction === "left") return k === "arrowleft" || k === "a";
+        if (targetAction === "right") return k === "arrowright" || k === "d";
+        if (targetAction === "jump") return k === " " || k === "space" || k === "arrowup" || k === "w";
+        return false;
+      };
+
+      if (matchesCheatKey(key, expected)) {
+        cheatIndexRef.current += 1;
+      } else if (matchesCheatKey(key, CHEAT_SEQUENCE[0])) {
+        cheatIndexRef.current = 1;
+      } else {
+        cheatIndexRef.current = 0;
+      }
+
+      if (cheatIndexRef.current === CHEAT_SEQUENCE.length) {
+        cheatIndexRef.current = 0;
+        if (stateRef.current) {
+          stateRef.current.stars = stateRef.current.stars.map(() => true);
+        }
+        setStarCount(3);
+        saveWin(3);
+        setMessage("win");
+        setPaused(false);
+        beep(900, .28, .06);
+      }
+
       if (key === "arrowleft" || key === "a") controls.current.left = true;
       if (key === "arrowright" || key === "d") controls.current.right = true;
       if (key === "arrowup" || key === "w" || key === " ") {
@@ -392,7 +426,7 @@ export default function Home() {
     const releaseAll = () => { controls.current = { left: false, right: false, jump: false, jumpPressed: false }; };
     window.addEventListener("keydown", press); window.addEventListener("keyup", release); window.addEventListener("blur", releaseAll);
     return () => { window.removeEventListener("keydown", press); window.removeEventListener("keyup", release); window.removeEventListener("blur", releaseAll); releaseAll(); };
-  }, [resetLevel, screen]);
+  }, [beep, resetLevel, saveWin, screen]);
 
   useEffect(() => {
     if (screen !== "game") return;
