@@ -398,26 +398,26 @@ export default function Home() {
         return;
       }
 
-      const expected = CHEAT_SEQUENCE[cheatIndexRef.current];
-      const matchesCheatKey = (k: string, targetAction: string): boolean => {
-        if (targetAction === "up") return k === "arrowup" || k === "w";
-        if (targetAction === "down") return k === "arrowdown" || k === "s";
-        if (targetAction === "left") return k === "arrowleft" || k === "a";
-        if (targetAction === "right") return k === "arrowright" || k === "d";
-        if (targetAction === "jump") return k === " " || k === "space" || k === "arrowup" || k === "w";
-        return false;
-      };
+      const cIdx = cheatIndexRef.current;
+      const isUp = key === "arrowup" || key === "w";
+      const isRight = key === "arrowright" || key === "d";
+      const isLeft = key === "arrowleft" || key === "a";
+      const isJump = key === " " || key === "space" || isUp;
 
-      if (matchesCheatKey(key, expected)) {
-        cheatIndexRef.current += 1;
-      } else if (matchesCheatKey(key, CHEAT_SEQUENCE[0])) {
+      if (cIdx === 0 && isUp) cheatIndexRef.current = 1;
+      else if (cIdx === 1 && isUp) cheatIndexRef.current = 2;
+      else if (cIdx === 2 && isRight) cheatIndexRef.current = 3;
+      else if (cIdx === 3 && isLeft) cheatIndexRef.current = 4;
+      else if (cIdx === 4 && isRight) cheatIndexRef.current = 5;
+      else if (cIdx === 5 && isLeft) cheatIndexRef.current = 6;
+      else if (cIdx === 6 && isJump) cheatIndexRef.current = 7;
+      else if (cIdx === 7 && isLeft) cheatIndexRef.current = 8;
+      else if (cIdx === 8 && isRight) {
+        triggerCheat();
+      } else if (isUp) {
         cheatIndexRef.current = 1;
       } else {
         cheatIndexRef.current = 0;
-      }
-
-      if (cheatIndexRef.current === CHEAT_SEQUENCE.length) {
-        triggerCheat();
       }
 
       if (key === "arrowleft" || key === "a") controls.current.left = true;
