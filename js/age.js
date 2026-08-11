@@ -1,5 +1,3 @@
-// Dynamic Age Counter
-// This script calculates and displays the age in real-time, updating continuously
 
 (function () {
 
