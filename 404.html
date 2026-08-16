@@ -898,7 +898,6 @@
   </aside>
   <div class="scanline" aria-hidden="true"></div>
 
-  <iframe id="log-frame" style="width: 0; height: 0; border: 0; visibility: hidden;" title="Log Frame"></iframe>
   <script>
     const pathname = window.location.pathname;
     const pageId = (pathname.split('/').pop() || '404').replace('.html', '');
@@ -931,7 +930,60 @@
     }
 
     missingPath.textContent = pathname || '/';
-    document.getElementById('log-frame').src = `https://log.parzi.dev/?ref=${encodeURIComponent(pageId)}`;
+
+    const makeTrackingId = (prefix) => `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+    const getTrackingId = (storageName, key, prefix) => {
+      try {
+        const storage = window[storageName];
+        let value = storage.getItem(key);
+        if (!value) {
+          value = makeTrackingId(prefix);
+          storage.setItem(key, value);
+        }
+        return value;
+      } catch (error) {
+        return makeTrackingId(prefix);
+      }
+    };
+
+    const log404Visit = () => {
+      const endpoint = 'https://log.parzi.dev/api/events';
+      const body = JSON.stringify({
+        event: 'landing_view',
+        properties: {
+          ref: pageId,
+          missing_path: pathname || '/'
+        },
+        page_url: window.location.href,
+        referrer: document.referrer,
+        client_id: getTrackingId('localStorage', 'logparzi_client_id', 'client'),
+        session_id: getTrackingId('sessionStorage', 'logparzi_session_id', 'session'),
+        log_id: null,
+        ref: pageId,
+        utm_source: null,
+        utm_medium: null,
+        utm_campaign: null,
+        utm_term: null,
+        utm_content: null
+      });
+
+      try {
+        if (typeof navigator.sendBeacon === 'function') {
+          const queued = navigator.sendBeacon(endpoint, new Blob([body], { type: 'text/plain;charset=UTF-8' }));
+          if (queued) return;
+        }
+      } catch (error) {}
+
+      fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+        body,
+        keepalive: true,
+        credentials: 'omit'
+      }).catch(() => {});
+    };
+
+    log404Visit();
 
     const updateClock = () => {
       const now = new Date();
