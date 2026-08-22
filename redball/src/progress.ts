@@ -48,3 +48,38 @@ export function loadProgress(storage: StorageLike, levelCount: number): Progress
   }
   return normalizeProgress(undefined, levelCount);
 }
+
+// iPad/touch support for the existing keyboard cheat listener.
+// The game already translates keyboard arrows into cheat-sequence inputs;
+// dispatching a short synthetic key press from the touch controls keeps both
+// input paths on the same code path without changing normal touch movement.
+if (typeof window !== "undefined") {
+  document.addEventListener("pointerdown", (event) => {
+    const target = event.target as HTMLElement | null;
+    const button = target?.closest<HTMLButtonElement>(".touch-controls button");
+    if (!button) return;
+
+    const label = button.getAttribute("aria-label")?.toLowerCase();
+    const key = label?.includes("sola")
+      ? "ArrowLeft"
+      : label?.includes("sağa")
+        ? "ArrowRight"
+        : label?.includes("zıpla")
+          ? "ArrowUp"
+          : null;
+
+    if (!key) return;
+
+    window.dispatchEvent(new KeyboardEvent("keydown", {
+      key,
+      bubbles: true,
+      cancelable: true,
+    }));
+
+    window.dispatchEvent(new KeyboardEvent("keyup", {
+      key,
+      bubbles: true,
+      cancelable: true,
+    }));
+  });
+}
