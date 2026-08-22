@@ -35,9 +35,8 @@ function distanceToSegment(px: number, py: number, ax: number, ay: number, bx: n
   return Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
 }
 
-const CHEAT_SEQUENCE = ["up", "up", "right", "left", "right", "left", "jump", "left", "right"];
+const CHEAT_SEQUENCE = ["up", "up", "right", "left", "right", "left", "up", "left", "right"] as const;
 const CHEAT_EMOJIS = ["🐱", "😼", "🐾", "🕵️‍♂️", "⚡", "✨", "🪄", "👑", "🎭", "😻", "🐈", "🕶️"];
-
 
 export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -187,7 +186,7 @@ export default function Home() {
 
     lvl.spikes.forEach(sp => { const count = Math.max(2, Math.round(sp.w / 28)); const sw = sp.w / count; for (let i = 0; i < count; i++) { ctx.fillStyle = "#4c5263"; ctx.beginPath(); ctx.moveTo(sp.x + i * sw, sp.y + sp.h); ctx.lineTo(sp.x + (i + .5) * sw, sp.y); ctx.lineTo(sp.x + (i + 1) * sw, sp.y + sp.h); ctx.fill(); ctx.strokeStyle = "#313744"; ctx.stroke(); } });
     lvl.stars.forEach((st, i) => { if (s.stars[i]) return; ctx.save(); ctx.translate(st.x, st.y); ctx.rotate(time * 1.8); ctx.shadowColor = "#ffd531"; ctx.shadowBlur = 18; starPath(ctx, 0, 0, 25); ctx.fillStyle = "#ffd531"; ctx.fill(); ctx.strokeStyle = "#e7a918"; ctx.lineWidth = 4; ctx.stroke(); ctx.restore(); });
-    
+
     // Floating Gold Key
     if (lvl.key && !s.hasKey) {
       const ky = lvl.key.y + Math.sin(time * 3.5) * 6;
@@ -225,7 +224,7 @@ export default function Home() {
     ctx.fillStyle = isLocked ? "rgba(255,80,80,.25)" : "rgba(255,224,75,.25)"; ctx.beginPath(); ctx.arc(gx, gy, 66 + Math.sin(time * 3) * 5, 0, Math.PI * 2); ctx.fill();
     ctx.strokeStyle = isLocked ? "#ff4444" : "#ffcc26"; ctx.lineWidth = 14; ctx.beginPath(); ctx.arc(gx, gy, 46, Math.PI, 0); ctx.lineTo(gx + 46, gy + 65); ctx.lineTo(gx - 46, gy + 65); ctx.closePath(); ctx.stroke();
     ctx.fillStyle = isLocked ? "#ffaaaa" : "#fff5a9"; ctx.fillRect(gx - 34, gy + 4, 68, 60); ctx.fillStyle = isLocked ? "#cc0000" : "#ffbd21"; ctx.beginPath(); ctx.arc(gx + 17, gy + 35, 5, 0, 7); ctx.fill();
-    
+
     if (isLocked) {
       // Draw padlock 🔒 icon over gate
       ctx.fillStyle = "#d32f2f"; ctx.beginPath(); ctx.roundRect(gx - 14, gy + 20, 28, 22, 4); ctx.fill();
@@ -235,7 +234,7 @@ export default function Home() {
     }
 
     if (levelIndex === LEVEL_COUNT - 1) { ctx.fillStyle = "#ffd32a"; ctx.beginPath(); ctx.moveTo(gx - 28, gy - 65); ctx.lineTo(gx - 14, gy - 90); ctx.lineTo(gx, gy - 68); ctx.lineTo(gx + 15, gy - 90); ctx.lineTo(gx + 30, gy - 65); ctx.closePath(); ctx.fill(); }
-    
+
     // Player Ball
     ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(s.angle); ctx.globalAlpha = s.invulnerable > 0 && Math.floor(time * 12) % 2 ? .35 : 1; ctx.shadowColor = "rgba(80,0,0,.25)"; ctx.shadowBlur = 14; ctx.shadowOffsetY = 10;
     const red = ctx.createRadialGradient(-9, -12, 3, 0, 0, BALL_R); red.addColorStop(0, "#ff7676"); red.addColorStop(.38, "#f13542"); red.addColorStop(1, "#b80d26"); ctx.fillStyle = red; ctx.beginPath(); ctx.arc(0, 0, BALL_R, 0, 7); ctx.fill(); ctx.shadowBlur = 0; ctx.strokeStyle = "#8f0d20"; ctx.lineWidth = 3; ctx.stroke();
@@ -310,7 +309,7 @@ export default function Home() {
             }
           }
         });
-        
+
         // Speed Booster collision
         if (s.grounded) {
           const booster = lvl.boosters.find(b => s.x + BALL_R > b.x && s.x - BALL_R < b.x + b.w && Math.abs((s.y + BALL_R) - b.y) < 14);
@@ -393,32 +392,35 @@ export default function Home() {
         beep(900, .28, .06);
       };
 
+      const handleCheatInput = (input: "up" | "left" | "right") => {
+        const sequence = CHEAT_SEQUENCE;
+        const current = cheatIndexRef.current;
+
+        if (sequence[current] === input) {
+          const next = current + 1;
+          if (next >= sequence.length) {
+            triggerCheat();
+            return;
+          }
+          cheatIndexRef.current = next;
+          return;
+        }
+
+        cheatIndexRef.current = input === "up" ? 1 : 0;
+      };
+
       if (key === "h" || key === "9" || key === "c") {
         triggerCheat();
         return;
       }
 
-      const cIdx = cheatIndexRef.current;
-      const isUp = key === "arrowup" || key === "w";
+      const isUp = key === "arrowup" || key === "w" || key === " ";
       const isRight = key === "arrowright" || key === "d";
       const isLeft = key === "arrowleft" || key === "a";
-      const isJump = key === " " || key === "space" || isUp;
 
-      if (cIdx === 0 && isUp) cheatIndexRef.current = 1;
-      else if (cIdx === 1 && isUp) cheatIndexRef.current = 2;
-      else if (cIdx === 2 && isRight) cheatIndexRef.current = 3;
-      else if (cIdx === 3 && isLeft) cheatIndexRef.current = 4;
-      else if (cIdx === 4 && isRight) cheatIndexRef.current = 5;
-      else if (cIdx === 5 && isLeft) cheatIndexRef.current = 6;
-      else if (cIdx === 6 && isJump) cheatIndexRef.current = 7;
-      else if (cIdx === 7 && isLeft) cheatIndexRef.current = 8;
-      else if (cIdx === 8 && isRight) {
-        triggerCheat();
-      } else if (isUp) {
-        cheatIndexRef.current = 1;
-      } else {
-        cheatIndexRef.current = 0;
-      }
+      if (isUp) handleCheatInput("up");
+      else if (isRight) handleCheatInput("right");
+      else if (isLeft) handleCheatInput("left");
 
       if (key === "arrowleft" || key === "a") controls.current.left = true;
       if (key === "arrowright" || key === "d") controls.current.right = true;
@@ -448,9 +450,22 @@ export default function Home() {
   }, [screen]);
 
   const touch = (action: "left" | "right" | "jump", active: boolean) => {
-    if (action === "jump") { if (active && !controls.current.jump) controls.current.jumpPressed = true; controls.current.jump = active; return; }
-    controls.current[action] = active;
+    if (active) {
+      if (action === "jump") {
+        if (!controls.current.jump) controls.current.jumpPressed = true;
+        controls.current.jump = true;
+        return;
+      }
+      if (action === "left") controls.current.left = true;
+      if (action === "right") controls.current.right = true;
+      return;
+    }
+
+    if (action === "jump") controls.current.jump = false;
+    else if (action === "left") controls.current.left = false;
+    else if (action === "right") controls.current.right = false;
   };
+
   const toggleSound = () => { soundRef.current = !soundRef.current; setSound(soundRef.current); };
 
   return (
@@ -506,18 +521,7 @@ export default function Home() {
           {message === "cheat" && (
             <div className="cheat-rain-container" aria-hidden="true">
               {Array.from({ length: 28 }).map((_, i) => (
-                <span
-                  key={i}
-                  className="cheat-emoji-item"
-                  style={{
-                    left: `${(i * 33 + 4) % 94}%`,
-                    animationDuration: `${2.2 + (i % 6) * 0.4}s`,
-                    animationDelay: `${(i % 8) * 0.25}s`,
-                    fontSize: `${1.8 + (i % 4) * 0.5}rem`,
-                  }}
-                >
-                  {CHEAT_EMOJIS[i % CHEAT_EMOJIS.length]}
-                </span>
+                <span key={i} className="cheat-emoji-item" style={{ left: `${(i * 33 + 4) % 94}%`, animationDuration: `${2.2 + (i % 6) * 0.4}s`, animationDelay: `${(i % 8) * 0.25}s`, fontSize: `${1.8 + (i % 4) * 0.5}rem` }}>{CHEAT_EMOJIS[i % CHEAT_EMOJIS.length]}</span>
               ))}
             </div>
           )}
@@ -525,19 +529,11 @@ export default function Home() {
             <div className="game-modal">
               <div className="modal-card">
                 <span className="modal-icon">{(message === "win" || message === "cheat") ? (levelIndex === LEVEL_COUNT - 1 ? "♛" : "★") : "×"}</span>
-                <p className="eyebrow">
-                  {message === "cheat" ? "HİLECİ KEDİMMM" : (message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "MACERA TAMAMLAYAN KEDİM" : "KAZANDIN ADA!") : "KAYBETTİN ADA")}
-                </p>
-                <h2>
-                  {message === "cheat" ? "hileci kedimmm" : (message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "ELLLERİNE SAĞLIK KEDİM 100 BÖLÜMÜN TAMAMINI BİTİRDİN!" : "Harika oynadın bebeğimmmmmm") : "SEN ÖLDÜN MÜÜÜ KIYAMAMMM")}
-                </h2>
-                {!((message === "win" || message === "cheat") && levelIndex === LEVEL_COUNT - 1) && (
-                  <p>{(message === "win" || message === "cheat") ? "FENAAA İYİSİNNN" : "Hadi bir kez daha dene sevgilim."}</p>
-                )}
+                <p className="eyebrow">{message === "cheat" ? "HİLECİ KEDİMMM" : (message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "MACERA TAMAMLAYAN KEDİM" : "KAZANDIN ADA!") : "KAYBETTİN ADA")}</p>
+                <h2>{message === "cheat" ? "hileci kedimmm" : (message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "ELLLERİNE SAĞLIK KEDİM 100 BÖLÜMÜN TAMAMINI BİTİRDİN!" : "Harika oynadın bebeğimmmmmm") : "SEN ÖLDÜN MÜÜÜ KIYAMAMMM")}</h2>
+                {!((message === "win" || message === "cheat") && levelIndex === LEVEL_COUNT - 1) && <p>{(message === "win" || message === "cheat") ? "FENAAA İYİSİNNN" : "Hadi bir kez daha dene sevgilim."}</p>}
                 {(message === "win" || message === "cheat") && <div className="result-stars">{[0, 1, 2].map(n => <span key={n} className={n < starCount ? "earned" : ""}>★</span>)}</div>}
-                <button className="primary-button small" onClick={() => { if ((message === "win" || message === "cheat") && levelIndex < LEVEL_COUNT - 1) startLevel(levelIndex + 1); else resetLevel(); }}>
-                  {(message === "win" || message === "cheat") && levelIndex < LEVEL_COUNT - 1 ? "SONRAKİ BÖLÜM, ADA" : "TEKRAR DENE ADA"}
-                </button>
+                <button className="primary-button small" onClick={() => { if ((message === "win" || message === "cheat") && levelIndex < LEVEL_COUNT - 1) startLevel(levelIndex + 1); else resetLevel(); }}>{(message === "win" || message === "cheat") && levelIndex < LEVEL_COUNT - 1 ? "SONRAKİ BÖLÜM, ADA" : "TEKRAR DENE ADA"}</button>
                 <button className="text-button" onClick={() => { setScreen("levels"); setMessage(null); }}>Bölüm haritası</button>
               </div>
             </div>
