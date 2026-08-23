@@ -1,7 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { BALL_R, GRAVITY, JUMP_SPEED, LEVEL_COUNT, MAX_RUN_SPEED, VIEW_H, VIEW_W, levels } from "./levels";
+import { advanceCheatIndex, CHEAT_SEQUENCE } from "./cheat";
+import type { CheatAction } from "./cheat";
+import { BALL_R, GRAVITY, JUMP_SPEED, LEVEL_COUNT, MAX_RUN_SPEED, VIEW_H, VIEW_W, isLaserGateActive, isPhasePlatformActive, levels } from "./levels";
 import type { EnemySpawn, Level } from "./levels";
 import { loadProgress, normalizeProgress, PROGRESS_KEY } from "./progress";
 
@@ -10,6 +12,7 @@ type GameState = {
   x: number; y: number; vx: number; vy: number; angle: number; grounded: boolean;
   camera: number; stars: boolean[]; enemies: Enemy[]; lives: number; time: number;
   hasKey: boolean; crumbleTimers: number[]; portalCooldown: number; gateCooldown: number; boostTimer: number; invulnerable: number;
+  checkpoint: { x: number; y: number }; checkpointIndex: number;
 };
 
 const initialProgress = () => {
@@ -35,7 +38,6 @@ function distanceToSegment(px: number, py: number, ax: number, ay: number, bx: n
   return Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
 }
 
-const CHEAT_SEQUENCE = ["up", "up", "right", "left", "right", "left", "up", "left", "right"] as const;
 const CHEAT_EMOJIS = ["🐱", "😼", "🐾", "🕵️‍♂️", "⚡", "✨", "🪄", "👑", "🎭", "😻", "🐈", "🕶️"];
 
 export default function Home() {
@@ -77,6 +79,7 @@ export default function Home() {
       camera: 0, stars: lvl.stars.map(() => false),
       enemies: lvl.enemies.map(e => ({ ...e, dir: Math.random() > .5 ? 1 : -1, dead: false })), lives: nextLives, time: 0,
       hasKey: false, crumbleTimers: lvl.crumbles.map(() => -1), portalCooldown: 0, gateCooldown: 0, boostTimer: 0, invulnerable: 0,
+      checkpoint: { ...lvl.start }, checkpointIndex: -1,
     };
     setLives(nextLives); setStarCount(0); setHasKey(false); setMessage(null); setPaused(false);
   }, [levelIndex]);
@@ -84,7 +87,7 @@ export default function Home() {
   const startLevel = useCallback((index: number) => {
     setLevelIndex(index); setScreen("game"); setMessage(null); setPaused(false);
     const lvl = levels[index];
-    stateRef.current = { x: lvl.start.x, y: lvl.start.y, vx: 0, vy: 0, angle: 0, grounded: false, camera: 0, stars: lvl.stars.map(() => false), enemies: lvl.enemies.map(e => ({ ...e, dir: 1, dead: false })), lives: 3, time: 0, hasKey: false, crumbleTimers: lvl.crumbles.map(() => -1), portalCooldown: 0, gateCooldown: 0, boostTimer: 0, invulnerable: 0 };
+    stateRef.current = { x: lvl.start.x, y: lvl.start.y, vx: 0, vy: 0, angle: 0, grounded: false, camera: 0, stars: lvl.stars.map(() => false), enemies: lvl.enemies.map(e => ({ ...e, dir: 1, dead: false })), lives: 3, time: 0, hasKey: false, crumbleTimers: lvl.crumbles.map(() => -1), portalCooldown: 0, gateCooldown: 0, boostTimer: 0, invulnerable: 0, checkpoint: { ...lvl.start }, checkpointIndex: -1 };
     setLives(3); setStarCount(0); setHasKey(false); beep(420, .07);
   }, [beep]);
 
@@ -96,12 +99,28 @@ export default function Home() {
     });
   }, [levelIndex]);
 
+  const triggerCheat = useCallback(() => {
+    cheatIndexRef.current = 0;
+    if (stateRef.current) stateRef.current.stars = stateRef.current.stars.map(() => true);
+    setStarCount(3);
+    saveWin(3);
+    setMessage("cheat");
+    setPaused(false);
+    beep(900, .28, .06);
+  }, [beep, saveWin]);
+
+  const advanceCheat = useCallback((action: CheatAction) => {
+    const nextIndex = advanceCheatIndex(cheatIndexRef.current, action);
+    if (nextIndex === CHEAT_SEQUENCE.length) triggerCheat();
+    else cheatIndexRef.current = nextIndex;
+  }, [triggerCheat]);
+
   const loseLife = useCallback(() => {
     const s = stateRef.current; if (!s || message || s.invulnerable > 0) return;
     s.lives -= 1; setLives(s.lives); beep(120, .22, .06);
     if (s.lives <= 0) { setMessage("lose"); return; }
     const lvl = levels[levelIndex];
-    s.x = lvl.start.x; s.y = lvl.start.y; s.vx = 0; s.vy = 0; s.camera = 0;
+    s.x = s.checkpoint.x; s.y = s.checkpoint.y; s.vx = 0; s.vy = 0; s.camera = Math.max(0, Math.min(lvl.width - VIEW_W, s.checkpoint.x - VIEW_W * .38));
     s.hasKey = false; setHasKey(false);
     s.crumbleTimers = lvl.crumbles.map(() => -1); s.portalCooldown = 0; s.gateCooldown = 0; s.boostTimer = 0; s.invulnerable = 1;
   }, [beep, levelIndex, message]);
@@ -120,6 +139,16 @@ export default function Home() {
     ctx.lineTo(VIEW_W, 720); ctx.lineTo(0, 720); ctx.fill();
 
     ctx.save(); ctx.translate(-s.camera, 0);
+    lvl.gravityZones.forEach(zone => {
+      ctx.fillStyle = "rgba(120,92,205,.13)"; ctx.fillRect(zone.x, zone.y, zone.w, zone.h);
+      ctx.strokeStyle = "rgba(255,255,255,.48)"; ctx.lineWidth = 3;
+      for (let yy = zone.y + 42; yy < zone.y + zone.h; yy += 72) {
+        for (let xx = zone.x + 34; xx < zone.x + zone.w; xx += 64) {
+          ctx.beginPath(); ctx.arc(xx, yy, 10 + Math.sin(time * 3 + xx) * 2, 0, Math.PI * 2); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(xx, yy + 18); ctx.lineTo(xx, yy - 17); ctx.lineTo(xx - 7, yy - 9); ctx.moveTo(xx, yy - 17); ctx.lineTo(xx + 7, yy - 9); ctx.stroke();
+        }
+      }
+    });
     lvl.windZones.forEach(zone => {
       ctx.fillStyle = "rgba(230,250,255,.15)"; ctx.fillRect(zone.x, zone.y, zone.w, zone.h);
       ctx.fillStyle = "rgba(255,255,255,.62)";
@@ -149,6 +178,14 @@ export default function Home() {
       ctx.fillStyle = "rgba(255,255,255,.18)"; ctx.fillRect(p.x + 8, p.y + 5, Math.max(0, p.w - 16), 3);
       if (p.h > 40) { ctx.fillStyle = "rgba(42,25,18,.14)"; for (let xx = p.x + 22; xx < p.x + p.w; xx += 58) ctx.fillRect(xx, p.y + 34, 12, 8); }
     });
+    lvl.phasePlatforms.forEach(platform => {
+      const active = isPhasePlatformActive(platform, time);
+      ctx.save(); ctx.globalAlpha = active ? .95 : .2;
+      ctx.fillStyle = active ? "#9b7be3" : "#d8caff"; ctx.fillRect(platform.x, platform.y, platform.w, platform.h);
+      ctx.fillStyle = "rgba(255,255,255,.82)"; ctx.fillRect(platform.x + 8, platform.y + 5, platform.w - 16, 4);
+      ctx.strokeStyle = "#5b3d99"; ctx.lineWidth = 3; ctx.strokeRect(platform.x, platform.y, platform.w, platform.h);
+      ctx.restore();
+    });
     lvl.crumbles.forEach((p, i) => {
       const timer = s.crumbleTimers[i] ?? -1;
       if (timer >= p.delay && timer < p.delay + p.respawn) return;
@@ -172,6 +209,14 @@ export default function Home() {
     lvl.ice.forEach(strip => {
       ctx.fillStyle = "rgba(190,248,255,.9)"; ctx.fillRect(strip.x, strip.y, strip.w, strip.h);
       ctx.fillStyle = "rgba(255,255,255,.8)"; for (let xx = strip.x + 12; xx < strip.x + strip.w; xx += 45) { ctx.beginPath(); ctx.moveTo(xx, strip.y + 2); ctx.lineTo(xx + 18, strip.y + strip.h - 2); ctx.lineTo(xx + 31, strip.y + 2); ctx.fill(); }
+    });
+    lvl.conveyors.forEach(belt => {
+      const direction = belt.speed >= 0 ? 1 : -1;
+      ctx.fillStyle = "#3f4652"; ctx.fillRect(belt.x, belt.y, belt.w, belt.h);
+      ctx.fillStyle = "#ffd052";
+      for (let xx = belt.x + 14; xx < belt.x + belt.w - 10; xx += 28) {
+        ctx.beginPath(); ctx.moveTo(xx, belt.y + 2); ctx.lineTo(xx + direction * 11, belt.y + belt.h / 2); ctx.lineTo(xx, belt.y + belt.h - 2); ctx.fill();
+      }
     });
 
     lvl.springs.forEach(spring => {
@@ -214,6 +259,25 @@ export default function Home() {
       ctx.strokeStyle = "#ffca36"; ctx.lineWidth = 7; ctx.beginPath(); ctx.moveTo(spinner.x - dx, spinner.y - dy); ctx.lineTo(spinner.x + dx, spinner.y + dy); ctx.stroke();
       ctx.fillStyle = "#f04a3f"; ctx.beginPath(); ctx.arc(spinner.x, spinner.y, 17, 0, Math.PI * 2); ctx.fill();
       ctx.fillStyle = "#fff2af"; ctx.beginPath(); ctx.arc(spinner.x - 4, spinner.y - 5, 4, 0, Math.PI * 2); ctx.fill();
+    });
+
+    lvl.laserGates.forEach(gate => {
+      const active = isLaserGateActive(gate, time);
+      ctx.fillStyle = "#3a3542"; ctx.fillRect(gate.x - 15, gate.y - 8, 30, 18); ctx.fillRect(gate.x - 15, gate.y + gate.h - 10, 30, 18);
+      ctx.fillStyle = active ? "#ffeb78" : "#8e8295"; ctx.beginPath(); ctx.arc(gate.x, gate.y + 1, 7, 0, Math.PI * 2); ctx.arc(gate.x, gate.y + gate.h - 1, 7, 0, Math.PI * 2); ctx.fill();
+      if (active) {
+        ctx.save(); ctx.shadowColor = "#ff3d4f"; ctx.shadowBlur = 18; ctx.strokeStyle = "#ff4357"; ctx.lineWidth = 8;
+        ctx.beginPath(); ctx.moveTo(gate.x, gate.y + 8); ctx.lineTo(gate.x, gate.y + gate.h - 8); ctx.stroke();
+        ctx.strokeStyle = "#fff5bf"; ctx.lineWidth = 2; ctx.stroke(); ctx.restore();
+      }
+    });
+
+    lvl.checkpoints.forEach((checkpoint, i) => {
+      const active = i <= s.checkpointIndex;
+      const surfaceY = checkpoint.y + BALL_R;
+      ctx.strokeStyle = active ? "#f5b51b" : "#596371"; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(checkpoint.x, surfaceY); ctx.lineTo(checkpoint.x, surfaceY - 78); ctx.stroke();
+      ctx.fillStyle = active ? "#ffd84e" : "#d5d8dc"; ctx.beginPath(); ctx.moveTo(checkpoint.x + 3, surfaceY - 76); ctx.lineTo(checkpoint.x + 48, surfaceY - 62); ctx.lineTo(checkpoint.x + 3, surfaceY - 47); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = active ? "rgba(255,216,78,.22)" : "rgba(255,255,255,.12)"; ctx.beginPath(); ctx.arc(checkpoint.x, checkpoint.y, 42, 0, Math.PI * 2); ctx.fill();
     });
 
     s.enemies.forEach(e => { if (e.dead) return; ctx.save(); ctx.translate(e.x, e.y); ctx.fillStyle = "#242a35"; ctx.rotate(time * e.dir); ctx.fillRect(-23, -23, 46, 46); ctx.fillStyle = "#f6f7fb"; ctx.fillRect(-14, -12, 9, 11); ctx.fillRect(5, -12, 9, 11); ctx.fillStyle = "#141820"; ctx.fillRect(-11, -9, 4, 5); ctx.fillRect(7, -9, 4, 5); ctx.restore(); });
@@ -265,12 +329,13 @@ export default function Home() {
         const c = controls.current;
         const dir = (c.right ? 1 : 0) - (c.left ? 1 : 0);
         const onIce = s.grounded && lvl.ice.some(strip => s.x + BALL_R > strip.x && s.x - BALL_R < strip.x + strip.w && Math.abs(s.y + BALL_R - (strip.y + strip.h)) < 14);
+        const gravityZone = lvl.gravityZones.find(zone => s.x > zone.x - BALL_R && s.x < zone.x + zone.w + BALL_R && s.y > zone.y - BALL_R && s.y < zone.y + zone.h + BALL_R);
         const friction = onIce ? (dir ? .38 : .6) : (s.grounded && !dir ? .001 : .08);
         s.vx += dir * 1450 * dt; s.vx *= Math.pow(friction, dt);
         const maxRunSpeed = s.boostTimer > 0 ? 790 : MAX_RUN_SPEED;
         s.vx = Math.max(-maxRunSpeed, Math.min(maxRunSpeed, s.vx));
         if (c.jumpPressed && s.grounded) { s.vy = -JUMP_SPEED; s.grounded = false; beep(360, .07); } c.jumpPressed = false;
-        s.vy = Math.min(1050, s.vy + GRAVITY * lvl.gravityScale * dt);
+        s.vy = Math.min(1050, s.vy + GRAVITY * lvl.gravityScale * (gravityZone?.scale || 1) * dt);
 
         lvl.windZones.forEach(zone => {
           if (s.x > zone.x - BALL_R && s.x < zone.x + zone.w + BALL_R && s.y > zone.y - BALL_R && s.y < zone.y + zone.h + BALL_R) {
@@ -291,9 +356,11 @@ export default function Home() {
             const timer = s.crumbleTimers[platform.crumbleIndex] ?? -1;
             return timer < 0 || timer < platform.delay;
           });
+        const activePhasePlatforms = lvl.phasePlatforms.filter(platform => isPhasePlatformActive(platform, s.time));
         const solids = [
           ...lvl.platforms.map(platform => ({ ...platform, crumbleIndex: -1 })),
           ...movingRects.map(platform => ({ ...platform, crumbleIndex: -1 })),
+          ...activePhasePlatforms.map(platform => ({ ...platform, crumbleIndex: -1 })),
           ...activeCrumbles,
         ];
         const prevX = s.x; s.x += s.vx * dt;
@@ -318,6 +385,8 @@ export default function Home() {
             if (s.boostTimer <= .05) beep(680, .06, .05);
             s.vx = boostDirection * Math.max(Math.abs(s.vx), 750); s.boostTimer = .7;
           }
+          const conveyor = lvl.conveyors.find(belt => s.x + BALL_R > belt.x && s.x - BALL_R < belt.x + belt.w && Math.abs((s.y + BALL_R) - (belt.y + belt.h)) < 14);
+          if (conveyor) s.vx += (conveyor.speed - s.vx) * Math.min(1, dt * 4.5);
         }
 
         // Spring collision
@@ -328,6 +397,12 @@ export default function Home() {
         if (lvl.key && !s.hasKey && Math.hypot(s.x - lvl.key.x, s.y - lvl.key.y) < BALL_R + 25) {
           s.hasKey = true; s.gateCooldown = 0; setHasKey(true); beep(880, .14, .06);
         }
+
+        lvl.checkpoints.forEach((checkpoint, i) => {
+          if (i > s.checkpointIndex && Math.hypot(s.x - checkpoint.x, s.y - checkpoint.y) < BALL_R + 30) {
+            s.checkpoint = { ...checkpoint }; s.checkpointIndex = i; beep(740, .12, .045);
+          }
+        });
 
         if (s.portalCooldown <= 0) {
           for (const portal of lvl.portals) {
@@ -354,7 +429,8 @@ export default function Home() {
           const dx = Math.cos(angle) * spinner.length, dy = Math.sin(angle) * spinner.length;
           return distanceToSegment(s.x, s.y, spinner.x - dx, spinner.y - dy, spinner.x + dx, spinner.y + dy) < BALL_R + 9;
         });
-        if (hitSpike || hitLava || hitSpinner || s.y > VIEW_H + 90) loseLife();
+        const hitLaser = lvl.laserGates.some(gate => isLaserGateActive(gate, s.time) && Math.abs(s.x - gate.x) < BALL_R + 8 && s.y + BALL_R > gate.y && s.y - BALL_R < gate.y + gate.h);
+        if (hitSpike || hitLava || hitSpinner || hitLaser || s.y > VIEW_H + 90) loseLife();
 
         // Goal reached (checked with key lock)
         if (Math.hypot(s.x - lvl.goal.x, s.y - (lvl.goal.y + 25)) < 70) {
@@ -380,47 +456,16 @@ export default function Home() {
       if (["arrowleft", "arrowright", "arrowup", "a", "d", "w", " "].includes(key)) event.preventDefault();
       if (event.repeat) return;
 
-      const triggerCheat = () => {
-        cheatIndexRef.current = 0;
-        if (stateRef.current) {
-          stateRef.current.stars = stateRef.current.stars.map(() => true);
-        }
-        setStarCount(3);
-        saveWin(3);
-        setMessage("cheat");
-        setPaused(false);
-        beep(900, .28, .06);
-      };
-
-      const handleCheatInput = (input: "up" | "left" | "right") => {
-        const sequence = CHEAT_SEQUENCE;
-        const current = cheatIndexRef.current;
-
-        if (sequence[current] === input) {
-          const next = current + 1;
-          if (next >= sequence.length) {
-            triggerCheat();
-            return;
-          }
-          cheatIndexRef.current = next;
-          return;
-        }
-
-        cheatIndexRef.current = input === "up" ? 1 : 0;
-      };
-
       if (key === "h" || key === "9" || key === "c") {
         triggerCheat();
         return;
       }
 
-      const isUp = key === "arrowup" || key === "w" || key === " ";
+      const isUp = key === "arrowup" || key === "w";
       const isRight = key === "arrowright" || key === "d";
       const isLeft = key === "arrowleft" || key === "a";
-
-      if (isUp) handleCheatInput("up");
-      else if (isRight) handleCheatInput("right");
-      else if (isLeft) handleCheatInput("left");
+      const cheatAction: CheatAction | null = isUp ? "up" : isRight ? "right" : isLeft ? "left" : key === " " || key === "space" ? "jump" : null;
+      if (cheatAction) advanceCheat(cheatAction);
 
       if (key === "arrowleft" || key === "a") controls.current.left = true;
       if (key === "arrowright" || key === "d") controls.current.right = true;
@@ -440,7 +485,7 @@ export default function Home() {
     const releaseAll = () => { controls.current = { left: false, right: false, jump: false, jumpPressed: false }; };
     window.addEventListener("keydown", press); window.addEventListener("keyup", release); window.addEventListener("blur", releaseAll);
     return () => { window.removeEventListener("keydown", press); window.removeEventListener("keyup", release); window.removeEventListener("blur", releaseAll); releaseAll(); };
-  }, [beep, resetLevel, saveWin, screen]);
+  }, [advanceCheat, resetLevel, screen, triggerCheat]);
 
   useEffect(() => {
     if (screen !== "game") return;
@@ -450,20 +495,9 @@ export default function Home() {
   }, [screen]);
 
   const touch = (action: "left" | "right" | "jump", active: boolean) => {
-    if (active) {
-      if (action === "jump") {
-        if (!controls.current.jump) controls.current.jumpPressed = true;
-        controls.current.jump = true;
-        return;
-      }
-      if (action === "left") controls.current.left = true;
-      if (action === "right") controls.current.right = true;
-      return;
-    }
-
-    if (action === "jump") controls.current.jump = false;
-    else if (action === "left") controls.current.left = false;
-    else if (action === "right") controls.current.right = false;
+    if (active) advanceCheat(action);
+    if (action === "jump") { if (active && !controls.current.jump) controls.current.jumpPressed = true; controls.current.jump = active; return; }
+    controls.current[action] = active;
   };
 
   const toggleSound = () => { soundRef.current = !soundRef.current; setSound(soundRef.current); };
@@ -475,7 +509,7 @@ export default function Home() {
         <section className="menu-screen">
           <div className="menu-cloud cloud-one" /><div className="menu-cloud cloud-two" />
           <div className="hero-copy">
-            <p className="eyebrow">ADA İÇİN 100 BÖLÜMLÜ MACERA</p>
+            <p className="eyebrow">ADA İÇİN 200 BÖLÜMLÜ MACERA</p>
             <h1>RED<br /><span>BALL</span></h1>
             <p className="intro">Ada, minik kahramanımızı yuvarla, dikenlerden kaç ve altın tacın yolunu aç.</p>
             <div className="menu-actions">
@@ -496,7 +530,7 @@ export default function Home() {
 
       {screen === "levels" && (
         <section className="level-screen">
-          <header className="level-header"><button className="round-button" onClick={() => setScreen("menu")} aria-label="Ana menüye dön">←</button><div><p className="eyebrow">10 DÜNYA · 100 BÖLÜM</p><h2>Bölümünü seç</h2></div><div className="total-stars">★ {progress.scores.reduce((a, b) => a + b, 0)} / {LEVEL_COUNT * 3}</div></header>
+          <header className="level-header"><button className="round-button" onClick={() => setScreen("menu")} aria-label="Ana menüye dön">←</button><div><p className="eyebrow">20 DÜNYA · 200 BÖLÜM</p><h2>Bölümünü seç</h2></div><div className="total-stars">★ {progress.scores.reduce((a, b) => a + b, 0)} / {LEVEL_COUNT * 3}</div></header>
           <div className="level-grid">
             {levels.map((lvl, i) => { const locked = i + 1 > progress.unlocked; return <button key={lvl.number} disabled={locked} onClick={() => startLevel(i)} className={`level-card ${locked ? "locked" : ""}`}><span className="level-number">{locked ? "◆" : String(i + 1).padStart(2, "0")}</span><span className="level-info"><em>{lvl.chapter}</em><strong>{lvl.name}</strong><small>{locked ? "Önceki bölümü bitir" : lvl.subtitle}</small></span><span className="card-stars">{[0, 1, 2].map(n => <i key={n} className={n < (progress.scores[i] || 0) ? "earned" : ""}>★</i>)}</span></button>; })}
           </div>
@@ -514,7 +548,10 @@ export default function Home() {
             <button className="round-button dark" onClick={() => setPaused(p => !p)} aria-label={paused ? "Devam et" : "Duraklat"}>{paused ? "▶" : "Ⅱ"}</button>
             <button className="round-button dark" onClick={toggleSound} aria-label={sound ? "Sesi kapat" : "Sesi aç"}>{sound ? "♫" : "×"}</button>
           </div>
-          <div className="canvas-frame"><canvas ref={canvasRef} width={VIEW_W} height={VIEW_H} aria-label={`${levels[levelIndex].name} oyun alanı`} /></div>
+          <div className="canvas-frame">
+            <canvas ref={canvasRef} width={VIEW_W} height={VIEW_H} aria-label={`${levels[levelIndex].name} oyun alanı`} />
+            {levels[levelIndex].note && <p className="level-note">{levels[levelIndex].note}</p>}
+          </div>
           <div className="rotate-hint">↻ iPad’i yatay çevirirsen oyun alanı genişler.</div>
           <div className="touch-controls" aria-label="Dokunmatik kontroller"><div><button aria-label="Sola git" onPointerDown={() => touch("left", true)} onPointerUp={() => touch("left", false)} onPointerCancel={() => touch("left", false)} onPointerLeave={() => touch("left", false)}>←</button><button aria-label="Sağa git" onPointerDown={() => touch("right", true)} onPointerUp={() => touch("right", false)} onPointerCancel={() => touch("right", false)} onPointerLeave={() => touch("right", false)}>→</button></div><button aria-label="Zıpla" className="jump-button" onPointerDown={() => touch("jump", true)} onPointerUp={() => touch("jump", false)} onPointerCancel={() => touch("jump", false)} onPointerLeave={() => touch("jump", false)}>↑</button></div>
           {paused && !message && <div className="game-modal"><div className="modal-card"><span className="modal-icon">Ⅱ</span><h2>Mola verdik</h2><p>Top da biraz nefeslensin.</p><button className="primary-button small" onClick={() => setPaused(false)}>DEVAM ET</button><button className="text-button" onClick={() => resetLevel()}>Bölümü yeniden başlat</button></div></div>}
@@ -529,9 +566,15 @@ export default function Home() {
             <div className="game-modal">
               <div className="modal-card">
                 <span className="modal-icon">{(message === "win" || message === "cheat") ? (levelIndex === LEVEL_COUNT - 1 ? "♛" : "★") : "×"}</span>
-                <p className="eyebrow">{message === "cheat" ? "HİLECİ KEDİMMM" : (message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "MACERA TAMAMLAYAN KEDİM" : "KAZANDIN ADA!") : "KAYBETTİN ADA")}</p>
-                <h2>{message === "cheat" ? "hileci kedimmm" : (message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "ELLLERİNE SAĞLIK KEDİM 100 BÖLÜMÜN TAMAMINI BİTİRDİN!" : "Harika oynadın bebeğimmmmmm") : "SEN ÖLDÜN MÜÜÜ KIYAMAMMM")}</h2>
-                {!((message === "win" || message === "cheat") && levelIndex === LEVEL_COUNT - 1) && <p>{(message === "win" || message === "cheat") ? "FENAAA İYİSİNNN" : "Hadi bir kez daha dene sevgilim."}</p>}
+                <p className="eyebrow">
+                  {message === "cheat" ? "HİLECİ KEDİMMM" : (message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "MACERA TAMAMLAYAN KEDİM" : "KAZANDIN ADA!") : "KAYBETTİN ADA")}
+                </p>
+                <h2>
+                  {message === "cheat" ? "hileci kedimmm" : (message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "ELLLERİNE SAĞLIK KEDİM 200 BÖLÜMÜN TAMAMINI BİTİRDİN!" : "Harika oynadın bebeğimmmmmm") : "SEN ÖLDÜN MÜÜÜ KIYAMAMMM")}
+                </h2>
+                {!((message === "win" || message === "cheat") && levelIndex === LEVEL_COUNT - 1) && (
+                  <p>{(message === "win" || message === "cheat") ? "FENAAA İYİSİNNN" : "Hadi bir kez daha dene sevgilim."}</p>
+                )}
                 {(message === "win" || message === "cheat") && <div className="result-stars">{[0, 1, 2].map(n => <span key={n} className={n < starCount ? "earned" : ""}>★</span>)}</div>}
                 <button className="primary-button small" onClick={() => { if ((message === "win" || message === "cheat") && levelIndex < LEVEL_COUNT - 1) startLevel(levelIndex + 1); else resetLevel(); }}>{(message === "win" || message === "cheat") && levelIndex < LEVEL_COUNT - 1 ? "SONRAKİ BÖLÜM, ADA" : "TEKRAR DENE ADA"}</button>
                 <button className="text-button" onClick={() => { setScreen("levels"); setMessage(null); }}>Bölüm haritası</button>

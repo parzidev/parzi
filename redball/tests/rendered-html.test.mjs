@@ -5,31 +5,36 @@ import test from "node:test";
 test("GitHub Pages paketi doğru domain ve varlıklarla hazırdır", async () => {
   const html = await readFile(new URL("../.pages-build/index.html", import.meta.url), "utf8");
   assert.match(html, /<title>REDBALL/i);
-  assert.match(html, /Ada İçin 100 Bölümlük Macera/);
+  assert.match(html, /Ada İçin 200 Bölümlük Macera/);
   assert.match(html, /https:\/\/parzi\.dev\/redball\//);
   assert.match(html, /\/redball\/assets\/index-[^"']+\.js/);
   assert.match(html, /https:\/\/parzi\.dev\/redball\/og-redball-100\.png/);
   await access(new URL("../og-redball-100.png", import.meta.url));
 });
 
-test("oyun 100 bölüm, yeni mekanikler, klavye ve iPad kontrolleri içerir", async () => {
+test("oyun 200 bölüm, yeni mekanikler, klavye ve iPad kontrolleri içerir", async () => {
   const source = await readFile(new URL("../src/Game.tsx", import.meta.url), "utf8");
   const levelSource = await readFile(new URL("../src/levels.ts", import.meta.url), "utf8");
-  assert.match(levelSource, /LEVEL_COUNT = 100/);
+  assert.match(levelSource, /LEVEL_COUNT = 200/);
   assert.match(levelSource, /SpringPlant/);
   assert.match(levelSource, /CrumblePlatform/);
   assert.match(levelSource, /PortalPair/);
   assert.match(levelSource, /WaterZone/);
   assert.match(levelSource, /LavaPool/);
   assert.match(levelSource, /Spinner/);
+  assert.match(levelSource, /Conveyor/);
+  assert.match(levelSource, /PhasePlatform/);
+  assert.match(levelSource, /LaserGate/);
+  assert.match(levelSource, /GravityZone/);
   assert.match(levelSource, /analyzeSolvability/);
   assert.match(levelSource, /redesignKeyRoute/);
   assert.match(levelSource, /KeyChallenge/);
-  assert.match(levelSource, /index < 50 \? makeLegacyLevel\(index\) : makeRedesignedLevel\(index\)/);
+  assert.match(levelSource, /index < 50 \? makeLegacyLevel\(index\) : index < 100 \? makeRedesignedLevel\(index\) : makeExpansionLevel\(index\)/);
   assert.match(source, /loadProgress\(window\.localStorage, LEVEL_COUNT\)/);
   assert.match(source, /localStorage\.setItem\(PROGRESS_KEY/);
   assert.match(source, /onPointerDown/);
   assert.match(source, /onPointerCancel/);
+  assert.match(source, /if \(active\) advanceCheat\(action\)/);
   assert.match(source, /requestAnimationFrame/);
   assert.match(source, /addEventListener\("keydown"/);
   assert.match(source, /visibilitychange/);
@@ -40,6 +45,11 @@ test("oyun 100 bölüm, yeni mekanikler, klavye ve iPad kontrolleri içerir", as
   assert.match(source, /lvl\.spinners/);
   assert.match(source, /lvl\.lava/);
   assert.match(source, /lvl\.keyPlatform/);
+  assert.match(source, /lvl\.conveyors/);
+  assert.match(source, /lvl\.phasePlatforms/);
+  assert.match(source, /lvl\.laserGates/);
+  assert.match(source, /lvl\.gravityZones/);
+  assert.match(source, /lvl\.checkpoints/);
   assert.match(source, /s\.hasKey = false; setHasKey\(false\)/);
   assert.match(source, /s\.gateCooldown/);
   assert.match(source, /ÖNCE ANAHTARI BUL/);
@@ -48,8 +58,9 @@ test("oyun 100 bölüm, yeni mekanikler, klavye ve iPad kontrolleri içerir", as
   assert.match(source, /Harika oynadın bebeğimmmmmm/);
   assert.match(source, /FENAAA İYİSİNNN/);
   assert.match(source, /MACERA TAMAMLAYAN KEDİM/);
-  assert.match(source, /ELLLERİNE SAĞLIK KEDİM 100 BÖLÜMÜN TAMAMINI BİTİRDİN!/);
+  assert.match(source, /ELLLERİNE SAĞLIK KEDİM 200 BÖLÜMÜN TAMAMINI BİTİRDİN!/);
   assert.match(source, /SEN ÖLDÜN MÜÜÜ KIYAMAMMM/);
+  assert.match(source, /levels\[levelIndex\]\.note/);
   assert.doesNotMatch(source, /Bu oyun senin için yapıldı/);
   assert.ok((840 ** 2) / (2 * 1900) > 180, "zıplama yüksekliği ilk bölüm basamaklarına yetmeli");
   const manifest = JSON.parse(await readFile(new URL("../manifest.webmanifest", import.meta.url), "utf8"));

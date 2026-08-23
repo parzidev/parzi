@@ -1,7 +1,7 @@
 {
-  "name": "REDBALL — Ada İçin 100 Bölümlük Macera",
+  "name": "REDBALL — Ada İçin 200 Bölümlük Macera",
   "short_name": "REDBALL",
-  "description": "Ada için hazırlanan REDBALL oyununda 100 bölümü tamamla.",
+  "description": "Ada için hazırlanan REDBALL oyununda 200 bölümü tamamla.",
   "start_url": "/redball/",
   "scope": "/redball/",
   "display": "fullscreen",

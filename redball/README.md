@@ -1,10 +1,12 @@
 # REDBALL
 
-`https://parzi.dev/redball/` adresinde çalışan, Ada için hazırlanmış 10 dünya ve
-100 bölümlü 2D platform oyunu. İlk 50 bölümün klasik düzeni korunur; 51–100
+`https://parzi.dev/redball/` adresinde çalışan, Ada için hazırlanmış 20 dünya ve
+200 bölümlü 2D platform oyunu. İlk 50 bölümün klasik düzeni korunur; 51–100
 arasında su, çöken zemin, anahtar, portal, lav, buz, rüzgâr, dönen tuzak,
-zıplatan bitki ve ivme pisti mekanikleri kademeli olarak birleşir. Anahtarlı
-32 bölüm; basamak, bitki, asansör veya yan oda temalı güvenli bir anahtar rotası kullanır.
+zıplatan bitki ve ivme pisti mekanikleri kademeli olarak birleşir. 101–200 ise
+yürüyen bant, faz platformu, lazer kapısı, yerçekimi alanı ve kontrol noktalarını
+10 yeni dünyada eski mekaniklerle birleştirir. Anahtarlı 32 bölüm; basamak,
+bitki, asansör veya yan oda temalı güvenli bir anahtar rotası kullanır.
 
 ## Kontroller
 

@@ -22,8 +22,11 @@ export function normalizeProgress(saved: StoredProgress | undefined, levelCount:
   const storedUnlocked = typeof saved?.unlocked === "number" && Number.isFinite(saved.unlocked)
     ? Math.floor(saved.unlocked)
     : unlockedFromScores;
+  const unlockedAfterExpansion = saved?.version === PROGRESS_VERSION && saved.scores?.length === 100 && storedUnlocked >= 100
+    ? Math.max(storedUnlocked, 101)
+    : storedUnlocked;
   const importedUnlocked = saved?.version === PROGRESS_VERSION
-    ? storedUnlocked
+    ? unlockedAfterExpansion
     : saved
       ? Math.min(storedUnlocked, Math.min(50, levelCount))
       : 1;
@@ -47,39 +50,4 @@ export function loadProgress(storage: StorageLike, levelCount: number): Progress
     } catch { /* try the older storage key */ }
   }
   return normalizeProgress(undefined, levelCount);
-}
-
-// iPad/touch support for the existing keyboard cheat listener.
-// The game already translates keyboard arrows into cheat-sequence inputs;
-// dispatching a short synthetic key press from the touch controls keeps both
-// input paths on the same code path without changing normal touch movement.
-if (typeof window !== "undefined") {
-  document.addEventListener("pointerdown", (event) => {
-    const target = event.target as HTMLElement | null;
-    const button = target?.closest<HTMLButtonElement>(".touch-controls button");
-    if (!button) return;
-
-    const label = button.getAttribute("aria-label")?.toLowerCase();
-    const key = label?.includes("sola")
-      ? "ArrowLeft"
-      : label?.includes("sağa")
-        ? "ArrowRight"
-        : label?.includes("zıpla")
-          ? "ArrowUp"
-          : null;
-
-    if (!key) return;
-
-    window.dispatchEvent(new KeyboardEvent("keydown", {
-      key,
-      bubbles: true,
-      cancelable: true,
-    }));
-
-    window.dispatchEvent(new KeyboardEvent("keyup", {
-      key,
-      bubbles: true,
-      cancelable: true,
-    }));
-  });
 }

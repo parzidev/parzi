@@ -9,6 +9,10 @@ export type PortalPair = { a: Point; b: Point; color: string };
 export type CrumblePlatform = Box & { delay: number; respawn: number };
 export type LavaPool = Box & { wave: number; speed: number; phase?: number };
 export type Spinner = Point & { length: number; speed: number; phase?: number };
+export type Conveyor = Box & { speed: number };
+export type PhasePlatform = Box & { activeTime: number; inactiveTime: number; phase?: number };
+export type LaserGate = { x: number; y: number; h: number; activeTime: number; inactiveTime: number; phase?: number };
+export type GravityZone = Box & { scale: number };
 export type KeyChallenge = "stairs" | "spring" | "lift" | "vault";
 export type Theme = { sky: string[]; hill: string; far: string; ground: string; grass: string; accent: string };
 
@@ -17,6 +21,7 @@ export type Level = {
   chapter: string;
   name: string;
   subtitle: string;
+  note?: string;
   mechanics: string[];
   width: number;
   start: Point;
@@ -31,6 +36,11 @@ export type Level = {
   portals: PortalPair[];
   lava: LavaPool[];
   spinners: Spinner[];
+  conveyors: Conveyor[];
+  phasePlatforms: PhasePlatform[];
+  laserGates: LaserGate[];
+  gravityZones: GravityZone[];
+  checkpoints: Point[];
   spikes: Box[];
   stars: Point[];
   enemies: EnemySpawn[];
@@ -48,7 +58,7 @@ export const BALL_R = 27;
 export const GRAVITY = 1900;
 export const JUMP_SPEED = 840;
 export const MAX_RUN_SPEED = 430;
-export const LEVEL_COUNT = 100;
+export const LEVEL_COUNT = 200;
 
 const themes: Theme[] = [
   { sky: ["#76d8ff", "#e7fbff"], hill: "#6ac77a", far: "#a5e2a8", ground: "#8a542d", grass: "#49ac55", accent: "#ffd646" },
@@ -61,11 +71,23 @@ const themes: Theme[] = [
   { sky: ["#4b1715", "#e85b34"], hill: "#8f271f", far: "#cf4930", ground: "#2d1718", grass: "#f07a35", accent: "#ffd16a" },
   { sky: ["#55d7ed", "#e8fbff"], hill: "#4ca5b7", far: "#8bd4df", ground: "#345a78", grass: "#b9f4ff", accent: "#e8baff" },
   { sky: ["#5a2588", "#f0b2ff"], hill: "#7a3f8e", far: "#d08bc7", ground: "#3e3947", grass: "#ffc83d", accent: "#fff09a" },
+  { sky: ["#ffd9a8", "#fff7dc"], hill: "#ce7d49", far: "#efb86d", ground: "#6f4933", grass: "#e39d3e", accent: "#fff28a" },
+  { sky: ["#b9f1dd", "#f5fff2"], hill: "#4ca97c", far: "#88d2a4", ground: "#4f624b", grass: "#75c96b", accent: "#ffe36a" },
+  { sky: ["#ffc8ba", "#fff1d9"], hill: "#c85e57", far: "#e58b73", ground: "#5f3f42", grass: "#f29b55", accent: "#fff08b" },
+  { sky: ["#c9c4ff", "#f7ecff"], hill: "#766cc3", far: "#aaa0df", ground: "#4d4969", grass: "#a88bd6", accent: "#ffe56f" },
+  { sky: ["#99e3e8", "#f1fff8"], hill: "#3f9b9c", far: "#80c9bd", ground: "#416169", grass: "#65c6a6", accent: "#fff082" },
+  { sky: ["#f7c994", "#fff4cf"], hill: "#b46e3f", far: "#df9f5c", ground: "#65432f", grass: "#d8873f", accent: "#fff38d" },
+  { sky: ["#d5b9f4", "#fff0fa"], hill: "#8659a6", far: "#bd8dcc", ground: "#56425e", grass: "#b979b7", accent: "#ffe374" },
+  { sky: ["#9ccff2", "#eefaff"], hill: "#497ea8", far: "#78afd0", ground: "#40586b", grass: "#69b5bd", accent: "#fff18a" },
+  { sky: ["#f5b7c9", "#fff0d5"], hill: "#a84f72", far: "#d27f91", ground: "#563d50", grass: "#cf7c73", accent: "#ffe66d" },
+  { sky: ["#ffcf74", "#fff6cf"], hill: "#c36b37", far: "#efa957", ground: "#503b3b", grass: "#e89338", accent: "#fff7a0" },
 ];
 
 const chapterNames = [
   "Çayır Rotası", "Zıpzıp Bahçesi", "Mor Gece", "Sıcak Vadi", "Gökyüzü Krallığı",
   "Su Bahçeleri", "Saray Zindanları", "Kor Mağaraları", "Kristal Zirveler", "Altın Taç Kalesi",
+  "Dişli Şehir", "Faz Ormanı", "Işık Metrosu", "Yerçekimi İstasyonu", "Zaman Tapınağı",
+  "Rüzgâr Fabrikası", "Işık Labirenti", "Kozmik Maden", "Saat Kulesi", "Sonsuzluk Sarayı",
 ];
 
 const names = [
@@ -79,6 +101,16 @@ const names = [
   ["Kızgın Nehir", "Lav Köprüsü", "Erimeyen Kayalar", "Ateş Sıçrayışı", "Kor Tüneli", "Magma Kanyonu", "Püskürme Alanı", "Alev Çemberi", "Kızıl Dev", "Volkanik Taç"],
   ["Mavi Parıltı", "Buzlu Kayalık", "Kristal Portal", "Gök Rüzgârı", "Kaygan Geçit", "Zirve Tırmanışı", "Prizma Yolu", "Uçurum Buzu", "Donmuş Fırtına", "Kristal Taç"],
   ["Saray Kapısı", "Kraliyet Merdiveni", "Büyük Salon", "Asil Parkur", "Altın Geçit", "Zafer Yolu", "Kule Sıçrayışı", "Usta Geçidi", "Son Parkur", "Efsanevi Altın Taç"],
+  ["İlk Dişli", "Bant Sokağı", "Bakır Köprü", "Piston Geçidi", "Çark Meydanı", "Hız Atölyesi", "Dişli Kule", "Makine Rotası", "Usta Vardiyası", "Şehir Çekirdeği"],
+  ["Soluk Patika", "Kaybolan Basamak", "Gölge Korusu", "Faz Köprüsü", "Sisli Katman", "Kayan Gerçeklik", "İkiz Boyut", "Hayalet Yol", "Kırık Zaman", "Orman Çekirdeği"],
+  ["İlk Işın", "Kırmızı Hat", "Prizma Durağı", "Kesik Tünel", "Işık Makası", "Bekleme Peronu", "Ayna Geçidi", "Foton Hattı", "Son Sefer", "Metro Çekirdeği"],
+  ["Hafif Adım", "Çekim Odası", "Yörünge Yolu", "Ters Akım", "Boşluk İstasyonu", "Ağırlık Sınavı", "Uydu Geçidi", "Kütle Merkezi", "Derin Yörünge", "İstasyon Çekirdeği"],
+  ["İlk Tik", "Sarkaç Avlusu", "Kaybolan Saniye", "Zaman Kapısı", "Duran Koridor", "Hızlı Dakika", "Kum Saati", "Geçmiş Köprü", "Gelecek Odası", "Tapınak Çekirdeği"],
+  ["İlk Vardiya", "Bant Fırtınası", "Pervane Salonu", "Basınç Hattı", "Hava Kanalı", "Ters Üretim", "Kasırga Bandı", "Uçan Atölye", "Son Makine", "Fabrika Çekirdeği"],
+  ["Sessiz Işık", "Keskin Köşe", "Işın Bulmacası", "Fazlı Duvar", "Kayıp Koridor", "Parlak Tuzak", "Prizma Odası", "Kırık Ayna", "Usta Labirent", "Labirent Çekirdeği"],
+  ["Yıldız Tozu", "Hafif Maden", "Meteor Bandı", "Kristal Çekim", "Boşluk Ocağı", "Kozmik Tünel", "Uydu Madeni", "Karanlık Cevher", "Galaksi Damarı", "Maden Çekirdeği"],
+  ["İlk Çan", "Dişli Akrep", "Saniye Köprüsü", "Fazlı Kadran", "Lazer Saati", "Çekim Sarkacı", "Kayıp Vakit", "Gece Yarısı", "Son Geri Sayım", "Kule Çekirdeği"],
+  ["Sonsuz Kapı", "Bitmeyen Bant", "Yitik Faz", "Taç Işını", "Kozmik Salon", "Zaman Bahçesi", "Usta Yörünge", "Sonsuz Koridor", "Son Sınav", "Efsanevi Sonsuzluk Tacı"],
 ];
 
 const worldSubtitles = [
@@ -92,6 +124,16 @@ const worldSubtitles = [
   "Lav, sıçratıcılar ve alev çemberleri birlikte.",
   "Buzda frene erken bas, kristal portala gir.",
   "Öğrendiğin bütün mekanikler aynı parkurda.",
+  "Yürüyen bantların yönünü okuyup kontrol noktasına ulaş.",
+  "Faz platformlarının görünme ritmini yakala.",
+  "Lazer söndüğünde geç, bant hızını lehine kullan.",
+  "Yerçekimi alanlarında zıplama süreni yeniden ölç.",
+  "Zamanlanan platform ve lazerleri sabırla çöz.",
+  "Bant, rüzgâr ve çekim akışını tek harekette birleştir.",
+  "Işık kapılarıyla faz yollarının ortak ritmini bul.",
+  "Kozmik çekimde hızını koru, lav boşluklarını aş.",
+  "Kontrol noktalarını yakala, saatin tuzaklarını geç.",
+  "İki yüz bölümde öğrendiğin her şeyi taç yolunda birleştir.",
 ];
 
 const routes = [
@@ -222,6 +264,11 @@ function redesignKeyRoute(level: Level, index: number): Level {
   }
 
   const key = { x: keyPlatform.x + keyPlatform.w / 2, y: keyPlatform.y - 58 };
+  cleanLevel.portals = cleanLevel.portals.filter(portal => {
+    const left = Math.min(portal.a.x, portal.b.x);
+    const right = Math.max(portal.a.x, portal.b.x);
+    return key.x <= left || key.x >= right;
+  });
   const stars = [...cleanLevel.stars];
   const starIndex = stars.reduce((best, star, candidate) => (
     Math.abs(star.x - key.x) < Math.abs(stars[best].x - key.x) ? candidate : best
@@ -250,7 +297,7 @@ function makeLegacyLevel(index: number): Level {
   const random = mulberry32(20260803 + index * 977);
   const chapterIndex = Math.floor(index / 10);
   const stage = index % 10;
-  const difficulty = index / (LEVEL_COUNT - 1);
+  const difficulty = index / 99;
   const requestedWidth = 2200 + chapterIndex * 250 + stage * 100;
   const platforms: Box[] = [];
   let x = 0;
@@ -366,6 +413,11 @@ function makeLegacyLevel(index: number): Level {
     portals: [],
     lava: [],
     spinners: [],
+    conveyors: [],
+    phasePlatforms: [],
+    laserGates: [],
+    gravityZones: [],
+    checkpoints: [],
     spikes,
     stars,
     enemies,
@@ -380,7 +432,7 @@ function makeRedesignedLevel(index: number): Level {
   const random = mulberry32(90210 + index * 7919);
   const chapterIndex = Math.floor(index / 10);
   const stage = index % 10;
-  const difficulty = index / (LEVEL_COUNT - 1);
+  const difficulty = index / 99;
   const route: Box[] = [];
   let cursor = 0;
 
@@ -582,6 +634,7 @@ function makeRedesignedLevel(index: number): Level {
     chapter: chapterNames[chapterIndex],
     name: names[chapterIndex][stage],
     subtitle: `${worldSubtitles[chapterIndex]} · ${mechanics.slice(0, 3).join(" + ")}`,
+    note: index === 65 ? "Keşke bunu düzelttiğim gibi aramızı da düzeltebilsem." : undefined,
     mechanics,
     width: last.x + last.w,
     start: { x: route[0].x + 105, y: route[0].y - BALL_R },
@@ -596,6 +649,11 @@ function makeRedesignedLevel(index: number): Level {
     portals,
     lava,
     spinners,
+    conveyors: [],
+    phasePlatforms: [],
+    laserGates: [],
+    gravityZones: [],
+    checkpoints: [],
     spikes,
     stars,
     enemies,
@@ -604,6 +662,228 @@ function makeRedesignedLevel(index: number): Level {
     goal: { x: last.x + last.w - 105, y: last.y - 90 },
     theme: themes[chapterIndex],
   }, index);
+}
+
+export function isPhasePlatformActive(platform: PhasePlatform, time: number) {
+  const cycle = platform.activeTime + platform.inactiveTime;
+  return cycle <= 0 || (time + (platform.phase || 0)) % cycle < platform.activeTime;
+}
+
+export function isLaserGateActive(gate: LaserGate, time: number) {
+  const cycle = gate.activeTime + gate.inactiveTime;
+  return cycle > 0 && (time + (gate.phase || 0)) % cycle < gate.activeTime;
+}
+
+function makeExpansionLevel(index: number): Level {
+  const expansionIndex = index - 100;
+  const world = Math.floor(expansionIndex / 10);
+  const stage = expansionIndex % 10;
+  const chapterIndex = 10 + world;
+  const difficulty = expansionIndex / 99;
+  const random = mulberry32(770031 + expansionIndex * 104729);
+  const pattern = routes[(stage * 3 + world) % routes.length];
+  const route: Box[] = [];
+  let cursor = 0;
+  let previousY = 640;
+
+  pattern.forEach((rawY, i) => {
+    const first = i === 0;
+    const last = i === pattern.length - 1;
+    let y = first || last ? 640 : round(Math.max(470, Math.min(640, rawY + ((world + stage) % 3 - 1) * 15)), 5);
+    if (previousY - y > 155) y = previousY - 155;
+    const width = first ? 590 : last ? 690 : round(380 + random() * 175 + world * 4, 10);
+    route.push({ x: cursor, y, w: width, h: VIEW_H - y + 90 });
+    previousY = y;
+    if (!last) cursor += width + round(72 + random() * 43, 5);
+  });
+
+  const platforms = [...route];
+  const ledges: Box[] = [];
+  route.slice(1, -1).forEach((platform, i) => {
+    if ((i + stage + world) % 3 !== 0) return;
+    const ledge = {
+      x: round(platform.x + 95 + random() * Math.max(30, platform.w - 300), 5),
+      y: Math.max(300, platform.y - 135 - (stage % 2) * 15),
+      w: 155 + ((i + world) % 3) * 20,
+      h: 24,
+    };
+    ledges.push(ledge);
+  });
+  platforms.push(...ledges);
+
+  const movers: Mover[] = [];
+  const crumbles: CrumblePlatform[] = [];
+  const springs: SpringPlant[] = [];
+  const boosters: Box[] = [];
+  const ice: Box[] = [];
+  const windZones: WindZone[] = [];
+  const waterZones: WaterZone[] = [];
+  const portals: PortalPair[] = [];
+  const lava: LavaPool[] = [];
+  const spinners: Spinner[] = [];
+  const conveyors: Conveyor[] = [];
+  const phasePlatforms: PhasePlatform[] = [];
+  const laserGates: LaserGate[] = [];
+  const gravityZones: GravityZone[] = [];
+  const checkpoints: Point[] = [];
+  const spikes: Box[] = [];
+  const enemies: EnemySpawn[] = [];
+
+  const safeRoute = (i: number) => route[Math.max(1, Math.min(route.length - 2, i))];
+  const addConveyor = (i: number, direction = 1) => {
+    const p = safeRoute(i);
+    conveyors.push({ x: p.x + 80, y: p.y - 10, w: Math.min(210, p.w - 160), h: 10, speed: direction * (230 + stage * 14 + world * 5) });
+  };
+  const addPhase = (i: number) => {
+    const p = safeRoute(i);
+    phasePlatforms.push({ x: round(p.x + p.w * .5 - 95, 5), y: Math.max(285, p.y - 185), w: 190, h: 22, activeTime: 1.65 + stage * .04, inactiveTime: 1.05 + world * .035, phase: (i + stage) * .37 });
+  };
+  const addLaser = (i: number) => {
+    const p = safeRoute(i);
+    laserGates.push({ x: round(p.x + p.w * .68, 5), y: p.y - 160, h: 160, activeTime: 1.1 + stage * .035, inactiveTime: 1.25, phase: (i + world) * .43 });
+  };
+  const addGravity = (i: number, scale = .58) => {
+    const left = route[Math.max(0, Math.min(route.length - 2, i))];
+    const right = route[Math.max(1, Math.min(route.length - 1, i + 1))];
+    gravityZones.push({ x: left.x + left.w - 70, y: Math.min(left.y, right.y) - 310, w: right.x - (left.x + left.w) + 140, h: 325, scale });
+  };
+  const addCheckpoint = (i: number) => {
+    const p = safeRoute(i);
+    checkpoints.push({ x: p.x + 92, y: p.y - BALL_R });
+  };
+  const addSpring = (i: number, power = 1080) => {
+    const p = safeRoute(i);
+    springs.push({ x: round(p.x + p.w * .45, 5), y: p.y, w: 72, power });
+  };
+  const addBooster = (i: number) => {
+    const p = safeRoute(i);
+    boosters.push({ x: p.x + p.w - 205, y: p.y - 8, w: 135, h: 10 });
+  };
+  const addWind = (i: number, direction = 1) => {
+    const left = route[Math.max(0, Math.min(route.length - 2, i))];
+    const right = route[Math.max(1, Math.min(route.length - 1, i + 1))];
+    windZones.push({ x: left.x + left.w - 80, y: Math.min(left.y, right.y) - 285, w: right.x - (left.x + left.w) + 160, h: 300, force: direction * (410 + world * 15), lift: -75 });
+  };
+  const addWater = (i: number) => {
+    const p = safeRoute(i);
+    const top = Math.max(310, p.y - 170);
+    waterZones.push({ x: p.x + 45, y: top, w: p.w - 90, h: p.y - top + 35, buoyancy: 1400 });
+  };
+  const addPortal = (fromIndex: number, toIndex: number) => {
+    const from = safeRoute(fromIndex), to = safeRoute(toIndex);
+    portals.push({ a: { x: from.x + from.w * .3, y: from.y - 55 }, b: { x: to.x + to.w * .72, y: to.y - 55 }, color: "#ffcf5c" });
+  };
+  const addSpinner = (i: number) => {
+    const p = safeRoute(i);
+    spinners.push({ x: p.x + p.w * .62, y: p.y - 78, length: 58 + stage, speed: 2.1 + difficulty * .7, phase: (i + stage) * .51 });
+  };
+  const addLavaGaps = (every = 2) => {
+    for (let i = 0; i < route.length - 1; i += every) {
+      const left = route[i], right = route[i + 1];
+      lava.push({ x: left.x + left.w, y: 620, w: right.x - (left.x + left.w), h: 130, wave: 7, speed: 2.3 + difficulty, phase: i * .6 });
+    }
+  };
+  const addIce = (i: number) => {
+    const p = safeRoute(i);
+    ice.push({ x: p.x + 25, y: p.y - 10, w: p.w - 50, h: 10 });
+  };
+  const addCrumble = (i: number) => {
+    const p = safeRoute(i);
+    crumbles.push({ x: p.x + p.w * .5 - 90, y: Math.max(300, p.y - 135), w: 180, h: 24, delay: .9, respawn: 2.1 });
+  };
+
+  if (world === 0) {
+    addConveyor(1, 1); addConveyor(route.length - 3, stage % 2 ? -1 : 1); addCheckpoint(Math.floor(route.length / 2)); addBooster(2);
+  } else if (world === 1) {
+    addPhase(1); addPhase(route.length - 3); addGravity(2, .58); addSpring(2, 1080 + stage * 12);
+  } else if (world === 2) {
+    addLaser(1); addLaser(route.length - 3); addConveyor(3, stage % 2 ? -1 : 1); addIce(2);
+  } else if (world === 3) {
+    addGravity(1, .5); addGravity(route.length - 3, .66); addCheckpoint(Math.floor(route.length / 2)); addSpring(2, 1070); if (stage >= 2) addPortal(1, route.length - 3);
+  } else if (world === 4) {
+    addPhase(2); addPhase(route.length - 3); addLaser(3); addCrumble(2); addWater(Math.floor(route.length / 2));
+  } else if (world === 5) {
+    addConveyor(1, 1); addConveyor(3, -1); addGravity(2, .6); addWind(route.length - 3, stage % 2 ? -1 : 1);
+  } else if (world === 6) {
+    addCheckpoint(2); addLaser(3); addSpinner(route.length - 3); if (stage >= 4) addPortal(1, route.length - 3);
+  } else if (world === 7) {
+    addPhase(1); addConveyor(2, 1); addLavaGaps(2); addBooster(route.length - 3);
+  } else if (world === 8) {
+    addGravity(1, .56); addLaser(2); addCheckpoint(Math.floor(route.length / 2)); addWind(route.length - 3, 1); addWater(3);
+  } else {
+    addConveyor(1, stage % 2 ? -1 : 1); addPhase(2); addLaser(3); addGravity(4, .55); addCheckpoint(Math.floor(route.length / 2));
+    addSpring(2, 1120); addBooster(route.length - 3); addWind(3, 1); addSpinner(route.length - 3);
+    if (stage >= 3) addLavaGaps(2);
+    if (stage >= 5) addPortal(1, route.length - 3);
+    if (stage >= 7) { addWater(3); addIce(4); addCrumble(2); }
+  }
+
+  if (stage >= 4) {
+    const p = safeRoute(2 + stage % Math.max(1, route.length - 3));
+    const laserTooClose = laserGates.some(gate => Math.abs(gate.x - (p.x + p.w * .4)) < 120);
+    const conveyorHere = conveyors.some(belt => belt.x < p.x + p.w && belt.x + belt.w > p.x);
+    if (!laserTooClose && !conveyorHere && p.w > 420) {
+      const min = p.x + 75, max = p.x + p.w - 75;
+      enemies.push({ x: (min + max) / 2, y: p.y - 37, min, max, speed: 92 + difficulty * 45 });
+    }
+  }
+
+  const starCandidates: Point[] = [
+    ...ledges.map(p => ({ x: p.x + p.w / 2, y: p.y - 54 })),
+    ...phasePlatforms.map(p => ({ x: p.x + p.w / 2, y: p.y - 55 })),
+    ...route.slice(1, -1).map((p, i) => ({ x: p.x + p.w * (i % 2 ? .32 : .72), y: p.y - 65 })),
+  ];
+  const starPicks = [.18, .5, .82].map(ratio => Math.min(starCandidates.length - 1, Math.floor(starCandidates.length * ratio)));
+  const stars = starPicks.map((pick, i) => starCandidates[pick] || ({ x: 720 + i * 650, y: 520 }));
+  const last = route.at(-1)!;
+
+  const mechanics: string[] = [];
+  if (conveyors.length) mechanics.push("yürüyen bant");
+  if (phasePlatforms.length) mechanics.push("faz platformu");
+  if (laserGates.length) mechanics.push("lazer kapısı");
+  if (gravityZones.length) mechanics.push("yerçekimi alanı");
+  if (checkpoints.length) mechanics.push("kontrol noktası");
+  if (springs.length) mechanics.push("zıplatan bitki");
+  if (boosters.length) mechanics.push("ivme pisti");
+  if (windZones.length) mechanics.push("rüzgâr");
+  if (waterZones.length) mechanics.push("su");
+  if (crumbles.length) mechanics.push("çöken zemin");
+  if (portals.length) mechanics.push("portal");
+  if (lava.length) mechanics.push("lav");
+  if (spinners.length) mechanics.push("dönen tuzak");
+  if (ice.length) mechanics.push("buz");
+
+  return {
+    number: index + 1,
+    chapter: chapterNames[chapterIndex],
+    name: names[chapterIndex][stage],
+    subtitle: `${worldSubtitles[chapterIndex]} · ${mechanics.slice(0, 3).join(" + ")}`,
+    mechanics,
+    width: last.x + last.w,
+    start: { x: route[0].x + 105, y: route[0].y - BALL_R },
+    platforms,
+    movers,
+    crumbles,
+    springs,
+    boosters,
+    ice,
+    windZones,
+    waterZones,
+    portals,
+    lava,
+    spinners,
+    conveyors,
+    phasePlatforms,
+    laserGates,
+    gravityZones,
+    checkpoints,
+    spikes,
+    stars,
+    enemies,
+    gravityScale: 1,
+    goal: { x: last.x + last.w - 105, y: last.y - 90 },
+    theme: themes[chapterIndex],
+  };
 }
 
 export type SolvabilityResult = { ok: boolean; reachablePlatforms: number; reason?: string };
@@ -653,6 +933,10 @@ export function analyzeSolvability(level: Level): SolvabilityResult {
   });
   if (!onReachableSurface(level.goal)) return { ok: false, reachablePlatforms: reachable.size, reason: "Kapıya ulaşan platform zinciri yok." };
   if (level.key && !onReachableSurface(level.key, 35)) return { ok: false, reachablePlatforms: reachable.size, reason: "Anahtar erişilebilir değil." };
+  if (level.stars.length !== 3) return { ok: false, reachablePlatforms: reachable.size, reason: "Bölümde tam üç yıldız yok." };
+  for (const checkpoint of level.checkpoints) {
+    if (!onReachableSurface(checkpoint, 35)) return { ok: false, reachablePlatforms: reachable.size, reason: "Kontrol noktası erişilebilir değil." };
+  }
 
   for (const spike of level.spikes) {
     const host = surfaces.find(p => spike.x >= p.x && spike.x + spike.w <= p.x + p.w && Math.abs(spike.y + spike.h - p.y) < 5);
@@ -665,9 +949,24 @@ export function analyzeSolvability(level: Level): SolvabilityResult {
       return { ok: false, reachablePlatforms: reachable.size, reason: "Zıplatan bitki platformsuz kaldı." };
     }
   }
-  for (const strip of [...level.boosters, ...level.ice]) {
+  for (const strip of [...level.boosters, ...level.ice, ...level.conveyors]) {
     if (!surfaces.some(p => strip.x >= p.x && strip.x + strip.w <= p.x + p.w && Math.abs(strip.y + strip.h - p.y) < 5)) {
       return { ok: false, reachablePlatforms: reachable.size, reason: "Bir yüzey mekaniği platformsuz kaldı." };
+    }
+  }
+  for (const phase of level.phasePlatforms) {
+    if (phase.w <= 0 || phase.h <= 0 || phase.activeTime <= 0 || phase.inactiveTime <= 0 || phase.x < 0 || phase.x + phase.w > level.width) {
+      return { ok: false, reachablePlatforms: reachable.size, reason: "Bir faz platformunun ölçüleri geçersiz." };
+    }
+  }
+  for (const gate of level.laserGates) {
+    if (gate.h <= 0 || gate.activeTime <= 0 || gate.inactiveTime <= 0 || gate.x < 0 || gate.x > level.width) {
+      return { ok: false, reachablePlatforms: reachable.size, reason: "Bir lazer kapısının ölçüleri geçersiz." };
+    }
+  }
+  for (const zone of level.gravityZones) {
+    if (zone.w <= 0 || zone.h <= 0 || zone.scale <= 0 || zone.x < 0 || zone.x + zone.w > level.width) {
+      return { ok: false, reachablePlatforms: reachable.size, reason: "Bir yerçekimi alanının ölçüleri geçersiz." };
     }
   }
 
@@ -675,7 +974,7 @@ export function analyzeSolvability(level: Level): SolvabilityResult {
 }
 
 export function makeLevel(index: number): Level {
-  return index < 50 ? makeLegacyLevel(index) : makeRedesignedLevel(index);
+  return index < 50 ? makeLegacyLevel(index) : index < 100 ? makeRedesignedLevel(index) : makeExpansionLevel(index);
 }
 
 export const levels: Level[] = Array.from({ length: LEVEL_COUNT }, (_, index) => makeLevel(index));

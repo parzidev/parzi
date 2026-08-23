@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
-import { LEVEL_COUNT, analyzeSolvability, levels } from "../src/levels.ts";
+import { LEVEL_COUNT, analyzeSolvability, isLaserGateActive, isPhasePlatformActive, levels } from "../src/levels.ts";
 
-test("100 bölümün tamamı fizik sınırları içinde geçilebilirdir", () => {
+test("200 bölümün tamamı fizik sınırları içinde geçilebilirdir", () => {
   assert.equal(levels.length, LEVEL_COUNT);
   assert.equal(new Set(levels.map(level => level.name)).size, LEVEL_COUNT, "bölüm adları benzersiz olmalı");
 
@@ -13,6 +13,18 @@ test("100 bölümün tamamı fizik sınırları içinde geçilebilirdir", () => 
     .map(({ level, result }) => `#${level.number} ${level.name}: ${result.reason}`);
 
   assert.deepEqual(failures, [], failures.join("\n"));
+});
+
+test("mevcut 1–100 bölüm genişleme sonrasında aynen korunur", () => {
+  const originalFields = [
+    "number", "chapter", "name", "subtitle", "note", "mechanics", "width", "start", "platforms", "movers", "crumbles", "springs",
+    "boosters", "ice", "windZones", "waterZones", "portals", "lava", "spinners", "spikes", "stars", "enemies", "key", "keyPlatform",
+    "keyChallenge", "gravityScale", "goal", "theme",
+  ] as const;
+  const originalData = levels.slice(0, 100).map(level => Object.fromEntries(originalFields.map(field => [field, level[field]])));
+  const fingerprint = createHash("sha256").update(JSON.stringify(originalData)).digest("hex");
+
+  assert.equal(fingerprint, "9c25a1f3203b67f098511f6910a630749bb68503608ce2066009c5eba1c2b3d9");
 });
 
 test("1–50'de anahtarsız bölümlerin mevcut tasarımı aynen korunur", () => {
@@ -34,7 +46,7 @@ test("1–50'de anahtarsız bölümlerin mevcut tasarımı aynen korunur", () =>
 });
 
 test("51–100 birbirinden farklı düzenlere ve anahtar odaları dahil yeni mekaniklere sahiptir", () => {
-  const redesigned = levels.slice(50);
+  const redesigned = levels.slice(50, 100);
   const layoutSignatures = redesigned.map(level => JSON.stringify({
     platforms: level.platforms.map(platform => [platform.x, platform.y, platform.w, platform.h]),
     crumbles: level.crumbles,
@@ -58,6 +70,53 @@ test("51–100 birbirinden farklı düzenlere ve anahtar odaları dahil yeni mek
   assert.ok(redesigned.every(level => level.mechanics.length >= 2));
 });
 
+test("101–200 yüz benzersiz parkur ve beş yeni mekanik getirir", () => {
+  const expansion = levels.slice(100);
+  const signatures = expansion.map(level => JSON.stringify({
+    platforms: level.platforms,
+    conveyors: level.conveyors,
+    phasePlatforms: level.phasePlatforms,
+    laserGates: level.laserGates,
+    gravityZones: level.gravityZones,
+    checkpoints: level.checkpoints,
+  }));
+  const mechanics = new Set(expansion.flatMap(level => level.mechanics));
+
+  assert.equal(expansion.length, 100);
+  assert.equal(new Set(signatures).size, 100, "101–200 arasında kopya bölüm düzeni olmamalı");
+  assert.equal(new Set(expansion.map(level => level.chapter)).size, 10);
+  assert.ok(expansion.every(level => level.mechanics.length >= 3));
+  for (const mechanic of ["yürüyen bant", "faz platformu", "lazer kapısı", "yerçekimi alanı", "kontrol noktası"]) {
+    assert.ok(mechanics.has(mechanic), `${mechanic} genişlemede bulunmalı`);
+  }
+});
+
+test("101–200'deki on dünya kendi mekanik kimliğini korur", () => {
+  const worlds = Array.from({ length: 10 }, (_, world) => levels.slice(100 + world * 10, 110 + world * 10));
+
+  assert.ok(worlds[0].every(level => level.conveyors.length > 0 && level.checkpoints.length > 0));
+  assert.ok(worlds[1].every(level => level.phasePlatforms.length > 0 && level.gravityZones.length > 0));
+  assert.ok(worlds[2].every(level => level.laserGates.length > 0 && level.conveyors.length > 0));
+  assert.ok(worlds[3].every(level => level.gravityZones.length > 0 && level.checkpoints.length > 0));
+  assert.ok(worlds[4].every(level => level.phasePlatforms.length > 0 && level.laserGates.length > 0));
+  assert.ok(worlds[5].every(level => level.conveyors.length > 0 && level.gravityZones.length > 0));
+  assert.ok(worlds[6].every(level => level.checkpoints.length > 0 && level.laserGates.length > 0));
+  assert.ok(worlds[7].every(level => level.phasePlatforms.length > 0 && level.conveyors.length > 0));
+  assert.ok(worlds[8].every(level => level.gravityZones.length > 0 && level.laserGates.length > 0 && level.checkpoints.length > 0));
+  assert.ok(worlds[9].every(level => level.conveyors.length > 0 && level.phasePlatforms.length > 0 && level.laserGates.length > 0 && level.gravityZones.length > 0 && level.checkpoints.length > 0));
+  assert.ok(worlds[9].at(-1)!.mechanics.length >= 14, "200. bölüm eski ve yeni mekanikleri birleştirmeli");
+});
+
+test("faz platformları ve lazer kapıları zaman döngüsüne uyar", () => {
+  const phase = { x: 0, y: 0, w: 100, h: 20, activeTime: 2, inactiveTime: 1, phase: 0 };
+  const laser = { x: 0, y: 0, h: 100, activeTime: 1, inactiveTime: 2, phase: 0 };
+
+  assert.equal(isPhasePlatformActive(phase, .5), true);
+  assert.equal(isPhasePlatformActive(phase, 2.5), false);
+  assert.equal(isLaserGateActive(laser, .5), true);
+  assert.equal(isLaserGateActive(laser, 1.5), false);
+});
+
 test("51–100'deki beş yeni dünya kendine özgü mekanik kurallarını taşır", () => {
   const [water, dungeon, lava, crystal, finale] = Array.from({ length: 5 }, (_, world) => levels.slice(50 + world * 10, 60 + world * 10));
 
@@ -67,6 +126,10 @@ test("51–100'deki beş yeni dünya kendine özgü mekanik kurallarını taşı
   assert.ok(crystal.every(level => level.ice.length > 0 && level.windZones.length > 0));
   assert.ok(finale.every(level => level.springs.length > 0 && level.boosters.length > 0 && level.windZones.length > 0 && level.spinners.length > 0));
   assert.ok(finale.at(-1)!.mechanics.length >= 10, "100. bölüm bütün yeni mekanikleri birleştirmeli");
+});
+
+test("66. bölüm özel mesajı taşır", () => {
+  assert.equal(levels[65].note, "Keşke bunu düzelttiğim gibi aramızı da düzeltebilsem.");
 });
 
 test("32 anahtarlı bölüm güvenli ve farklı anahtar odalarına sahiptir", () => {
@@ -85,5 +148,6 @@ test("32 anahtarlı bölüm güvenli ve farklı anahtar odalarına sahiptir", ()
     assert.ok(!level.enemies.some(enemy => enemy.min < key.x + 160 && enemy.max > key.x - 160), `#${level.number}: anahtar düşman rotasında`);
     assert.ok(!level.spinners.some(spinner => Math.hypot(spinner.x - key.x, spinner.y - key.y) < spinner.length + 100), `#${level.number}: anahtar dönen tuzağa çok yakın`);
     assert.ok(!level.portals.some(portal => [portal.a, portal.b].some(point => Math.hypot(point.x - key.x, point.y - key.y) < 140)), `#${level.number}: anahtar portalla çakışıyor`);
+    assert.ok(!level.portals.some(portal => Math.min(portal.a.x, portal.b.x) < key.x && Math.max(portal.a.x, portal.b.x) > key.x), `#${level.number}: portal anahtar rotasını atlıyor`);
   }
 });

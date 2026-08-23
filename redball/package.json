@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "test": "pnpm run build && node --test tests/rendered-html.test.mjs && node --experimental-strip-types --test tests/levels.test.ts tests/progress.test.ts"
+    "test": "pnpm run build && node --test tests/rendered-html.test.mjs && node --experimental-strip-types --test tests/cheat.test.ts tests/levels.test.ts tests/progress.test.ts"
   },
   "dependencies": {
     "react": "19.2.6",
