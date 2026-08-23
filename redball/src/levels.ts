@@ -16,6 +16,74 @@ export type GravityZone = Box & { scale: number };
 export type KeyChallenge = "stairs" | "spring" | "lift" | "vault";
 export type Theme = { sky: string[]; hill: string; far: string; ground: string; grass: string; accent: string };
 
+export type SeesawBoard = Box & { pivotX: number; maxAngle: number; response: number; damping: number };
+export type WallJumpWall = Box & { side: "left" | "right" | "both" };
+export type PushBlock = Box & { minX: number; maxX: number; pushAcceleration: number; maxSpeed: number };
+export type PressurePlate = Box & { gateId: string };
+export type PressureGate = Box & { id: string; openOffset: Point };
+export type BreakableWall = Box & { minImpactSpeed: number; debrisCount: number };
+export type SwingAnchor = Point & { length: number; catchRadius: number; torque: number; releaseBoost: number };
+export type ZiplineCable = { a: Point; b: Point; catchRadius: number; speed: number };
+export type ElasticSurface = Box & { restitution: number; minBounce: number; maxBounce: number };
+export type RisingWaterCourse = {
+  basin: Box;
+  surfaceStartY: number;
+  surfaceEndY: number;
+  riseSpeed: number;
+  buoyancy: number;
+  airPockets: Box[];
+};
+export type MagnetNode = Point & { radius: number; strength: number; polarity: 1 | -1 };
+export type MagnetPad = Box & { polarity: 1 | -1 };
+export type GravityFlipPad = Box & { gravity: 1 | -1 };
+export type GearPlatform = Point & { radius: number; speed: number; phase: number; teeth: number; toothWidth: number; toothHeight: number };
+export type Piston = Box & {
+  axis: "x" | "y";
+  travel: number;
+  extendTime: number;
+  holdTime: number;
+  retractTime: number;
+  phase: number;
+  lethal: boolean;
+};
+export type MomentumPortal = PortalPair & { aNormal: Point; bNormal: Point; speedMultiplier: number };
+export type PhaseSwitchPad = Box & { phase: "a" | "b" };
+export type PhaseSwitchPlatform = Box & { phase: "a" | "b" };
+export type EchoGate = Box & { id: string };
+export type EchoPlate = Box & { gateId: string };
+export type CollapseTile = Box & { order: number };
+export type BossPhase = { triggerX: number; pattern: "shockwave" | "echo" | "portal"; interval: number };
+
+export type SpecialLevelSpec =
+  | { kind: "seesaw"; boards: SeesawBoard[] }
+  | { kind: "oneWay"; surfaces: Box[] }
+  | { kind: "wallJump"; walls: WallJumpWall[]; horizontalSpeed: number; verticalSpeed: number; coyoteTime: number }
+  | { kind: "pushBlock"; blocks: PushBlock[] }
+  | { kind: "pressureGate"; blocks: PushBlock[]; plates: PressurePlate[]; gates: PressureGate[] }
+  | { kind: "breakableWall"; walls: BreakableWall[] }
+  | { kind: "swing"; anchors: SwingAnchor[] }
+  | { kind: "zipline"; cables: ZiplineCable[] }
+  | { kind: "elastic"; surfaces: ElasticSurface[] }
+  | { kind: "risingWater"; course: RisingWaterCourse }
+  | { kind: "magnet"; nodes: MagnetNode[]; pads: MagnetPad[]; initialPolarity: 1 | -1 }
+  | { kind: "gravityFlip"; pads: GravityFlipPad[]; initialGravity: 1 | -1 }
+  | { kind: "gears"; gears: GearPlatform[] }
+  | { kind: "pistons"; pistons: Piston[] }
+  | { kind: "momentumPortal"; pairs: MomentumPortal[] }
+  | { kind: "phaseSwitch"; pads: PhaseSwitchPad[]; platforms: PhaseSwitchPlatform[]; initialPhase: "a" | "b" }
+  | { kind: "echo"; trigger: Box; delay: number; duration: number; sampleRate: number; plates: EchoPlate[]; gates: EchoGate[] }
+  | { kind: "timeFreeze"; triggers: Box[]; duration: number; affected: Array<"movers" | "spinners" | "laserGates" | "pistons"> }
+  | { kind: "collapse"; trigger: Box; tiles: CollapseTile[]; leadTime: number; interval: number; permanent: boolean }
+  | {
+    kind: "boss";
+    arena: Box;
+    center: Point;
+    phases: BossPhase[];
+    goalLock: Box;
+    shockwaveSpeed: number;
+    shockwaveWidth: number;
+  };
+
 export type Level = {
   number: number;
   chapter: string;
@@ -50,6 +118,7 @@ export type Level = {
   gravityScale: number;
   goal: Point;
   theme: Theme;
+  special?: SpecialLevelSpec;
 };
 
 export const VIEW_W = 1280;
@@ -58,7 +127,7 @@ export const BALL_R = 27;
 export const GRAVITY = 1900;
 export const JUMP_SPEED = 840;
 export const MAX_RUN_SPEED = 430;
-export const LEVEL_COUNT = 200;
+export const LEVEL_COUNT = 220;
 
 const themes: Theme[] = [
   { sky: ["#76d8ff", "#e7fbff"], hill: "#6ac77a", far: "#a5e2a8", ground: "#8a542d", grass: "#49ac55", accent: "#ffd646" },
@@ -81,6 +150,8 @@ const themes: Theme[] = [
   { sky: ["#9ccff2", "#eefaff"], hill: "#497ea8", far: "#78afd0", ground: "#40586b", grass: "#69b5bd", accent: "#fff18a" },
   { sky: ["#f5b7c9", "#fff0d5"], hill: "#a84f72", far: "#d27f91", ground: "#563d50", grass: "#cf7c73", accent: "#ffe66d" },
   { sky: ["#ffcf74", "#fff6cf"], hill: "#c36b37", far: "#efa957", ground: "#503b3b", grass: "#e89338", accent: "#fff7a0" },
+  { sky: ["#d9c8ff", "#fff4fb"], hill: "#8f79c5", far: "#c6a9dc", ground: "#5d526d", grass: "#8bcf9d", accent: "#fff39a" },
+  { sky: ["#ffb7c9", "#fff2d9"], hill: "#ad4f68", far: "#df8492", ground: "#67404b", grass: "#d87878", accent: "#ffd66e" },
 ];
 
 const chapterNames = [
@@ -88,6 +159,7 @@ const chapterNames = [
   "Su Bahçeleri", "Saray Zindanları", "Kor Mağaraları", "Kristal Zirveler", "Altın Taç Kalesi",
   "Dişli Şehir", "Faz Ormanı", "Işık Metrosu", "Yerçekimi İstasyonu", "Zaman Tapınağı",
   "Rüzgâr Fabrikası", "Işık Labirenti", "Kozmik Maden", "Saat Kulesi", "Sonsuzluk Sarayı",
+  "Rüya Bahçesi", "Kalp Sarayı",
 ];
 
 const names = [
@@ -111,6 +183,8 @@ const names = [
   ["Yıldız Tozu", "Hafif Maden", "Meteor Bandı", "Kristal Çekim", "Boşluk Ocağı", "Kozmik Tünel", "Uydu Madeni", "Karanlık Cevher", "Galaksi Damarı", "Maden Çekirdeği"],
   ["İlk Çan", "Dişli Akrep", "Saniye Köprüsü", "Fazlı Kadran", "Lazer Saati", "Çekim Sarkacı", "Kayıp Vakit", "Gece Yarısı", "Son Geri Sayım", "Kule Çekirdeği"],
   ["Sonsuz Kapı", "Bitmeyen Bant", "Yitik Faz", "Taç Işını", "Kozmik Salon", "Zaman Bahçesi", "Usta Yörünge", "Sonsuz Koridor", "Son Sınav", "Efsanevi Sonsuzluk Tacı"],
+  ["Uyanan Çiçek", "Bulut Çardağı", "Fısıltı Korusu", "Ayçiçeği Salıncağı", "Uyuyan Nilüfer", "Rüya Köprüsü", "Masal Pınarı", "Yıldız Serası", "Şafak Labirenti", "Düş Bahçesi Tacı"],
+  ["Kalbe Açılan Kapı", "Gül Galerisi", "Altın Mektup", "Hatıra Balkonu", "İki Kalp Köprüsü", "Saklı Sözler", "Barış Avlusu", "Sonsuz Dans", "Sevgi Tahtı", "Kalbin Efsanevi Tacı"],
 ];
 
 const worldSubtitles = [
@@ -134,6 +208,8 @@ const worldSubtitles = [
   "Kozmik çekimde hızını koru, lav boşluklarını aş.",
   "Kontrol noktalarını yakala, saatin tuzaklarını geç.",
   "İki yüz bölümde öğrendiğin her şeyi taç yolunda birleştir.",
+  "Sabit çiçek adalarında ilerle, rüyanın değişen yollarını keşfet.",
+  "Kalbin ritmini izle; ışık, hız ve cesareti son taçta birleştir.",
 ];
 
 const routes = [
@@ -886,6 +962,456 @@ function makeExpansionLevel(index: number): Level {
   };
 }
 
+function makeProceduralSpecialLevel(index: number): Level {
+  const specialIndex = index - 200;
+  const world = Math.floor(specialIndex / 10);
+  const stage = specialIndex % 10;
+  const chapterIndex = 20 + world;
+  const random = mulberry32(220220 + specialIndex * 65537);
+  const pattern = routes[(stage * 7 + world * 3) % routes.length];
+  const route: Box[] = [];
+  let cursor = 0;
+  let previousY = 640;
+
+  pattern.forEach((rawY, i) => {
+    const first = i === 0;
+    const last = i === pattern.length - 1;
+    let y = first || last ? 640 : round(Math.max(485, Math.min(640, rawY + ((stage + i + world) % 3 - 1) * 10)), 5);
+    if (previousY - y > 145) y = previousY - 145;
+    const width = first ? 610 : last ? 720 : round(440 + random() * 105 + stage * 4 + world * 12, 5);
+    route.push({ x: cursor, y, w: width, h: VIEW_H - y + 90 });
+    previousY = y;
+    if (!last) cursor += width + 70 + ((stage * 3 + i * 7 + world) % 5) * 7;
+  });
+
+  const ledgeIndexes = Array.from(new Set([1, Math.floor(route.length / 2), route.length - 2]));
+  const ledges: Box[] = ledgeIndexes.map((routeIndex, i) => {
+    const host = route[routeIndex];
+    const width = 190 + ((stage + i + world) % 3) * 15;
+    const travel = Math.max(0, host.w - width - 150);
+    return {
+      x: round(host.x + 75 + ((stage * 31 + i * 47) % Math.max(1, travel)), 5),
+      y: Math.max(300, host.y - 115 - ((stage + i) % 2) * 15),
+      w: width,
+      h: 24,
+    };
+  });
+  const platforms = [...route, ...ledges];
+  const safeRoute = (i: number) => route[Math.max(1, Math.min(route.length - 2, i))];
+  const middleIndex = Math.floor(route.length / 2);
+
+  const moverLeft = route[Math.max(0, middleIndex - 1)];
+  const moverRight = route[Math.min(route.length - 1, middleIndex)];
+  const movers: Mover[] = [{
+    x: moverLeft.x + moverLeft.w + 8,
+    y: Math.min(moverLeft.y, moverRight.y) - 92,
+    w: Math.max(105, moverRight.x - (moverLeft.x + moverLeft.w) - 16),
+    h: 22,
+    axis: stage % 2 ? "x" : "y",
+    range: 28 + stage,
+    speed: 1.05 + stage * .045,
+    phase: stage * .41,
+  }];
+
+  const crumbleHost = safeRoute(2 + stage % Math.max(1, route.length - 4));
+  const crumbles: CrumblePlatform[] = [{
+    x: round(crumbleHost.x + crumbleHost.w - 205, 5),
+    y: Math.max(300, crumbleHost.y - 122),
+    w: 165,
+    h: 24,
+    delay: 1.15 - stage * .025,
+    respawn: 2.25,
+  }];
+  const springs: SpringPlant[] = [{ x: ledges[0].x + 10, y: ledges[0].y, w: 72, power: 1040 + stage * 12 }];
+
+  const boostHost = safeRoute(route.length - 3);
+  const boosters: Box[] = world === 1 || stage >= 3
+    ? [{ x: boostHost.x + 85, y: boostHost.y - 10, w: 125, h: 10 }]
+    : [];
+  const iceHost = safeRoute(2);
+  const ice: Box[] = world === 1 || stage >= 2
+    ? [{ x: iceHost.x + 35, y: iceHost.y - 10, w: Math.min(230, iceHost.w - 70), h: 10 }]
+    : [];
+
+  const windZones: WindZone[] = [];
+  const gravityZones: GravityZone[] = [];
+  const addGapFlow = (gapIndex: number, force: number, scale: number) => {
+    const left = route[Math.max(0, Math.min(route.length - 2, gapIndex))];
+    const right = route[Math.max(1, Math.min(route.length - 1, gapIndex + 1))];
+    const x = left.x + left.w - 55;
+    const w = right.x - (left.x + left.w) + 110;
+    windZones.push({ x, y: Math.min(left.y, right.y) - 270, w, h: 285, force, lift: -55 });
+    gravityZones.push({ x, y: Math.min(left.y, right.y) - 305, w, h: 320, scale });
+  };
+  addGapFlow(1 + stage % Math.max(1, route.length - 3), 235 + stage * 8, world === 0 ? .62 : .7);
+  if (stage >= 6 || world === 1) addGapFlow(route.length - 3, 210 + stage * 7, .66);
+
+  const waterLedge = ledges[1];
+  const waterZones: WaterZone[] = [{
+    x: waterLedge.x + 12,
+    y: waterLedge.y - 108,
+    w: waterLedge.w - 24,
+    h: 120,
+    buoyancy: 1360 + stage * 8,
+  }];
+  const portals: PortalPair[] = [{
+    a: { x: ledges[0].x + ledges[0].w - 43, y: ledges[0].y - 55 },
+    b: { x: ledges.at(-1)!.x + 43, y: ledges.at(-1)!.y - 55 },
+    color: world === 0 ? "#dca6ff" : "#ffcf72",
+  }];
+
+  const lava: LavaPool[] = [];
+  if (world === 1 || stage >= 5) {
+    for (let i = world === 1 ? 0 : 1; i < route.length - 1; i += world === 1 ? 1 : 2) {
+      const left = route[i], right = route[i + 1];
+      lava.push({
+        x: left.x + left.w,
+        y: 620,
+        w: right.x - (left.x + left.w),
+        h: 130,
+        wave: world === 0 ? 5 : 7,
+        speed: 2.1 + stage * .07,
+        phase: i * .53,
+      });
+    }
+  }
+
+  const spinnerLedge = ledges.at(-1)!;
+  const spinners: Spinner[] = world === 1 || stage >= 4
+    ? [{ x: spinnerLedge.x + spinnerLedge.w / 2, y: spinnerLedge.y - 68, length: 38 + stage, speed: 1.8 + stage * .09, phase: stage * .35 }]
+    : [];
+  const conveyors: Conveyor[] = [];
+  const conveyorHosts = world === 0 ? [safeRoute(1)] : [safeRoute(1), safeRoute(route.length - 3)];
+  conveyorHosts.forEach((host, i) => conveyors.push({
+    x: host.x + 55,
+    y: host.y - 10,
+    w: Math.min(205, host.w - 110),
+    h: 10,
+    speed: 185 + stage * 9 + i * 25,
+  }));
+
+  const phasePlatforms: PhasePlatform[] = [];
+  const phaseGapIndexes = [2, route.length - 3];
+  phaseGapIndexes.forEach((gapIndex, i) => {
+    const left = route[Math.max(0, Math.min(route.length - 2, gapIndex))];
+    const right = route[Math.max(1, Math.min(route.length - 1, gapIndex + 1))];
+    phasePlatforms.push({
+      x: left.x + left.w - 8,
+      y: Math.min(left.y, right.y) - 130 - i * 18,
+      w: right.x - (left.x + left.w) + 16,
+      h: 22,
+      activeTime: 1.8 + stage * .025,
+      inactiveTime: 1.05 + world * .15,
+      phase: stage * .29 + i * .8,
+    });
+  });
+
+  const laserGates: LaserGate[] = [];
+  if (world === 1 || stage >= 6) {
+    const laserHosts = world === 1 && stage === 9
+      ? [safeRoute(1), safeRoute(middleIndex), safeRoute(route.length - 3)]
+      : [ledges[1]];
+    laserHosts.forEach((host, i) => laserGates.push({
+      x: host.x + host.w * (.68 + i % 2 * .1),
+      y: host.y - 105,
+      h: 105,
+      activeTime: .9 + i * .08,
+      inactiveTime: 1.65,
+      phase: stage * .37 + i * .64,
+    }));
+  }
+
+  const checkpoints: Point[] = [
+    { x: safeRoute(2).x + 90, y: safeRoute(2).y - BALL_R },
+    { x: safeRoute(route.length - 3).x + 90, y: safeRoute(route.length - 3).y - BALL_R },
+  ];
+  const spikes: Box[] = [];
+  if (world === 1 || stage >= 7) {
+    const host = ledges[1];
+    spikes.push({ x: host.x + host.w / 2 - 20, y: host.y - 30, w: 40, h: 30 });
+  }
+
+  const enemies: EnemySpawn[] = [];
+  if (stage >= 5) {
+    const host = safeRoute(middleIndex + 1);
+    enemies.push({
+      x: host.x + host.w / 2,
+      y: host.y - 37,
+      min: host.x + 70,
+      max: host.x + host.w - 70,
+      speed: 78 + stage * 5,
+    });
+  }
+
+  const starHosts = [safeRoute(2), safeRoute(middleIndex), safeRoute(route.length - 2)];
+  const stars = starHosts.map((host, i) => ({ x: host.x + host.w * (i % 2 ? .58 : .42), y: host.y - 70 }));
+  const last = route.at(-1)!;
+  const mechanics: string[] = [];
+  if (movers.length) mechanics.push("hareketli platform");
+  if (crumbles.length) mechanics.push("çöken zemin");
+  if (springs.length) mechanics.push("zıplatan bitki");
+  if (boosters.length) mechanics.push("ivme pisti");
+  if (ice.length) mechanics.push("buz");
+  if (windZones.length) mechanics.push("rüzgâr");
+  if (waterZones.length) mechanics.push("su");
+  if (portals.length) mechanics.push("portal");
+  if (lava.length) mechanics.push("lav");
+  if (spinners.length) mechanics.push("dönen tuzak");
+  if (conveyors.length) mechanics.push("yürüyen bant");
+  if (phasePlatforms.length) mechanics.push("faz platformu");
+  if (laserGates.length) mechanics.push("lazer kapısı");
+  if (gravityZones.length) mechanics.push("yerçekimi alanı");
+  if (checkpoints.length) mechanics.push("kontrol noktası");
+
+  return {
+    number: index + 1,
+    chapter: chapterNames[chapterIndex],
+    name: names[chapterIndex][stage],
+    subtitle: world === 1 && stage === 9
+      ? "İki yüz yirmi bölümün bütün ritmini Kalbin Efsanevi Tacı'nda birleştir."
+      : `${worldSubtitles[chapterIndex]} · ${mechanics.slice(0, 4).join(" + ")}`,
+    mechanics,
+    width: last.x + last.w,
+    start: { x: route[0].x + 110, y: route[0].y - BALL_R },
+    platforms,
+    movers,
+    crumbles,
+    springs,
+    boosters,
+    ice,
+    windZones,
+    waterZones,
+    portals,
+    lava,
+    spinners,
+    conveyors,
+    phasePlatforms,
+    laserGates,
+    gravityZones,
+    checkpoints,
+    spikes,
+    stars,
+    enemies,
+    gravityScale: 1,
+    goal: { x: last.x + last.w - 110, y: last.y - 90 },
+    theme: themes[chapterIndex],
+  };
+}
+
+type SpecialLevelDesign = {
+  chapter: string;
+  name: string;
+  subtitle: string;
+  width: number;
+  platforms: Box[];
+  stars: Point[];
+  goal: Point;
+  special: SpecialLevelSpec;
+  movers?: Mover[];
+  crumbles?: CrumblePlatform[];
+  springs?: SpringPlant[];
+  boosters?: Box[];
+  ice?: Box[];
+  windZones?: WindZone[];
+  waterZones?: WaterZone[];
+  portals?: PortalPair[];
+  lava?: LavaPool[];
+  spinners?: Spinner[];
+  conveyors?: Conveyor[];
+  phasePlatforms?: PhasePlatform[];
+  laserGates?: LaserGate[];
+  gravityZones?: GravityZone[];
+  checkpoints?: Point[];
+  spikes?: Box[];
+  enemies?: EnemySpawn[];
+};
+
+const ground = (x: number, w: number, y = 640): Box => ({ x, y, w, h: VIEW_H - y + 90 });
+const ledge = (x: number, y: number, w: number, h = 24): Box => ({ x, y, w, h });
+
+const specialActThemes: Theme[] = [
+  { sky: ["#8fdcf2", "#fff0c8"], hill: "#55ad79", far: "#9ed6a0", ground: "#655044", grass: "#65c779", accent: "#ffd45c" },
+  { sky: ["#85d9e8", "#f8f0c8"], hill: "#458e78", far: "#83c5a2", ground: "#67513f", grass: "#57b978", accent: "#ffbf55" },
+  { sky: ["#9d91d9", "#f2cfde"], hill: "#6d5b91", far: "#a48db8", ground: "#55495b", grass: "#c28a72", accent: "#ffd36a" },
+  { sky: ["#ef9baa", "#ffe0c5"], hill: "#a95c71", far: "#d78e93", ground: "#5f414b", grass: "#d97977", accent: "#ffe06c" },
+];
+
+const specialLevelDesigns: readonly SpecialLevelDesign[] = [
+  {
+    chapter: "Kök Bahçesi", name: "Denge Kökü", subtitle: "Tahterevallinin ucuna yuvarlan; eğimi sıçrama rampasına çevir.", width: 2700,
+    platforms: [ground(0, 500), ledge(485, 548, 230), ground(580, 530, 610), ground(1110, 510), ground(1620, 510), ground(2130, 570)],
+    stars: [{ x: 650, y: 480 }, { x: 1320, y: 535 }, { x: 2020, y: 515 }], goal: { x: 2590, y: 550 },
+    special: { kind: "seesaw", boards: [{ x: 485, y: 548, w: 230, h: 24, pivotX: 600, maxAngle: .28, response: 7, damping: .82 }] },
+  },
+  {
+    chapter: "Kök Bahçesi", name: "Yaprak Kanopisi", subtitle: "Yaprakların altından geç; yukarıdan inerken üstlerine kon.", width: 2680,
+    platforms: [ground(0, 560), ground(640, 430), ground(1150, 430, 610), ground(1660, 410), ground(2150, 530), ledge(610, 505, 190), ledge(930, 410, 180), ledge(1290, 345, 190), ledge(1640, 430, 190)],
+    stars: [{ x: 705, y: 455 }, { x: 1385, y: 290 }, { x: 1950, y: 530 }], goal: { x: 2570, y: 550 },
+    special: { kind: "oneWay", surfaces: [ledge(610, 505, 190), ledge(930, 410, 180), ledge(1290, 345, 190), ledge(1640, 430, 190)] },
+  },
+  {
+    chapter: "Kök Bahçesi", name: "Kabuk Bacası", subtitle: "Duvara dokunurken zıpla; karşı kabuğa sekerek yüksel.", width: 2760,
+    platforms: [ground(0, 650), ground(730, 430), ground(1240, 440, 605), ground(1760, 430), ground(2270, 490), { x: 720, y: 390, w: 45, h: 250 }, { x: 960, y: 315, w: 45, h: 325 }, ledge(765, 315, 195)],
+    stars: [{ x: 845, y: 520 }, { x: 860, y: 250 }, { x: 1990, y: 530 }], goal: { x: 2650, y: 550 },
+    special: { kind: "wallJump", walls: [{ x: 720, y: 390, w: 45, h: 250, side: "both" }, { x: 960, y: 315, w: 45, h: 325, side: "both" }], horizontalSpeed: 510, verticalSpeed: 790, coyoteTime: .13 },
+  },
+  {
+    chapter: "Kök Bahçesi", name: "Meşepalamudu Basamağı", subtitle: "Meşepalamudunu it; yüksek kökün altına taşıyıp basamak yap.", width: 2780,
+    platforms: [ground(0, 720), ground(800, 540), ground(1340, 510), ground(1850, 510), ground(2360, 420), ledge(1030, 470, 250), ledge(1580, 440, 210)],
+    stars: [{ x: 630, y: 550 }, { x: 1155, y: 410 }, { x: 2070, y: 545 }], goal: { x: 2670, y: 550 },
+    special: { kind: "pushBlock", blocks: [{ x: 520, y: 574, w: 66, h: 66, minX: 260, maxX: 1240, pushAcceleration: 980, maxSpeed: 250 }] },
+  },
+  {
+    chapter: "Kök Bahçesi", name: "İki Ağırlık Kapısı", subtitle: "Top ya da meşepalamudu plakaya değince kök kapısı açılır.", width: 2860,
+    platforms: [ground(0, 760), ground(840, 500), ground(1380, 510), ground(1930, 470), ground(2440, 420), ledge(1510, 490, 240)],
+    stars: [{ x: 690, y: 545 }, { x: 1610, y: 430 }, { x: 2180, y: 540 }], goal: { x: 2750, y: 550 },
+    special: {
+      kind: "pressureGate",
+      blocks: [{ x: 520, y: 576, w: 64, h: 64, minX: 260, maxX: 1240, pushAcceleration: 920, maxSpeed: 235 }],
+      plates: [{ x: 920, y: 628, w: 120, h: 12, gateId: "root-gate" }],
+      gates: [{ x: 1275, y: 430, w: 46, h: 210, id: "root-gate", openOffset: { x: 0, y: -235 } }],
+    },
+  },
+  {
+    chapter: "Yaprak Serası", name: "Çatlayan Kök", subtitle: "İvme yaprağında hızlan; çatlak duvara omuz at.", width: 2840,
+    platforms: [ground(0, 780), ground(860, 530), ground(1430, 510, 610), ground(1980, 470), ground(2490, 350)],
+    boosters: [{ x: 535, y: 630, w: 155, h: 10 }], stars: [{ x: 620, y: 545 }, { x: 1540, y: 530 }, { x: 2210, y: 545 }], goal: { x: 2730, y: 550 },
+    special: { kind: "breakableWall", walls: [{ x: 795, y: 465, w: 52, h: 175, minImpactSpeed: 620, debrisCount: 14 }] },
+  },
+  {
+    chapter: "Yaprak Serası", name: "Sarmaşık Salıncağı", subtitle: "Sarmaşığa temasla tutun; zıplayarak doğru anda bırak.", width: 2900,
+    platforms: [ground(0, 720), ground(810, 370), ground(1260, 460, 610), ground(1800, 430), ground(2310, 590), ledge(1030, 470, 170)],
+    stars: [{ x: 650, y: 540 }, { x: 1070, y: 280 }, { x: 2040, y: 530 }], goal: { x: 2790, y: 550 },
+    special: { kind: "swing", anchors: [{ x: 1010, y: 235, length: 235, catchRadius: 58, torque: 2.7, releaseBoost: 1.12 }] },
+  },
+  {
+    chapter: "Yaprak Serası", name: "Sera Zipline'ı", subtitle: "Raya dokun; hızını koruyarak zıpla ve makaradan ayrıl.", width: 2920,
+    platforms: [ground(0, 690), ground(780, 420, 610), ground(1280, 410), ground(1770, 420, 600), ground(2270, 650), ledge(750, 430, 170), ledge(1700, 390, 190)],
+    stars: [{ x: 610, y: 540 }, { x: 1240, y: 320 }, { x: 2050, y: 520 }], goal: { x: 2810, y: 550 },
+    special: { kind: "zipline", cables: [{ a: { x: 760, y: 350 }, b: { x: 1690, y: 300 }, catchRadius: 55, speed: 310 }] },
+  },
+  {
+    chapter: "Yaprak Serası", name: "Esneyen Nilüfer", subtitle: "Nilüfere yüksekten in; sıkışan yaprak seni yukarı fırlatsın.", width: 2840,
+    platforms: [ground(0, 640), ground(720, 430), ground(1230, 450, 610), ground(1760, 430), ground(2270, 570), ledge(690, 520, 180), ledge(1120, 390, 210), ledge(1630, 455, 190)],
+    stars: [{ x: 780, y: 455 }, { x: 1225, y: 330 }, { x: 2000, y: 530 }], goal: { x: 2730, y: 550 },
+    special: { kind: "elastic", surfaces: [{ x: 690, y: 520, w: 180, h: 24, restitution: 1.22, minBounce: 820, maxBounce: 1180 }] },
+  },
+  {
+    chapter: "Yaprak Serası", name: "Yükselen Gölet", subtitle: "Su yükselirken yüz; hava ceplerini kullanıp üst köke çık.", width: 3000,
+    platforms: [ground(0, 650), ground(730, 430), ground(1240, 430, 600), ground(1750, 440), ground(2270, 730), ledge(900, 455, 190), ledge(1320, 370, 190), ledge(1710, 450, 180)],
+    stars: [{ x: 920, y: 400 }, { x: 1415, y: 315 }, { x: 2080, y: 535 }], goal: { x: 2890, y: 550 },
+    special: { kind: "risingWater", course: { basin: { x: 720, y: 300, w: 1470, h: 340 }, surfaceStartY: 600, surfaceEndY: 360, riseSpeed: 42, buoyancy: 1450, airPockets: [{ x: 1060, y: 345, w: 170, h: 90 }, { x: 1530, y: 315, w: 170, h: 90 }] } },
+  },
+  {
+    chapter: "Saat Atölyesi", name: "Mıknatıs Rayı", subtitle: "Kutup pedine değ; çekim ve itmeyi rotana dönüştür.", width: 2920,
+    platforms: [ground(0, 650), ground(730, 420), ground(1230, 430, 605), ground(1740, 430), ground(2250, 670), ledge(930, 430, 180), ledge(1540, 390, 190)],
+    stars: [{ x: 620, y: 545 }, { x: 1010, y: 360 }, { x: 2010, y: 530 }], goal: { x: 2810, y: 550 },
+    special: { kind: "magnet", initialPolarity: 1, pads: [{ x: 550, y: 628, w: 105, h: 12, polarity: -1 }, { x: 1780, y: 628, w: 105, h: 12, polarity: 1 }], nodes: [{ x: 1040, y: 330, radius: 330, strength: 920, polarity: 1 }, { x: 1620, y: 325, radius: 300, strength: 820, polarity: -1 }] },
+  },
+  {
+    chapter: "Saat Atölyesi", name: "Tavan Vardiyası", subtitle: "Yerçekimi pedinden geç; aynı tuşlarla tavanda ilerle.", width: 3000,
+    platforms: [ground(0, 700), ground(790, 430), ground(1300, 430), ground(1810, 430), ground(2320, 680), { x: 760, y: 130, w: 1510, h: 35 }, ledge(1190, 470, 190), ledge(1700, 430, 190)],
+    stars: [{ x: 620, y: 545 }, { x: 1450, y: 215 }, { x: 2080, y: 215 }], goal: { x: 2890, y: 550 },
+    special: { kind: "gravityFlip", initialGravity: 1, pads: [{ x: 720, y: 520, w: 85, h: 120, gravity: -1 }, { x: 2210, y: 130, w: 85, h: 120, gravity: 1 }] },
+  },
+  {
+    chapter: "Saat Atölyesi", name: "Saat Dişleri", subtitle: "Dönen dişlerin ritmini oku; üstlerine basıp bir sonrakine atla.", width: 2960,
+    platforms: [ground(0, 650), ground(740, 380), ground(1200, 420), ground(1700, 420, 610), ground(2200, 760), ledge(820, 470, 110), ledge(1190, 430, 110), ledge(1580, 460, 110)],
+    stars: [{ x: 620, y: 545 }, { x: 1280, y: 335 }, { x: 2040, y: 525 }], goal: { x: 2850, y: 550 },
+    special: { kind: "gears", gears: [{ x: 890, y: 455, radius: 78, speed: 1.1, phase: 0, teeth: 12, toothWidth: 80, toothHeight: 20 }, { x: 1300, y: 410, radius: 92, speed: -1, phase: 1.1, teeth: 14, toothWidth: 90, toothHeight: 20 }, { x: 1690, y: 445, radius: 82, speed: 1.25, phase: 2.1, teeth: 12, toothWidth: 82, toothHeight: 20 }] },
+  },
+  {
+    chapter: "Saat Atölyesi", name: "Piston Kalbi", subtitle: "Sarı uyarıyı izle; piston çekildiğinde koridoru geç.", width: 3020,
+    platforms: [ground(0, 710), ground(790, 510), ground(1340, 490), ground(1870, 490), ground(2400, 620), ledge(1080, 485, 180), ledge(2140, 465, 180)],
+    stars: [{ x: 650, y: 545 }, { x: 1550, y: 530 }, { x: 2250, y: 405 }], goal: { x: 2910, y: 550 },
+    special: { kind: "pistons", pistons: [{ x: 1040, y: 460, w: 60, h: 180, axis: "y", travel: 145, extendTime: .7, holdTime: .55, retractTime: .8, phase: 0, lethal: true }, { x: 1640, y: 470, w: 62, h: 170, axis: "y", travel: 135, extendTime: .75, holdTime: .5, retractTime: .75, phase: .9, lethal: true }, { x: 2200, y: 445, w: 150, h: 55, axis: "x", travel: 125, extendTime: .8, holdTime: .45, retractTime: .8, phase: 1.6, lethal: false }] },
+  },
+  {
+    chapter: "Saat Atölyesi", name: "Momentum Geçidi", subtitle: "Portala hızlı gir; çıkışta aynı yön ve hızla boşluğu aş.", width: 3100,
+    platforms: [ground(0, 760), ground(850, 430), ground(1370, 430, 600), ground(1880, 430), ground(2390, 710), ledge(1160, 455, 180), ledge(2020, 410, 190)],
+    boosters: [{ x: 515, y: 630, w: 150, h: 10 }], stars: [{ x: 650, y: 545 }, { x: 1530, y: 525 }, { x: 2210, y: 355 }], goal: { x: 2990, y: 550 },
+    portals: [{ a: { x: 735, y: 560 }, b: { x: 2010, y: 355 }, color: "#ffbf57" }],
+    special: { kind: "momentumPortal", pairs: [{ a: { x: 735, y: 560 }, b: { x: 2010, y: 355 }, color: "#ffbf57", aNormal: { x: 1, y: 0 }, bNormal: { x: 1, y: -.2 }, speedMultiplier: 1.04 }] },
+  },
+  {
+    chapter: "Kalp Motoru", name: "İki Dünya Rölesi", subtitle: "A ve B pedlerine değ; yalnız seçili dünyanın platformları katılaşır.", width: 3060,
+    platforms: [ground(0, 690), ground(780, 400), ground(1260, 410, 610), ground(1750, 410), ground(2240, 820), ledge(720, 500, 170), ledge(1040, 420, 170), ledge(1450, 500, 170), ledge(1780, 420, 170)],
+    stars: [{ x: 620, y: 545 }, { x: 1120, y: 360 }, { x: 1940, y: 360 }], goal: { x: 2950, y: 550 },
+    special: { kind: "phaseSwitch", initialPhase: "a", pads: [{ x: 560, y: 628, w: 90, h: 12, phase: "a" }, { x: 1510, y: 488, w: 90, h: 12, phase: "b" }], platforms: [{ ...ledge(720, 500, 170), phase: "a" }, { ...ledge(1040, 420, 170), phase: "b" }, { ...ledge(1450, 500, 170), phase: "a" }, { ...ledge(1780, 420, 170), phase: "b" }] },
+  },
+  {
+    chapter: "Kalp Motoru", name: "Zaman Yankısı", subtitle: "Rota kaydolur; gecikmeli hayaletin plakayı tutarken kapıdan geç.", width: 3040,
+    platforms: [ground(0, 760), ground(840, 460), ground(1380, 450), ground(1910, 430), ground(2420, 620), ledge(1050, 480, 190), ledge(1680, 450, 180)],
+    stars: [{ x: 640, y: 545 }, { x: 1140, y: 420 }, { x: 2200, y: 535 }], goal: { x: 2930, y: 550 },
+    special: { kind: "echo", trigger: { x: 520, y: 500, w: 120, h: 140 }, delay: 1.7, duration: 7, sampleRate: 30, plates: [{ x: 1000, y: 628, w: 120, h: 12, gateId: "echo-gate" }], gates: [{ x: 1510, y: 455, w: 46, h: 185, id: "echo-gate" }] },
+  },
+  {
+    chapter: "Kalp Motoru", name: "Duran Saniye", subtitle: "Saat plakasına değ; tuzaklar donar, top hareket etmeye devam eder.", width: 3060,
+    platforms: [ground(0, 730), ground(810, 450), ground(1340, 450), ground(1870, 450), ground(2400, 660), ledge(1020, 470, 180), ledge(2070, 450, 180)],
+    movers: [{ x: 980, y: 500, w: 165, h: 22, axis: "y", range: 95, speed: 1.3 }, { x: 2020, y: 480, w: 165, h: 22, axis: "x", range: 90, speed: 1.15, phase: 1.2 }],
+    laserGates: [{ x: 1630, y: 450, h: 190, activeTime: 1, inactiveTime: 1.1 }], stars: [{ x: 650, y: 545 }, { x: 1080, y: 410 }, { x: 2210, y: 390 }], goal: { x: 2950, y: 550 },
+    special: { kind: "timeFreeze", triggers: [{ x: 610, y: 628, w: 105, h: 12 }], duration: 3.2, affected: ["movers", "spinners", "laserGates", "pistons"] },
+  },
+  {
+    chapter: "Kalp Motoru", name: "Çöken Hatıra Köprüsü", subtitle: "Arkandaki köprü dalga halinde çöküyor; ritmi bozmadan ilerle.", width: 3150,
+    platforms: [ground(0, 620), ledge(610, 590, 190, 50), ledge(800, 585, 190, 55), ledge(990, 580, 190, 60), ledge(1180, 585, 190, 55), ledge(1370, 590, 190, 50), ledge(1560, 580, 190, 60), ledge(1750, 585, 190, 55), ledge(1940, 590, 190, 50), ground(2130, 1020)],
+    checkpoints: [{ x: 2190, y: 613 }], stars: [{ x: 760, y: 520 }, { x: 1430, y: 510 }, { x: 2280, y: 540 }], goal: { x: 3040, y: 550 },
+    special: { kind: "collapse", trigger: { x: 520, y: 480, w: 120, h: 160 }, leadTime: 3, interval: .5, permanent: true, tiles: [ledge(610, 590, 190, 50), ledge(800, 585, 190, 55), ledge(990, 580, 190, 60), ledge(1180, 585, 190, 55), ledge(1370, 590, 190, 50), ledge(1560, 580, 190, 60), ledge(1750, 585, 190, 55), ledge(1940, 590, 190, 50)].map((tile, order) => ({ ...tile, order })) },
+  },
+  {
+    chapter: "Kalp Motoru", name: "Kalbin Efsanevi Tacı", subtitle: "Üç mührü aç; şok dalgası, yankı ve portal fazlarını tamamla.", width: 3300,
+    platforms: [ground(0, 720), ground(800, 660), ground(1500, 660), ground(2200, 1100), ledge(1040, 470, 190), ledge(1740, 430, 190), ledge(2500, 460, 190)],
+    portals: [{ a: { x: 1320, y: 540 }, b: { x: 2360, y: 500 }, color: "#ffd15c" }],
+    stars: [{ x: 1120, y: 405 }, { x: 1820, y: 365 }, { x: 2580, y: 395 }], goal: { x: 3190, y: 550 },
+    special: { kind: "boss", arena: { x: 720, y: 260, w: 2440, h: 380 }, center: { x: 1950, y: 290 }, phases: [{ triggerX: 1050, pattern: "shockwave", interval: 2.4 }, { triggerX: 1750, pattern: "echo", interval: 2.1 }, { triggerX: 2450, pattern: "portal", interval: 1.9 }], goalLock: { x: 3100, y: 430, w: 52, h: 210 }, shockwaveSpeed: 520, shockwaveWidth: 34 },
+  },
+];
+
+function makeSpecialLevel(index: number): Level {
+  const designIndex = index - 200;
+  const design = specialLevelDesigns[designIndex];
+  if (!design) throw new RangeError(`Özel bölüm bulunamadı: ${index + 1}`);
+  const act = Math.min(3, Math.floor(designIndex / 5));
+  const mechanics = [
+    "tahterevalli", "tek yönlü yaprak", "duvar zıplama", "itilebilir meşepalamudu", "basınç plakası",
+    "kırılabilir duvar", "sarmaşık salıncağı", "zipline", "elastik yüzey", "yükselen su",
+    "mıknatıs", "ters yerçekimi", "taşıyan dişliler", "piston", "momentum portalı",
+    "A/B dünyası", "zaman yankısı", "zaman dondurma", "çöken rota", "üç fazlı muhafız",
+  ];
+  return {
+    number: index + 1,
+    chapter: design.chapter,
+    name: design.name,
+    subtitle: design.subtitle,
+    mechanics: [mechanics[designIndex]],
+    width: design.width,
+    start: { x: 105, y: 640 - BALL_R },
+    platforms: design.platforms,
+    movers: design.movers || [],
+    crumbles: design.crumbles || [],
+    springs: design.springs || [],
+    boosters: design.boosters || [],
+    ice: design.ice || [],
+    windZones: design.windZones || [],
+    waterZones: design.waterZones || [],
+    portals: design.portals || [],
+    lava: design.lava || [],
+    spinners: design.spinners || [],
+    conveyors: design.conveyors || [],
+    phasePlatforms: design.phasePlatforms || [],
+    laserGates: design.laserGates || [],
+    gravityZones: design.gravityZones || [],
+    checkpoints: design.checkpoints || [],
+    spikes: design.spikes || [],
+    stars: design.stars,
+    enemies: design.enemies || [],
+    gravityScale: 1,
+    goal: design.goal,
+    theme: specialActThemes[act],
+    special: design.special,
+  };
+}
+
 export type SolvabilityResult = { ok: boolean; reachablePlatforms: number; reason?: string };
 
 export function analyzeSolvability(level: Level): SolvabilityResult {
@@ -974,7 +1500,13 @@ export function analyzeSolvability(level: Level): SolvabilityResult {
 }
 
 export function makeLevel(index: number): Level {
-  return index < 50 ? makeLegacyLevel(index) : index < 100 ? makeRedesignedLevel(index) : makeExpansionLevel(index);
+  return index < 50
+    ? makeLegacyLevel(index)
+    : index < 100
+      ? makeRedesignedLevel(index)
+      : index < 200
+        ? makeExpansionLevel(index)
+        : makeSpecialLevel(index);
 }
 
 export const levels: Level[] = Array.from({ length: LEVEL_COUNT }, (_, index) => makeLevel(index));

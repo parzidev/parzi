@@ -1,19 +1,18 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { advanceCheatIndex, CHEAT_SEQUENCE } from "./cheat";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import type { FormEvent } from "react";
+import { advanceCheatIndex, CHEAT_SEQUENCE, isLevelUnlockCode, isSingleLevelSkipCode } from "./cheat";
 import type { CheatAction } from "./cheat";
 import { BALL_R, GRAVITY, JUMP_SPEED, LEVEL_COUNT, MAX_RUN_SPEED, VIEW_H, VIEW_W, isLaserGateActive, isPhasePlatformActive, levels } from "./levels";
-import type { EnemySpawn, Level } from "./levels";
-import { loadProgress, normalizeProgress, PROGRESS_KEY } from "./progress";
+import type { Level } from "./levels";
+import { createPhysicsState, stepPhysics } from "./physics";
+import type { PhysicsState } from "./physics";
+import { loadProgress, normalizeProgress, PROGRESS_KEY, skipNextLevel } from "./progress";
 
-type Enemy = EnemySpawn & { dir: number; dead: boolean };
-type GameState = {
-  x: number; y: number; vx: number; vy: number; angle: number; grounded: boolean;
-  camera: number; stars: boolean[]; enemies: Enemy[]; lives: number; time: number;
-  hasKey: boolean; crumbleTimers: number[]; portalCooldown: number; gateCooldown: number; boostTimer: number; invulnerable: number;
-  checkpoint: { x: number; y: number }; checkpointIndex: number;
-};
+const SpecialWorld3D = lazy(() => import("./SpecialWorld3D"));
+
+type GameState = PhysicsState & { lives: number };
 
 const initialProgress = () => {
   if (typeof window === "undefined") return normalizeProgress(undefined, LEVEL_COUNT);
@@ -48,6 +47,7 @@ export default function Home() {
   const rafRef = useRef(0);
   const lastRef = useRef(0);
   const soundRef = useRef(true);
+  const specialReadyRef = useRef(false);
   const [screen, setScreen] = useState<"menu" | "levels" | "game">("menu");
   const [levelIndex, setLevelIndex] = useState(0);
   const [lives, setLives] = useState(3);
@@ -57,6 +57,9 @@ export default function Home() {
   const [message, setMessage] = useState<"win" | "lose" | "cheat" | null>(null);
   const [sound, setSound] = useState(true);
   const [progress, setProgress] = useState(initialProgress);
+  const [levelCheatCode, setLevelCheatCode] = useState("");
+  const [levelCheatStatus, setLevelCheatStatus] = useState<"idle" | "success" | "error">("idle");
+  const [levelCheatMessage, setLevelCheatMessage] = useState("");
 
   const beep = useCallback((frequency: number, duration = .08, gain = .04) => {
     if (!soundRef.current) return;
@@ -74,20 +77,17 @@ export default function Home() {
   const resetLevel = useCallback((index = levelIndex, keepLives = false) => {
     const lvl = levels[index];
     const nextLives = keepLives && stateRef.current ? stateRef.current.lives : 3;
-    stateRef.current = {
-      x: lvl.start.x, y: lvl.start.y, vx: 0, vy: 0, angle: 0, grounded: false,
-      camera: 0, stars: lvl.stars.map(() => false),
-      enemies: lvl.enemies.map(e => ({ ...e, dir: Math.random() > .5 ? 1 : -1, dead: false })), lives: nextLives, time: 0,
-      hasKey: false, crumbleTimers: lvl.crumbles.map(() => -1), portalCooldown: 0, gateCooldown: 0, boostTimer: 0, invulnerable: 0,
-      checkpoint: { ...lvl.start }, checkpointIndex: -1,
-    };
+    const directions = lvl.enemies.map(() => Math.random() > .5 ? 1 : -1);
+    stateRef.current = { ...createPhysicsState(lvl, directions), lives: nextLives };
+    specialReadyRef.current = false;
     setLives(nextLives); setStarCount(0); setHasKey(false); setMessage(null); setPaused(false);
   }, [levelIndex]);
 
   const startLevel = useCallback((index: number) => {
     setLevelIndex(index); setScreen("game"); setMessage(null); setPaused(false);
     const lvl = levels[index];
-    stateRef.current = { x: lvl.start.x, y: lvl.start.y, vx: 0, vy: 0, angle: 0, grounded: false, camera: 0, stars: lvl.stars.map(() => false), enemies: lvl.enemies.map(e => ({ ...e, dir: 1, dead: false })), lives: 3, time: 0, hasKey: false, crumbleTimers: lvl.crumbles.map(() => -1), portalCooldown: 0, gateCooldown: 0, boostTimer: 0, invulnerable: 0, checkpoint: { ...lvl.start }, checkpointIndex: -1 };
+    stateRef.current = { ...createPhysicsState(lvl), lives: 3 };
+    specialReadyRef.current = false;
     setLives(3); setStarCount(0); setHasKey(false); beep(420, .07);
   }, [beep]);
 
@@ -115,14 +115,50 @@ export default function Home() {
     else cheatIndexRef.current = nextIndex;
   }, [triggerCheat]);
 
+  const submitLevelCheat = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const unlockAll = isLevelUnlockCode(levelCheatCode);
+    const skipOne = isSingleLevelSkipCode(levelCheatCode);
+    if (!unlockAll && !skipOne) {
+      setLevelCheatStatus("error");
+      setLevelCheatMessage("Bu kod olmadı kedim.");
+      beep(145, .16, .045);
+      return;
+    }
+    setProgress(prev => {
+      const next = unlockAll ? { ...prev, unlocked: LEVEL_COUNT } : skipNextLevel(prev, LEVEL_COUNT);
+      try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(next)); } catch { /* unlocked for this session */ }
+      return next;
+    });
+    if (unlockAll) setLevelCheatMessage(`Tüm ${LEVEL_COUNT} bölüm açıldı!`);
+    else if (progress.unlocked < LEVEL_COUNT) setLevelCheatMessage(`${progress.unlocked}. bölüm geçildi, ${progress.unlocked + 1}. bölüm açıldı!`);
+    else setLevelCheatMessage(`Tüm ${LEVEL_COUNT} bölüm zaten açık.`);
+    setLevelCheatCode("");
+    setLevelCheatStatus("success");
+    beep(unlockAll ? 960 : 820, .24, .055);
+  };
+
   const loseLife = useCallback(() => {
     const s = stateRef.current; if (!s || message || s.invulnerable > 0) return;
     s.lives -= 1; setLives(s.lives); beep(120, .22, .06);
     if (s.lives <= 0) { setMessage("lose"); return; }
     const lvl = levels[levelIndex];
-    s.x = s.checkpoint.x; s.y = s.checkpoint.y; s.vx = 0; s.vy = 0; s.camera = Math.max(0, Math.min(lvl.width - VIEW_W, s.checkpoint.x - VIEW_W * .38));
-    s.hasKey = false; setHasKey(false);
-    s.crumbleTimers = lvl.crumbles.map(() => -1); s.portalCooldown = 0; s.gateCooldown = 0; s.boostTimer = 0; s.invulnerable = 1;
+    const checkpoint = { ...s.checkpoint };
+    const checkpointIndex = s.checkpointIndex;
+    const collectedStars = [...s.stars];
+    const livesLeft = s.lives;
+    const fresh = createPhysicsState(lvl);
+    Object.assign(s, fresh, {
+      x: checkpoint.x,
+      y: checkpoint.y,
+      camera: Math.max(0, Math.min(lvl.width - VIEW_W, checkpoint.x - VIEW_W * .38)),
+      checkpoint,
+      checkpointIndex,
+      stars: collectedStars,
+      lives: livesLeft,
+      invulnerable: 1,
+    });
+    setHasKey(false);
   }, [beep, levelIndex, message]);
 
   const draw = useCallback((ctx: CanvasRenderingContext2D, s: GameState, lvl: Level, time: number) => {
@@ -315,135 +351,26 @@ export default function Home() {
       if (!s) { rafRef.current = requestAnimationFrame(tick); return; }
       const dt = Math.min(.025, (now - (lastRef.current || now)) / 1000); lastRef.current = now;
       if (!paused && !message) {
-        s.time += dt;
-        s.portalCooldown = Math.max(0, s.portalCooldown - dt);
-        s.gateCooldown = Math.max(0, s.gateCooldown - dt);
-        s.boostTimer = Math.max(0, s.boostTimer - dt);
-        s.invulnerable = Math.max(0, s.invulnerable - dt);
-        s.crumbleTimers = s.crumbleTimers.map((timer, i) => {
-          if (timer < 0) return timer;
-          const next = timer + dt;
-          return next >= lvl.crumbles[i].delay + lvl.crumbles[i].respawn ? -1 : next;
-        });
-
         const c = controls.current;
-        const dir = (c.right ? 1 : 0) - (c.left ? 1 : 0);
-        const onIce = s.grounded && lvl.ice.some(strip => s.x + BALL_R > strip.x && s.x - BALL_R < strip.x + strip.w && Math.abs(s.y + BALL_R - (strip.y + strip.h)) < 14);
-        const gravityZone = lvl.gravityZones.find(zone => s.x > zone.x - BALL_R && s.x < zone.x + zone.w + BALL_R && s.y > zone.y - BALL_R && s.y < zone.y + zone.h + BALL_R);
-        const friction = onIce ? (dir ? .38 : .6) : (s.grounded && !dir ? .001 : .08);
-        s.vx += dir * 1450 * dt; s.vx *= Math.pow(friction, dt);
-        const maxRunSpeed = s.boostTimer > 0 ? 790 : MAX_RUN_SPEED;
-        s.vx = Math.max(-maxRunSpeed, Math.min(maxRunSpeed, s.vx));
-        if (c.jumpPressed && s.grounded) { s.vy = -JUMP_SPEED; s.grounded = false; beep(360, .07); } c.jumpPressed = false;
-        s.vy = Math.min(1050, s.vy + GRAVITY * lvl.gravityScale * (gravityZone?.scale || 1) * dt);
-
-        lvl.windZones.forEach(zone => {
-          if (s.x > zone.x - BALL_R && s.x < zone.x + zone.w + BALL_R && s.y > zone.y - BALL_R && s.y < zone.y + zone.h + BALL_R) {
-            s.vx += zone.force * dt; s.vy += (zone.lift || 0) * dt;
-          }
-        });
-        lvl.waterZones.forEach(zone => {
-          if (s.x > zone.x - BALL_R && s.x < zone.x + zone.w + BALL_R && s.y > zone.y && s.y < zone.y + zone.h + BALL_R) {
-            s.vy -= zone.buoyancy * 1.5 * dt;
-            s.vy *= Math.pow(.07, dt); s.vx *= Math.pow(.2, dt);
-          }
-        });
-
-        const movingRects = lvl.movers.map(m => ({ ...m, x: m.x + (m.axis === "x" ? Math.sin(s.time * m.speed + (m.phase || 0)) * m.range : 0), y: m.y + (m.axis === "y" ? Math.sin(s.time * m.speed + (m.phase || 0)) * m.range : 0) }));
-        const activeCrumbles = lvl.crumbles
-          .map((platform, i) => ({ ...platform, crumbleIndex: i }))
-          .filter(platform => {
-            const timer = s.crumbleTimers[platform.crumbleIndex] ?? -1;
-            return timer < 0 || timer < platform.delay;
-          });
-        const activePhasePlatforms = lvl.phasePlatforms.filter(platform => isPhasePlatformActive(platform, s.time));
-        const solids = [
-          ...lvl.platforms.map(platform => ({ ...platform, crumbleIndex: -1 })),
-          ...movingRects.map(platform => ({ ...platform, crumbleIndex: -1 })),
-          ...activePhasePlatforms.map(platform => ({ ...platform, crumbleIndex: -1 })),
-          ...activeCrumbles,
-        ];
-        const prevX = s.x; s.x += s.vx * dt;
-        solids.forEach(p => { if (s.x + BALL_R > p.x && s.x - BALL_R < p.x + p.w && s.y + BALL_R > p.y + 3 && s.y - BALL_R < p.y + p.h) { if (s.vx > 0 && prevX + BALL_R <= p.x + 8) { s.x = p.x - BALL_R; s.vx = 0; } else if (s.vx < 0 && prevX - BALL_R >= p.x + p.w - 8) { s.x = p.x + p.w + BALL_R; s.vx = 0; } } });
-        const prevY = s.y; s.y += s.vy * dt; s.grounded = false;
-        solids.forEach(p => {
-          if (s.x + BALL_R - 5 > p.x && s.x - BALL_R + 5 < p.x + p.w && s.y + BALL_R > p.y && s.y - BALL_R < p.y + p.h) {
-            if (s.vy >= 0 && prevY + BALL_R <= p.y + 10) {
-              s.y = p.y - BALL_R; s.vy = 0; s.grounded = true;
-              if (p.crumbleIndex >= 0 && s.crumbleTimers[p.crumbleIndex] < 0) s.crumbleTimers[p.crumbleIndex] = .001;
-            } else if (s.vy < 0 && prevY - BALL_R >= p.y + p.h - 8) {
-              s.y = p.y + p.h + BALL_R; s.vy = 0;
-            }
-          }
-        });
-
-        // Speed Booster collision
-        if (s.grounded) {
-          const booster = lvl.boosters.find(b => s.x + BALL_R > b.x && s.x - BALL_R < b.x + b.w && Math.abs((s.y + BALL_R) - b.y) < 14);
-          if (booster) {
-            const boostDirection = dir || (s.vx < 0 ? -1 : 1);
-            if (s.boostTimer <= .05) beep(680, .06, .05);
-            s.vx = boostDirection * Math.max(Math.abs(s.vx), 750); s.boostTimer = .7;
-          }
-          const conveyor = lvl.conveyors.find(belt => s.x + BALL_R > belt.x && s.x - BALL_R < belt.x + belt.w && Math.abs((s.y + BALL_R) - (belt.y + belt.h)) < 14);
-          if (conveyor) s.vx += (conveyor.speed - s.vx) * Math.min(1, dt * 4.5);
+        const dir = ((c.right ? 1 : 0) - (c.left ? 1 : 0)) as -1 | 0 | 1;
+        const events = stepPhysics(lvl, s, { dir, jumpPressed: c.jumpPressed }, dt);
+        c.jumpPressed = false;
+        for (const event of events) {
+          if (event.type === "jump") beep(360, .07);
+          else if (event.type === "boost") beep(680, .06, .05);
+          else if (event.type === "spring") beep(520, .12, .05);
+          else if (event.type === "key") { setHasKey(true); beep(880, .14, .06); }
+          else if (event.type === "checkpoint") beep(740, .12, .045);
+          else if (event.type === "portal") beep(620, .16, .045);
+          else if (event.type === "star") { setStarCount(event.count); beep(760 + event.count * 100, .11); }
+          else if (event.type === "enemyStomp") beep(190, .08);
+          else if (event.type === "gateLocked") beep(220, .15, .05);
+          else if (event.type === "death") { loseLife(); break; }
+          else if (event.type === "win") { saveWin(event.stars); setMessage("win"); beep(900, .28, .06); break; }
         }
-
-        // Spring collision
-        const spring = lvl.springs.find(plant => s.grounded && s.x + BALL_R - 5 > plant.x && s.x - BALL_R + 5 < plant.x + plant.w && Math.abs(s.y + BALL_R - plant.y) < 12);
-        if (spring) { s.vy = -spring.power; s.grounded = false; beep(520, .12, .05); }
-
-        // Gold Key pickup
-        if (lvl.key && !s.hasKey && Math.hypot(s.x - lvl.key.x, s.y - lvl.key.y) < BALL_R + 25) {
-          s.hasKey = true; s.gateCooldown = 0; setHasKey(true); beep(880, .14, .06);
-        }
-
-        lvl.checkpoints.forEach((checkpoint, i) => {
-          if (i > s.checkpointIndex && Math.hypot(s.x - checkpoint.x, s.y - checkpoint.y) < BALL_R + 30) {
-            s.checkpoint = { ...checkpoint }; s.checkpointIndex = i; beep(740, .12, .045);
-          }
-        });
-
-        if (s.portalCooldown <= 0) {
-          for (const portal of lvl.portals) {
-            const atA = Math.hypot(s.x - portal.a.x, s.y - portal.a.y) < BALL_R + 27;
-            const atB = Math.hypot(s.x - portal.b.x, s.y - portal.b.y) < BALL_R + 27;
-            if (atA || atB) {
-              const target = atA ? portal.b : portal.a;
-              s.x = target.x; s.y = target.y; s.portalCooldown = .8; s.grounded = false;
-              beep(620, .16, .045); break;
-            }
-          }
-        }
-
-        s.x = Math.max(BALL_R, Math.min(lvl.width - BALL_R, s.x)); s.angle += s.vx * dt / BALL_R;
-        lvl.stars.forEach((st, i) => { if (!s.stars[i] && Math.hypot(s.x - st.x, s.y - st.y) < BALL_R + 25) { s.stars[i] = true; const count = s.stars.filter(Boolean).length; setStarCount(count); beep(760 + count * 100, .11); } });
-        s.enemies.forEach(e => { if (e.dead) return; e.x += e.dir * (e.speed || 88) * dt; if (e.x < e.min) { e.x = e.min; e.dir = 1; } if (e.x > e.max) { e.x = e.max; e.dir = -1; } const d = Math.hypot(s.x - e.x, s.y - e.y); if (d < BALL_R + 25) { if (s.vy > 110 && s.y < e.y - 8) { e.dead = true; s.vy = -570; beep(190, .08); } else loseLife(); } });
-        const hitSpike = lvl.spikes.some(sp => s.x + BALL_R - 8 > sp.x && s.x - BALL_R + 8 < sp.x + sp.w && s.y + BALL_R > sp.y + 5 && s.y - BALL_R < sp.y + sp.h);
-        const hitLava = lvl.lava.some(pool => {
-          const top = pool.y + Math.sin(s.time * pool.speed + (pool.phase || 0)) * pool.wave;
-          return s.x + BALL_R - 5 > pool.x && s.x - BALL_R + 5 < pool.x + pool.w && s.y + BALL_R > top && s.y - BALL_R < top + pool.h;
-        });
-        const hitSpinner = lvl.spinners.some(spinner => {
-          const angle = s.time * spinner.speed + (spinner.phase || 0);
-          const dx = Math.cos(angle) * spinner.length, dy = Math.sin(angle) * spinner.length;
-          return distanceToSegment(s.x, s.y, spinner.x - dx, spinner.y - dy, spinner.x + dx, spinner.y + dy) < BALL_R + 9;
-        });
-        const hitLaser = lvl.laserGates.some(gate => isLaserGateActive(gate, s.time) && Math.abs(s.x - gate.x) < BALL_R + 8 && s.y + BALL_R > gate.y && s.y - BALL_R < gate.y + gate.h);
-        if (hitSpike || hitLava || hitSpinner || hitLaser || s.y > VIEW_H + 90) loseLife();
-
-        // Goal reached (checked with key lock)
-        if (Math.hypot(s.x - lvl.goal.x, s.y - (lvl.goal.y + 25)) < 70) {
-          if (lvl.key && !s.hasKey) {
-            s.x = Math.min(s.x, lvl.goal.x - 82); s.vx = Math.min(s.vx, -360);
-            if (s.gateCooldown <= 0) { beep(220, .15, .05); s.gateCooldown = .65; }
-          } else {
-            const got = s.stars.filter(Boolean).length; saveWin(got); setMessage("win"); beep(900, .28, .06);
-          }
-        }
-        const targetCamera = Math.max(0, Math.min(lvl.width - VIEW_W, s.x - VIEW_W * .38)); s.camera += (targetCamera - s.camera) * Math.min(1, dt * 6);
       }
-      draw(ctx, s, lvl, s.time); rafRef.current = requestAnimationFrame(tick);
+      if (levelIndex < 200 || !specialReadyRef.current) draw(ctx, s, lvl, s.time);
+      rafRef.current = requestAnimationFrame(tick);
     };
     rafRef.current = requestAnimationFrame(tick);
     return () => { cancelAnimationFrame(rafRef.current); lastRef.current = 0; };
@@ -501,6 +428,7 @@ export default function Home() {
   };
 
   const toggleSound = () => { soundRef.current = !soundRef.current; setSound(soundRef.current); };
+  const getSpecialRenderState = useCallback(() => stateRef.current, []);
 
   return (
     <main className="app-shell">
@@ -509,7 +437,7 @@ export default function Home() {
         <section className="menu-screen">
           <div className="menu-cloud cloud-one" /><div className="menu-cloud cloud-two" />
           <div className="hero-copy">
-            <p className="eyebrow">ADA İÇİN 200 BÖLÜMLÜ MACERA</p>
+            <p className="eyebrow">ADA İÇİN 220 BÖLÜMLÜ MACERA</p>
             <h1>RED<br /><span>BALL</span></h1>
             <p className="intro">Ada, minik kahramanımızı yuvarla, dikenlerden kaç ve altın tacın yolunu aç.</p>
             <div className="menu-actions">
@@ -530,7 +458,25 @@ export default function Home() {
 
       {screen === "levels" && (
         <section className="level-screen">
-          <header className="level-header"><button className="round-button" onClick={() => setScreen("menu")} aria-label="Ana menüye dön">←</button><div><p className="eyebrow">20 DÜNYA · 200 BÖLÜM</p><h2>Bölümünü seç</h2></div><div className="total-stars">★ {progress.scores.reduce((a, b) => a + b, 0)} / {LEVEL_COUNT * 3}</div></header>
+          <header className="level-header"><button className="round-button" onClick={() => setScreen("menu")} aria-label="Ana menüye dön">←</button><div><p className="eyebrow">22 DÜNYA · 220 BÖLÜM</p><h2>Bölümünü seç</h2></div><div className="total-stars">★ {progress.scores.reduce((a, b) => a + b, 0)} / {LEVEL_COUNT * 3}</div></header>
+          <form className="level-cheat" onSubmit={submitLevelCheat}>
+            <label htmlFor="level-cheat-code"><span>🐾</span><strong>Gizli geçit</strong><small>Hile kodunu yaz</small></label>
+            <input
+              id="level-cheat-code"
+              value={levelCheatCode}
+              onChange={event => { setLevelCheatCode(event.target.value); setLevelCheatStatus("idle"); setLevelCheatMessage(""); }}
+              placeholder="Hile kodu"
+              autoCapitalize="characters"
+              autoComplete="off"
+              spellCheck={false}
+              enterKeyHint="done"
+              aria-describedby="level-cheat-result"
+            />
+            <button type="submit">HEPSİNİ AÇ</button>
+            <output id="level-cheat-result" className={`level-cheat-result ${levelCheatStatus}`} aria-live="polite">
+              {levelCheatMessage}
+            </output>
+          </form>
           <div className="level-grid">
             {levels.map((lvl, i) => { const locked = i + 1 > progress.unlocked; return <button key={lvl.number} disabled={locked} onClick={() => startLevel(i)} className={`level-card ${locked ? "locked" : ""}`}><span className="level-number">{locked ? "◆" : String(i + 1).padStart(2, "0")}</span><span className="level-info"><em>{lvl.chapter}</em><strong>{lvl.name}</strong><small>{locked ? "Önceki bölümü bitir" : lvl.subtitle}</small></span><span className="card-stars">{[0, 1, 2].map(n => <i key={n} className={n < (progress.scores[i] || 0) ? "earned" : ""}>★</i>)}</span></button>; })}
           </div>
@@ -550,6 +496,17 @@ export default function Home() {
           </div>
           <div className="canvas-frame">
             <canvas ref={canvasRef} width={VIEW_W} height={VIEW_H} aria-label={`${levels[levelIndex].name} oyun alanı`} />
+            {levelIndex >= 200 && (
+              <Suspense fallback={null}>
+                <SpecialWorld3D
+                  level={levels[levelIndex]}
+                  getState={getSpecialRenderState}
+                  active={!paused && !message}
+                  onReadyChange={ready => { specialReadyRef.current = ready; }}
+                />
+              </Suspense>
+            )}
+            {levelIndex >= 200 && <p className="special-mechanic-hint">{levels[levelIndex].subtitle}</p>}
             {levels[levelIndex].note && <p className="level-note">{levels[levelIndex].note}</p>}
           </div>
           <div className="rotate-hint">↻ iPad’i yatay çevirirsen oyun alanı genişler.</div>
@@ -570,7 +527,7 @@ export default function Home() {
                   {message === "cheat" ? "HİLECİ KEDİMMM" : (message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "MACERA TAMAMLAYAN KEDİM" : "KAZANDIN ADA!") : "KAYBETTİN ADA")}
                 </p>
                 <h2>
-                  {message === "cheat" ? "hileci kedimmm" : (message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "ELLLERİNE SAĞLIK KEDİM 200 BÖLÜMÜN TAMAMINI BİTİRDİN!" : "Harika oynadın bebeğimmmmmm") : "SEN ÖLDÜN MÜÜÜ KIYAMAMMM")}
+                  {message === "cheat" ? "hileci kedimmm" : (message === "win" ? (levelIndex === LEVEL_COUNT - 1 ? "ELLLERİNE SAĞLIK KEDİM 220 BÖLÜMÜN TAMAMINI BİTİRDİN!" : "Harika oynadın bebeğimmmmmm") : "SEN ÖLDÜN MÜÜÜ KIYAMAMMM")}
                 </h2>
                 {!((message === "win" || message === "cheat") && levelIndex === LEVEL_COUNT - 1) && (
                   <p>{(message === "win" || message === "cheat") ? "FENAAA İYİSİNNN" : "Hadi bir kez daha dene sevgilim."}</p>

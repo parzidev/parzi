@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import test from "node:test";
 import { LEVEL_COUNT, analyzeSolvability, isLaserGateActive, isPhasePlatformActive, levels } from "../src/levels.ts";
 
-test("200 bölümün tamamı fizik sınırları içinde geçilebilirdir", () => {
+test("220 bölümün tamamı fizik sınırları içinde geçilebilirdir", () => {
   assert.equal(levels.length, LEVEL_COUNT);
   assert.equal(new Set(levels.map(level => level.name)).size, LEVEL_COUNT, "bölüm adları benzersiz olmalı");
 
@@ -25,6 +25,12 @@ test("mevcut 1–100 bölüm genişleme sonrasında aynen korunur", () => {
   const fingerprint = createHash("sha256").update(JSON.stringify(originalData)).digest("hex");
 
   assert.equal(fingerprint, "9c25a1f3203b67f098511f6910a630749bb68503608ce2066009c5eba1c2b3d9");
+});
+
+test("mevcut 1–200 bölüm bonus dünyalar eklenirken bit bit korunur", () => {
+  const fingerprint = createHash("sha256").update(JSON.stringify(levels.slice(0, 200))).digest("hex");
+
+  assert.equal(fingerprint, "9426b2ebe79911e7226f5fdd12ca55b221e961ad6786562fb5cd8be281c82773");
 });
 
 test("1–50'de anahtarsız bölümlerin mevcut tasarımı aynen korunur", () => {
@@ -71,7 +77,7 @@ test("51–100 birbirinden farklı düzenlere ve anahtar odaları dahil yeni mek
 });
 
 test("101–200 yüz benzersiz parkur ve beş yeni mekanik getirir", () => {
-  const expansion = levels.slice(100);
+  const expansion = levels.slice(100, 200);
   const signatures = expansion.map(level => JSON.stringify({
     platforms: level.platforms,
     conveyors: level.conveyors,
@@ -105,6 +111,52 @@ test("101–200'deki on dünya kendi mekanik kimliğini korur", () => {
   assert.ok(worlds[8].every(level => level.gravityZones.length > 0 && level.laserGates.length > 0 && level.checkpoints.length > 0));
   assert.ok(worlds[9].every(level => level.conveyors.length > 0 && level.phasePlatforms.length > 0 && level.laserGates.length > 0 && level.gravityZones.length > 0 && level.checkpoints.length > 0));
   assert.ok(worlds[9].at(-1)!.mechanics.length >= 14, "200. bölüm eski ve yeni mekanikleri birleştirmeli");
+});
+
+test("201–220 dört perdede yirmi el yapımı ana mekanik sunar", () => {
+  const bonus = levels.slice(200, 220);
+  const expectedKinds = [
+    "seesaw", "oneWay", "wallJump", "pushBlock", "pressureGate",
+    "breakableWall", "swing", "zipline", "elastic", "risingWater",
+    "magnet", "gravityFlip", "gears", "pistons", "momentumPortal",
+    "phaseSwitch", "echo", "timeFreeze", "collapse", "boss",
+  ];
+  const signatures = bonus.map(level => JSON.stringify({
+    platforms: level.platforms,
+    special: level.special,
+  }));
+
+  assert.equal(bonus.length, 20);
+  assert.equal(new Set(signatures).size, 20, "201–220 arasında kopya bölüm düzeni olmamalı");
+  assert.deepEqual(bonus.map(level => level.special?.kind), expectedKinds);
+  assert.deepEqual([...new Set(bonus.map(level => level.chapter))], ["Kök Bahçesi", "Yaprak Serası", "Saat Atölyesi", "Kalp Motoru"]);
+  assert.ok(bonus.every(level => level.mechanics.length === 1), "her özel bölüm tek ana fikre odaklanmalı");
+  assert.ok(bonus.every(level => level.subtitle.length >= 35), "mekanik dokunmatik oyuncuya açıkça anlatılmalı");
+
+  for (const level of bonus) {
+    const collapseTiles = level.special?.kind === "collapse" ? level.special.tiles : [];
+    const mainRoute = [
+      ...level.platforms.filter(platform => platform.h >= 80 && platform.w >= 300),
+      ...collapseTiles,
+    ].sort((a, b) => a.x - b.x);
+    assert.equal(mainRoute[0].x, 0, `#${level.number}: ana rota başlangıçta başlamalı`);
+    assert.equal(mainRoute.at(-1)!.x + mainRoute.at(-1)!.w, level.width, `#${level.number}: ana rota kapıya ulaşmalı`);
+    for (let i = 0; i < mainRoute.length - 1; i++) {
+      const from = mainRoute[i], to = mainRoute[i + 1];
+      assert.ok(to.x - (from.x + from.w) <= 100, `#${level.number}: ana rotadaki boşluk fazla geniş`);
+      assert.ok(from.y - to.y <= 145, `#${level.number}: ana rotadaki yükseliş fazla dik`);
+    }
+  }
+});
+
+test("220. bölüm üç fazlı, kilitli bir muhafız finalidir", () => {
+  const finale = levels[219];
+
+  assert.equal(finale.name, "Kalbin Efsanevi Tacı");
+  assert.equal(finale.special?.kind, "boss");
+  assert.equal(finale.special?.kind === "boss" ? finale.special.phases.length : 0, 3);
+  assert.ok(finale.subtitle.includes("Üç mührü"));
+  assert.equal(finale.portals.length, 1);
 });
 
 test("faz platformları ve lazer kapıları zaman döngüsüne uyar", () => {

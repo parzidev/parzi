@@ -22,9 +22,16 @@ export function normalizeProgress(saved: StoredProgress | undefined, levelCount:
   const storedUnlocked = typeof saved?.unlocked === "number" && Number.isFinite(saved.unlocked)
     ? Math.floor(saved.unlocked)
     : unlockedFromScores;
-  const unlockedAfterExpansion = saved?.version === PROGRESS_VERSION && saved.scores?.length === 100 && storedUnlocked >= 100
-    ? Math.max(storedUnlocked, 101)
-    : storedUnlocked;
+  const expansionBoundary = saved?.scores?.length === 100
+    ? 100
+    : saved?.scores?.length === 200
+      ? 200
+      : undefined;
+  const unlockedAfterExpansion = saved?.version === PROGRESS_VERSION
+    && expansionBoundary !== undefined
+    && storedUnlocked >= expansionBoundary
+      ? Math.max(storedUnlocked, expansionBoundary + 1)
+      : storedUnlocked;
   const importedUnlocked = saved?.version === PROGRESS_VERSION
     ? unlockedAfterExpansion
     : saved
@@ -50,4 +57,11 @@ export function loadProgress(storage: StorageLike, levelCount: number): Progress
     } catch { /* try the older storage key */ }
   }
   return normalizeProgress(undefined, levelCount);
+}
+
+export function skipNextLevel(progress: Progress, levelCount: number): Progress {
+  return {
+    ...progress,
+    unlocked: Math.min(levelCount, progress.unlocked + 1),
+  };
 }
