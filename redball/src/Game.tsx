@@ -1,7 +1,7 @@
 "use client";
 
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
-import type { FormEvent } from "react";
+import type { FormEvent, PointerEvent as ReactPointerEvent } from "react";
 import { advanceCheatIndex, CHEAT_SEQUENCE, isLevelUnlockCode, isSingleLevelSkipCode } from "./cheat";
 import type { CheatAction } from "./cheat";
 import { BALL_R, GRAVITY, JUMP_SPEED, LEVEL_COUNT, MAX_RUN_SPEED, VIEW_H, VIEW_W, isLaserGateActive, isPhasePlatformActive, levels } from "./levels";
@@ -427,6 +427,18 @@ export default function Home() {
     controls.current[action] = active;
   };
 
+  const beginTouch = (event: ReactPointerEvent<HTMLButtonElement>, action: "left" | "right" | "jump") => {
+    event.preventDefault();
+    if (!event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.setPointerCapture(event.pointerId);
+    touch(action, true);
+  };
+
+  const endTouch = (event: ReactPointerEvent<HTMLButtonElement>, action: "left" | "right" | "jump") => {
+    event.preventDefault();
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+    touch(action, false);
+  };
+
   const toggleSound = () => { soundRef.current = !soundRef.current; setSound(soundRef.current); };
   const getSpecialRenderState = useCallback(() => stateRef.current, []);
 
@@ -444,6 +456,7 @@ export default function Home() {
               <button className="primary-button" onClick={() => startLevel(Math.min(progress.unlocked - 1, LEVEL_COUNT - 1))}><span>▶</span> MACERAYA BAŞLA</button>
               <button className="secondary-button" onClick={() => setScreen("levels")}>BÖLÜMLER</button>
             </div>
+            <p className="apology-note">Her şey için özür dilerim.</p>
             <p className="control-hint"><kbd>A</kbd><kbd>D</kbd> hareket &nbsp; <kbd>W</kbd> / <kbd>↑</kbd> zıpla</p>
           </div>
           <div className="hero-art" aria-hidden="true">
@@ -510,7 +523,7 @@ export default function Home() {
             {levels[levelIndex].note && <p className="level-note">{levels[levelIndex].note}</p>}
           </div>
           <div className="rotate-hint">↻ iPad’i yatay çevirirsen oyun alanı genişler.</div>
-          <div className="touch-controls" aria-label="Dokunmatik kontroller"><div><button aria-label="Sola git" onPointerDown={() => touch("left", true)} onPointerUp={() => touch("left", false)} onPointerCancel={() => touch("left", false)} onPointerLeave={() => touch("left", false)}>←</button><button aria-label="Sağa git" onPointerDown={() => touch("right", true)} onPointerUp={() => touch("right", false)} onPointerCancel={() => touch("right", false)} onPointerLeave={() => touch("right", false)}>→</button></div><button aria-label="Zıpla" className="jump-button" onPointerDown={() => touch("jump", true)} onPointerUp={() => touch("jump", false)} onPointerCancel={() => touch("jump", false)} onPointerLeave={() => touch("jump", false)}>↑</button></div>
+          <div className="touch-controls" aria-label="Dokunmatik kontroller"><div><button type="button" aria-label="Sola git" onPointerDown={event => beginTouch(event, "left")} onPointerUp={event => endTouch(event, "left")} onPointerCancel={event => endTouch(event, "left")}>←</button><button type="button" aria-label="Sağa git" onPointerDown={event => beginTouch(event, "right")} onPointerUp={event => endTouch(event, "right")} onPointerCancel={event => endTouch(event, "right")}>→</button></div><button type="button" aria-label="Zıpla" className="jump-button" onPointerDown={event => beginTouch(event, "jump")} onPointerUp={event => endTouch(event, "jump")} onPointerCancel={event => endTouch(event, "jump")}>↑</button></div>
           {paused && !message && <div className="game-modal"><div className="modal-card"><span className="modal-icon">Ⅱ</span><h2>Mola verdik</h2><p>Top da biraz nefeslensin.</p><button className="primary-button small" onClick={() => setPaused(false)}>DEVAM ET</button><button className="text-button" onClick={() => resetLevel()}>Bölümü yeniden başlat</button></div></div>}
           {message === "cheat" && (
             <div className="cheat-rain-container" aria-hidden="true">

@@ -75,6 +75,7 @@ export type PhysicsState = {
   portalCooldown: number;
   gateCooldown: number;
   boostTimer: number;
+  jumpBuffer: number;
   invulnerable: number;
   checkpoint: Point;
   checkpointIndex: number;
@@ -95,6 +96,8 @@ export type PhysicsEvent =
   | { type: "gateLocked" }
   | { type: "death"; reason: string }
   | { type: "win"; stars: number };
+
+const JUMP_BUFFER_TIME = .14;
 
 function createSpecialRuntime(level: Level): SpecialRuntime {
   const spec = level.special;
@@ -167,6 +170,7 @@ export function createPhysicsState(level: Level, enemyDirections: readonly numbe
     portalCooldown: 0,
     gateCooldown: 0,
     boostTimer: 0,
+    jumpBuffer: 0,
     invulnerable: 0,
     checkpoint: { ...level.start },
     checkpointIndex: -1,
@@ -262,6 +266,7 @@ export function stepPhysics(level: Level, state: PhysicsState, input: PhysicsInp
   state.portalCooldown = Math.max(0, state.portalCooldown - dt);
   state.gateCooldown = Math.max(0, state.gateCooldown - dt);
   state.boostTimer = Math.max(0, state.boostTimer - dt);
+  state.jumpBuffer = input.jumpPressed ? JUMP_BUFFER_TIME : Math.max(0, state.jumpBuffer - dt);
   state.invulnerable = Math.max(0, state.invulnerable - dt);
   special.attachCooldown = Math.max(0, special.attachCooldown - dt);
   special.wallCoyote = Math.max(0, special.wallCoyote - dt);
@@ -318,14 +323,16 @@ export function stepPhysics(level: Level, state: PhysicsState, input: PhysicsInp
   state.vx *= Math.pow(friction, dt);
   const maxRunSpeed = state.boostTimer > 0 ? 790 : MAX_RUN_SPEED;
   state.vx = Math.max(-maxRunSpeed, Math.min(maxRunSpeed, state.vx));
-  if (input.jumpPressed && state.grounded) {
+  if (state.jumpBuffer > 0 && state.grounded) {
     state.vy = -JUMP_SPEED * special.gravity;
     state.grounded = false;
+    state.jumpBuffer = 0;
     events.push({ type: "jump" });
-  } else if (input.jumpPressed && spec?.kind === "wallJump" && special.wallCoyote > 0 && special.wallSide !== 0) {
+  } else if (state.jumpBuffer > 0 && spec?.kind === "wallJump" && special.wallCoyote > 0 && special.wallSide !== 0) {
     state.vx = -special.wallSide * spec.horizontalSpeed;
     state.vy = -spec.verticalSpeed;
     state.grounded = false;
+    state.jumpBuffer = 0;
     special.wallCoyote = 0;
     events.push({ type: "jump" });
   }
@@ -557,7 +564,7 @@ export function stepPhysics(level: Level, state: PhysicsState, input: PhysicsInp
   state.grounded = false;
   let groundedSolid: Solid | null = null;
   for (const platform of solids) {
-    if (!overlapsPlayer(state, platform, 5)) continue;
+    if (!overlapsPlayer(state, platform)) continue;
     if (platform.oneWay && (special.gravity < 0 || state.vy < 0 || previousY + BALL_R > platform.y + 10)) continue;
     if (special.gravity > 0) {
       if (state.vy >= 0 && previousY + BALL_R <= platform.y + 10) {
@@ -649,11 +656,12 @@ export function stepPhysics(level: Level, state: PhysicsState, input: PhysicsInp
   if (spec?.kind === "swing") {
     if (special.attachedSwing >= 0) {
       const anchor = spec.anchors[special.attachedSwing];
-      if (input.jumpPressed) {
+      if (state.jumpBuffer > 0) {
         const tangentX = Math.cos(special.swingAngle) * anchor.length * special.swingVelocity;
         const tangentY = -Math.sin(special.swingAngle) * anchor.length * special.swingVelocity;
         state.vx = tangentX * anchor.releaseBoost + dir * 110;
         state.vy = tangentY * anchor.releaseBoost - 250;
+        state.jumpBuffer = 0;
         special.attachedSwing = -1;
         special.attachCooldown = .35;
         events.push({ type: "jump" });
@@ -682,11 +690,12 @@ export function stepPhysics(level: Level, state: PhysicsState, input: PhysicsInp
     if (special.attachedZipline >= 0) {
       const cable = spec.cables[special.attachedZipline];
       const length = Math.hypot(cable.b.x - cable.a.x, cable.b.y - cable.a.y);
-      if (input.jumpPressed || special.ziplineProgress >= 1) {
+      if (state.jumpBuffer > 0 || special.ziplineProgress >= 1) {
         const dx = (cable.b.x - cable.a.x) / Math.max(1, length);
         const dy = (cable.b.y - cable.a.y) / Math.max(1, length);
         state.vx = dx * cable.speed;
         state.vy = dy * cable.speed - 300;
+        state.jumpBuffer = 0;
         special.attachedZipline = -1;
         special.attachCooldown = .3;
         events.push({ type: "jump" });

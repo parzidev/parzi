@@ -37,6 +37,7 @@ test("oyun 220 bölüm, yeni mekanikler, klavye ve iPad kontrolleri içerir", as
   assert.match(source, /localStorage\.setItem\(PROGRESS_KEY/);
   assert.match(source, /onPointerDown/);
   assert.match(source, /onPointerCancel/);
+  assert.match(source, /setPointerCapture/);
   assert.match(source, /if \(active\) advanceCheat\(action\)/);
   assert.match(source, /requestAnimationFrame/);
   assert.match(source, /addEventListener\("keydown"/);
@@ -58,6 +59,7 @@ test("oyun 220 bölüm, yeni mekanikler, klavye ve iPad kontrolleri içerir", as
   assert.match(source, /setHasKey\(false\)/);
   assert.match(physicsSource, /state\.gateCooldown/);
   assert.match(source, /stepPhysics\(lvl, s/);
+  assert.match(physicsSource, /JUMP_BUFFER_TIME/);
   assert.match(source, /ÖNCE ANAHTARI BUL/);
   assert.match(source, /KAZANDIN ADA!/);
   assert.match(source, /KAYBETTİN ADA/);
@@ -65,6 +67,7 @@ test("oyun 220 bölüm, yeni mekanikler, klavye ve iPad kontrolleri içerir", as
   assert.match(source, /FENAAA İYİSİNNN/);
   assert.match(source, /MACERA TAMAMLAYAN KEDİM/);
   assert.match(source, /ELLLERİNE SAĞLIK KEDİM 220 BÖLÜMÜN TAMAMINI BİTİRDİN!/);
+  assert.match(source, /Her şey için özür dilerim\./);
   assert.match(source, /SEN ÖLDÜN MÜÜÜ KIYAMAMMM/);
   assert.match(source, /levels\[levelIndex\]\.note/);
   assert.match(source, /Hile kodunu yaz/);

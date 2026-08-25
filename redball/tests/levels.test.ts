@@ -1,7 +1,37 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
-import { LEVEL_COUNT, analyzeSolvability, isLaserGateActive, isPhasePlatformActive, levels } from "../src/levels.ts";
+import { BALL_R, LEVEL_COUNT, analyzeSolvability, isLaserGateActive, isPhasePlatformActive, levels } from "../src/levels.ts";
+import { createPhysicsState, stepPhysics } from "../src/physics.ts";
+
+test("tek karelik zıplama dokunuşu yere basar basmaz çalışır", () => {
+  const level = levels[0];
+  const state = createPhysicsState(level);
+  const floor = level.platforms.find(platform => state.x > platform.x && state.x < platform.x + platform.w && platform.y >= state.y);
+  assert.ok(floor);
+  state.y = floor.y - BALL_R;
+
+  const firstFrame = stepPhysics(level, state, { dir: 0, jumpPressed: true }, 1 / 60);
+  assert.equal(firstFrame.some(event => event.type === "jump"), false, "ilk karede top henüz grounded değil");
+  assert.equal(state.grounded, true, "ilk fizik karesinde zemin teması kurulmalı");
+
+  const secondFrame = stepPhysics(level, state, { dir: 0, jumpPressed: false }, 1 / 60);
+  assert.equal(secondFrame.some(event => event.type === "jump"), true, "tek dokunuş sonraki kareye tamponlanmalı");
+  assert.ok(state.vy < 0, "top yukarı doğru hareket etmeli");
+  assert.equal(state.grounded, false);
+});
+
+test("zeminde bekleyen top her karede grounded kalır", () => {
+  const level = levels[0];
+  const state = createPhysicsState(level);
+  const floor = level.platforms.find(platform => state.x > platform.x && state.x < platform.x + platform.w && platform.y >= state.y);
+  assert.ok(floor);
+  state.y = floor.y - BALL_R;
+  for (let frame = 0; frame < 12; frame += 1) {
+    stepPhysics(level, state, { dir: 0, jumpPressed: false }, 1 / 60);
+    assert.equal(state.grounded, true, `${frame + 1}. karede zemin teması kaybolmamalı`);
+  }
+});
 
 test("220 bölümün tamamı fizik sınırları içinde geçilebilirdir", () => {
   assert.equal(levels.length, LEVEL_COUNT);
