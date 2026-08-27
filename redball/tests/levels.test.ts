@@ -165,10 +165,20 @@ test("180–200 uzun, benzersiz ve bütün eski mekanikleri kullanan kaçışlar
       ...level.crumbles.filter(platform => platform.h >= 80),
     ].sort((a, b) => a.x - b.x);
     assert.ok(route.length >= 10, `#${level.number}: ana rota çok kısa`);
+    assert.ok(route.slice(1, -1).every(platform => platform.h <= 126), `#${level.number}: orta rota yine düz zemin kolonlarına dönmüş`);
+    assert.equal(level.platforms.filter(platform => platform.h === 26).length, 3, `#${level.number}: üç yıldız üst rota seçimi sunmalı`);
+    assert.ok(new Set(route.map(platform => platform.y)).size >= 4, `#${level.number}: rota yeterince katmanlı değil`);
+    const gaps: number[] = [];
     for (let i = 0; i < route.length - 1; i += 1) {
-      assert.ok(route[i + 1].x - (route[i].x + route[i].w) <= 155, `#${level.number}: hız boşluğu fazla geniş`);
+      const gap = route[i + 1].x - (route[i].x + route[i].w);
+      gaps.push(gap);
+      assert.ok(gap <= 370, `#${level.number}: set-piece boşluğu fizik sınırını aşıyor`);
       assert.ok(route[i].y - route[i + 1].y <= 90, `#${level.number}: hız rotası fazla dik yükseliyor`);
     }
+    assert.ok(gaps.some(gap => gap >= 175), `#${level.number}: hiçbir mekanik büyük atlayışta zorunlu değil`);
+    assert.ok((level.chaser.beats?.length || 0) >= 3, `#${level.number}: takipçi baskı ritmi eksik`);
+    assert.ok(level.chaser.beats?.some(beat => beat.kind === "surge"), `#${level.number}: takipçi hızlanma anı eksik`);
+    assert.ok(level.chaser.beats?.some(beat => beat.kind === "breather"), `#${level.number}: takipçi nefes alanı eksik`);
     identities.add(level.mechanics[1]);
     level.mechanics.slice(2).forEach(mechanic => usedMechanics.add(mechanic));
     signatures.add(JSON.stringify({ platforms: route, spikes: level.spikes, movers: level.movers, phase: level.phasePlatforms }));
@@ -197,6 +207,10 @@ test("diken duvarı duran oyuncuyu yakalar ve yeniden doğuşta arkaya alınır"
     assert.equal(state.chaserX, state.x - level.chaser!.respawnGap);
     assert.equal(state.chaserSpeed, level.chaser!.speed);
     assert.equal(state.chaserGrace, level.chaser!.graceTime);
+    const nextBeat = level.chaser!.beats!.findIndex(beat => beat.at > state.x);
+    assert.equal(state.chaserBeatIndex, nextBeat < 0 ? level.chaser!.beats!.length : nextBeat);
+    assert.equal(state.chaserBeatTimer, 0);
+    assert.equal(state.chaserBeatMultiplier, 1);
   }
 });
 

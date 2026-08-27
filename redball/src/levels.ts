@@ -24,6 +24,12 @@ export type SpikeChaser = {
   maxGap: number;
   graceTime: number;
   width: number;
+  beats?: Array<{
+    at: number;
+    kind: "surge" | "breather";
+    duration: number;
+    multiplier: number;
+  }>;
 };
 
 export type SeesawBoard = Box & { pivotX: number; maxAngle: number; response: number; damping: number };
@@ -1126,7 +1132,7 @@ const escapeDesigns: readonly EscapeDesign[] = [
     identity: "mekanik röle",
     subtitle: "Portal, su, faz, lazer ve çöken zemin sırayla gelir; her bölümde öğrendiğin refleksi değiştir.",
     route: [[640,760,86],[600,560,92],[550,520,96],[615,600,88],[565,540,100],[605,590,92],[535,520,104],[590,580,94],[545,540,102],[610,600,90],[560,530,100],[600,590,92],[550,540,98],[615,610,88],[575,560,92],[640,820,0]],
-    portals: [[1,3,"#cc7dff"],[9,11,"#6ce5ff"]], water: [4,12], phaseBridges: [[5,.3],[10,1.2]], lasers: [[3,.9],[8,.2],[13,1.5]], crumbles: [6,7,11], movers: [[2,"y",48,.5],[9,"x",38,2.1]], springs: [[4,1050],[12,1070]], conveyors: [[1,430],[5,460],[10,490],[14,520]], boosters: [0,7,13], gravity: [[6,.58]], spinners: [[9,2.45,48]], spikes: [[5,.72,48],[13,.68,52]], enemies: [[8,.55,108]], keyAt: 13, checkpoints: [5,10,13], lavaGaps: [6,10], starAt: [3,8,13], chaseEase: .74,
+    portals: [[1,3,"#cc7dff"],[9,11,"#6ce5ff"]], water: [4,12], phaseBridges: [[5,.3],[10,1.2]], lasers: [[3,.9],[8,.2],[13,1.5]], crumbles: [6,7,11], movers: [[2,"y",48,.5],[9,"x",38,2.1]], springs: [[4,1050],[12,1070]], conveyors: [[1,430],[5,460],[10,490],[14,520]], boosters: [0,7,13], gravity: [[6,.58]], spinners: [[9,2.45,48]], spikes: [[5,.72,48],[13,.68,52]], enemies: [[8,.55,108]], keyAt: 13, checkpoints: [5,11,13], lavaGaps: [6,10], starAt: [3,8,13], chaseEase: .74,
   },
   {
     identity: "büyük final karması",
@@ -1136,16 +1142,61 @@ const escapeDesigns: readonly EscapeDesign[] = [
   },
 ];
 
+type EscapeChaseBeat = readonly [ratio: number, kind: "surge" | "breather", duration: number, multiplier: number];
+const escapeChaseRhythms: ReadonlyArray<readonly EscapeChaseBeat[]> = [
+  [[.24,"surge",1.2,1.18],[.5,"breather",1.45,.42],[.78,"surge",1.35,1.24]],
+  [[.18,"surge",1.05,1.2],[.4,"surge",.9,1.16],[.62,"breather",1.25,.38],[.84,"surge",1.4,1.27]],
+  [[.3,"breather",1.5,.34],[.56,"surge",1.35,1.24],[.82,"surge",1.05,1.18]],
+  [[.2,"surge",.9,1.2],[.38,"breather",1.1,.4],[.58,"surge",1.1,1.23],[.78,"breather",1.05,.36],[.9,"surge",1.15,1.28]],
+  [[.27,"surge",1.2,1.22],[.48,"breather",1.2,.4],[.7,"surge",1.25,1.25],[.88,"surge",.85,1.3]],
+  [[.2,"surge",1.3,1.16],[.42,"breather",1.65,.32],[.6,"surge",1.5,1.2],[.8,"breather",1.25,.36],[.9,"surge",1.2,1.24]],
+  [[.22,"breather",1.2,.36],[.4,"surge",1.25,1.22],[.58,"breather",1.15,.34],[.74,"surge",1.35,1.26],[.9,"surge",.95,1.3]],
+  [[.16,"surge",1.05,1.2],[.34,"surge",1.05,1.22],[.52,"breather",1.5,.3],[.7,"surge",1.2,1.26],[.86,"surge",1.1,1.3]],
+  [[.24,"surge",1.2,1.24],[.46,"breather",1.15,.38],[.62,"surge",1.05,1.26],[.8,"surge",1.25,1.3]],
+  [[.18,"breather",1.25,.35],[.36,"surge",1.3,1.21],[.54,"surge",1.1,1.24],[.72,"breather",1.25,.34],[.88,"surge",1.4,1.3]],
+  [[.2,"surge",1.15,1.18],[.36,"breather",1.5,.3],[.54,"surge",1.3,1.24],[.7,"breather",1.25,.34],[.86,"surge",1.45,1.28]],
+  [[.16,"breather",1.2,.3],[.31,"surge",1.15,1.22],[.48,"breather",1.35,.28],[.64,"surge",1.25,1.26],[.8,"breather",1.05,.32],[.91,"surge",1.2,1.32]],
+  [[.2,"surge",1.1,1.19],[.38,"breather",1.4,.3],[.52,"surge",1.35,1.24],[.7,"breather",1.25,.32],[.86,"surge",1.25,1.29]],
+  [[.18,"surge",.95,1.2],[.34,"breather",1.25,.34],[.5,"surge",1.15,1.23],[.66,"breather",1.15,.3],[.8,"surge",1.2,1.27],[.92,"surge",.8,1.32]],
+  [[.17,"surge",1.05,1.22],[.32,"breather",1.1,.34],[.47,"surge",1.15,1.25],[.62,"breather",1.15,.3],[.77,"surge",1.2,1.28],[.91,"surge",.9,1.33]],
+  [[.16,"breather",1.55,.25],[.31,"surge",1.1,1.18],[.46,"breather",1.5,.24],[.61,"surge",1.2,1.22],[.76,"breather",1.4,.26],[.9,"surge",1.2,1.28]],
+  [[.2,"surge",1.15,1.2],[.38,"breather",1.35,.28],[.55,"surge",1.25,1.24],[.72,"breather",1.2,.3],[.87,"surge",1.35,1.3]],
+  [[.15,"surge",1.05,1.22],[.3,"surge",.9,1.2],[.45,"breather",1.25,.3],[.6,"surge",1.1,1.26],[.75,"breather",1.05,.32],[.88,"surge",1.35,1.34]],
+  [[.2,"breather",1.1,.3],[.34,"surge",1.15,1.23],[.5,"surge",1.05,1.2],[.64,"breather",1.3,.26],[.78,"surge",1.2,1.28],[.9,"surge",1,1.34]],
+  [[.13,"surge",.9,1.18],[.26,"breather",1.1,.28],[.39,"surge",1.05,1.22],[.52,"breather",1.2,.25],[.65,"surge",1.15,1.27],[.78,"breather",1.05,.28],[.9,"surge",1.3,1.34]],
+  [[.12,"surge",.9,1.18],[.24,"breather",1.15,.25],[.36,"surge",1.05,1.22],[.48,"breather",1.1,.24],[.6,"surge",1.15,1.26],[.72,"breather",1.05,.26],[.83,"surge",1.2,1.3],[.92,"surge",1.25,1.36]],
+];
+
 function makeEscapeLevel(index: number): Level {
   const escapeIndex = index - 179;
   const chapterIndex = Math.floor(index / 10);
   const design = escapeDesigns[escapeIndex];
   const route: Box[] = [];
   let cursor = 0;
+  const phaseGapIndexes = new Set((design.phaseBridges || []).map(([routeIndex]) => routeIndex));
+  const moverGapIndexes = new Set((design.movers || []).map(([routeIndex]) => routeIndex));
+  const flightGapIndexes = new Set([
+    ...(design.gravity || []).map(([routeIndex]) => routeIndex),
+    ...(design.winds || []).map(([routeIndex]) => routeIndex),
+  ]);
+  const springGapIndexes = new Set((design.springs || []).map(([routeIndex]) => routeIndex));
+  const boosterGapIndexes = new Set(design.boosters || []);
+  const portalGapIndexes = new Set((design.portals || []).map(([routeIndex]) => routeIndex));
 
-  design.route.forEach(([y, width, gapAfter], routeIndex) => {
-    route.push({ x: cursor, y, w: width, h: VIEW_H - y + 100 });
-    if (routeIndex < design.route.length - 1) cursor += width + gapAfter;
+  design.route.forEach(([y, configuredWidth, configuredGap], routeIndex) => {
+    const first = routeIndex === 0;
+    const last = routeIndex === design.route.length - 1;
+    const width = first ? Math.min(540, configuredWidth) : configuredWidth;
+    const thickness = first || last ? VIEW_H - y + 100 : 82 + ((escapeIndex * 2 + routeIndex) % 3) * 22;
+    route.push({ x: cursor, y, w: width, h: thickness });
+    if (last) return;
+    let gapAfter = configuredGap;
+    if (phaseGapIndexes.has(routeIndex) || moverGapIndexes.has(routeIndex)) gapAfter = Math.max(gapAfter, 225);
+    if (flightGapIndexes.has(routeIndex)) gapAfter = Math.max(gapAfter, 205);
+    if (springGapIndexes.has(routeIndex)) gapAfter = Math.max(gapAfter, 185);
+    if (boosterGapIndexes.has(routeIndex)) gapAfter = Math.max(gapAfter, 175);
+    if (portalGapIndexes.has(routeIndex)) gapAfter = Math.max(gapAfter, 350);
+    cursor += width + gapAfter;
   });
 
   const routeAt = (routeIndex: number) => route[Math.max(0, Math.min(route.length - 1, routeIndex))];
@@ -1234,13 +1285,19 @@ function makeEscapeLevel(index: number): Level {
     return { x: start - 16, y: Math.min(left.y, right.y) - 74, w: Math.max(135, width + 32), h: 22, axis, range, speed: 1.2 + escapeIndex * .018, phase };
   });
   const starIndexes = design.starAt || [Math.floor(route.length * .25), Math.floor(route.length * .55), Math.floor(route.length * .82)];
-  const stars = starIndexes.map((routeIndex, starIndex) => {
-    const platform = routeAt(routeIndex);
+  const starLedges = starIndexes.map((routeIndex, starIndex) => {
+    const host = routeAt(routeIndex);
+    const width = 155 + ((escapeIndex + starIndex) % 3) * 24;
+    const xRatio = .24 + ((escapeIndex + starIndex * 2) % 3) * .2;
     return {
-      x: platform.x + platform.w * (starIndex % 2 ? .58 : .38),
-      y: platform.y - 66,
+      x: Math.max(host.x + 30, Math.min(host.x + host.w - width - 30, host.x + host.w * xRatio - width / 2)),
+      y: Math.max(295, host.y - 126 - ((escapeIndex + starIndex) % 3) * 24),
+      w: width,
+      h: 26,
     };
   });
+  platforms.push(...starLedges);
+  const stars = starLedges.map(ledge => ({ x: ledge.x + ledge.w / 2, y: ledge.y - 52 }));
   const keyPlatform = design.keyAt === undefined ? undefined : routeAt(design.keyAt);
   const key = keyPlatform ? { x: keyPlatform.x + keyPlatform.w * .54, y: keyPlatform.y - 58 } : undefined;
   const last = route.at(-1)!;
@@ -1306,6 +1363,12 @@ function makeEscapeLevel(index: number): Level {
       maxGap: 660 - escapeIndex * 5,
       graceTime: 2.05 - escapeIndex * .018,
       width: 138 + escapeIndex * .6,
+      beats: escapeChaseRhythms[escapeIndex].map(([ratio, kind, duration, multiplier]) => ({
+        at: (last.x + last.w) * ratio,
+        kind,
+        duration,
+        multiplier,
+      })),
     },
   };
 }
@@ -1787,6 +1850,12 @@ export function analyzeSolvability(level: Level): SolvabilityResult {
     const horizontalReach = (boosted ? 700 : MAX_RUN_SPEED) * flight * .76 + BALL_R * 2;
     return Math.max(0, to.x - (from.x + from.w)) <= horizontalReach;
   };
+  const surfaceAtPoint = (point: Point, margin = 65) => surfaces.findIndex(platform => (
+    point.x >= platform.x - margin
+    && point.x <= platform.x + platform.w + margin
+    && point.y + 100 >= platform.y
+    && point.y <= platform.y + platform.h + 60
+  ));
 
   let changed = true;
   while (changed) {
@@ -1799,12 +1868,22 @@ export function analyzeSolvability(level: Level): SolvabilityResult {
         }
       }
     }
+    for (const portal of level.portals) {
+      for (const [entry, exit] of [[portal.a, portal.b], [portal.b, portal.a]] as const) {
+        const entrySurface = surfaceAtPoint(entry);
+        const exitSurface = surfaceAtPoint(exit);
+        if (entrySurface >= 0 && exitSurface >= 0 && reachable.has(entrySurface) && !reachable.has(exitSurface)) {
+          reachable.add(exitSurface);
+          changed = true;
+        }
+      }
+    }
   }
 
-  const onReachableSurface = (point: Point, margin = 65) => [...reachable].some(index => {
-    const p = surfaces[index];
-    return point.x >= p.x - margin && point.x <= p.x + p.w + margin && point.y + 100 >= p.y;
-  });
+  const onReachableSurface = (point: Point, margin = 65) => {
+    const surfaceIndex = surfaceAtPoint(point, margin);
+    return surfaceIndex >= 0 && reachable.has(surfaceIndex);
+  };
   if (!onReachableSurface(level.goal)) return { ok: false, reachablePlatforms: reachable.size, reason: "Kapıya ulaşan platform zinciri yok." };
   if (level.key && !onReachableSurface(level.key, 35)) return { ok: false, reachablePlatforms: reachable.size, reason: "Anahtar erişilebilir değil." };
   if (level.stars.length !== 3) return { ok: false, reachablePlatforms: reachable.size, reason: "Bölümde tam üç yıldız yok." };

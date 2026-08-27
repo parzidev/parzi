@@ -82,6 +82,9 @@ export type PhysicsState = {
   chaserX: number | null;
   chaserSpeed: number;
   chaserGrace: number;
+  chaserBeatIndex: number;
+  chaserBeatTimer: number;
+  chaserBeatMultiplier: number;
   special: SpecialRuntime;
 };
 
@@ -180,6 +183,9 @@ export function createPhysicsState(level: Level, enemyDirections: readonly numbe
     chaserX: level.chaser ? level.start.x - level.chaser.startGap : null,
     chaserSpeed: level.chaser?.speed || 0,
     chaserGrace: level.chaser?.graceTime || 0,
+    chaserBeatIndex: 0,
+    chaserBeatTimer: 0,
+    chaserBeatMultiplier: 1,
     special: createSpecialRuntime(level),
   };
 }
@@ -189,11 +195,18 @@ export function resetChaserBehind(level: Level, state: PhysicsState, playerX: nu
     state.chaserX = null;
     state.chaserSpeed = 0;
     state.chaserGrace = 0;
+    state.chaserBeatIndex = 0;
+    state.chaserBeatTimer = 0;
+    state.chaserBeatMultiplier = 1;
     return;
   }
   state.chaserX = playerX - level.chaser.respawnGap;
   state.chaserSpeed = level.chaser.speed;
   state.chaserGrace = level.chaser.graceTime;
+  const nextBeatIndex = level.chaser.beats?.findIndex(beat => beat.at > playerX) ?? -1;
+  state.chaserBeatIndex = nextBeatIndex < 0 ? level.chaser.beats?.length || 0 : nextBeatIndex;
+  state.chaserBeatTimer = 0;
+  state.chaserBeatMultiplier = 1;
 }
 
 export function clonePhysicsState(state: PhysicsState): PhysicsState {
@@ -288,10 +301,19 @@ export function stepPhysics(level: Level, state: PhysicsState, input: PhysicsInp
   state.invulnerable = Math.max(0, state.invulnerable - dt);
   if (level.chaser && state.chaserX !== null) {
     state.chaserGrace = Math.max(0, state.chaserGrace - dt);
+    state.chaserBeatTimer = Math.max(0, state.chaserBeatTimer - dt);
+    if (state.chaserBeatTimer <= 0) state.chaserBeatMultiplier = 1;
+    const nextBeat = level.chaser.beats?.[state.chaserBeatIndex];
+    if (state.chaserGrace <= 0 && state.chaserBeatTimer <= 0 && nextBeat && state.x >= nextBeat.at) {
+      state.chaserBeatIndex += 1;
+      state.chaserBeatTimer = nextBeat.duration;
+      state.chaserBeatMultiplier = nextBeat.multiplier;
+    }
     state.chaserX = Math.max(state.chaserX, state.x - level.chaser.maxGap);
     if (state.chaserGrace <= 0) {
-      state.chaserSpeed = Math.min(level.chaser.maxSpeed, state.chaserSpeed + level.chaser.acceleration * dt);
-      state.chaserX += state.chaserSpeed * dt;
+      const accelerationScale = Math.max(1, state.chaserBeatMultiplier);
+      state.chaserSpeed = Math.min(level.chaser.maxSpeed, state.chaserSpeed + level.chaser.acceleration * accelerationScale * dt);
+      state.chaserX += state.chaserSpeed * state.chaserBeatMultiplier * dt;
     }
   }
   special.attachCooldown = Math.max(0, special.attachCooldown - dt);

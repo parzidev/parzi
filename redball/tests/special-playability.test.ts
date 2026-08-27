@@ -63,6 +63,7 @@ function stateKey(state: SimState) {
     s.special.blocks.map(block => Math.round(block.x / 28)).join("."),
     s.special.boss?.phase || 0, s.special.boss?.defeated ? 1 : 0,
     s.chaserX === null ? "-" : Math.round(s.chaserX / 24), Math.round(s.chaserSpeed / 12), Math.round(s.chaserGrace * 10),
+    s.chaserBeatIndex, Math.round(s.chaserBeatTimer * 10), Math.round(s.chaserBeatMultiplier * 10),
     deadEnemies, crumbleMask, flagSignature,
   ].join(":");
 }

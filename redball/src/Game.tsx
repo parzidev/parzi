@@ -444,14 +444,22 @@ export default function Home() {
     if (lvl.chaser && s.chaserX !== null) {
       const lead = Math.max(0, s.x - BALL_R - s.chaserX);
       const safeRatio = Math.max(0, Math.min(1, lead / lvl.chaser.maxGap));
-      const danger = lead < 175;
+      const activeBeat = s.chaserBeatTimer > 0 ? lvl.chaser.beats?.[s.chaserBeatIndex - 1] : undefined;
+      const danger = lead < 175 || activeBeat?.kind === "surge";
+      const chaseLabel = s.chaserGrace > 0
+        ? "⚠ DİKEN DUVARI GELİYOR"
+        : activeBeat?.kind === "surge"
+          ? "⚡ DUVAR HIZLANDI!"
+          : activeBeat?.kind === "breather"
+            ? "◇ NEFES ALANI"
+            : "⚠ KAÇIŞ — DURMA!";
       ctx.save();
       ctx.fillStyle = "rgba(29,22,29,.82)";
       ctx.beginPath(); ctx.roundRect(20, 18, 218, 58, 15); ctx.fill();
       ctx.fillStyle = danger ? "#ff5b68" : "#ffe06a";
       ctx.font = "900 13px Arial";
       ctx.textAlign = "left";
-      ctx.fillText(s.chaserGrace > 0 ? "⚠ DİKEN DUVARI GELİYOR" : "⚠ KAÇIŞ — DURMA!", 34, 40);
+      ctx.fillText(chaseLabel, 34, 40);
       ctx.fillStyle = "rgba(255,255,255,.16)";
       ctx.beginPath(); ctx.roundRect(34, 50, 188, 10, 5); ctx.fill();
       const meter = ctx.createLinearGradient(34, 0, 222, 0);
