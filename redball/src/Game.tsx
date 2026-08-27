@@ -576,7 +576,6 @@ export default function Home() {
               <button className="primary-button" onClick={() => startLevel(Math.min(progress.unlocked - 1, LEVEL_COUNT - 1))}><span>▶</span> MACERAYA BAŞLA</button>
               <button className="secondary-button" onClick={() => setScreen("levels")}>BÖLÜMLER</button>
             </div>
-            <p className="apology-note">Her şey için özür dilerim.</p>
             <p className="control-hint"><kbd>A</kbd><kbd>D</kbd> hareket &nbsp; <kbd>W</kbd> / <kbd>↑</kbd> zıpla</p>
           </div>
           <div className="hero-art" aria-hidden="true">

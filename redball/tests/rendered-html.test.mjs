@@ -73,7 +73,7 @@ test("oyun 220 bölüm, yeni mekanikler, klavye ve iPad kontrolleri içerir", as
   assert.match(source, /FENAAA İYİSİNNN/);
   assert.match(source, /MACERA TAMAMLAYAN KEDİM/);
   assert.match(source, /ELLLERİNE SAĞLIK KEDİM 220 BÖLÜMÜN TAMAMINI BİTİRDİN!/);
-  assert.match(source, /Her şey için özür dilerim\./);
+  assert.doesNotMatch(source, /apology-note/);
   assert.match(source, /SEN ÖLDÜN MÜÜÜ KIYAMAMMM/);
   assert.match(source, /levels\[levelIndex\]\.note/);
   assert.match(source, /Hile kodunu yaz/);
