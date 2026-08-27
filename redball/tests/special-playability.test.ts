@@ -62,6 +62,7 @@ function stateKey(state: SimState) {
     s.special.attachedSwing, s.special.attachedZipline,
     s.special.blocks.map(block => Math.round(block.x / 28)).join("."),
     s.special.boss?.phase || 0, s.special.boss?.defeated ? 1 : 0,
+    s.chaserX === null ? "-" : Math.round(s.chaserX / 24), Math.round(s.chaserSpeed / 12), Math.round(s.chaserGrace * 10),
     deadEnemies, crumbleMask, flagSignature,
   ].join(":");
 }
@@ -126,6 +127,21 @@ test("201–220 ortak oyun fiziğinde yalnız dokunmatik left/right/jump ile bit
     }
     const finalState = replay(level, result.replay);
     if (!finalState.won) failures.push(`#${level.number} ${level.name}: deterministik replay bozuldu`);
+  }
+  assert.deepEqual(failures, [], failures.join("\n"));
+});
+
+test("180–200 diken duvarından kaçarken yalnız dokunmatik left/right/jump ile hızlı bitirilebilir", { timeout: 90_000 }, () => {
+  const failures: string[] = [];
+  for (const level of levels.slice(179, 200)) {
+    const result = findReplay(level);
+    if (!result.replay) {
+      failures.push(`#${level.number} ${level.name}: en uzak x=${result.farthestX.toFixed(0)}/${level.width}, ölümler=[${summarizeDeaths(result.deathReasons)}]`);
+      continue;
+    }
+    const finalState = replay(level, result.replay);
+    if (!finalState.won) failures.push(`#${level.number} ${level.name}: deterministik replay bozuldu`);
+    else if (finalState.physics.time > 25) failures.push(`#${level.number} ${level.name}: bitirme süresi ${finalState.physics.time.toFixed(1)}sn ile çok yavaş`);
   }
   assert.deepEqual(failures, [], failures.join("\n"));
 });

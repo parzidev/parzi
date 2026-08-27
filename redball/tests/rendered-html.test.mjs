@@ -32,7 +32,8 @@ test("oyun 220 bölüm, yeni mekanikler, klavye ve iPad kontrolleri içerir", as
   assert.match(levelSource, /analyzeSolvability/);
   assert.match(levelSource, /redesignKeyRoute/);
   assert.match(levelSource, /KeyChallenge/);
-  assert.match(levelSource, /index < 50[\s\S]*makeLegacyLevel\(index\)[\s\S]*index < 100[\s\S]*makeRedesignedLevel\(index\)[\s\S]*index < 200[\s\S]*makeExpansionLevel\(index\)[\s\S]*makeSpecialLevel\(index\)/);
+  assert.match(levelSource, /SpikeChaser/);
+  assert.match(levelSource, /index < 50[\s\S]*makeLegacyLevel\(index\)[\s\S]*index < 100[\s\S]*makeRedesignedLevel\(index\)[\s\S]*index < 179[\s\S]*makeExpansionLevel\(index\)[\s\S]*index < 200[\s\S]*makeEscapeLevel\(index\)[\s\S]*makeSpecialLevel\(index\)/);
   assert.match(source, /loadProgress\(window\.localStorage, LEVEL_COUNT\)/);
   assert.match(source, /localStorage\.setItem\(PROGRESS_KEY/);
   assert.match(source, /onPointerDown/);
@@ -60,6 +61,11 @@ test("oyun 220 bölüm, yeni mekanikler, klavye ve iPad kontrolleri içerir", as
   assert.match(physicsSource, /state\.gateCooldown/);
   assert.match(source, /stepPhysics\(lvl, s/);
   assert.match(physicsSource, /JUMP_BUFFER_TIME/);
+  assert.match(physicsSource, /diken duvarı/);
+  assert.match(source, /KAÇIŞ — DURMA!/);
+  assert.match(source, /requestFullscreen/);
+  assert.match(source, /Ana Ekrana Ekle/);
+  assert.match(source, /display-mode: fullscreen/);
   assert.match(source, /ÖNCE ANAHTARI BUL/);
   assert.match(source, /KAZANDIN ADA!/);
   assert.match(source, /KAYBETTİN ADA/);
@@ -98,5 +104,6 @@ test("oyun 220 bölüm, yeni mekanikler, klavye ve iPad kontrolleri içerir", as
   assert.ok((840 ** 2) / (2 * 1900) > 180, "zıplama yüksekliği ilk bölüm basamaklarına yetmeli");
   const manifest = JSON.parse(await readFile(new URL("../manifest.webmanifest", import.meta.url), "utf8"));
   assert.equal(manifest.display, "fullscreen");
+  assert.deepEqual(manifest.display_override, ["fullscreen", "standalone"]);
   assert.equal(manifest.orientation, "landscape");
 });

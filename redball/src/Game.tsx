@@ -6,7 +6,7 @@ import { advanceCheatIndex, CHEAT_SEQUENCE, isLevelUnlockCode, isSingleLevelSkip
 import type { CheatAction } from "./cheat";
 import { BALL_R, GRAVITY, JUMP_SPEED, LEVEL_COUNT, MAX_RUN_SPEED, VIEW_H, VIEW_W, isLaserGateActive, isPhasePlatformActive, levels } from "./levels";
 import type { Level } from "./levels";
-import { createPhysicsState, stepPhysics } from "./physics";
+import { createPhysicsState, resetChaserBehind, stepPhysics } from "./physics";
 import type { PhysicsState } from "./physics";
 import { loadProgress, normalizeProgress, PROGRESS_KEY, skipNextLevel } from "./progress";
 
@@ -60,6 +60,31 @@ export default function Home() {
   const [levelCheatCode, setLevelCheatCode] = useState("");
   const [levelCheatStatus, setLevelCheatStatus] = useState<"idle" | "success" | "error">("idle");
   const [levelCheatMessage, setLevelCheatMessage] = useState("");
+  const [fullscreenHelp, setFullscreenHelp] = useState(false);
+  const [fullscreenActive, setFullscreenActive] = useState(false);
+  const [standaloneMode, setStandaloneMode] = useState(false);
+
+  useEffect(() => {
+    const fullscreenQuery = window.matchMedia("(display-mode: fullscreen)");
+    const standaloneQuery = window.matchMedia("(display-mode: standalone)");
+    const updateDisplayMode = () => {
+      const webkitDocument = document as Document & { webkitFullscreenElement?: Element | null };
+      const iosNavigator = navigator as Navigator & { standalone?: boolean };
+      setFullscreenActive(Boolean(document.fullscreenElement || webkitDocument.webkitFullscreenElement));
+      setStandaloneMode(Boolean(iosNavigator.standalone || fullscreenQuery.matches || standaloneQuery.matches));
+    };
+    updateDisplayMode();
+    document.addEventListener("fullscreenchange", updateDisplayMode);
+    document.addEventListener("webkitfullscreenchange", updateDisplayMode);
+    fullscreenQuery.addEventListener("change", updateDisplayMode);
+    standaloneQuery.addEventListener("change", updateDisplayMode);
+    return () => {
+      document.removeEventListener("fullscreenchange", updateDisplayMode);
+      document.removeEventListener("webkitfullscreenchange", updateDisplayMode);
+      fullscreenQuery.removeEventListener("change", updateDisplayMode);
+      standaloneQuery.removeEventListener("change", updateDisplayMode);
+    };
+  }, []);
 
   const beep = useCallback((frequency: number, duration = .08, gain = .04) => {
     if (!soundRef.current) return;
@@ -73,6 +98,41 @@ export default function Home() {
       osc.stop(ac.currentTime + duration); osc.onended = () => ac.close();
     } catch { /* sound is optional */ }
   }, []);
+
+  const toggleFullscreen = useCallback(async () => {
+    if (standaloneMode) return;
+    const webkitDocument = document as Document & {
+      webkitExitFullscreen?: () => Promise<void> | void;
+      webkitFullscreenElement?: Element | null;
+    };
+    const root = document.documentElement as HTMLElement & { webkitRequestFullscreen?: () => Promise<void> | void };
+    const fullscreenEntered = () => Boolean(document.fullscreenElement || webkitDocument.webkitFullscreenElement);
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+        return;
+      }
+      if (webkitDocument.webkitFullscreenElement && webkitDocument.webkitExitFullscreen) {
+        await webkitDocument.webkitExitFullscreen();
+        return;
+      }
+      if (root.requestFullscreen) {
+        await root.requestFullscreen({ navigationUI: "hide" });
+        await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+        if (fullscreenEntered()) return;
+        throw new Error("fullscreen unavailable");
+      }
+      if (root.webkitRequestFullscreen) {
+        await root.webkitRequestFullscreen();
+        await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+        if (fullscreenEntered()) return;
+        throw new Error("fullscreen unavailable");
+      }
+    } catch { /* iPad Safari falls back to Home Screen web-app instructions */ }
+    setFullscreenActive(false);
+    setPaused(true);
+    setFullscreenHelp(true);
+  }, [standaloneMode]);
 
   const resetLevel = useCallback((index = levelIndex, keepLives = false) => {
     const lvl = levels[index];
@@ -158,6 +218,7 @@ export default function Home() {
       lives: livesLeft,
       invulnerable: 1,
     });
+    resetChaserBehind(lvl, s, checkpoint.x);
     setHasKey(false);
   }, [beep, levelIndex, message]);
 
@@ -335,11 +396,70 @@ export default function Home() {
 
     if (levelIndex === LEVEL_COUNT - 1) { ctx.fillStyle = "#ffd32a"; ctx.beginPath(); ctx.moveTo(gx - 28, gy - 65); ctx.lineTo(gx - 14, gy - 90); ctx.lineTo(gx, gy - 68); ctx.lineTo(gx + 15, gy - 90); ctx.lineTo(gx + 30, gy - 65); ctx.closePath(); ctx.fill(); }
 
+    if (lvl.chaser && s.chaserX !== null) {
+      const front = s.chaserX;
+      const wallWidth = lvl.chaser.width;
+      ctx.save();
+      ctx.shadowColor = "rgba(123,12,27,.55)";
+      ctx.shadowBlur = 24;
+      const wallGradient = ctx.createLinearGradient(front - wallWidth, 0, front + 12, 0);
+      wallGradient.addColorStop(0, "#241f29");
+      wallGradient.addColorStop(.58, "#5d2633");
+      wallGradient.addColorStop(1, "#d62b42");
+      ctx.fillStyle = wallGradient;
+      ctx.fillRect(front - wallWidth, -80, wallWidth, VIEW_H + 160);
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = "rgba(255,204,76,.9)";
+      for (let yy = -24; yy < VIEW_H + 40; yy += 58) {
+        ctx.beginPath();
+        ctx.moveTo(front - 18, yy + 8);
+        ctx.lineTo(front + 28 + Math.sin(time * 5 + yy) * 3, yy + 29);
+        ctx.lineTo(front - 18, yy + 50);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = "#55202d";
+        ctx.lineWidth = 4;
+        ctx.stroke();
+      }
+      ctx.fillStyle = "rgba(255,255,255,.2)";
+      ctx.fillRect(front - 18, -80, 7, VIEW_H + 160);
+      ctx.fillStyle = "#f3b23b";
+      for (let yy = 18; yy < VIEW_H; yy += 92) {
+        ctx.beginPath();
+        ctx.arc(front - wallWidth * .55, yy, 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "#2d2027";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
     // Player Ball
     ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(s.angle); ctx.globalAlpha = s.invulnerable > 0 && Math.floor(time * 12) % 2 ? .35 : 1; ctx.shadowColor = "rgba(80,0,0,.25)"; ctx.shadowBlur = 14; ctx.shadowOffsetY = 10;
     const red = ctx.createRadialGradient(-9, -12, 3, 0, 0, BALL_R); red.addColorStop(0, "#ff7676"); red.addColorStop(.38, "#f13542"); red.addColorStop(1, "#b80d26"); ctx.fillStyle = red; ctx.beginPath(); ctx.arc(0, 0, BALL_R, 0, 7); ctx.fill(); ctx.shadowBlur = 0; ctx.strokeStyle = "#8f0d20"; ctx.lineWidth = 3; ctx.stroke();
     ctx.fillStyle = "white"; ctx.beginPath(); ctx.ellipse(-9, -7, 7, 9, 0, 0, 7); ctx.ellipse(9, -7, 7, 9, 0, 0, 7); ctx.fill(); ctx.fillStyle = "#20232a"; ctx.beginPath(); ctx.arc(-7, -6, 3, 0, 7); ctx.arc(11, -6, 3, 0, 7); ctx.fill(); ctx.strokeStyle = "#650918"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 4, 10, .2, Math.PI - .2); ctx.stroke(); ctx.restore();
     ctx.restore();
+
+    if (lvl.chaser && s.chaserX !== null) {
+      const lead = Math.max(0, s.x - BALL_R - s.chaserX);
+      const safeRatio = Math.max(0, Math.min(1, lead / lvl.chaser.maxGap));
+      const danger = lead < 175;
+      ctx.save();
+      ctx.fillStyle = "rgba(29,22,29,.82)";
+      ctx.beginPath(); ctx.roundRect(20, 18, 218, 58, 15); ctx.fill();
+      ctx.fillStyle = danger ? "#ff5b68" : "#ffe06a";
+      ctx.font = "900 13px Arial";
+      ctx.textAlign = "left";
+      ctx.fillText(s.chaserGrace > 0 ? "⚠ DİKEN DUVARI GELİYOR" : "⚠ KAÇIŞ — DURMA!", 34, 40);
+      ctx.fillStyle = "rgba(255,255,255,.16)";
+      ctx.beginPath(); ctx.roundRect(34, 50, 188, 10, 5); ctx.fill();
+      const meter = ctx.createLinearGradient(34, 0, 222, 0);
+      meter.addColorStop(0, "#ff4b5e"); meter.addColorStop(.55, "#ffd85a"); meter.addColorStop(1, "#6ee083");
+      ctx.fillStyle = meter;
+      ctx.beginPath(); ctx.roundRect(34, 50, 188 * safeRatio, 10, 5); ctx.fill();
+      ctx.restore();
+    }
   }, [levelIndex]);
 
   useEffect(() => {
@@ -504,6 +624,7 @@ export default function Home() {
             <div className="hud-pill"><span className="mini-ball" /> × {lives}</div>
             <div className="hud-pill stars"><span>★</span> {starCount} / 3</div>
             {levels[levelIndex].key && <div className="hud-pill key">{hasKey ? "🔑 ✓" : "🔑 ✗"}</div>}
+            <button className={`round-button dark fullscreen-button ${standaloneMode ? "active" : ""}`} onClick={toggleFullscreen} disabled={standaloneMode} aria-label={standaloneMode ? "Uygulama tam ekran açık" : fullscreenActive ? "Tam ekrandan çık" : "Tam ekran"}>{fullscreenActive || standaloneMode ? "▣" : "⛶"}</button>
             <button className="round-button dark" onClick={() => setPaused(p => !p)} aria-label={paused ? "Devam et" : "Duraklat"}>{paused ? "▶" : "Ⅱ"}</button>
             <button className="round-button dark" onClick={toggleSound} aria-label={sound ? "Sesi kapat" : "Sesi aç"}>{sound ? "♫" : "×"}</button>
           </div>
@@ -520,11 +641,13 @@ export default function Home() {
               </Suspense>
             )}
             {levelIndex >= 200 && <p className="special-mechanic-hint">{levels[levelIndex].subtitle}</p>}
+            {levels[levelIndex].chaser && <p className="special-mechanic-hint chase">⚠ Diken duvarı geliyor — durmadan sağa ilerle!</p>}
             {levels[levelIndex].note && <p className="level-note">{levels[levelIndex].note}</p>}
           </div>
           <div className="rotate-hint">↻ iPad’i yatay çevirirsen oyun alanı genişler.</div>
           <div className="touch-controls" aria-label="Dokunmatik kontroller"><div><button type="button" aria-label="Sola git" onPointerDown={event => beginTouch(event, "left")} onPointerUp={event => endTouch(event, "left")} onPointerCancel={event => endTouch(event, "left")}>←</button><button type="button" aria-label="Sağa git" onPointerDown={event => beginTouch(event, "right")} onPointerUp={event => endTouch(event, "right")} onPointerCancel={event => endTouch(event, "right")}>→</button></div><button type="button" aria-label="Zıpla" className="jump-button" onPointerDown={event => beginTouch(event, "jump")} onPointerUp={event => endTouch(event, "jump")} onPointerCancel={event => endTouch(event, "jump")}>↑</button></div>
-          {paused && !message && <div className="game-modal"><div className="modal-card"><span className="modal-icon">Ⅱ</span><h2>Mola verdik</h2><p>Top da biraz nefeslensin.</p><button className="primary-button small" onClick={() => setPaused(false)}>DEVAM ET</button><button className="text-button" onClick={() => resetLevel()}>Bölümü yeniden başlat</button></div></div>}
+          {fullscreenHelp && <div className="game-modal"><div className="modal-card fullscreen-help-card"><span className="modal-icon">⛶</span><p className="eyebrow">iPAD UYGULAMA MODU</p><h2>Gerçek tam ekran aç</h2><p>Safari, gerçek uygulama görünümünü Ana Ekran’dan açılan web uygulamalarına veriyor.</p><ol className="fullscreen-steps"><li>Safari’de <strong>Paylaş</strong> düğmesine dokun.</li><li><strong>Ana Ekrana Ekle</strong> seçeneğini seç.</li><li>REDBALL ikonunu aç; oyun yatay ve tarayıcı çubuğu olmadan başlayacak.</li></ol><button className="primary-button small" onClick={() => { setFullscreenHelp(false); setPaused(false); }}>ANLADIM</button></div></div>}
+          {paused && !message && !fullscreenHelp && <div className="game-modal"><div className="modal-card"><span className="modal-icon">Ⅱ</span><h2>Mola verdik</h2><p>Top da biraz nefeslensin.</p><button className="primary-button small" onClick={() => setPaused(false)}>DEVAM ET</button><button className="text-button" onClick={() => resetLevel()}>Bölümü yeniden başlat</button></div></div>}
           {message === "cheat" && (
             <div className="cheat-rain-container" aria-hidden="true">
               {Array.from({ length: 28 }).map((_, i) => (

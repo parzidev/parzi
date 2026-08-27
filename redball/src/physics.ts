@@ -79,6 +79,9 @@ export type PhysicsState = {
   invulnerable: number;
   checkpoint: Point;
   checkpointIndex: number;
+  chaserX: number | null;
+  chaserSpeed: number;
+  chaserGrace: number;
   special: SpecialRuntime;
 };
 
@@ -174,8 +177,23 @@ export function createPhysicsState(level: Level, enemyDirections: readonly numbe
     invulnerable: 0,
     checkpoint: { ...level.start },
     checkpointIndex: -1,
+    chaserX: level.chaser ? level.start.x - level.chaser.startGap : null,
+    chaserSpeed: level.chaser?.speed || 0,
+    chaserGrace: level.chaser?.graceTime || 0,
     special: createSpecialRuntime(level),
   };
+}
+
+export function resetChaserBehind(level: Level, state: PhysicsState, playerX: number) {
+  if (!level.chaser) {
+    state.chaserX = null;
+    state.chaserSpeed = 0;
+    state.chaserGrace = 0;
+    return;
+  }
+  state.chaserX = playerX - level.chaser.respawnGap;
+  state.chaserSpeed = level.chaser.speed;
+  state.chaserGrace = level.chaser.graceTime;
 }
 
 export function clonePhysicsState(state: PhysicsState): PhysicsState {
@@ -268,6 +286,14 @@ export function stepPhysics(level: Level, state: PhysicsState, input: PhysicsInp
   state.boostTimer = Math.max(0, state.boostTimer - dt);
   state.jumpBuffer = input.jumpPressed ? JUMP_BUFFER_TIME : Math.max(0, state.jumpBuffer - dt);
   state.invulnerable = Math.max(0, state.invulnerable - dt);
+  if (level.chaser && state.chaserX !== null) {
+    state.chaserGrace = Math.max(0, state.chaserGrace - dt);
+    state.chaserX = Math.max(state.chaserX, state.x - level.chaser.maxGap);
+    if (state.chaserGrace <= 0) {
+      state.chaserSpeed = Math.min(level.chaser.maxSpeed, state.chaserSpeed + level.chaser.acceleration * dt);
+      state.chaserX += state.chaserSpeed * dt;
+    }
+  }
   special.attachCooldown = Math.max(0, special.attachCooldown - dt);
   special.wallCoyote = Math.max(0, special.wallCoyote - dt);
   const wasFrozen = special.frozenTimer > 0;
@@ -836,6 +862,7 @@ export function stepPhysics(level: Level, state: PhysicsState, input: PhysicsInp
     && state.y + BALL_R > gate.y
       && state.y - BALL_R < gate.y + gate.h
   ));
+  const hitChaser = state.chaserX !== null && state.x - BALL_R <= state.chaserX + 10;
   const hitBossWave = Boolean(spec?.kind === "boss" && special.boss?.shockwaves.some(radius => (
     Math.abs(Math.abs(state.x - spec.center.x) - radius) < spec.shockwaveWidth
     && state.y > 545
@@ -845,8 +872,8 @@ export function stepPhysics(level: Level, state: PhysicsState, input: PhysicsInp
     state.vy = -620;
     state.grounded = false;
   }
-  if (state.invulnerable <= 0 && (hitSpike || hitLava || hitSpinner || hitLaser || state.y > VIEW_H + 90 || state.y < -90)) {
-    const reason = hitSpike ? "diken" : hitLava ? "lav" : hitSpinner ? "dönen tuzak" : hitLaser ? "lazer" : "düşüş";
+  if (state.invulnerable <= 0 && (hitChaser || hitSpike || hitLava || hitSpinner || hitLaser || state.y > VIEW_H + 90 || state.y < -90)) {
+    const reason = hitChaser ? "diken duvarı" : hitSpike ? "diken" : hitLava ? "lav" : hitSpinner ? "dönen tuzak" : hitLaser ? "lazer" : "düşüş";
     events.push({ type: "death", reason });
     return events;
   }

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
 import { BALL_R, LEVEL_COUNT, analyzeSolvability, isLaserGateActive, isPhasePlatformActive, levels } from "../src/levels.ts";
-import { createPhysicsState, stepPhysics } from "../src/physics.ts";
+import { createPhysicsState, resetChaserBehind, stepPhysics } from "../src/physics.ts";
 
 test("tek karelik zıplama dokunuşu yere basar basmaz çalışır", () => {
   const level = levels[0];
@@ -57,10 +57,10 @@ test("mevcut 1–100 bölüm genişleme sonrasında aynen korunur", () => {
   assert.equal(fingerprint, "9c25a1f3203b67f098511f6910a630749bb68503608ce2066009c5eba1c2b3d9");
 });
 
-test("mevcut 1–200 bölüm bonus dünyalar eklenirken bit bit korunur", () => {
-  const fingerprint = createHash("sha256").update(JSON.stringify(levels.slice(0, 200))).digest("hex");
+test("mevcut 1–179 bölüm kaçış parkurları eklenirken bit bit korunur", () => {
+  const fingerprint = createHash("sha256").update(JSON.stringify(levels.slice(0, 179))).digest("hex");
 
-  assert.equal(fingerprint, "9426b2ebe79911e7226f5fdd12ca55b221e961ad6786562fb5cd8be281c82773");
+  assert.equal(fingerprint, "7675d6d56bb4dc39bd417a09a44591ca7d0ea7a92eec92a9417d7f0dba99e011");
 });
 
 test("1–50'de anahtarsız bölümlerin mevcut tasarımı aynen korunur", () => {
@@ -137,10 +137,58 @@ test("101–200'deki on dünya kendi mekanik kimliğini korur", () => {
   assert.ok(worlds[4].every(level => level.phasePlatforms.length > 0 && level.laserGates.length > 0));
   assert.ok(worlds[5].every(level => level.conveyors.length > 0 && level.gravityZones.length > 0));
   assert.ok(worlds[6].every(level => level.checkpoints.length > 0 && level.laserGates.length > 0));
-  assert.ok(worlds[7].every(level => level.phasePlatforms.length > 0 && level.conveyors.length > 0));
-  assert.ok(worlds[8].every(level => level.gravityZones.length > 0 && level.laserGates.length > 0 && level.checkpoints.length > 0));
-  assert.ok(worlds[9].every(level => level.conveyors.length > 0 && level.phasePlatforms.length > 0 && level.laserGates.length > 0 && level.gravityZones.length > 0 && level.checkpoints.length > 0));
-  assert.ok(worlds[9].at(-1)!.mechanics.length >= 14, "200. bölüm eski ve yeni mekanikleri birleştirmeli");
+  assert.ok(worlds[7].slice(0, 9).every(level => level.phasePlatforms.length > 0 && level.conveyors.length > 0));
+  assert.ok(levels.slice(179, 200).every(level => level.chaser && level.conveyors.length > 0 && level.boosters.length > 0));
+});
+
+test("180–200 kesintisiz ve hız odaklı diken duvarı kaçışlarıdır", () => {
+  const escapeLevels = levels.slice(179, 200);
+  assert.equal(escapeLevels.length, 21);
+  assert.ok(levels.slice(0, 179).every(level => !level.chaser));
+  assert.ok(levels.slice(200).every(level => !level.chaser));
+
+  const signatures = new Set<string>();
+  for (const level of escapeLevels) {
+    assert.ok(level.chaser, `#${level.number}: takipçi ayarı eksik`);
+    assert.ok(level.mechanics.includes("diken duvarı"), `#${level.number}: mekanik etiketi eksik`);
+    assert.ok(level.chaser.speed > 0 && level.chaser.maxSpeed < 430, `#${level.number}: takipçi hızı adil değil`);
+    assert.ok(level.chaser.speed <= level.chaser.maxSpeed, `#${level.number}: başlangıç hızı üst sınırı aşıyor`);
+    assert.ok(level.chaser.startGap >= 250 && level.chaser.maxGap >= 440, `#${level.number}: başlangıç mesafesi çok dar`);
+    assert.ok(level.boosters.length >= 3, `#${level.number}: kaçış rotasında ivme eksik`);
+    assert.ok(level.conveyors.length >= 2 && level.conveyors.every(belt => belt.speed > 0), `#${level.number}: bütün bantlar ileri akmalı`);
+    assert.equal(level.waterZones.length, 0, `#${level.number}: ana rotada yavaşlatan su olmamalı`);
+    assert.equal(level.portals.length, 0, `#${level.number}: portal takipçiyi atlatmamalı`);
+    assert.equal(level.phasePlatforms.length, 0, `#${level.number}: faz beklemesi kaçış ritmini bozmamalı`);
+    assert.equal(level.laserGates.length, 0, `#${level.number}: zamanlı lazer beklemeye zorlamamalı`);
+    assert.equal(level.enemies.length, 0, `#${level.number}: ana tehdit diken duvarı olmalı`);
+    assert.equal(level.stars.length, 3);
+
+    const route = [...level.platforms].sort((a, b) => a.x - b.x);
+    for (let i = 0; i < route.length - 1; i += 1) {
+      assert.ok(route[i + 1].x - (route[i].x + route[i].w) <= 100, `#${level.number}: hız boşluğu fazla geniş`);
+      assert.ok(route[i].y - route[i + 1].y <= 100, `#${level.number}: hız rotası fazla dik yükseliyor`);
+    }
+    signatures.add(JSON.stringify({ platforms: route, spikes: level.spikes, boosters: level.boosters }));
+  }
+  assert.equal(signatures.size, escapeLevels.length, "kaçış parkurlarının düzenleri benzersiz olmalı");
+});
+
+test("diken duvarı duran oyuncuyu yakalar ve yeniden doğuşta arkaya alınır", () => {
+  for (const level of levels.slice(179, 200)) {
+    const state = createPhysicsState(level);
+    let deathReason = "";
+    for (let frame = 0; frame < 8 * 60 && !deathReason; frame += 1) {
+      const death = stepPhysics(level, state, { dir: 0, jumpPressed: false }, 1 / 60).find(event => event.type === "death");
+      if (death?.type === "death") deathReason = death.reason;
+    }
+    assert.equal(deathReason, "diken duvarı", `#${level.number}: duran oyuncu yakalanmalı`);
+
+    state.x = level.width * .55;
+    resetChaserBehind(level, state, state.x);
+    assert.equal(state.chaserX, state.x - level.chaser!.respawnGap);
+    assert.equal(state.chaserSpeed, level.chaser!.speed);
+    assert.equal(state.chaserGrace, level.chaser!.graceTime);
+  }
 });
 
 test("201–220 dört perdede yirmi el yapımı ana mekanik sunar", () => {

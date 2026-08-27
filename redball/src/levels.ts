@@ -15,6 +15,16 @@ export type LaserGate = { x: number; y: number; h: number; activeTime: number; i
 export type GravityZone = Box & { scale: number };
 export type KeyChallenge = "stairs" | "spring" | "lift" | "vault";
 export type Theme = { sky: string[]; hill: string; far: string; ground: string; grass: string; accent: string };
+export type SpikeChaser = {
+  startGap: number;
+  respawnGap: number;
+  speed: number;
+  acceleration: number;
+  maxSpeed: number;
+  maxGap: number;
+  graceTime: number;
+  width: number;
+};
 
 export type SeesawBoard = Box & { pivotX: number; maxAngle: number; response: number; damping: number };
 export type WallJumpWall = Box & { side: "left" | "right" | "both" };
@@ -118,6 +128,7 @@ export type Level = {
   gravityScale: number;
   goal: Point;
   theme: Theme;
+  chaser?: SpikeChaser;
   special?: SpecialLevelSpec;
 };
 
@@ -962,6 +973,163 @@ function makeExpansionLevel(index: number): Level {
   };
 }
 
+const escapeLevelNames = [
+  "İlk Alarm", "Yaklaşan Dişler", "Kırmızı Takip", "Durmak Yasak", "Dar Kaçış", "Hız Koridoru", "Nefes Nefese",
+  "Son Anda", "Diken Gölgesi", "Çan Kulesi Kaçışı", "Saray Alarmı", "Kapanan Yol", "Taç Koşusu", "Kesintisiz Akış",
+  "Alevli Sprint", "Sonsuz Takip", "Hız Yemini", "Diken Fırtınası", "Son Koridor", "Taçtan Kaçış", "Büyük Final Sprinti",
+];
+
+function makeEscapeLevel(index: number): Level {
+  const escapeIndex = index - 179;
+  const difficulty = escapeIndex / 20;
+  const chapterIndex = Math.floor(index / 10);
+  const random = mulberry32(180200 + escapeIndex * 7919);
+  const sourcePattern = routes[(escapeIndex * 7 + 3) % routes.length];
+  const route: Box[] = [];
+  let cursor = 0;
+  let previousY = 640;
+
+  sourcePattern.forEach((rawY, routeIndex) => {
+    const first = routeIndex === 0;
+    const last = routeIndex === sourcePattern.length - 1;
+    const targetY = first || last ? 640 : round(Math.max(525, Math.min(640, rawY + (escapeIndex % 3 - 1) * 10)), 5);
+    const y = first || last ? 640 : Math.max(previousY - 100, targetY);
+    const width = first
+      ? 700
+      : last
+        ? 760
+        : round(390 + random() * 115 + (routeIndex % 2) * 20, 5);
+    route.push({ x: cursor, y, w: width, h: VIEW_H - y + 100 });
+    previousY = y;
+    if (!last) cursor += width + round(66 + random() * 23 + difficulty * 7, 5);
+  });
+
+  const boosters: Box[] = [];
+  const conveyors: Conveyor[] = [];
+  const windZones: WindZone[] = [];
+  const ice: Box[] = [];
+  const spikes: Box[] = [];
+
+  const boosterIndexes = new Set([1, Math.floor(route.length / 2), route.length - 2]);
+  const conveyorIndexes = new Set([2, route.length - 3]);
+  route.slice(1, -1).forEach((platform, routeOffset) => {
+    const routeIndex = routeOffset + 1;
+    if (boosterIndexes.has(routeIndex)) {
+      boosters.push({ x: platform.x + 48, y: platform.y - 10, w: Math.min(145, platform.w - 96), h: 10 });
+    }
+    if (conveyorIndexes.has(routeIndex)) {
+      conveyors.push({
+        x: platform.x + 42,
+        y: platform.y - 10,
+        w: Math.min(230, platform.w - 84),
+        h: 10,
+        speed: 360 + escapeIndex * 5,
+      });
+    }
+    if ((routeIndex + escapeIndex) % 3 === 0 && platform.w >= 410) {
+      const spikeWidth = 42 + (escapeIndex % 2) * 10;
+      spikes.push({
+        x: round(platform.x + platform.w * .68, 5),
+        y: platform.y - 32,
+        w: spikeWidth,
+        h: 32,
+      });
+    }
+    if (escapeIndex >= 7 && (routeIndex + escapeIndex) % 5 === 1) {
+      ice.push({ x: platform.x + 34, y: platform.y - 10, w: Math.min(210, platform.w - 68), h: 10 });
+    }
+  });
+
+  if (escapeIndex >= 4) {
+    const gapIndexes = [Math.floor(route.length / 3), route.length - 3];
+    gapIndexes.forEach((gapIndex, flowIndex) => {
+      const left = route[Math.max(0, Math.min(route.length - 2, gapIndex))];
+      const right = route[gapIndex + 1];
+      const x = left.x + left.w - 55;
+      windZones.push({
+        x,
+        y: Math.min(left.y, right.y) - 260,
+        w: right.x - (left.x + left.w) + 110,
+        h: 280,
+        force: 190 + escapeIndex * 7 + flowIndex * 20,
+        lift: -48,
+      });
+    });
+  }
+
+  const lava: LavaPool[] = route.slice(0, -1).map((platform, routeIndex) => {
+    const next = route[routeIndex + 1];
+    return {
+      x: platform.x + platform.w,
+      y: 632,
+      w: next.x - (platform.x + platform.w),
+      h: 110,
+      wave: 5 + escapeIndex * .08,
+      speed: 2.4 + difficulty * .8,
+      phase: routeIndex * .57,
+    };
+  });
+
+  const starIndexes = [
+    Math.max(1, Math.floor(route.length * .25)),
+    Math.max(1, Math.floor(route.length * .54)),
+    Math.min(route.length - 2, Math.floor(route.length * .8)),
+  ];
+  const stars = starIndexes.map((routeIndex, starIndex) => {
+    const platform = route[routeIndex];
+    return {
+      x: platform.x + platform.w * (starIndex % 2 ? .58 : .38),
+      y: platform.y - 66,
+    };
+  });
+  const last = route.at(-1)!;
+  const mechanics = ["diken duvarı", "ivme pisti", "yürüyen bant", "hız parkuru", "lav"];
+  if (windZones.length) mechanics.push("rüzgâr");
+  if (ice.length) mechanics.push("buz");
+
+  return {
+    number: index + 1,
+    chapter: chapterNames[chapterIndex],
+    name: escapeLevelNames[escapeIndex],
+    subtitle: "Diken duvarı arkanda! Ritmi bozma, ivme pistlerini yakala ve kapıya koş.",
+    mechanics,
+    width: last.x + last.w,
+    start: { x: 105, y: 640 - BALL_R },
+    platforms: route,
+    movers: [],
+    crumbles: [],
+    springs: [],
+    boosters,
+    ice,
+    windZones,
+    waterZones: [],
+    portals: [],
+    lava,
+    spinners: [],
+    conveyors,
+    phasePlatforms: [],
+    laserGates: [],
+    gravityZones: [],
+    checkpoints: [],
+    spikes,
+    stars,
+    enemies: [],
+    gravityScale: 1,
+    goal: { x: last.x + last.w - 105, y: last.y - 90 },
+    theme: themes[chapterIndex],
+    chaser: {
+      startGap: 320 - escapeIndex * 2,
+      respawnGap: 480 - escapeIndex * 3,
+      speed: 235 + escapeIndex * 3.7,
+      acceleration: 4.2 + escapeIndex * .18,
+      maxSpeed: 325 + escapeIndex * 2.7,
+      maxGap: 540 - escapeIndex * 4,
+      graceTime: 1.65 - escapeIndex * .018,
+      width: 138 + escapeIndex * .6,
+    },
+  };
+}
+
 function makeProceduralSpecialLevel(index: number): Level {
   const specialIndex = index - 200;
   const world = Math.floor(specialIndex / 10);
@@ -1504,9 +1672,11 @@ export function makeLevel(index: number): Level {
     ? makeLegacyLevel(index)
     : index < 100
       ? makeRedesignedLevel(index)
-      : index < 200
+      : index < 179
         ? makeExpansionLevel(index)
-        : makeSpecialLevel(index);
+        : index < 200
+          ? makeEscapeLevel(index)
+          : makeSpecialLevel(index);
 }
 
 export const levels: Level[] = Array.from({ length: LEVEL_COUNT }, (_, index) => makeLevel(index));
