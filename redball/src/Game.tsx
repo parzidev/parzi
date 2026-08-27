@@ -640,7 +640,7 @@ export default function Home() {
               </Suspense>
             )}
             {levelIndex >= 200 && <p className="special-mechanic-hint">{levels[levelIndex].subtitle}</p>}
-            {levels[levelIndex].chaser && <p className="special-mechanic-hint chase">⚠ Diken duvarı geliyor — durmadan sağa ilerle!</p>}
+            {levels[levelIndex].chaser && <p className="special-mechanic-hint chase">⚠ {levels[levelIndex].subtitle}</p>}
             {levels[levelIndex].note && <p className="level-note">{levels[levelIndex].note}</p>}
           </div>
           <div className="rotate-hint">↻ iPad’i yatay çevirirsen oyun alanı genişler.</div>

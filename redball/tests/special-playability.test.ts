@@ -131,7 +131,7 @@ test("201–220 ortak oyun fiziğinde yalnız dokunmatik left/right/jump ile bit
   assert.deepEqual(failures, [], failures.join("\n"));
 });
 
-test("180–200 diken duvarından kaçarken yalnız dokunmatik left/right/jump ile hızlı bitirilebilir", { timeout: 90_000 }, () => {
+test("180–200 uzun diken duvarı kaçışları yalnız dokunmatik left/right/jump ile bitirilebilir", { timeout: 180_000 }, () => {
   const failures: string[] = [];
   for (const level of levels.slice(179, 200)) {
     const result = findReplay(level);
@@ -141,7 +141,7 @@ test("180–200 diken duvarından kaçarken yalnız dokunmatik left/right/jump i
     }
     const finalState = replay(level, result.replay);
     if (!finalState.won) failures.push(`#${level.number} ${level.name}: deterministik replay bozuldu`);
-    else if (finalState.physics.time > 25) failures.push(`#${level.number} ${level.name}: bitirme süresi ${finalState.physics.time.toFixed(1)}sn ile çok yavaş`);
+    else if (finalState.physics.time > 35) failures.push(`#${level.number} ${level.name}: bitirme süresi ${finalState.physics.time.toFixed(1)}sn ile çok yavaş`);
   }
   assert.deepEqual(failures, [], failures.join("\n"));
 });

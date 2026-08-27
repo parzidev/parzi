@@ -138,39 +138,48 @@ test("101–200'deki on dünya kendi mekanik kimliğini korur", () => {
   assert.ok(worlds[5].every(level => level.conveyors.length > 0 && level.gravityZones.length > 0));
   assert.ok(worlds[6].every(level => level.checkpoints.length > 0 && level.laserGates.length > 0));
   assert.ok(worlds[7].slice(0, 9).every(level => level.phasePlatforms.length > 0 && level.conveyors.length > 0));
-  assert.ok(levels.slice(179, 200).every(level => level.chaser && level.conveyors.length > 0 && level.boosters.length > 0));
+  assert.ok(levels.slice(179, 200).every(level => level.chaser && level.width >= 7000));
 });
 
-test("180–200 kesintisiz ve hız odaklı diken duvarı kaçışlarıdır", () => {
+test("180–200 uzun, benzersiz ve bütün eski mekanikleri kullanan kaçışlardır", () => {
   const escapeLevels = levels.slice(179, 200);
   assert.equal(escapeLevels.length, 21);
   assert.ok(levels.slice(0, 179).every(level => !level.chaser));
   assert.ok(levels.slice(200).every(level => !level.chaser));
 
   const signatures = new Set<string>();
+  const identities = new Set<string>();
+  const usedMechanics = new Set<string>();
   for (const level of escapeLevels) {
     assert.ok(level.chaser, `#${level.number}: takipçi ayarı eksik`);
     assert.ok(level.mechanics.includes("diken duvarı"), `#${level.number}: mekanik etiketi eksik`);
     assert.ok(level.chaser.speed > 0 && level.chaser.maxSpeed < 430, `#${level.number}: takipçi hızı adil değil`);
     assert.ok(level.chaser.speed <= level.chaser.maxSpeed, `#${level.number}: başlangıç hızı üst sınırı aşıyor`);
     assert.ok(level.chaser.startGap >= 250 && level.chaser.maxGap >= 440, `#${level.number}: başlangıç mesafesi çok dar`);
-    assert.ok(level.boosters.length >= 3, `#${level.number}: kaçış rotasında ivme eksik`);
-    assert.ok(level.conveyors.length >= 2 && level.conveyors.every(belt => belt.speed > 0), `#${level.number}: bütün bantlar ileri akmalı`);
-    assert.equal(level.waterZones.length, 0, `#${level.number}: ana rotada yavaşlatan su olmamalı`);
-    assert.equal(level.portals.length, 0, `#${level.number}: portal takipçiyi atlatmamalı`);
-    assert.equal(level.phasePlatforms.length, 0, `#${level.number}: faz beklemesi kaçış ritmini bozmamalı`);
-    assert.equal(level.laserGates.length, 0, `#${level.number}: zamanlı lazer beklemeye zorlamamalı`);
-    assert.equal(level.enemies.length, 0, `#${level.number}: ana tehdit diken duvarı olmalı`);
+    assert.ok(level.width >= 7000, `#${level.number}: kaçış parkuru yeterince uzun değil`);
+    assert.ok(level.mechanics.length >= 4, `#${level.number}: mekanik kimliği yeterince güçlü değil`);
     assert.equal(level.stars.length, 3);
 
-    const route = [...level.platforms].sort((a, b) => a.x - b.x);
+    const route = [
+      ...level.platforms.filter(platform => platform.h >= 80),
+      ...level.crumbles.filter(platform => platform.h >= 80),
+    ].sort((a, b) => a.x - b.x);
+    assert.ok(route.length >= 10, `#${level.number}: ana rota çok kısa`);
     for (let i = 0; i < route.length - 1; i += 1) {
-      assert.ok(route[i + 1].x - (route[i].x + route[i].w) <= 100, `#${level.number}: hız boşluğu fazla geniş`);
-      assert.ok(route[i].y - route[i + 1].y <= 100, `#${level.number}: hız rotası fazla dik yükseliyor`);
+      assert.ok(route[i + 1].x - (route[i].x + route[i].w) <= 155, `#${level.number}: hız boşluğu fazla geniş`);
+      assert.ok(route[i].y - route[i + 1].y <= 90, `#${level.number}: hız rotası fazla dik yükseliyor`);
     }
-    signatures.add(JSON.stringify({ platforms: route, spikes: level.spikes, boosters: level.boosters }));
+    identities.add(level.mechanics[1]);
+    level.mechanics.slice(2).forEach(mechanic => usedMechanics.add(mechanic));
+    signatures.add(JSON.stringify({ platforms: route, spikes: level.spikes, movers: level.movers, phase: level.phasePlatforms }));
   }
   assert.equal(signatures.size, escapeLevels.length, "kaçış parkurlarının düzenleri benzersiz olmalı");
+  assert.equal(identities.size, escapeLevels.length, "her kaçışın ayrı bir mekanik kimliği olmalı");
+  const expectedMechanics = [
+    "hareketli platform", "çöken zemin", "zıplatan bitki", "ivme pisti", "buz", "rüzgâr", "su", "portal", "lav",
+    "dönen tuzak", "yürüyen bant", "faz platformu", "lazer kapısı", "yerçekimi alanı", "kontrol noktası", "diken", "düşman", "anahtar",
+  ];
+  expectedMechanics.forEach(mechanic => assert.ok(usedMechanics.has(mechanic), `kaçış serisinde ${mechanic} kullanılmalı`));
 });
 
 test("diken duvarı duran oyuncuyu yakalar ve yeniden doğuşta arkaya alınır", () => {
@@ -262,8 +271,8 @@ test("66. bölüm özel mesajı taşır", () => {
   assert.equal(levels[65].note, "Keşke bunu düzelttiğim gibi aramızı da düzeltebilsem.");
 });
 
-test("32 anahtarlı bölüm güvenli ve farklı anahtar odalarına sahiptir", () => {
-  const keyLevels = levels.filter(level => level.key);
+test("ilk 179 bölümdeki 32 anahtarlı bölüm güvenli ve farklı anahtar odalarına sahiptir", () => {
+  const keyLevels = levels.slice(0, 179).filter(level => level.key);
   assert.equal(keyLevels.length, 32);
   assert.deepEqual(new Set(keyLevels.map(level => level.keyChallenge)), new Set(["stairs", "spring", "lift", "vault"]));
 

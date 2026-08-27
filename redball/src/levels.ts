@@ -979,152 +979,332 @@ const escapeLevelNames = [
   "Alevli Sprint", "Sonsuz Takip", "Hız Yemini", "Diken Fırtınası", "Son Koridor", "Taçtan Kaçış", "Büyük Final Sprinti",
 ];
 
+type EscapeRouteSegment = readonly [y: number, width: number, gapAfter: number];
+type EscapeDesign = {
+  identity: string;
+  subtitle: string;
+  route: readonly EscapeRouteSegment[];
+  boosters?: readonly number[];
+  conveyors?: ReadonlyArray<readonly [at: number, speed: number]>;
+  springs?: ReadonlyArray<readonly [at: number, power: number]>;
+  ice?: readonly number[];
+  winds?: ReadonlyArray<readonly [after: number, force: number, lift: number]>;
+  water?: readonly number[];
+  portals?: ReadonlyArray<readonly [from: number, to: number, color: string]>;
+  lavaGaps?: readonly number[];
+  spinners?: ReadonlyArray<readonly [at: number, speed: number, length: number]>;
+  phaseBridges?: ReadonlyArray<readonly [after: number, phase: number]>;
+  lasers?: ReadonlyArray<readonly [at: number, phase: number]>;
+  gravity?: ReadonlyArray<readonly [after: number, scale: number]>;
+  checkpoints?: readonly number[];
+  spikes?: ReadonlyArray<readonly [at: number, ratio: number, width: number]>;
+  enemies?: ReadonlyArray<readonly [at: number, ratio: number, speed: number]>;
+  crumbles?: readonly number[];
+  movers?: ReadonlyArray<readonly [after: number, axis: "x" | "y", range: number, phase: number]>;
+  keyAt?: number;
+  starAt?: readonly [number, number, number];
+  chaseEase?: number;
+};
+
+const escapeDesigns: readonly EscapeDesign[] = [
+  {
+    identity: "ritim sıçrayışı",
+    subtitle: "Geniş pistlerle ritmi bul; sarı ivmeler seni ilk uzun kaçışa taşısın.",
+    route: [[640,760,80],[620,560,75],[590,500,78],[620,600,82],[570,510,78],[610,640,75],[550,500,88],[600,620,76],[575,520,82],[625,610,74],[600,540,80],[640,820,0]],
+    boosters: [1,5,9], conveyors: [[3,390],[8,420]], spikes: [[6,.72,48]], lavaGaps: [4,8], starAt: [2,6,9],
+  },
+  {
+    identity: "testere basamakları",
+    subtitle: "Yükselen ve alçalan dişlerde kısa zıpları zincirle; düz koşu burada yetmez.",
+    route: [[640,690,88],[560,500,82],[630,470,86],[545,520,78],[620,460,92],[535,540,82],[615,480,88],[550,520,84],[625,470,90],[560,540,78],[620,500,84],[640,780,0]],
+    conveyors: [[2,360],[7,400]], springs: [[4,1010]], spikes: [[1,.72,48],[3,.68,52],[6,.7,48],[8,.67,54]], lavaGaps: [1,3,5,7,9], starAt: [3,6,9],
+  },
+  {
+    identity: "iniş şelalesi",
+    subtitle: "Yüksek maden ağzından buzlu inişe bırak kendini, aşağıdaki rampalarda frenleme.",
+    route: [[470,720,75],[500,620,80],[535,560,84],[575,590,78],[615,650,76],[640,720,82],[600,560,86],[630,620,78],[570,540,84],[610,620,80],[590,560,76],[640,820,0]],
+    boosters: [2,6,9], ice: [0,1,2,3,4,7,9], conveyors: [[5,430],[10,450]],
+    winds: [[3,280,-35],[8,320,-55]], lavaGaps: [5,8], starAt: [2,6,9],
+  },
+  {
+    identity: "ada sekansı",
+    subtitle: "On beş küçük adayı tek nefeste sek; yaylar iki büyük boşlukta rotayı değiştirir.",
+    route: [[640,650,100],[610,380,104],[570,360,108],[620,410,98],[550,370,112],[600,390,104],[535,360,116],[590,420,102],[545,380,110],[615,400,100],[560,360,112],[605,410,104],[550,380,108],[620,420,96],[640,760,0]],
+    springs: [[3,1050],[7,1090],[11,1060]], boosters: [1,9,12], movers: [[5,"y",52,.8],[10,"x",38,1.6]], lavaGaps: [0,1,2,3,4,5,6,7,8,9,10,11,12,13], starAt: [4,8,12],
+  },
+  {
+    identity: "dar pervaneler",
+    subtitle: "Dar inişlere nişan al, dönen kolların üstünden atla ve çizgini hiç bozma.",
+    route: [[640,650,92],[590,410,104],[620,360,110],[555,390,104],[610,370,112],[540,420,108],[600,360,114],[565,400,106],[625,370,112],[550,410,104],[610,380,108],[570,430,100],[625,390,96],[640,760,0]],
+    boosters: [2,6,10], conveyors: [[4,390],[9,420]], spinners: [[3,2.1,48],[7,-2.35,52],[11,2.55,50]], spikes: [[5,.72,44],[9,.68,46]], starAt: [3,7,11],
+  },
+  {
+    identity: "lazer ekspresi",
+    subtitle: "Uzun bantlarda hızlan; lazerlerin kısa karanlık aralıklarını koşarken yakala.",
+    route: [[640,850,70],[620,920,76],[590,880,72],[630,980,78],[570,900,74],[615,960,76],[585,890,72],[625,980,78],[600,900,74],[640,960,0]],
+    conveyors: [[1,470],[2,500],[3,480],[5,520],[6,500],[8,540]], boosters: [0,4,7], lasers: [[1,.2],[3,1.1],[5,.55],[6,1.45],[8,.85]], checkpoints: [4,7], starAt: [2,5,8], chaseEase: .94,
+  },
+  {
+    identity: "çekim merdiveni",
+    subtitle: "Yerçekimi ceplerinde yükselen merdiveni tırman, yaylarla katlar arasında uç.",
+    route: [[640,700,82],[585,500,84],[530,480,86],[475,470,88],[520,520,84],[465,460,90],[520,500,86],[575,540,82],[515,480,88],[570,520,84],[620,560,80],[560,500,86],[610,560,78],[640,780,0]],
+    springs: [[2,1070],[5,1100],[8,1060]], gravity: [[1,.58],[4,.52],[8,.62]], boosters: [6,10,12], movers: [[3,"y",48,.4],[9,"y",56,1.2]], checkpoints: [7], starAt: [3,7,11], chaseEase: .92,
+  },
+  {
+    identity: "çöken köprü",
+    subtitle: "Taşlar arkandan düşüyor; çöken köprüde kararını havadayken ver.",
+    route: [[640,720,78],[610,520,82],[580,480,80],[620,460,84],[565,500,82],[610,450,86],[550,480,84],[600,460,88],[545,500,82],[605,450,86],[560,480,84],[615,470,80],[580,520,78],[640,780,0]],
+    crumbles: [2,3,5,6,8,9,11], boosters: [1,4,7,10], conveyors: [[6,430],[11,460]], lavaGaps: [2,5,8,11], checkpoints: [7], starAt: [3,7,11], chaseEase: .93,
+  },
+  {
+    identity: "diken slalomu",
+    subtitle: "Diken kümeleri yolu sağa sola böler; kısa ve uzun zıpları sırayla kullan.",
+    route: [[640,760,76],[610,680,80],[570,620,82],[620,700,78],[560,650,84],[610,720,76],[550,640,86],[600,700,80],[565,660,82],[620,720,78],[580,650,80],[640,820,0]],
+    boosters: [1,4,7,9], conveyors: [[2,410],[6,440]], spikes: [[1,.32,52],[1,.72,48],[3,.48,56],[4,.75,50],[6,.35,52],[7,.68,58],[9,.42,54],[10,.72,50]], enemies: [[5,.58,104]], starAt: [2,6,9],
+  },
+  {
+    identity: "hareketli kule",
+    subtitle: "Saat kulesinin hareketli balkonlarını kesmeden geç; aşağı iniş de tırmanış kadar hızlı.",
+    route: [[640,680,88],[580,500,92],[520,470,96],[460,450,100],[510,480,94],[450,460,102],[500,480,96],[555,510,92],[610,540,88],[550,490,96],[600,530,90],[560,500,92],[620,560,84],[640,780,0]],
+    movers: [[1,"y",62,.2],[3,"x",44,.9],[5,"y",70,1.5],[8,"x",48,2.1],[10,"y",58,2.8]], springs: [[2,1030],[5,1090]], boosters: [7,10,12], checkpoints: [6,10], lavaGaps: [3,8], starAt: [3,7,11], chaseEase: .91,
+  },
+  {
+    identity: "lazer alarmı",
+    subtitle: "Saray alarmı yanıp sönerken banttan banda atla; ışınların arasındaki çizgiyi oku.",
+    route: [[640,760,74],[610,720,78],[575,680,76],[620,740,80],[560,700,74],[605,760,78],[550,690,82],[600,740,76],[565,700,80],[620,760,74],[585,690,78],[640,820,0]],
+    conveyors: [[1,450],[3,480],[5,500],[7,520],[9,540]], lasers: [[1,.1],[2,.8],[4,1.5],[6,.45],[8,1.2],[9,1.8]], boosters: [0,5,10], checkpoints: [5,9], ice: [2,8], starAt: [2,6,9], chaseEase: .9,
+  },
+  {
+    identity: "faz kapanı",
+    subtitle: "Kaybolan mor köprüler kestirme sunuyor; görünürken üst rotaya, sönünce uzun atlayışa geç.",
+    route: [[640,700,112],[590,500,118],[620,460,122],[550,480,126],[605,450,118],[535,480,130],[590,460,124],[545,500,120],[610,470,128],[555,490,122],[615,480,116],[570,510,112],[640,780,0]],
+    phaseBridges: [[0,.1],[2,.8],[4,1.5],[6,.45],[8,1.2],[10,1.8]], movers: [[1,"y",42,.5],[5,"x",36,1.7],[9,"y",48,2.4]], boosters: [1,5,9], crumbles: [3,7,10], checkpoints: [6], starAt: [3,7,10], chaseEase: .88,
+  },
+  {
+    identity: "portal zinciri",
+    subtitle: "Mor kapılara doğru açıyla gir; üç portal sıçraması diken duvarıyla mesafeyi yeniden kurar.",
+    route: [[640,760,82],[600,620,86],[550,580,90],[610,640,84],[560,600,88],[620,660,82],[545,590,92],[600,650,84],[555,610,88],[615,670,82],[570,600,86],[620,650,80],[580,620,82],[640,820,0]],
+    portals: [[1,4,"#c47cff"],[5,8,"#6ce4ff"],[9,11,"#ffd45c"]], boosters: [0,4,8,11], conveyors: [[3,420],[7,450],[10,470]], keyAt: 11, checkpoints: [5,9], spikes: [[2,.7,48],[6,.68,52],[10,.72,50]], starAt: [4,8,11],
+  },
+  {
+    identity: "rüzgâr sörfü",
+    subtitle: "Arka rüzgârda uzun boşlukları süzül, ters esen iki bacada yere yakın kal.",
+    route: [[640,720,118],[585,540,128],[620,500,134],[550,520,126],[605,480,138],[535,520,130],[590,500,136],[545,540,128],[610,490,140],[560,530,130],[615,510,124],[575,550,118],[640,800,0]],
+    winds: [[0,430,-90],[2,520,-120],[4,-260,-35],[6,560,-130],[8,-230,-20],[10,520,-110]], ice: [1,5,9], boosters: [3,7,10], gravity: [[1,.68],[6,.62]], checkpoints: [6,10], starAt: [3,7,10], chaseEase: .9,
+  },
+  {
+    identity: "lav adaları",
+    subtitle: "Lav nehrindeki küçük adaları yay ve ivme sırasıyla bağla; yanlış inişin telafisi yok.",
+    route: [[640,680,108],[600,420,116],[550,390,122],[610,430,112],[535,400,126],[590,420,118],[520,390,130],[580,430,116],[540,400,124],[605,440,112],[550,390,126],[595,430,116],[535,400,122],[610,450,108],[640,760,0]],
+    lavaGaps: [0,1,2,3,4,5,6,7,8,9,10,11,12,13], springs: [[2,1070],[6,1110],[10,1080]], boosters: [1,4,8,12], spinners: [[5,2.2,46],[9,-2.4,48]], checkpoints: [7,11], starAt: [3,7,11], chaseEase: .88,
+  },
+  {
+    identity: "su maratonu",
+    subtitle: "Su odalarında yükselip kuru şeritlere fırla; her havuzdan çıkışta takip yeniden yaklaşır.",
+    route: [[640,760,76],[610,620,80],[570,650,78],[620,680,82],[560,640,76],[605,700,80],[545,650,84],[595,680,78],[555,640,82],[610,700,76],[565,650,80],[620,680,78],[580,640,82],[615,700,76],[590,650,78],[640,820,0]],
+    water: [2,5,9,12], springs: [[2,1040],[5,1070],[9,1050],[12,1080]], conveyors: [[1,420],[4,450],[8,470],[11,490],[14,510]], boosters: [3,7,10,13], checkpoints: [4,8,12], starAt: [3,8,12], chaseEase: .78,
+  },
+  {
+    identity: "hafif çekim uçuşu",
+    subtitle: "Hafif çekim baloncuklarında uzun uçuşlar yap, hareketli inişlere hızını koruyarak kon.",
+    route: [[640,700,132],[570,500,142],[610,460,148],[525,480,138],[590,450,150],[510,490,144],[575,460,152],[525,500,140],[600,470,148],[540,490,142],[610,480,136],[560,520,130],[640,800,0]],
+    gravity: [[0,.5],[2,.42],[4,.48],[6,.4],[8,.5],[10,.46]], movers: [[1,"x",46,.3],[3,"y",58,1.1],[5,"x",50,1.8],[7,"y",62,2.5],[9,"x",44,3.1]], boosters: [0,4,8,10], winds: [[5,260,-80]], checkpoints: [6,10], starAt: [3,7,10], chaseEase: .84,
+  },
+  {
+    identity: "tuzak fırtınası",
+    subtitle: "Diken, pervane ve lazer aynı anda saldırıyor; her engelde başka zıplama yüksekliği seç.",
+    route: [[640,760,80],[600,620,84],[550,590,88],[615,650,82],[565,610,86],[605,640,84],[540,600,90],[590,630,82],[555,610,88],[615,650,84],[570,600,86],[610,640,82],[580,620,80],[640,820,0]],
+    spikes: [[1,.35,48],[2,.72,54],[4,.42,52],[5,.76,48],[7,.34,56],[8,.7,52],[10,.4,54],[11,.74,50]], spinners: [[3,2.4,50],[6,-2.65,54],[9,2.8,52]], lasers: [[2,.6],[5,1.4],[8,.2],[11,1.05]], springs: [[4,1020],[8,1060]], boosters: [0,6,10], checkpoints: [6,10], starAt: [3,7,11], chaseEase: .84,
+  },
+  {
+    identity: "ters akım koridoru",
+    subtitle: "Ters bant ve karşı rüzgâr seni geri iter; üstlerinden zıplayıp ileri bantlara iniş yap.",
+    route: [[640,900,70],[620,860,74],[590,920,72],[625,880,76],[570,940,70],[610,900,74],[550,920,78],[600,880,72],[565,940,76],[615,900,70],[585,880,74],[640,960,0]],
+    conveyors: [[1,-260],[2,480],[3,-290],[4,510],[5,-310],[6,530],[7,-330],[8,550],[9,-350],[10,570]], winds: [[2,-250,-30],[6,-280,-40],[9,-300,-35]], boosters: [0,4,8], lasers: [[3,.8],[7,1.55],[10,.3]], ice: [5,9], checkpoints: [5,9], starAt: [2,6,9], chaseEase: .8,
+  },
+  {
+    identity: "mekanik röle",
+    subtitle: "Portal, su, faz, lazer ve çöken zemin sırayla gelir; her bölümde öğrendiğin refleksi değiştir.",
+    route: [[640,760,86],[600,560,92],[550,520,96],[615,600,88],[565,540,100],[605,590,92],[535,520,104],[590,580,94],[545,540,102],[610,600,90],[560,530,100],[600,590,92],[550,540,98],[615,610,88],[575,560,92],[640,820,0]],
+    portals: [[1,3,"#cc7dff"],[9,11,"#6ce5ff"]], water: [4,12], phaseBridges: [[5,.3],[10,1.2]], lasers: [[3,.9],[8,.2],[13,1.5]], crumbles: [6,7,11], movers: [[2,"y",48,.5],[9,"x",38,2.1]], springs: [[4,1050],[12,1070]], conveyors: [[1,430],[5,460],[10,490],[14,520]], boosters: [0,7,13], gravity: [[6,.58]], spinners: [[9,2.45,48]], spikes: [[5,.72,48],[13,.68,52]], enemies: [[8,.55,108]], keyAt: 13, checkpoints: [5,10,13], lavaGaps: [6,10], starAt: [3,8,13], chaseEase: .74,
+  },
+  {
+    identity: "büyük final karması",
+    subtitle: "Üç perdeli final: hız merdiveni, çöken saat ve bütün mekaniklerin birleştiği taç yolu.",
+    route: [[640,820,78],[590,600,84],[535,560,88],[480,540,92],[530,580,86],[585,620,82],[620,660,88],[560,570,94],[510,540,98],[565,590,90],[615,640,86],[550,560,96],[500,530,100],[555,580,92],[605,630,88],[545,550,98],[595,610,90],[640,900,0]],
+    boosters: [0,4,9,14], conveyors: [[1,450],[5,480],[10,520],[15,560]], springs: [[2,1060],[8,1100],[12,1080]], ice: [3,9,15], winds: [[4,360,-90],[11,-220,-25],[14,440,-110]], water: [6], portals: [[7,10,"#d47cff"]], lavaGaps: [2,5,9,13,15], spinners: [[4,2.3,48],[11,-2.6,52]], phaseBridges: [[6,.5],[12,1.4]], lasers: [[3,.2],[8,1.1],[13,1.7],[16,.65]], gravity: [[1,.58],[10,.5]], checkpoints: [5,10,14], spikes: [[1,.72,48],[7,.68,52],[14,.72,54]], enemies: [[5,.58,104],[12,.56,112]], crumbles: [6,8,12,15], movers: [[2,"y",52,.3],[9,"x",42,1.8],[14,"y",58,2.7]], keyAt: 14, starAt: [4,10,14], chaseEase: .68,
+  },
+];
+
 function makeEscapeLevel(index: number): Level {
   const escapeIndex = index - 179;
-  const difficulty = escapeIndex / 20;
   const chapterIndex = Math.floor(index / 10);
-  const random = mulberry32(180200 + escapeIndex * 7919);
-  const sourcePattern = routes[(escapeIndex * 7 + 3) % routes.length];
+  const design = escapeDesigns[escapeIndex];
   const route: Box[] = [];
   let cursor = 0;
-  let previousY = 640;
 
-  sourcePattern.forEach((rawY, routeIndex) => {
-    const first = routeIndex === 0;
-    const last = routeIndex === sourcePattern.length - 1;
-    const targetY = first || last ? 640 : round(Math.max(525, Math.min(640, rawY + (escapeIndex % 3 - 1) * 10)), 5);
-    const y = first || last ? 640 : Math.max(previousY - 100, targetY);
-    const width = first
-      ? 700
-      : last
-        ? 760
-        : round(390 + random() * 115 + (routeIndex % 2) * 20, 5);
+  design.route.forEach(([y, width, gapAfter], routeIndex) => {
     route.push({ x: cursor, y, w: width, h: VIEW_H - y + 100 });
-    previousY = y;
-    if (!last) cursor += width + round(66 + random() * 23 + difficulty * 7, 5);
+    if (routeIndex < design.route.length - 1) cursor += width + gapAfter;
   });
 
-  const boosters: Box[] = [];
-  const conveyors: Conveyor[] = [];
-  const windZones: WindZone[] = [];
-  const ice: Box[] = [];
-  const spikes: Box[] = [];
-
-  const boosterIndexes = new Set([1, Math.floor(route.length / 2), route.length - 2]);
-  const conveyorIndexes = new Set([2, route.length - 3]);
-  route.slice(1, -1).forEach((platform, routeOffset) => {
-    const routeIndex = routeOffset + 1;
-    if (boosterIndexes.has(routeIndex)) {
-      boosters.push({ x: platform.x + 48, y: platform.y - 10, w: Math.min(145, platform.w - 96), h: 10 });
-    }
-    if (conveyorIndexes.has(routeIndex)) {
-      conveyors.push({
-        x: platform.x + 42,
-        y: platform.y - 10,
-        w: Math.min(230, platform.w - 84),
-        h: 10,
-        speed: 360 + escapeIndex * 5,
-      });
-    }
-    if ((routeIndex + escapeIndex) % 3 === 0 && platform.w >= 410) {
-      const spikeWidth = 42 + (escapeIndex % 2) * 10;
-      spikes.push({
-        x: round(platform.x + platform.w * .68, 5),
-        y: platform.y - 32,
-        w: spikeWidth,
-        h: 32,
-      });
-    }
-    if (escapeIndex >= 7 && (routeIndex + escapeIndex) % 5 === 1) {
-      ice.push({ x: platform.x + 34, y: platform.y - 10, w: Math.min(210, platform.w - 68), h: 10 });
-    }
+  const routeAt = (routeIndex: number) => route[Math.max(0, Math.min(route.length - 1, routeIndex))];
+  const gapAt = (routeIndex: number) => {
+    const left = routeAt(Math.min(route.length - 2, routeIndex));
+    const right = routeAt(Math.min(route.length - 1, routeIndex + 1));
+    return { left, right, start: left.x + left.w, width: right.x - (left.x + left.w) };
+  };
+  const crumbleIndexes = new Set(design.crumbles || []);
+  const crumbles: CrumblePlatform[] = [...crumbleIndexes].map(routeIndex => ({
+    ...routeAt(routeIndex), delay: .62 + (routeIndex % 3) * .1, respawn: 2.1,
+  }));
+  const platforms = route.filter((_, routeIndex) => !crumbleIndexes.has(routeIndex));
+  const boosters = (design.boosters || []).map(routeIndex => {
+    const platform = routeAt(routeIndex);
+    return { x: platform.x + Math.max(55, platform.w - 215), y: platform.y - 10, w: Math.min(145, platform.w - 110), h: 10 };
   });
-
-  if (escapeIndex >= 4) {
-    const gapIndexes = [Math.floor(route.length / 3), route.length - 3];
-    gapIndexes.forEach((gapIndex, flowIndex) => {
-      const left = route[Math.max(0, Math.min(route.length - 2, gapIndex))];
-      const right = route[gapIndex + 1];
-      const x = left.x + left.w - 55;
-      windZones.push({
-        x,
-        y: Math.min(left.y, right.y) - 260,
-        w: right.x - (left.x + left.w) + 110,
-        h: 280,
-        force: 190 + escapeIndex * 7 + flowIndex * 20,
-        lift: -48,
-      });
-    });
-  }
-
-  const lava: LavaPool[] = route.slice(0, -1).map((platform, routeIndex) => {
-    const next = route[routeIndex + 1];
+  const conveyors: Conveyor[] = (design.conveyors || []).map(([routeIndex, speed]) => {
+    const platform = routeAt(routeIndex);
+    return { x: platform.x + 48, y: platform.y - 10, w: Math.max(150, platform.w - 96), h: 10, speed };
+  });
+  const springs: SpringPlant[] = (design.springs || []).map(([routeIndex, power]) => {
+    const platform = routeAt(routeIndex);
+    return { x: platform.x + platform.w * .55 - 36, y: platform.y, w: 72, power };
+  });
+  const ice = (design.ice || []).map(routeIndex => {
+    const platform = routeAt(routeIndex);
+    return { x: platform.x + 22, y: platform.y - 10, w: platform.w - 44, h: 10 };
+  });
+  const windZones: WindZone[] = (design.winds || []).map(([routeIndex, force, lift]) => {
+    const { left, right, start, width } = gapAt(routeIndex);
+    return { x: start - 100, y: Math.min(left.y, right.y) - 330, w: width + 200, h: 350, force, lift };
+  });
+  const waterZones: WaterZone[] = (design.water || []).map(routeIndex => {
+    const platform = routeAt(routeIndex);
+    const y = Math.max(300, platform.y - 175);
+    return { x: platform.x + 45, y, w: platform.w - 90, h: platform.y - y + 38, buoyancy: 1420 };
+  });
+  const portals: PortalPair[] = (design.portals || []).map(([fromIndex, toIndex, color]) => {
+    const from = routeAt(fromIndex), to = routeAt(toIndex);
+    return { a: { x: from.x + from.w * .72, y: from.y - 55 }, b: { x: to.x + to.w * .32, y: to.y - 55 }, color };
+  });
+  const lava: LavaPool[] = (design.lavaGaps || []).map(routeIndex => {
+    const { start, width } = gapAt(routeIndex);
     return {
-      x: platform.x + platform.w,
+      x: start,
       y: 632,
-      w: next.x - (platform.x + platform.w),
+      w: width,
       h: 110,
-      wave: 5 + escapeIndex * .08,
-      speed: 2.4 + difficulty * .8,
+      wave: 6 + escapeIndex * .1,
+      speed: 2.35 + escapeIndex * .025,
       phase: routeIndex * .57,
     };
   });
-
-  const starIndexes = [
-    Math.max(1, Math.floor(route.length * .25)),
-    Math.max(1, Math.floor(route.length * .54)),
-    Math.min(route.length - 2, Math.floor(route.length * .8)),
-  ];
+  const spinners: Spinner[] = (design.spinners || []).map(([routeIndex, speed, length]) => {
+    const platform = routeAt(routeIndex);
+    return { x: platform.x + platform.w * .66, y: platform.y - 76, length, speed, phase: routeIndex * .63 };
+  });
+  const phasePlatforms: PhasePlatform[] = (design.phaseBridges || []).map(([routeIndex, phase]) => {
+    const { left, right, start, width } = gapAt(routeIndex);
+    return { x: start - 18, y: Math.min(left.y, right.y) - 62, w: Math.max(140, width + 36), h: 22, activeTime: 2.15, inactiveTime: .58, phase };
+  });
+  const laserGates: LaserGate[] = (design.lasers || []).map(([routeIndex, phase]) => {
+    const platform = routeAt(routeIndex);
+    return { x: platform.x + platform.w * .7, y: platform.y - 170, h: 170, activeTime: .55, inactiveTime: 1.85, phase };
+  });
+  const gravityZones: GravityZone[] = (design.gravity || []).map(([routeIndex, scale]) => {
+    const { left, right, start, width } = gapAt(routeIndex);
+    return { x: start - 90, y: Math.min(left.y, right.y) - 340, w: width + 180, h: 355, scale };
+  });
+  const checkpoints = (design.checkpoints || []).map(routeIndex => {
+    const platform = routeAt(routeIndex);
+    return { x: platform.x + 92, y: platform.y - BALL_R };
+  });
+  const spikes = (design.spikes || []).map(([routeIndex, ratio, width]) => {
+    const platform = routeAt(routeIndex);
+    return { x: platform.x + platform.w * ratio, y: platform.y - 32, w: width, h: 32 };
+  });
+  const enemies = (design.enemies || []).map(([routeIndex, ratio, speed]) => {
+    const platform = routeAt(routeIndex);
+    const min = platform.x + 72, max = platform.x + platform.w - 72;
+    return { x: platform.x + platform.w * ratio, y: platform.y - 37, min, max, speed };
+  });
+  const movers: Mover[] = (design.movers || []).map(([routeIndex, axis, range, phase]) => {
+    const { left, right, start, width } = gapAt(routeIndex);
+    return { x: start - 16, y: Math.min(left.y, right.y) - 74, w: Math.max(135, width + 32), h: 22, axis, range, speed: 1.2 + escapeIndex * .018, phase };
+  });
+  const starIndexes = design.starAt || [Math.floor(route.length * .25), Math.floor(route.length * .55), Math.floor(route.length * .82)];
   const stars = starIndexes.map((routeIndex, starIndex) => {
-    const platform = route[routeIndex];
+    const platform = routeAt(routeIndex);
     return {
       x: platform.x + platform.w * (starIndex % 2 ? .58 : .38),
       y: platform.y - 66,
     };
   });
+  const keyPlatform = design.keyAt === undefined ? undefined : routeAt(design.keyAt);
+  const key = keyPlatform ? { x: keyPlatform.x + keyPlatform.w * .54, y: keyPlatform.y - 58 } : undefined;
   const last = route.at(-1)!;
-  const mechanics = ["diken duvarı", "ivme pisti", "yürüyen bant", "hız parkuru", "lav"];
-  if (windZones.length) mechanics.push("rüzgâr");
+  const mechanics = ["diken duvarı", design.identity];
+  if (movers.length) mechanics.push("hareketli platform");
+  if (crumbles.length) mechanics.push("çöken zemin");
+  if (springs.length) mechanics.push("zıplatan bitki");
+  if (boosters.length) mechanics.push("ivme pisti");
   if (ice.length) mechanics.push("buz");
+  if (windZones.length) mechanics.push("rüzgâr");
+  if (waterZones.length) mechanics.push("su");
+  if (portals.length) mechanics.push("portal");
+  if (lava.length) mechanics.push("lav");
+  if (spinners.length) mechanics.push("dönen tuzak");
+  if (conveyors.length) mechanics.push("yürüyen bant");
+  if (phasePlatforms.length) mechanics.push("faz platformu");
+  if (laserGates.length) mechanics.push("lazer kapısı");
+  if (gravityZones.length) mechanics.push("yerçekimi alanı");
+  if (checkpoints.length) mechanics.push("kontrol noktası");
+  if (spikes.length) mechanics.push("diken");
+  if (enemies.length) mechanics.push("düşman");
+  if (key) mechanics.push("anahtar");
+  const chaseEase = design.chaseEase || 1;
 
   return {
     number: index + 1,
     chapter: chapterNames[chapterIndex],
     name: escapeLevelNames[escapeIndex],
-    subtitle: "Diken duvarı arkanda! Ritmi bozma, ivme pistlerini yakala ve kapıya koş.",
+    subtitle: design.subtitle,
     mechanics,
     width: last.x + last.w,
-    start: { x: 105, y: 640 - BALL_R },
-    platforms: route,
-    movers: [],
-    crumbles: [],
-    springs: [],
+    start: { x: 105, y: route[0].y - BALL_R },
+    platforms,
+    movers,
+    crumbles,
+    springs,
     boosters,
     ice,
     windZones,
-    waterZones: [],
-    portals: [],
+    waterZones,
+    portals,
     lava,
-    spinners: [],
+    spinners,
     conveyors,
-    phasePlatforms: [],
-    laserGates: [],
-    gravityZones: [],
-    checkpoints: [],
+    phasePlatforms,
+    laserGates,
+    gravityZones,
+    checkpoints,
     spikes,
     stars,
-    enemies: [],
+    enemies,
+    key,
+    keyPlatform,
     gravityScale: 1,
     goal: { x: last.x + last.w - 105, y: last.y - 90 },
     theme: themes[chapterIndex],
     chaser: {
-      startGap: 320 - escapeIndex * 2,
-      respawnGap: 480 - escapeIndex * 3,
-      speed: 235 + escapeIndex * 3.7,
-      acceleration: 4.2 + escapeIndex * .18,
-      maxSpeed: 325 + escapeIndex * 2.7,
-      maxGap: 540 - escapeIndex * 4,
-      graceTime: 1.65 - escapeIndex * .018,
+      startGap: 370 - escapeIndex * 2,
+      respawnGap: 560 - escapeIndex * 2,
+      speed: (225 + escapeIndex * 3.1) * chaseEase,
+      acceleration: (3.7 + escapeIndex * .14) * chaseEase,
+      maxSpeed: Math.min(398, (318 + escapeIndex * 2.6) * chaseEase),
+      maxGap: 660 - escapeIndex * 5,
+      graceTime: 2.05 - escapeIndex * .018,
       width: 138 + escapeIndex * .6,
     },
   };
