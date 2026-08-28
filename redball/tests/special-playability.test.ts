@@ -134,7 +134,11 @@ test("201–220 ortak oyun fiziğinde yalnız dokunmatik left/right/jump ile bit
 
 test("180–200 uzun diken duvarı kaçışları yalnız dokunmatik left/right/jump ile bitirilebilir", { timeout: 180_000 }, () => {
   const failures: string[] = [];
-  for (const level of levels.slice(179, 200)) {
+  const requestedLevel = Number(process.env.ESCAPE_LEVEL || 0);
+  const escapeLevels = requestedLevel >= 180 && requestedLevel <= 200
+    ? [levels[requestedLevel - 1]]
+    : levels.slice(179, 200);
+  for (const level of escapeLevels) {
     const result = findReplay(level);
     if (!result.replay) {
       failures.push(`#${level.number} ${level.name}: en uzak x=${result.farthestX.toFixed(0)}/${level.width}, ölümler=[${summarizeDeaths(result.deathReasons)}]`);

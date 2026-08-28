@@ -235,7 +235,15 @@ export default function Home() {
     for (let x = -100; x <= VIEW_W + 220; x += 240) { const px = x - (s.camera * .28 % 240); ctx.quadraticCurveTo(px + 110, 500, px + 240, 650); }
     ctx.lineTo(VIEW_W, 720); ctx.lineTo(0, 720); ctx.fill();
 
-    ctx.save(); ctx.translate(-s.camera, 0);
+    const quakeStrength = lvl.quake
+      ? s.crumbleTimers.reduce((strongest, timer) => {
+        if (timer <= 0 || timer >= .28) return strongest;
+        return Math.max(strongest, 1 - timer / .28);
+      }, 0)
+      : 0;
+    const quakeX = Math.sin(time * 91) * quakeStrength * 5;
+    const quakeY = Math.cos(time * 73) * quakeStrength * 3;
+    ctx.save(); ctx.translate(-s.camera + quakeX, quakeY);
     lvl.gravityZones.forEach(zone => {
       ctx.fillStyle = "rgba(120,92,205,.13)"; ctx.fillRect(zone.x, zone.y, zone.w, zone.h);
       ctx.strokeStyle = "rgba(255,255,255,.48)"; ctx.lineWidth = 3;

@@ -192,6 +192,54 @@ test("180–200 uzun, benzersiz ve bütün eski mekanikleri kullanan kaçışlar
   expectedMechanics.forEach(mechanic => assert.ok(usedMechanics.has(mechanic), `kaçış serisinde ${mechanic} kullanılmalı`));
 });
 
+test("181–200 yirmi ayrı elite escape set-piece'i olarak tasarlanmıştır", () => {
+  const elite = levels.slice(180, 200);
+  assert.deepEqual(elite.map(level => level.name), [
+    "İlk Kırılma", "Lazer Nabzı", "Batık Koridor", "Artçı Şok", "Dikey Av",
+    "Kırmızı Pencere", "Akıntıya Karşı", "Çöküş Kuyusu", "Faz Kırılması", "Fırtına Şaftı",
+    "Sismik Lazerler", "Derin Basınç", "Momentum Hattı", "Saat Mekanizması", "Kırılan Baraj",
+    "Ters Akış", "Ölüm Asansörü", "Kızıl Fırtına", "Son Prova", "Kıyamet Koşusu",
+  ]);
+
+  const routes = elite.map(level => [
+    ...level.platforms.filter(platform => platform.h >= 80),
+    ...level.crumbles.filter(platform => platform.h >= 80),
+  ].sort((a, b) => a.x - b.x));
+  routes.forEach((route, index) => {
+    assert.ok(route.slice(0, -1).every(platform => platform.w <= 720), `#${index + 181}: uzun düz zemin var`);
+    for (let i = 0; i < route.length - 1; i += 1) {
+      const decisionDistance = route[i].w + route[i + 1].x - (route[i].x + route[i].w);
+      assert.ok(decisionDistance <= 1000, `#${index + 181}: karar anları fazla seyrek`);
+    }
+  });
+
+  assert.ok(elite[0].chaser!.graceTime >= 4 && elite[0].crumbles.length === 4 && elite[0].movers.some(mover => mover.axis === "y"));
+  assert.equal(elite[1].laserGates.length, 3);
+  assert.equal(new Set(elite[1].laserGates.map(gate => gate.activeTime + gate.inactiveTime)).size, 3);
+  assert.ok(elite[2].waterZones.length >= 4 && elite[2].springs.length > 0 && elite[2].platforms.filter(platform => platform.h === 30).length >= 2);
+  assert.ok(elite[3].quake && elite[3].crumbles.length >= 5 && elite[3].movers.filter(mover => mover.axis === "y").length >= 2);
+  assert.ok(Math.min(...routes[4].map(platform => platform.y)) <= 340 && Math.max(...routes[4].map(platform => platform.y)) >= 620);
+  assert.ok(elite[5].laserGates.length >= 5 && elite[5].movers.length && elite[5].conveyors.length && elite[5].gravityZones.length);
+  assert.ok(elite[6].waterZones.length >= 4 && elite[6].conveyors.some(belt => belt.speed < 0) && elite[6].conveyors.some(belt => belt.speed > 0));
+  assert.ok(Math.max(...routes[7].map(platform => platform.y)) - Math.min(...routes[7].map(platform => platform.y)) >= 250 && elite[7].movers.length >= 2 && elite[7].springs.length >= 2);
+  assert.equal(elite[8].phasePlatforms.length, 3);
+  assert.equal(new Set(elite[8].phasePlatforms.map(platform => platform.activeTime + platform.inactiveTime)).size, 3);
+  assert.ok(elite[9].windZones.length === 3 && elite[9].windZones.some(zone => zone.force < 0) && elite[9].windZones.some(zone => (zone.lift || 0) <= -200));
+  assert.ok(elite[10].quake && elite[10].crumbles.length >= 3 && elite[10].laserGates.length >= 4 && elite[10].movers.length >= 2);
+  assert.ok(elite[11].waterZones.length >= 6 && elite[11].springs.length && elite[11].laserGates.length && elite[11].spikes.length);
+  assert.ok(elite[12].conveyors.length >= 4 && elite[12].boosters.length >= 3 && elite[12].movers.length >= 2);
+  assert.ok(elite[13].laserGates.length >= 4 && elite[13].movers.length >= 3 && elite[13].spinners.length >= 2 && elite[13].phasePlatforms.length >= 3);
+  assert.ok(elite[14].quake && elite[14].crumbles.length >= 5 && elite[14].waterZones.length >= 4);
+  assert.ok(elite[15].conveyors.filter(belt => belt.speed < 0).length >= 3 && elite[15].movers.length >= 2 && elite[15].laserGates.length >= 2);
+  assert.ok(elite[16].movers.filter(mover => mover.axis === "y").length >= 3 && elite[16].springs.length);
+  assert.ok(elite[17].windZones.length >= 2 && elite[17].waterZones.length >= 3 && elite[17].crumbles.length >= 2 && elite[17].laserGates.length >= 2 && elite[17].conveyors.length && elite[17].spinners.length);
+  assert.ok(elite[18].crumbles.length >= 3 && elite[18].waterZones.length >= 3 && elite[18].laserGates.length >= 2 && elite[18].phasePlatforms.length >= 2);
+  assert.equal(elite[18].checkpoints.length, 1);
+  assert.ok(elite[18].checkpoints[0].x / elite[18].width > .45 && elite[18].checkpoints[0].x / elite[18].width < .65);
+  assert.ok(elite[19].width >= 9000 && elite[19].width <= 14500 && elite[19].crumbles.length >= 3 && elite[19].waterZones.length >= 3 && elite[19].phasePlatforms.length >= 2);
+  assert.ok(elite[19].chaser!.beats!.some(beat => beat.kind === "surge" && beat.duration >= 3 && beat.at > elite[19].width * .8));
+});
+
 test("diken duvarı duran oyuncuyu yakalar ve yeniden doğuşta arkaya alınır", () => {
   for (const level of levels.slice(179, 200)) {
     const state = createPhysicsState(level);
