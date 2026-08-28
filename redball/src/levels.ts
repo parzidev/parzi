@@ -10,7 +10,7 @@ export type CrumblePlatform = Box & { delay: number; respawn: number };
 export type LavaPool = Box & { wave: number; speed: number; phase?: number };
 export type Spinner = Point & { length: number; speed: number; phase?: number };
 export type Conveyor = Box & { speed: number };
-export type PhasePlatform = Box & { activeTime: number; inactiveTime: number; phase?: number };
+export type PhasePlatform = Box & { activeTime: number; inactiveTime: number; phase?: number; oneWay?: boolean };
 export type LaserGate = { x: number; y: number; h: number; activeTime: number; inactiveTime: number; phase?: number };
 export type GravityZone = Box & { scale: number };
 export type KeyChallenge = "stairs" | "spring" | "lift" | "vault";
@@ -1132,13 +1132,13 @@ const escapeDesigns: readonly EscapeDesign[] = [
     identity: "mekanik röle",
     subtitle: "Portal, su, faz, lazer ve çöken zemin sırayla gelir; her bölümde öğrendiğin refleksi değiştir.",
     route: [[640,760,86],[600,560,92],[550,520,96],[615,600,88],[565,540,100],[605,590,92],[535,520,104],[590,580,94],[545,540,102],[610,600,90],[560,530,100],[600,590,92],[550,540,98],[615,610,88],[575,560,92],[640,820,0]],
-    portals: [[1,3,"#cc7dff"],[9,11,"#6ce5ff"]], water: [4,12], phaseBridges: [[5,.3],[10,1.2]], lasers: [[3,.9],[8,.2],[13,1.5]], crumbles: [6,7,11], movers: [[2,"y",48,.5],[9,"x",38,2.1]], springs: [[4,1050],[12,1070]], conveyors: [[1,430],[5,460],[10,490],[14,520]], boosters: [0,7,13], gravity: [[6,.58]], spinners: [[9,2.45,48]], spikes: [[5,.72,48],[13,.68,52]], enemies: [[8,.55,108]], keyAt: 13, checkpoints: [5,11,13], lavaGaps: [6,10], starAt: [3,8,13], chaseEase: .74,
+    portals: [[1,3,"#cc7dff"],[9,11,"#6ce5ff"]], water: [4,12], phaseBridges: [[5,.3],[10,1.2]], lasers: [[3,.9],[8,.2],[13,1.5]], crumbles: [7,11], movers: [[2,"y",48,.5],[9,"x",38,2.1]], springs: [[4,1050],[12,1070]], conveyors: [[1,430],[5,460],[10,490],[14,520]], boosters: [0,7,13], gravity: [[6,.58]], spinners: [[9,2.45,48]], spikes: [[5,.72,48],[13,.68,52]], enemies: [[8,.55,108]], keyAt: 13, checkpoints: [5,11,13], lavaGaps: [6,10], starAt: [3,8,13], chaseEase: .74,
   },
   {
     identity: "büyük final karması",
     subtitle: "Üç perdeli final: hız merdiveni, çöken saat ve bütün mekaniklerin birleştiği taç yolu.",
     route: [[640,820,78],[590,600,84],[535,560,88],[480,540,92],[530,580,86],[585,620,82],[620,660,88],[560,570,94],[510,540,98],[565,590,90],[615,640,86],[550,560,96],[500,530,100],[555,580,92],[605,630,88],[545,550,98],[595,610,90],[640,900,0]],
-    boosters: [0,4,9,14], conveyors: [[1,450],[5,480],[10,520],[15,560]], springs: [[2,1060],[8,1100],[12,1080]], ice: [3,9,15], winds: [[4,360,-90],[11,-220,-25],[14,440,-110]], water: [6], portals: [[7,10,"#d47cff"]], lavaGaps: [2,5,9,13,15], spinners: [[4,2.3,48],[11,-2.6,52]], phaseBridges: [[6,.5],[12,1.4]], lasers: [[3,.2],[8,1.1],[13,1.7],[16,.65]], gravity: [[1,.58],[10,.5]], checkpoints: [5,10,14], spikes: [[1,.72,48],[7,.68,52],[14,.72,54]], enemies: [[5,.58,104],[12,.56,112]], crumbles: [6,8,12,15], movers: [[2,"y",52,.3],[9,"x",42,1.8],[14,"y",58,2.7]], keyAt: 14, starAt: [4,10,14], chaseEase: .68,
+    boosters: [0,4,9,14], conveyors: [[1,450],[5,480],[10,520],[15,560]], springs: [[2,1060],[8,1100],[12,1080]], ice: [3,9,15], winds: [[4,360,-90],[11,-220,-25],[14,440,-110]], water: [6], portals: [[7,10,"#d47cff"]], lavaGaps: [2,5,9,13,15], spinners: [[4,2.3,48],[11,-2.6,52]], phaseBridges: [[6,.5],[12,1.4]], lasers: [[3,.2],[8,1.1],[13,1.7],[16,.65]], gravity: [[1,.58],[10,.5]], checkpoints: [5,10,14], spikes: [[1,.72,48],[7,.68,52],[14,.72,54]], enemies: [[5,.58,104],[12,.56,112]], crumbles: [8,15], movers: [[2,"y",52,.3],[9,"x",42,1.8],[14,"y",58,2.7]], keyAt: 0, starAt: [4,10,14], chaseEase: .68,
   },
 ];
 
@@ -1257,7 +1257,9 @@ function makeEscapeLevel(index: number): Level {
   });
   const phasePlatforms: PhasePlatform[] = (design.phaseBridges || []).map(([routeIndex, phase]) => {
     const { left, right, start, width } = gapAt(routeIndex);
-    return { x: start - 18, y: Math.min(left.y, right.y) - 62, w: Math.max(140, width + 36), h: 22, activeTime: 2.15, inactiveTime: .58, phase };
+    // Keep the phase bridge high enough to be a route choice, not a low ceiling
+    // that catches the ball when it jumps from the lower platform below.
+    return { x: start - 18, y: Math.min(left.y, right.y) - 128, w: Math.max(140, width + 36), h: 22, activeTime: 2.15, inactiveTime: .58, phase, oneWay: true };
   });
   const laserGates: LaserGate[] = (design.lasers || []).map(([routeIndex, phase]) => {
     const platform = routeAt(routeIndex);
@@ -1299,7 +1301,12 @@ function makeEscapeLevel(index: number): Level {
   platforms.push(...starLedges);
   const stars = starLedges.map(ledge => ({ x: ledge.x + ledge.w / 2, y: ledge.y - 52 }));
   const keyPlatform = design.keyAt === undefined ? undefined : routeAt(design.keyAt);
-  const key = keyPlatform ? { x: keyPlatform.x + keyPlatform.w * .54, y: keyPlatform.y - 58 } : undefined;
+  // Put escape-run keys directly on the approach line so a chased player can
+  // collect them while grounded instead of having to make a blind detour.
+  const key = keyPlatform ? {
+    x: keyPlatform.x + Math.min(260, keyPlatform.w * .54),
+    y: keyPlatform.y - BALL_R - 8,
+  } : undefined;
   const last = route.at(-1)!;
   const mechanics = ["diken duvarı", design.identity];
   if (movers.length) mechanics.push("hareketli platform");
