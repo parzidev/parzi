@@ -25,6 +25,7 @@
         min-height: 100dvh;
         font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
         background: linear-gradient(180deg, var(--bg), var(--bg2));
+        transition: background 1.8s ease;
         display: grid;
         place-items: center; /* ortada tek büyük nokta */
         overflow-x: hidden;   /* yatay kaydırmayı engelle */
@@ -48,8 +49,10 @@
         font-size: clamp(56px, 16vw, 180px);
         text-shadow: 0 4px 12px var(--shadow);
         transition: transform 160ms ease;
+        touch-action: manipulation;
       }
-      #toggle:active { transform: scale(0.98); }
+      #toggle:active { transform: translate(-50%, -50%) scale(0.98); }
+      #toggle.is-holding { opacity: 0.72; }
       #toggle:focus-visible {
         outline: none;
         box-shadow: 0 0 0 8px rgba(194, 24, 91, 0.08);
@@ -84,6 +87,16 @@
         animation: rise var(--rise-duration) linear forwards;
       }
 
+      /* Noktaya kısa dokunuşta çevreye yayılan emojiler */
+      .burst-flake {
+        position: fixed;
+        z-index: 8;
+        pointer-events: none;
+        will-change: transform, opacity;
+        filter: drop-shadow(0 5px 12px var(--shadow));
+        animation: burst-pop var(--burst-duration) cubic-bezier(.18, .76, .28, 1) forwards;
+      }
+
       /* Yatay salınım ve dönüş (açılar değişken) */
       @keyframes sway {
         0%   { transform: translate(-50%, -50%) translateX(calc(var(--sway) * -1)) rotate(var(--rot-start)); }
@@ -96,10 +109,23 @@
         to   { transform: translateY(-80vh); opacity: 0; }
       }
 
+      @keyframes burst-pop {
+        0% {
+          transform: translate(-50%, -50%) scale(0.25) rotate(0deg);
+          opacity: 0;
+        }
+        14% { opacity: 1; }
+        100% {
+          transform: translate(-50%, -50%) translate(var(--burst-x), var(--burst-y)) scale(0.88) rotate(var(--burst-rotation));
+          opacity: 0;
+        }
+      }
+
       /* Hareket azaltma tercihi olanlar için: daha az animasyon ve üretim */
       @media (prefers-reduced-motion: reduce) {
         .flake { animation-duration: 6s; }
         .flake > span { animation-duration: 8s; }
+        .burst-flake { animation-duration: 700ms; }
       }
       
       /* Ortadaki noktayı belirginleştirmek için */
@@ -183,8 +209,8 @@
 
 
 
-    <!-- Ortadaki büyük nokta (●). Tıklayınca üretim durur/başlar. -->
-    <button id="toggle" type="button" aria-label="Emoji üretimini başlat/durdur" aria-pressed="true">●</button>
+    <!-- Kısa dokunuş emoji patlatır; uzun basış üretimi durdurur/başlatır. -->
+    <button id="toggle" type="button" aria-label="Emoji patlat; basılı tutarak akışı durdur veya başlat" aria-pressed="true">●</button>
 
     <script>
 
@@ -236,9 +262,10 @@ window.addEventListener('DOMContentLoaded', function() {
       const EMOJIS = ["🍰","🍩","🧁","🍪","🍨","🍧","🍮","🍫","🍦","🍭","🍬"];
       const layer = document.getElementById("emoji-layer");
       const toggleBtn = document.getElementById("toggle");
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-      let MAX_ACTIVE = 36;            // aynı anda daha fazla tatlı (~36)
-      let SPAWN_INTERVAL_MS = 220;    // daha sık üretim (performans dostu aralık)
+      const MAX_ACTIVE = prefersReduced.matches ? 16 : 36;
+      const SPAWN_INTERVAL_MS = prefersReduced.matches ? 400 : 220;
 
       let isGenerating = true; // tıklamayla aç/kapa
       let isPageVisible = true; // sekme görünür değilken üretimi duraklat
@@ -297,10 +324,37 @@ window.addEventListener('DOMContentLoaded', function() {
         activeCount += 1;
       }
 
+      // Kısa dokunuşta emojileri noktanın çevresine yay.
+      function burstEmojis() {
+        const toggleRect = toggleBtn.getBoundingClientRect();
+        const originX = toggleRect.left + toggleRect.width / 2;
+        const originY = toggleRect.top + toggleRect.height / 2;
+        const amount = prefersReduced.matches ? 8 : 20;
+        const radius = Math.min(window.innerWidth, window.innerHeight) * (prefersReduced.matches ? 0.18 : 0.34);
+
+        for (let i = 0; i < amount; i++) {
+          const angle = (Math.PI * 2 * i / amount) + rand(-0.16, 0.16);
+          const distance = rand(radius * 0.5, radius);
+          const flake = document.createElement('span');
+
+          flake.className = 'burst-flake';
+          flake.textContent = choice(EMOJIS);
+          flake.style.left = originX + 'px';
+          flake.style.top = originY + 'px';
+          flake.style.fontSize = rand(25, 52) + 'px';
+          flake.style.setProperty('--burst-x', Math.cos(angle) * distance + 'px');
+          flake.style.setProperty('--burst-y', Math.sin(angle) * distance + 'px');
+          flake.style.setProperty('--burst-rotation', randInt(-160, 160) + 'deg');
+          flake.style.setProperty('--burst-duration', rand(0.85, 1.35) + 's');
+          flake.addEventListener('animationend', () => flake.remove(), { once: true });
+          layer.appendChild(flake);
+        }
+      }
+
       // Düzenli aralıklarla yeni emojiler üret
       const spawnTimer = setInterval(spawnEmoji, SPAWN_INTERVAL_MS);
 
-      // Noktaya tıklayınca üretimi aç/kapa
+      // Uzun basışta sürekli emoji akışını aç/kapa.
       function toggleGeneration() {
         isGenerating = !isGenerating;
         toggleBtn.setAttribute('aria-pressed', String(isGenerating));
@@ -310,7 +364,37 @@ window.addEventListener('DOMContentLoaded', function() {
           : 'translate(-50%, -50%) scale(1)';
       }
 
-      toggleBtn.addEventListener('click', toggleGeneration);
+      let holdTimer;
+      let didLongPress = false;
+
+      toggleBtn.addEventListener('pointerdown', (event) => {
+        if (event.pointerType === 'mouse' && event.button !== 0) return;
+        didLongPress = false;
+        toggleBtn.setPointerCapture(event.pointerId);
+        toggleBtn.classList.add('is-holding');
+        holdTimer = window.setTimeout(() => {
+          didLongPress = true;
+          toggleBtn.classList.remove('is-holding');
+          toggleGeneration();
+          if (navigator.vibrate) navigator.vibrate(24);
+        }, 550);
+      });
+
+      function cancelHold() {
+        window.clearTimeout(holdTimer);
+        toggleBtn.classList.remove('is-holding');
+      }
+
+      toggleBtn.addEventListener('pointerup', cancelHold);
+      toggleBtn.addEventListener('pointercancel', cancelHold);
+      toggleBtn.addEventListener('contextmenu', (event) => event.preventDefault());
+      toggleBtn.addEventListener('click', () => {
+        if (didLongPress) {
+          didLongPress = false;
+          return;
+        }
+        burstEmojis();
+      });
 
       // İlk karede birkaç tane üretip ekranda hemen görünmelerini sağla
       for (let i = 0; i < 10; i++) setTimeout(spawnEmoji, i * 60);
@@ -319,13 +403,6 @@ window.addEventListener('DOMContentLoaded', function() {
       document.addEventListener('visibilitychange', () => {
         isPageVisible = !document.hidden;
       });
-
-      // Hareket azaltma tercihine göre üretimi seyrekleştir
-      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-      if (prefersReduced.matches) {
-        MAX_ACTIVE = 16;
-        SPAWN_INTERVAL_MS = 400;
-      }
 
       // (Gezinme kaldırıldı)
     </script>
@@ -361,6 +438,40 @@ window.addEventListener('DOMContentLoaded', function() {
         
         updateCountdown();
         setInterval(updateCountdown, 1000);
+      })();
+
+      // Arka planı ziyaretçinin yerel saatine göre yumuşakça değiştir.
+      (function(){
+        const themeColor = document.querySelector('meta[name="theme-color"]');
+        const themes = {
+          morning:   { bg: '#f4c7b4', bg2: '#efd9b6', dot: '#c94f6d', text: '#4a1825', shadow: 'rgba(155, 55, 83, 0.18)' },
+          afternoon: { bg: '#e9a4bd', bg2: '#e3c5a1', dot: '#c2185b', text: '#3b0d1a', shadow: 'rgba(194, 24, 91, 0.18)' },
+          evening:   { bg: '#d596ae', bg2: '#cfa998', dot: '#a31350', text: '#35101d', shadow: 'rgba(115, 24, 61, 0.22)' },
+          night:     { bg: '#75647f', bg2: '#a77e8b', dot: '#ffc0d5', text: '#fff0f5', shadow: 'rgba(39, 16, 48, 0.28)' }
+        };
+
+        function updateTimeTheme(){
+          const hour = new Date().getHours();
+          const period = hour >= 6 && hour < 11
+            ? 'morning'
+            : hour >= 11 && hour < 17
+              ? 'afternoon'
+              : hour >= 17 && hour < 21
+                ? 'evening'
+                : 'night';
+          const theme = themes[period];
+          const root = document.documentElement;
+
+          root.style.setProperty('--bg', theme.bg);
+          root.style.setProperty('--bg2', theme.bg2);
+          root.style.setProperty('--dot', theme.dot);
+          root.style.setProperty('--text', theme.text);
+          root.style.setProperty('--shadow', theme.shadow);
+          if (themeColor) themeColor.setAttribute('content', theme.bg);
+        }
+
+        updateTimeTheme();
+        setInterval(updateTimeTheme, 5 * 60 * 1000);
       })();
     </script>
 
