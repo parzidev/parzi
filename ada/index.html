@@ -73,6 +73,8 @@
         z-index: 0;
         overflow: hidden;
         pointer-events: none;
+        transform: translate3d(var(--tilt-x, 0px), var(--tilt-y, 0px), 0);
+        transition: transform 220ms ease-out;
       }
 
       .ambient-star {
@@ -472,9 +474,13 @@ window.addEventListener('DOMContentLoaded', function() {
       });
 
       let motionEnabled = false;
+      let orientationEnabled = false;
       let lastShakeAt = 0;
+      let previousAcceleration = null;
+      let orientationBase = null;
 
       function handleDeviceMotion(event) {
+        if (!isPageVisible) return;
         const linear = event.acceleration;
         const linearAvailable = linear && [linear.x, linear.y, linear.z].some(Number.isFinite);
         const acceleration = linearAvailable ? linear : event.accelerationIncludingGravity;
@@ -483,11 +489,21 @@ window.addEventListener('DOMContentLoaded', function() {
         const x = Number.isFinite(acceleration.x) ? acceleration.x : 0;
         const y = Number.isFinite(acceleration.y) ? acceleration.y : 0;
         const z = Number.isFinite(acceleration.z) ? acceleration.z : 0;
-        const strength = Math.sqrt(x * x + y * y + z * z);
-        const threshold = linearAvailable ? 13 : 24;
+        if (previousAcceleration === null) {
+          previousAcceleration = { x, y, z };
+          return;
+        }
+
+        const delta = Math.sqrt(
+          (x - previousAcceleration.x) ** 2
+          + (y - previousAcceleration.y) ** 2
+          + (z - previousAcceleration.z) ** 2
+        );
+        previousAcceleration = { x, y, z };
+        const threshold = linearAvailable ? 7 : 4.5;
         const now = Date.now();
 
-        if (strength > threshold && now - lastShakeAt > 3500) {
+        if (delta > threshold && now - lastShakeAt > 2800) {
           lastShakeAt = now;
           rainEmojis();
         }
@@ -499,27 +515,59 @@ window.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('devicemotion', handleDeviceMotion, { passive: true });
       }
 
-      async function enableShake() {
-        if (!('DeviceMotionEvent' in window)) return;
-        if (typeof DeviceMotionEvent.requestPermission === 'function') {
-          try {
-            const permission = await DeviceMotionEvent.requestPermission();
-            if (permission === 'granted') startMotionListener();
-          } catch (error) {
-            console.debug('Hareket izni alınamadı.', error);
-          }
-        } else {
+      function handleDeviceOrientation(event) {
+        const beta = Number(event.beta);
+        const gamma = Number(event.gamma);
+        if (!Number.isFinite(beta) || !Number.isFinite(gamma)) return;
+
+        if (orientationBase === null) {
+          orientationBase = { beta, gamma };
+          return;
+        }
+
+        const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+        const tiltX = clamp((gamma - orientationBase.gamma) * 0.72, -24, 24);
+        const tiltY = clamp((beta - orientationBase.beta) * 0.56, -18, 18);
+        document.getElementById('ambient-layer').style.setProperty('--tilt-x', tiltX + 'px');
+        document.getElementById('ambient-layer').style.setProperty('--tilt-y', tiltY + 'px');
+      }
+
+      function startOrientationListener() {
+        if (orientationEnabled) return;
+        orientationEnabled = true;
+        window.addEventListener('deviceorientation', handleDeviceOrientation, { passive: true });
+        window.addEventListener('orientationchange', () => { orientationBase = null; }, { passive: true });
+      }
+
+      async function enableSensors() {
+        const motionSensor = window.DeviceMotionEvent;
+        const orientationSensor = window.DeviceOrientationEvent;
+        if (!motionSensor && !orientationSensor) return;
+
+        const motionPermission = motionSensor && typeof motionSensor.requestPermission === 'function'
+          ? motionSensor.requestPermission()
+          : Promise.resolve('granted');
+        const orientationPermission = orientationSensor && typeof orientationSensor.requestPermission === 'function'
+          ? orientationSensor.requestPermission()
+          : Promise.resolve('granted');
+        const [motionResult, orientationResult] = await Promise.all([
+          motionPermission.catch(() => 'denied'),
+          orientationPermission.catch(() => 'denied')
+        ]);
+
+        if (motionSensor && (motionResult === 'granted' || typeof motionSensor.requestPermission !== 'function')) {
           startMotionListener();
+        }
+        if (orientationSensor && (orientationResult === 'granted' || typeof orientationSensor.requestPermission !== 'function')) {
+          startOrientationListener();
+        }
+        if (motionResult !== 'granted' || orientationResult !== 'granted') {
+          console.debug('Hareket sensörü izni alınamadı.');
         }
       }
 
-      if ('DeviceMotionEvent' in window) {
-        if (typeof DeviceMotionEvent.requestPermission === 'function') {
-          toggleBtn.addEventListener('click', enableShake, { once: true });
-        } else {
-          startMotionListener();
-        }
-      }
+      // iPadOS sensör iznini yalnızca kullanıcı etkileşimi içinde verebiliyor.
+      document.addEventListener('pointerdown', enableSensors, { once: true, passive: true });
 
       // İlk karede birkaç tane üretip ekranda hemen görünmelerini sağla
       for (let i = 0; i < 10; i++) setTimeout(spawnEmoji, i * 60);
