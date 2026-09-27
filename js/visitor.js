@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const facingElement = document.getElementById('visitor-facing');
     const postureElement = document.getElementById('visitor-posture');
     const tiltElement = document.getElementById('visitor-tilt');
-    const motionTrigger = document.getElementById('visitor-motion-trigger');
     const phoneHoldRow = document.getElementById('visitor-phone-hold-row');
     const localTimeElement = document.getElementById('visitor-local-time');
     const timezoneElement = document.getElementById('visitor-timezone');
@@ -153,12 +152,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('resize', updateDisplayInfo);
     window.addEventListener('resize', updateFacingFallback);
-    window.addEventListener('orientationchange', updateFacingFallback);
+    window.addEventListener('resize', updatePhoneHoldFallback);
+    window.addEventListener('orientationchange', () => {
+        updateFacingFallback();
+        updatePhoneHoldFallback();
+    });
     window.addEventListener('online', updateNetworkInfo);
     window.addEventListener('offline', updateNetworkInfo);
 
     if (screen.orientation && typeof screen.orientation.addEventListener === 'function') {
-        screen.orientation.addEventListener('change', updateFacingFallback);
+        screen.orientation.addEventListener('change', () => {
+            updateFacingFallback();
+            updatePhoneHoldFallback();
+        });
     }
 
     const connection = getConnection();
@@ -326,45 +332,27 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!postureElement && !tiltElement && !facingElement) return;
 
         if (!hasDeviceMotion() && !hasDeviceOrientation()) {
-            setMotionCopy('No motion sensor', 'no sensor');
+            updatePhoneHoldFallback();
             return;
         }
 
         if (needsMotionPermission() || needsOrientationPermission()) {
-            if (motionTrigger) {
-                motionTrigger.classList.add('is-visible');
-                motionTrigger.addEventListener('click', requestMotionAccess);
-            }
-            setMotionCopy('Motion permission needed', 'locked');
+            updatePhoneHoldFallback();
             return;
         }
 
         startMotionListener();
     }
 
-    async function requestMotionAccess() {
-        if (!motionTrigger) return;
+    function updatePhoneHoldFallback() {
+        if (!postureElement || receivedMotionData || receivedOrientationData) return;
 
-        motionTrigger.disabled = true;
-        motionTrigger.classList.add('is-loading');
-
-        try {
-            const permissions = await requestSensorPermissions();
-
-            if (permissions.some(permission => permission === 'granted')) {
-                motionTrigger.classList.remove('is-visible');
-                motionTrigger.classList.remove('is-loading');
-                startMotionListener();
-            } else {
-                setMotionCopy('Motion permission denied', 'blocked');
-                motionTrigger.disabled = false;
-                motionTrigger.classList.remove('is-loading');
-            }
-        } catch (error) {
-            setMotionCopy('Sensor unavailable', 'blocked');
-            motionTrigger.disabled = false;
-            motionTrigger.classList.remove('is-loading');
-        }
+        const orientationType = screen.orientation?.type
+            || (window.innerWidth >= window.innerHeight ? 'landscape-primary' : 'portrait-primary');
+        const isLandscape = orientationType.startsWith('landscape');
+        postureElement.textContent = isLandscape ? 'Phone held sideways' : 'Phone held upright';
+        postureElement.dataset.position = isLandscape ? 'landscape' : 'portrait';
+        postureElement.title = 'Estimated automatically from screen orientation';
     }
 
     function startMotionListener() {
@@ -552,28 +540,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function needsOrientationPermission() {
         return hasDeviceOrientation() && typeof DeviceOrientationEvent.requestPermission === 'function';
-    }
-
-    async function requestSensorPermissions() {
-        const permissions = [];
-
-        if (needsMotionPermission()) {
-            try {
-                permissions.push(await DeviceMotionEvent.requestPermission());
-            } catch (error) {
-                permissions.push('denied');
-            }
-        }
-
-        if (needsOrientationPermission()) {
-            try {
-                permissions.push(await DeviceOrientationEvent.requestPermission());
-            } catch (error) {
-                permissions.push('denied');
-            }
-        }
-
-        return permissions.length ? permissions : ['granted'];
     }
 
     function updateLocaleInfo() {

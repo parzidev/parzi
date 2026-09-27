@@ -2395,45 +2395,6 @@ html[data-night-mode="on"] .your-info {
     display: flex;
 }
 
-.visitor-motion-trigger {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    border: 1px solid rgba(79, 172, 254, 0.42);
-    border-radius: 6px;
-    background: rgba(79, 172, 254, 0.12);
-    color: #4facfe;
-    cursor: pointer;
-    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.visitor-motion-trigger.is-visible {
-    display: inline-flex;
-}
-
-.visitor-motion-trigger:hover,
-.visitor-motion-trigger:focus-visible {
-    border-color: rgba(79, 172, 254, 0.74);
-    box-shadow: 0 0 10px rgba(79, 172, 254, 0.24);
-    outline: none;
-}
-
-.visitor-motion-trigger:active {
-    transform: scale(0.94);
-}
-
-.visitor-motion-trigger.is-loading i {
-    animation: visitorMotionSpin 0.9s linear infinite;
-}
-
-@keyframes visitorMotionSpin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
 .copy-tooltip {
     display: none;
     position: absolute;
