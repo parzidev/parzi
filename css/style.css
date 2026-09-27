@@ -2195,6 +2195,14 @@ html[data-theme="light"] .loading-value {
     .education-content-row {
         flex-direction: column;
         gap: 1.5rem;
+        align-items: stretch;
+    }
+
+    .personal-info,
+    .education-content {
+        flex: 0 0 auto;
+        min-width: 0;
+        overflow-wrap: anywhere;
     }
 
     .personal-info {
@@ -2222,6 +2230,26 @@ html[data-theme="light"] .loading-value {
 }
 
 @media (max-width: 768px) {
+    .main-container,
+    .secondary-container,
+    .tertiary-container {
+        grid-column: 1 / -1;
+        min-width: 0;
+    }
+
+    .secondary-container,
+    .tertiary-container {
+        margin-top: 0;
+    }
+
+    .github-card,
+    .spotify-card,
+    .fitbit-card,
+    .server-card {
+        width: 100%;
+        min-width: 0;
+    }
+
     .education-card {
         padding: 22px 18px;
     }
@@ -2321,6 +2349,12 @@ html[data-night-mode="on"] .your-info {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.your-info .personal-list li,
+#visitor-ip {
+    max-width: 100%;
+    overflow-wrap: anywhere;
 }
 
 /* Centered & Colored Education Headers */
