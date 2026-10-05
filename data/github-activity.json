@@ -2,22 +2,15 @@
   "schema_version": 1,
   "username": "parzidev",
   "source": "github-graphql",
-  "generated_at": "2026-09-28T14:02:23.578Z",
+  "generated_at": "2026-10-05T14:47:40.528Z",
   "range": {
-    "from": "2025-10-01",
-    "to": "2026-09-28"
+    "from": "2025-11-01",
+    "to": "2026-10-05"
   },
   "contributions": {
-    "total": 280,
+    "total": 264,
     "restricted": 0,
     "months": [
-      {
-        "key": "2025-10",
-        "name": "Oct",
-        "year": 2025,
-        "count": 20,
-        "level": 1
-      },
       {
         "key": "2025-11",
         "name": "Nov",
@@ -94,21 +87,28 @@
         "year": 2026,
         "count": 25,
         "level": 2
+      },
+      {
+        "key": "2026-10",
+        "name": "Oct",
+        "year": 2026,
+        "count": 4,
+        "level": 1
       }
     ],
     "best_day": {
       "date": "2026-08-20",
       "count": 20
     },
-    "last_contribution_date": "2026-09-27"
+    "last_contribution_date": "2026-10-03"
   },
   "stats": {
     "stars": 2,
-    "public_repositories": 12,
+    "public_repositories": 13,
     "top_language": "Python",
     "latest_repository": {
-      "name": "parzi",
-      "pushed_at": "2026-09-27T19:32:49Z"
+      "name": "esik",
+      "pushed_at": "2026-10-03T00:04:01Z"
     }
   }
 }
