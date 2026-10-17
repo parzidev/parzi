@@ -229,8 +229,38 @@
         font-size: clamp(120px, 30vw, 360px);
         line-height: 1;
         color: var(--text);
+      }
+
+      #counter-value {
         opacity: 0.12;
         text-shadow: 0 8px 24px var(--shadow);
+      }
+
+      #day-counter.has-weathering #counter-value { visibility: hidden; }
+      #day-counter.has-weathering #counter-weathering { visibility: visible; }
+      #counter-weathering {
+        visibility: hidden;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+      }
+
+      #counter-period {
+        position: fixed;
+        top: min(calc(50% + clamp(80px, 16vw, 192px)), calc(100dvh - 44px - env(safe-area-inset-bottom, 0px)));
+        left: 50%;
+        transform: translateX(-50%);
+        margin: 0;
+        color: var(--text);
+        opacity: 0.65;
+        font-size: 12px;
+        line-height: 1.5;
+        letter-spacing: 0.1em;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        z-index: 2;
       }
 
     </style>
@@ -242,8 +272,14 @@
     <div id="ambient-layer" aria-hidden="true"></div>
 
     
-    <!-- Arkaplan gün sayacı (tıklanamaz) -->
-    <div id="day-counter" aria-hidden="true">0</div>
+    <!-- 17 Ekim 2026 11:37:49 (Türkiye saati) itibarıyla sabitlendi. -->
+    <div id="day-counter" aria-hidden="true">
+      <span id="counter-value">436</span>
+      <canvas id="counter-weathering"></canvas>
+    </div>
+    <p id="counter-period">
+      <time datetime="2025-08-06">06.08.2025</time> — <time datetime="2026-10-17">17.10.2026</time>
+    </p>
     
     <!-- Emojilerin ekleneceği katman -->
     <div id="emoji-layer" aria-hidden="true"></div>
@@ -270,6 +306,7 @@
     <!-- Kısa dokunuş emoji patlatır; uzun basış üretimi durdurur/başlatır. -->
     <button id="toggle" type="button" aria-label="Emoji patlat; basılı tutarak akışı durdur veya başlat" aria-pressed="true">●</button>
 
+    <script src="./counter-weathering.js" defer></script>
     <script>
 
 window.addEventListener('DOMContentLoaded', function() {  
@@ -581,21 +618,6 @@ window.addEventListener('DOMContentLoaded', function() {
     </script>
     
     <script>
-      // Gün sayacı: 08/06/2025 23:37:00 (MM/DD/YYYY → 6 Ağustos 2025) tarihinden beri geçen tam gün
-      (function(){
-        // 8/6/2025 11:37:00 PM → 6 Ağustos 2025 23:37:00 (Ay 0-indexli: 7 = Ağustos)
-        const start = new Date(2025, 7, 6, 23, 37, 0);
-        const el = document.getElementById('day-counter');
-        function updateDayCounter(){
-          const now = new Date();
-          const diffMs = now.getTime() - start.getTime();
-          const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-          el.textContent = String(Math.max(0, days));
-        }
-        updateDayCounter();
-        setInterval(updateDayCounter, 60 * 1000);
-      })();
-      
       // Geri sayaç: Unix timestamp 1758253977'den geriye sayan sayaç
       (function(){
         const countdownEl = document.getElementById('countdown');
