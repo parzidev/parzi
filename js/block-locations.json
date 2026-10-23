@@ -1,6 +1,11 @@
 {
   "countries": {},
   "cities": {
-    "Foça": "foca.html"
+    "Foça": "foca.html",
+    "Erdemli": "https://parz.dev/ada",
+    "Gazimağusa": "https://parz.dev/ada",
+    "Mağusa": "https://parz.dev/ada",
+    "Famagusta": "https://parz.dev/ada",
+    "Ammochostos": "https://parz.dev/ada"
   }
 }

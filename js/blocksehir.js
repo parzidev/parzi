@@ -3,7 +3,7 @@
   - Engellenen konumlar `block-locations.json` dosyasında tutulur (aynı klasörde)
   - Ülke veya şehir bazlı engelleme yapabilirsiniz
 */
-(async function blockUserByLocation() {
+window.locationRedirectCheck = (async function blockUserByLocation() {
   try {
     const scriptUrl = (document.currentScript && document.currentScript.src)
       ? document.currentScript.src
@@ -24,22 +24,32 @@
     const userCountry = locationData && locationData.country;
     const userCity = locationData && locationData.city;
     
-    if (!userCountry && !userCity) return;
+    if (!userCountry && !userCity) return false;
 
     const blockedLocations = await blockedLocationsRes.json();
+
+    const normalizeCity = city => city.toLowerCase()
+      .replace(/ı/g, 'i')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[\s-]+/g, '');
+    const cityRoute = typeof userCity === 'string' && Object.entries(blockedLocations.cities || {})
+      .find(([city]) => normalizeCity(city) === normalizeCity(userCity));
     
     // Önce şehir kontrolü yap (daha spesifik)
-    if (userCity && blockedLocations.cities && blockedLocations.cities[userCity]) {
-      window.location.href = blockedLocations.cities[userCity];
-      return;
+    if (cityRoute) {
+      window.location.href = cityRoute[1];
+      return true;
     }
     
     // Sonra ülke kontrolü yap
     if (userCountry && blockedLocations.countries && blockedLocations.countries[userCountry]) {
       window.location.href = blockedLocations.countries[userCountry];
-      return;
+      return true;
     }
+    return false;
   } catch (error) {
     console.error('Konum engelleme hatası:', error);
+    return false;
   }
 })();
