@@ -1,7 +1,7 @@
 /*
   Konum tabanlı engelleme
   - Engellenen konumlar `block-locations.json` dosyasında tutulur (aynı klasörde)
-  - Ülke veya şehir bazlı engelleme yapabilirsiniz
+  - Ülke, bölge veya şehir bazlı engelleme yapabilirsiniz
 */
 window.locationRedirectCheck = (async function blockUserByLocation() {
   try {
@@ -11,9 +11,9 @@ window.locationRedirectCheck = (async function blockUserByLocation() {
 
     const blockedLocationsUrl = new URL('block-locations.json', scriptUrl).toString();
 
-    // IP bilgisi, ülke ve şehir bilgisi almak için ipinfo.io kullanıyoruz
+    // Ziyaretçi paneliyle aynı konum kaynağını kullan.
     const [locationRes, blockedLocationsRes] = await Promise.all([
-      fetch('https://ipinfo.io/json?token=c8d8f13b5d6a0d', { cache: 'no-store' }),
+      fetch('https://log.parzi.dev/api/ip', { cache: 'no-store' }),
       fetch(blockedLocationsUrl, { cache: 'no-store' })
     ]);
 
@@ -21,24 +21,28 @@ window.locationRedirectCheck = (async function blockUserByLocation() {
     if (!blockedLocationsRes.ok) throw new Error('block-locations.json bulunamadı veya erişilemedi');
 
     const locationData = await locationRes.json();
-    const userCountry = locationData && locationData.country;
-    const userCity = locationData && locationData.city;
+    const userLocation = (locationData && locationData.location) || {};
+    const userCountry = userLocation.country_code;
+    const userCity = userLocation.city;
+    const userRegion = userLocation.state;
     
-    if (!userCountry && !userCity) return false;
+    if (!userCountry && !userCity && !userRegion) return false;
 
     const blockedLocations = await blockedLocationsRes.json();
 
-    const normalizeCity = city => city.toLowerCase()
+    const normalizeLocation = name => name.toLowerCase()
       .replace(/ı/g, 'i')
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
       .replace(/[\s-]+/g, '');
-    const cityRoute = typeof userCity === 'string' && Object.entries(blockedLocations.cities || {})
-      .find(([city]) => normalizeCity(city) === normalizeCity(userCity));
+    const findRoute = (routes, value) => typeof value === 'string' && Object.entries(routes || {})
+      .find(([name]) => normalizeLocation(name) === normalizeLocation(value));
+    const locationRoute = findRoute(blockedLocations.cities, userCity)
+      || findRoute(blockedLocations.regions, userRegion);
     
-    // Önce şehir kontrolü yap (daha spesifik)
-    if (cityRoute) {
-      window.location.href = cityRoute[1];
+    // Önce şehir, ardından bölge kontrolü yap.
+    if (locationRoute) {
+      window.location.href = locationRoute[1];
       return true;
     }
     
