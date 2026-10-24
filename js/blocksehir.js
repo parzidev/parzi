@@ -1,7 +1,7 @@
 /*
-  Konum tabanlı engelleme
+  Konum ve ISP tabanlı yönlendirme
   - Engellenen konumlar `block-locations.json` dosyasında tutulur (aynı klasörde)
-  - Ülke, bölge veya şehir bazlı engelleme yapabilirsiniz
+  - ISP, ülke, bölge veya şehir bazlı yönlendirme yapabilirsiniz
 */
 window.locationRedirectCheck = (async function blockUserByLocation() {
   try {
@@ -25,8 +25,13 @@ window.locationRedirectCheck = (async function blockUserByLocation() {
     const userCountry = userLocation.country_code;
     const userCity = userLocation.city;
     const userRegion = userLocation.state;
+    const userIsp = locationData && (
+      (locationData.company && locationData.company.name)
+      || (locationData.asn && locationData.asn.name)
+      || locationData.org
+    );
     
-    if (!userCountry && !userCity && !userRegion) return false;
+    if (!userCountry && !userCity && !userRegion && !userIsp) return false;
 
     const blockedLocations = await blockedLocationsRes.json();
 
@@ -37,12 +42,13 @@ window.locationRedirectCheck = (async function blockUserByLocation() {
       .replace(/[\s-]+/g, '');
     const findRoute = (routes, value) => typeof value === 'string' && Object.entries(routes || {})
       .find(([name]) => normalizeLocation(name) === normalizeLocation(value));
-    const locationRoute = findRoute(blockedLocations.cities, userCity)
+    const route = findRoute(blockedLocations.isps, userIsp)
+      || findRoute(blockedLocations.cities, userCity)
       || findRoute(blockedLocations.regions, userRegion);
     
-    // Önce şehir, ardından bölge kontrolü yap.
-    if (locationRoute) {
-      window.location.href = locationRoute[1];
+    // Önce ISP, ardından şehir ve bölge kontrolü yap.
+    if (route) {
+      window.location.href = route[1];
       return true;
     }
     

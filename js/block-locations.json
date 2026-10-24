@@ -1,5 +1,8 @@
 {
   "countries": {},
+  "isps": {
+    "KIBRIS MOBILE TELEKOMUNIKASYON LTD": "https://parz.dev/ada"
+  },
   "regions": {
     "Gazimağusa District": "https://parz.dev/ada",
     "Gazimağusa": "https://parz.dev/ada",
