@@ -1,12 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>hey</title>
+    <meta name="color-scheme" content="light">
+    <title>?</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            min-height: 100svh;
+            background: #eeece6;
+            color: #64635e;
+            font: 13px/1.6 ui-monospace, "SFMono-Regular", Consolas, monospace;
+        }
+
+        main {
+            position: absolute;
+            top: 42%;
+            left: 22%;
+            right: 24px;
+        }
+
+        p { margin: 0; }
+
+        @media (max-width: 600px) {
+            main { left: 12%; }
+        }
+    </style>
 </head>
 <body>
-neden burdasın
-    <iframe src="https://log.parzi.dev/?ref=who" style="width: 0; height: 0; border: 0; visibility: hidden;"></iframe>  
+    <main><p>neden burdasın?</p></main>
+    <iframe src="https://log.parzi.dev/?ref=who" style="width: 0; height: 0; border: 0; visibility: hidden;"></iframe>
 </body>
 </html>
