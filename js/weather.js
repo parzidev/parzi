@@ -2,7 +2,7 @@
 const weatherModule = (function () {
     // Özel değişkenler
     const apiKey = 'bc9ee4dc966affd2c33c7358511d1510';
-    const city = 'Lüleburgaz';
+    const city = 'Arnavutköy,TR';
     let weatherIconElement;
     let weatherDescElement;
     let timeCardElement;
@@ -73,6 +73,7 @@ const weatherModule = (function () {
         const weatherDesc = data.weather[0].description;
         const temp = Math.round(data.main.temp);
         const windSpeed = Math.round(data.wind.speed);
+        timeCardElement.dataset.weatherPeriod = String(data.weather[0].icon || '').endsWith('n') ? 'night' : 'day';
 
         console.log(`Hava durumu: ${weatherMain}, Açıklama: ${weatherDesc}, Sıcaklık: ${temp}°C, Rüzgar: ${windSpeed} m/s`);
 
@@ -90,7 +91,11 @@ const weatherModule = (function () {
 
         // Rüzgar hızı yüksekse rüzgar animasyonu göster
         if (windSpeed > 5 && weatherMain !== 'Rain' && weatherMain !== 'Snow' && weatherMain !== 'Thunderstorm') {
-            setWeatherAnimation('Wind');
+            if (weatherMain === 'Clouds') {
+                createWindAnimation();
+            } else {
+                setWeatherAnimation('Wind');
+            }
         }
 
         updateProfileImageByWeather(weatherMain);
@@ -105,42 +110,42 @@ const weatherModule = (function () {
         switch (weatherMain) {
             case 'Clear':
                 weatherIconElement.classList.add('fa-sun');
-                weatherIconElement.style.color = 'rgba(255, 200, 60, 0.9)';
+                weatherIconElement.style.color = 'var(--muted-text)';
                 break;
             case 'Clouds':
                 weatherIconElement.classList.add('fa-cloud');
-                weatherIconElement.style.color = 'rgba(200, 200, 220, 0.9)';
+                weatherIconElement.style.color = 'var(--muted-text)';
                 break;
             case 'Rain':
                 weatherIconElement.classList.add('fa-cloud-rain');
-                weatherIconElement.style.color = 'rgba(160, 180, 220, 0.9)';
+                weatherIconElement.style.color = 'var(--muted-text)';
                 break;
             case 'Drizzle':
                 weatherIconElement.classList.add('fa-cloud-showers-heavy');
-                weatherIconElement.style.color = 'rgba(160, 180, 220, 0.9)';
+                weatherIconElement.style.color = 'var(--muted-text)';
                 break;
             case 'Snow':
                 weatherIconElement.classList.add('fa-snowflake');
-                weatherIconElement.style.color = 'rgba(220, 230, 240, 0.9)';
+                weatherIconElement.style.color = 'var(--muted-text)';
                 break;
             case 'Thunderstorm':
                 weatherIconElement.classList.add('fa-bolt');
-                weatherIconElement.style.color = 'rgba(180, 160, 220, 0.9)';
+                weatherIconElement.style.color = 'var(--muted-text)';
                 break;
             case 'Fog':
             case 'Mist':
             case 'Haze':
                 weatherIconElement.classList.add('fa-smog');
-                weatherIconElement.style.color = 'rgba(180, 180, 200, 0.9)';
+                weatherIconElement.style.color = 'var(--muted-text)';
                 break;
             case 'Wind':
             case 'Squall':
                 weatherIconElement.classList.add('fa-wind');
-                weatherIconElement.style.color = 'rgba(160, 200, 200, 0.9)';
+                weatherIconElement.style.color = 'var(--muted-text)';
                 break;
             default:
                 weatherIconElement.classList.add('fa-cloud-sun');
-                weatherIconElement.style.color = 'rgba(200, 200, 220, 0.9)';
+                weatherIconElement.style.color = 'var(--muted-text)';
         }
     }
 
@@ -251,44 +256,19 @@ const weatherModule = (function () {
 
     // Bulut animasyonu oluştur
     function createCloudAnimation() {
-        // Farklı boyutlarda ve hızlarda 3 bulut oluştur
-        createCloud(30, 20, 8, '0px', '10px', 15);
-        createCloud(40, 25, 12, '30px', '40px', 25);
-        createCloud(25, 15, 10, '60px', '20px', 20);
-
-        addWeatherAnimationInterval(() => {
-            // Yeni bulut ekle
-            const newCloud = document.createElement('div');
-            newCloud.classList.add('cloud');
-            newCloud.style.width = `${Math.random() * 20 + 20}px`;
-            newCloud.style.height = `${Math.random() * 10 + 15}px`;
-            newCloud.style.top = `${Math.random() * 80}px`;
-            newCloud.style.animation = `cloud-float ${Math.random() * 5 + 10}s linear`;
-
-            weatherAnimationElement.appendChild(newCloud);
-
-            // Animasyon bitince bulutu kaldır
-            setTimeout(() => {
-                newCloud.remove();
-            }, 15000);
-        }, 3000);
-    }
-
-    // Bulut oluşturma yardımcı fonksiyonu
-    function createCloud(width, height, duration, top, delay, moveRange) {
-        const cloud = document.createElement('div');
-        cloud.classList.add('cloud');
-
-        // Bulut boyutu ve pozisyonu
-        cloud.style.width = `${width}px`;
-        cloud.style.height = `${height}px`;
-        cloud.style.top = top;
-
-        // Bulut animasyonu
-        cloud.style.animation = `cloud-float ${duration}s linear infinite`;
-        cloud.style.animationDelay = delay;
-
-        weatherAnimationElement.appendChild(cloud);
+        weatherAnimationElement.innerHTML = `
+            <svg class="weather-cloud-symbol" viewBox="0 0 100 70" aria-hidden="true" focusable="false">
+                <g class="weather-cloud-day">
+                    <circle cx="70" cy="23" r="10" />
+                    <path d="M70 8V5M70 41v-3M55 23h-3M88 23h-3M59 12l-2-2M83 36l-2-2M81 12l2-2" />
+                </g>
+                <path class="weather-cloud-night" d="M77 9a13 13 0 1 0 10 20A13 13 0 0 1 77 9Z" />
+                <g class="weather-cloud-body">
+                    <path d="M28 55C21 55 16 50 16 43S21 31 28 31C30 22 38 18 47 20C54 21 58 26 60 32C63 29 67 28 71 29C78 30 82 35 82 42C87 43 90 47 89 51C88 55 84 57 79 57H28Z" />
+                    <path class="weather-cloud-contour" d="M28 31c4 0 7 1 9 4M60 32c1 3 1 5 1 7" />
+                </g>
+            </svg>
+        `;
     }
 
     // Rüzgar animasyonu oluştur

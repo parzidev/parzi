@@ -183,8 +183,8 @@ document.addEventListener('DOMContentLoaded', () => {
             navigator.getBattery().then(function (battery) {
                 function updateBattery() {
                     const level = Math.round(battery.level * 100);
-                    const charging = battery.charging ? "⚡" : "";
-                    batteryElement.textContent = `${level}% ${charging}`;
+                    const charging = battery.charging ? ' · charging' : '';
+                    batteryElement.textContent = `${level}%${charging}`;
                 }
 
                 updateBattery();

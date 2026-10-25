@@ -20,7 +20,7 @@ const fitbitModule = (function() {
         const statusEl = card.querySelector('.fitbit-status');
 
         try {
-            statusEl.textContent = '🟡';
+            statusEl.textContent = 'Loading';
             const resp = await fetch('https://fitbit.parzi.dev/api/adim', { cache: 'no-store' });
             if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
             const json = await resp.json();
@@ -33,10 +33,10 @@ const fitbitModule = (function() {
             fitbitData = { ...fitbitData, steps, date, percent };
 
             updateCard();
-            statusEl.textContent = '🟢';
+            statusEl.textContent = 'Updated';
         } catch (err) {
             console.error('Fitbit API hatası:', err);
-            statusEl.textContent = '⚪';
+            statusEl.textContent = 'Unavailable';
         }
     }
 
@@ -57,6 +57,9 @@ const fitbitModule = (function() {
         if (progressEl) {
             progressEl.style.setProperty('--progress', `${fitbitData.percent}%`);
             progressEl.setAttribute('data-percent', String(fitbitData.percent));
+            progressEl.setAttribute('aria-valuenow', String(Math.min(fitbitData.steps, fitbitData.goal)));
+            progressEl.setAttribute('aria-valuemax', String(fitbitData.goal));
+            progressEl.setAttribute('aria-valuetext', `${formatNumber(fitbitData.steps)} of ${formatNumber(fitbitData.goal)} steps`);
         }
     }
 

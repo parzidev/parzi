@@ -1,4 +1,4 @@
-// Wandering pixel bot
+// Wandering crow
 (function () {
     const messages = [
         'npm install snacks',
@@ -183,25 +183,48 @@
     const bot = document.createElement('button');
     bot.type = 'button';
     bot.className = 'wander-bot';
-    bot.setAttribute('aria-label', 'Wandering bot');
+    bot.setAttribute('aria-label', 'Wandering crow');
+    bot.dataset.direction = 'right';
     bot.innerHTML = `
-        <span class="wander-bot__antenna"></span>
-        <span class="wander-bot__face">
-            <span class="wander-bot__eye"></span>
-            <span class="wander-bot__eye"></span>
-        </span>
+        <canvas class="wander-bot__crow" width="144" height="144" aria-hidden="true"></canvas>
         <span class="wander-bot__bubble"></span>
     `;
 
     const STORAGE_KEY = 'wanderBotState';
     const WINDOWS_KEY = 'wanderBotWindows';
-    const BOT_SIZE = 58;
+    const BOT_SIZE = 72;
     const OWNER_TIMEOUT = 2200;
     const WINDOW_TIMEOUT = 4000;
     const WRITE_INTERVAL = 90;
     const instanceId = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
     const bubble = bot.querySelector('.wander-bot__bubble');
+    const canvas = bot.querySelector('.wander-bot__crow');
+    const context = canvas.getContext('2d');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const flightImage = new Image();
+    const perchImage = new Image();
+    flightImage.src = 'images/crow-flight-32.png';
+    perchImage.src = 'images/crow-perch-8.png';
+    // Explicit source bounds isolate every bird from its neighbours in the atlas.
+    const flightFrames = [
+        [23,41,224,245], [245,55,444,245], [465,69,663,246], [684,83,882,246],
+        [905,91,1102,246], [1124,92,1322,246], [1343,106,1543,246], [1563,115,1763,246],
+        [23,292,224,432], [244,309,444,432], [465,328,664,433], [685,332,883,433],
+        [904,345,1103,433], [1124,345,1321,433], [1341,347,1543,477], [1560,349,1761,466],
+        [22,526,224,653], [242,524,443,638], [462,516,662,625], [682,510,881,611],
+        [902,509,1101,611], [1122,511,1323,619], [1341,511,1540,612], [1561,484,1760,612],
+        [24,679,224,831], [244,684,444,832], [465,680,664,832], [685,667,883,832],
+        [903,659,1102,832], [1122,654,1323,832], [1342,646,1545,832], [1562,642,1764,832]
+    ];
+    const perchFrames = [
+        [51,52,448,512], [491,138,887,513], [918,203,1313,501], [1340,274,1743,501],
+        [56,583,433,828], [495,583,871,828], [931,583,1306,828], [1352,583,1728,827]
+    ];
+    const perchSelectors = ['.profile-image', '.profile-details', '.visitor-section', '.now-section', '.github-card', '.details-section', '.server-card'];
+    let crowSize = BOT_SIZE;
+    let lastDrawnFrame = '';
     let state = readState();
+    let lastSharedState = JSON.stringify(state);
     let mouseX = -9999;
     let mouseY = -9999;
     let lastMessageIndex = -1;
@@ -209,6 +232,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(bot);
+        crowSize = bot.offsetWidth || BOT_SIZE;
         startWandering();
     });
 
@@ -229,7 +253,11 @@
     }
 
     function tick(now) {
-        state = readState() || createState();
+        const sharedState = localStorage.getItem(STORAGE_KEY);
+        if (sharedState !== lastSharedState) {
+            state = readState() || createState();
+            lastSharedState = sharedState;
+        }
 
         if (isOwnerStale(state)) {
             state.ownerId = instanceId;
@@ -248,20 +276,56 @@
     }
 
     function updateOwnerState(now) {
-        if (!state.targetX || !state.targetY || now - state.lastTargetAt > 8500 || distance(state.x, state.y, state.targetX, state.targetY) < 6) {
+        const time = Date.now();
+        state.motion ||= 'flight';
+        state.nextPerchAt ||= time + randomBetween(2500, 4500);
+        const mouseDistance = distance(state.x + crowSize / 2, state.y + crowSize / 2, mouseX, mouseY);
+
+        if (state.perch) {
+            const point = getPerchPoint(state.perch);
+            if (!point || mouseDistance < 110) {
+                takeOff();
+            } else {
+                state.targetX = point.x;
+                state.targetY = point.y;
+                if (state.motion === 'landing' || state.motion === 'perched') {
+                    state.x = point.x;
+                    state.y = point.y;
+                    if (time - state.motionAt >= 340) state.motion = 'perched';
+                    if (time >= state.perchUntil) takeOff();
+                    else {
+                        state.updatedAt = time;
+                        return;
+                    }
+                }
+            }
+        }
+
+        if (state.motion === 'takeoff' && time - state.motionAt >= 280) state.motion = 'flight';
+        if (state.motion === 'flight' && time >= state.nextPerchAt) choosePerch();
+
+        if (state.motion === 'flight' && (!state.targetX || !state.targetY || now - state.lastTargetAt > 8500 || distance(state.x, state.y, state.targetX, state.targetY) < 6)) {
             setRandomTarget();
         }
 
-        const mouseDistance = distance(state.x, state.y, mouseX, mouseY);
         if (mouseDistance < 120) {
             state.targetX += (state.x - mouseX) * 0.025;
             state.targetY += (state.y - mouseY) * 0.025;
             clampTarget();
         }
 
-        state.x += (state.targetX - state.x) * 0.007;
-        state.y += (state.targetY - state.y) * 0.007;
-        state.updatedAt = Date.now();
+        const speed = state.motion === 'approach' ? 0.018 : 0.007;
+        state.x += (state.targetX - state.x) * speed;
+        state.y += (state.targetY - state.y) * speed;
+        state.updatedAt = time;
+
+        if (state.motion === 'approach' && distance(state.x, state.y, state.targetX, state.targetY) < 3) {
+            state.x = state.targetX;
+            state.y = state.targetY;
+            state.motion = 'landing';
+            state.motionAt = time;
+            state.perchUntil = time + randomBetween(4500, 8500);
+        }
 
         const nextWindowId = getContainingWindowId(state.x, state.y);
         if (nextWindowId && nextWindowId !== state.windowId) {
@@ -270,6 +334,76 @@
         } else if (!state.windowId) {
             state.windowId = nextWindowId || state.windowId;
         }
+    }
+
+    function choosePerch() {
+        const candidates = [];
+        perchSelectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach((element, index) => {
+                const rect = element.getBoundingClientRect();
+                if (rect.width > crowSize + 24 && rect.top > crowSize + 8 && rect.top < window.innerHeight - 12 && rect.height > 0) {
+                    candidates.push({ windowId: instanceId, selector, index, ratio: randomBetween(0.15, 0.85) });
+                }
+            });
+        });
+        state.nextPerchAt = Date.now() + randomBetween(8000, 14000);
+        if (!candidates.length) return;
+        state.perch = candidates[Math.floor(Math.random() * candidates.length)];
+        state.motion = 'approach';
+        const point = getPerchPoint(state.perch);
+        state.targetX = point.x;
+        state.targetY = point.y;
+        state.lastTargetAt = performance.now();
+    }
+
+    function getPerchPoint(perch) {
+        if (perch.windowId !== instanceId) return null;
+        const element = document.querySelectorAll(perch.selector)[perch.index];
+        if (!element) return null;
+        const rect = element.getBoundingClientRect();
+        if (rect.top < crowSize || rect.top > window.innerHeight - 8 || rect.width < crowSize || !rect.height) return null;
+        const win = getCurrentWindowShape();
+        return {
+            x: win.x + rect.left + (rect.width - crowSize) * perch.ratio,
+            y: win.y + rect.top - crowSize * 68 / 72
+        };
+    }
+
+    function takeOff() {
+        state.perch = null;
+        state.motion = 'takeoff';
+        state.motionAt = Date.now();
+        state.nextPerchAt = Date.now() + randomBetween(8000, 14000);
+        setRandomTarget();
+    }
+
+    function drawCrow() {
+        const time = Date.now();
+        const perching = ['landing', 'perched', 'takeoff'].includes(state.motion);
+        const image = perching ? perchImage : flightImage;
+        if (!context || !image.complete || !image.naturalWidth) return;
+        let frame;
+        if (reducedMotion.matches) frame = perching ? 4 : 3;
+        else if (state.motion === 'landing') frame = Math.min(3, Math.floor((time - state.motionAt) / 85));
+        else if (state.motion === 'takeoff') frame = Math.max(0, 3 - Math.floor((time - state.motionAt) / 70));
+        else if (state.motion === 'perched') frame = 4 + Math.floor((time - state.motionAt) / 900) % 4;
+        else frame = Math.floor(time / 28) % flightFrames.length;
+        bot.dataset.motion = state.motion || 'flight';
+        bot.dataset.frame = String(frame);
+        const key = `${perching}-${frame}`;
+        if (key === lastDrawnFrame) return;
+        lastDrawnFrame = key;
+        const [left, top, right, bottom] = (perching ? perchFrames : flightFrames)[frame];
+        const scale = perching ? 0.145 : 0.28;
+        const sourceX = Math.max(0, left - 2);
+        const sourceY = Math.max(0, top - 2);
+        const width = Math.min(image.naturalWidth, right + 2) - sourceX;
+        const height = Math.min(image.naturalHeight, bottom + 2) - sourceY;
+        const x = perching ? (72 - (right - left) * scale) / 2 - 2 * scale : 55 - (right - 28 - sourceX) * scale;
+        const y = perching ? 68 - (bottom - sourceY) * scale : 42 - ([188, 377, 561, 761][Math.floor(frame / 8)] - sourceY) * scale;
+        context.setTransform(2, 0, 0, 2, 0, 0);
+        context.clearRect(0, 0, 72, 72);
+        context.drawImage(image, sourceX, sourceY, width, height, x, y, width * scale, height * scale);
     }
 
     function setRandomTarget() {
@@ -292,10 +426,15 @@
         const localX = state.x - win.x;
         const localY = state.y - win.y;
         const isVisible = localX > -BOT_SIZE && localY > -BOT_SIZE && localX < window.innerWidth && localY < window.innerHeight;
-        const tilt = Math.max(-7, Math.min(7, (state.targetX - state.x) * 0.018));
+        const tilt = ['landing', 'perched'].includes(state.motion) ? 0 : Math.max(-7, Math.min(7, (state.targetX - state.x) * 0.018));
+
+        if (Math.abs(state.targetX - state.x) > 5) {
+            bot.dataset.direction = state.targetX < state.x ? 'left' : 'right';
+        }
 
         bot.classList.toggle('is-away', !isVisible);
         bot.style.transform = `translate3d(${localX}px, ${localY}px, 0) rotate(${tilt}deg)`;
+        drawCrow();
 
         if (state.message && state.messageUntil > Date.now() && isVisible) {
             bubble.textContent = state.message;
@@ -353,7 +492,8 @@
     }
 
     function writeState(nextState) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(nextState));
+        lastSharedState = JSON.stringify(nextState);
+        localStorage.setItem(STORAGE_KEY, lastSharedState);
     }
 
     function isOwnerStale(nextState) {
@@ -444,9 +584,17 @@
         const win = getCurrentWindowShape();
         mouseX = win.x + event.clientX;
         mouseY = win.y + event.clientY;
+        const latestState = readState();
+        if (latestState && latestState.ownerId !== instanceId && distance(latestState.x + crowSize / 2, latestState.y + crowSize / 2, mouseX, mouseY) < 120) {
+            state = latestState;
+            state.ownerId = instanceId;
+            state.updatedAt = Date.now();
+            writeState(state);
+        }
     });
 
     window.addEventListener('resize', () => {
+        crowSize = bot.offsetWidth || BOT_SIZE;
         updateWindowRegistry();
         clampTarget();
     });

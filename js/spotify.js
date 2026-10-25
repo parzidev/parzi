@@ -24,6 +24,18 @@ const spotifyModule = (function () {
 
     // Modül başlatma
     function init() {
+        const spotifyCard = document.querySelector('.spotify-card');
+        if (spotifyCard) {
+            spotifyCard.addEventListener('keydown', event => {
+                if (event.target === spotifyCard
+                    && (event.key === 'Enter' || event.key === ' ')
+                    && spotifyCard.onclick) {
+                    event.preventDefault();
+                    spotifyCard.click();
+                }
+            });
+        }
+
         // Spotify'da çalan şarkıyı getir
         fetchCurrentlyPlaying();
 
@@ -102,7 +114,7 @@ const spotifyModule = (function () {
         // Şarkı çalıyor mu durumunu güncelle
         if (data.is_playing) {
             spotifyCard.classList.add('is-playing');
-            spotifyStatus.textContent = '🟢';
+            spotifyStatus.textContent = 'Playing';
             syncSmoothProgress(data);
 
             // Albüm kapağını güncelle
@@ -112,10 +124,14 @@ const spotifyModule = (function () {
                 const currentImageSrc = currentImage ? currentImage.getAttribute('src') : '';
 
                 if (!nextImage) {
-                    albumCover.textContent = '🎵';
+                    albumCover.textContent = '';
+                    albumCover.setAttribute('role', 'img');
+                    albumCover.setAttribute('aria-label', 'Album cover unavailable');
                     albumCover.className = 'album-cover-placeholder';
                 } else if (!currentImage || currentImageSrc !== nextImage) {
                     albumCover.textContent = '';
+                    albumCover.removeAttribute('role');
+                    albumCover.removeAttribute('aria-label');
                     const image = document.createElement('img');
                     image.src = nextImage;
                     image.alt = data.album_name || data.track_name || 'Album cover';
@@ -127,7 +143,7 @@ const spotifyModule = (function () {
 
             // Şarkı bilgilerini güncelle
             if (songTitle) songTitle.textContent = data.track_name;
-            if (songArtist) songArtist.textContent = `by ${data.artists}`;
+            if (songArtist) songArtist.textContent = data.artists;
             if (songAlbum) songAlbum.textContent = data.album_name;
         } else {
             stopSmoothProgress();
@@ -135,17 +151,19 @@ const spotifyModule = (function () {
             spotifyData.progress = 0;
             spotifyData.progressPercent = 0;
             spotifyCard.classList.remove('is-playing');
-            spotifyStatus.textContent = '⚪';
+            spotifyStatus.textContent = 'Not playing';
 
             // Spotify kapalı olduğunda özel mesaj göster (İngilizce)
             if (songTitle) songTitle.textContent = "Not currently listening";
-            if (songArtist) songArtist.textContent = "Spotify is closed";
-            if (songAlbum) songAlbum.textContent = "Check back later";
+            if (songArtist) songArtist.textContent = "Spotify is idle";
+            if (songAlbum) songAlbum.textContent = '';
             if (lastPlayed) lastPlayed.textContent = 'Last checked just now';
 
             // Albüm kapağını varsayılan hale getir
             if (albumCover) {
-                albumCover.textContent = '🎵';
+                albumCover.textContent = '';
+                albumCover.setAttribute('role', 'img');
+                albumCover.setAttribute('aria-label', 'Album cover unavailable');
                 albumCover.className = 'album-cover-placeholder';
             }
 
@@ -157,14 +175,20 @@ const spotifyModule = (function () {
 
         // Spotify kartına tıklandığında şarkıya yönlendir (şarkı çalıyorsa)
         if (data.is_playing && data.spotify_url) {
-            spotifyCard.onclick = function (e) {
-                window.open(data.spotify_url, '_blank');
+            spotifyCard.onclick = function () {
+                window.open(data.spotify_url, '_blank', 'noopener,noreferrer');
             };
+            spotifyCard.tabIndex = 0;
+            spotifyCard.setAttribute('role', 'link');
+            spotifyCard.setAttribute('aria-label', `Listen to ${data.track_name} by ${data.artists} on Spotify`);
             // Kartın tıklanabilir olduğunu belirtmek için stil ekle
             spotifyCard.style.cursor = 'pointer';
         } else {
             // Spotify kapalıysa tıklama özelliğini kaldır
             spotifyCard.onclick = null;
+            spotifyCard.removeAttribute('tabindex');
+            spotifyCard.removeAttribute('role');
+            spotifyCard.removeAttribute('aria-label');
             spotifyCard.style.cursor = 'default';
         }
     }

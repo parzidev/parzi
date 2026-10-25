@@ -2,24 +2,26 @@
 const themeModule = (function() {
     // Özel değişkenler
     let themeToggle;
+    let themeOptions;
     let themeToggleLabel;
     let xdText;
     let themeColorMeta;
-    let currentMode = 'dark'; // default mode
+    let currentMode = 'light'; // default mode
     const browserChrome = {
         dark: {
             favicon: 'images/code-white.png',
-            themeColor: '#1a0a2e'
+            themeColor: '#111111'
         },
         light: {
             favicon: 'images/code.png',
-            themeColor: '#f5f0ff'
+            themeColor: '#ffffff'
         }
     };
 
     // Modül başlatma
     function init() {
         themeToggle = document.getElementById('theme-toggle');
+        themeOptions = document.querySelectorAll('[data-theme-option]');
         themeToggleLabel = document.getElementById('theme-toggle-label');
         xdText = document.getElementById('xd-text');
         themeColorMeta = document.getElementById('theme-color-meta');
@@ -30,15 +32,20 @@ const themeModule = (function() {
         }
 
         // Kullanıcının tema tercihini localStorage'dan al
-        const savedMode = normalizeMode(localStorage.getItem('mode') || 'dark');
+        const savedMode = normalizeMode(localStorage.getItem('mode') || 'light');
 
         // Kaydedilen modu uygula
         applyMode(savedMode);
 
-        // Tema değiştirme butonuna tıklandığında
-        themeToggle.addEventListener('click', function() {
-            applyMode(currentMode === 'dark' ? 'light' : 'dark');
-        });
+        if (themeOptions.length) {
+            themeOptions.forEach(option => {
+                option.addEventListener('click', () => applyMode(option.dataset.themeOption));
+            });
+        } else {
+            themeToggle.addEventListener('click', function() {
+                applyMode(currentMode === 'dark' ? 'light' : 'dark');
+            });
+        }
 
         return this;
     }
@@ -57,8 +64,15 @@ const themeModule = (function() {
         }
 
         document.documentElement.setAttribute('data-theme', currentMode);
-        themeToggle.setAttribute('aria-pressed', String(currentMode === 'dark'));
-        themeToggle.setAttribute('aria-label', currentMode === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+        if (themeOptions.length) {
+            themeOptions.forEach(option => {
+                option.setAttribute('aria-pressed', String(option.dataset.themeOption === currentMode));
+                option.setAttribute('aria-label', `Use ${option.dataset.themeOption} theme`);
+            });
+        } else {
+            themeToggle.setAttribute('aria-pressed', String(currentMode === 'dark'));
+            themeToggle.setAttribute('aria-label', currentMode === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+        }
 
         if (themeToggleLabel) {
             themeToggleLabel.textContent = currentMode === 'dark' ? 'Dark' : 'Light';
@@ -80,7 +94,7 @@ const themeModule = (function() {
     }
 
     function normalizeMode(mode) {
-        return mode === 'light' ? 'light' : 'dark';
+        return mode === 'dark' ? 'dark' : 'light';
     }
 
     // Public API

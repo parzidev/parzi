@@ -12,9 +12,9 @@
     }
 
     function setProgressColor(percent) {
-        if (percent < 50) return '#1DB954';
-        if (percent < 75) return '#ffaa00';
-        return '#ff4444';
+        if (percent < 50) return 'var(--muted-text)';
+        if (percent < 75) return 'var(--warning-color, #9c742d)';
+        return 'var(--accent-color)';
     }
 
     function updateStats(data) {
@@ -55,7 +55,7 @@
 
         // Status indicator
         const statusEl = document.getElementById('server-status-dot');
-        if (statusEl) statusEl.textContent = '🟢';
+        if (statusEl) statusEl.textContent = 'Online';
     }
 
     function fetchStats() {
@@ -64,7 +64,7 @@
             .then(data => updateStats(data))
             .catch(() => {
                 const statusEl = document.getElementById('server-status-dot');
-                if (statusEl) statusEl.textContent = '🔴';
+                if (statusEl) statusEl.textContent = 'Offline';
                 ['server-cpu', 'server-ram', 'server-disk', 'server-uptime', 'server-network'].forEach(id => {
                     const valueEl = document.getElementById(id);
                     if (valueEl) valueEl.textContent = 'N/A';

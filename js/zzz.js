@@ -67,12 +67,12 @@ async function updateSleepStatus() {
 
                 const duration = formatSleepDuration(durationSeconds);
                 console.log(`💤 Sleeping: for ${duration}`);
-                sleepStatusElement.innerHTML = `😴 sleeping <span style="opacity: 0.7;">(${duration})</span>`;
-                sleepStatusElement.style.color = '#9b87f5';
+                sleepStatusElement.innerHTML = `sleeping <span style="color: var(--muted-text);">(${duration})</span>`;
+                sleepStatusElement.style.color = 'var(--text-color)';
             } else if (sleepData.is_sleeping) {
                 console.log('💤 Sleeping (no duration info)');
-                sleepStatusElement.textContent = '😴 sleeping';
-                sleepStatusElement.style.color = '#9b87f5';
+                sleepStatusElement.textContent = 'sleeping';
+                sleepStatusElement.style.color = 'var(--text-color)';
             } else {
                 // When awake, show last sleep info
                 console.log('👀 Awake');
@@ -90,19 +90,19 @@ async function updateSleepStatus() {
                             : '';
 
                     const durationText = sleepDuration ? ` for ${sleepDuration}` : '';
-                    sleepStatusElement.innerHTML = `awake <span style="opacity: 0.7;">(slept ${timeSince}${durationText})</span>`;
+                    sleepStatusElement.innerHTML = `awake <span style="color: var(--muted-text);">(slept ${timeSince}${durationText})</span>`;
                 } else {
                     sleepStatusElement.textContent = 'awake';
                 }
-                sleepStatusElement.style.color = '#4ade80';
+                sleepStatusElement.style.color = 'var(--text-color)';
             }
         }
     } catch (error) {
         console.error('❌ Sleep status could not be retrieved:', error.message);
         const sleepStatusElement = document.getElementById('sleep-status');
         if (sleepStatusElement) {
-            sleepStatusElement.textContent = '🤷 unknown';
-            sleepStatusElement.style.color = '#94a3b8';
+            sleepStatusElement.textContent = 'unknown';
+            sleepStatusElement.style.color = 'var(--muted-text)';
         }
     }
 }

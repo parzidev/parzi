@@ -66,11 +66,11 @@ const githubModule = (function () {
 
         const bestDay = data.contributions.best_day;
         const bestDayLabel = bestDay
-            ? `best day: ${formatNumber(bestDay.count)} on ${formatShortDate(bestDay.date)}`
-            : 'no contribution days yet';
+            ? `Best day: ${formatNumber(bestDay.count)} on ${formatShortDate(bestDay.date)}`
+            : 'No contribution days yet';
         const latestLabel = data.contributions.last_contribution_date
-            ? `last activity ${formatRelativeDate(data.contributions.last_contribution_date)}`
-            : 'no recent activity';
+            ? `Last activity: ${formatRelativeDate(data.contributions.last_contribution_date)}`
+            : 'No recent activity';
 
         updateGithubCard({
             stars: formatNumber(data.stats?.stars || 0),
@@ -87,6 +87,7 @@ const githubModule = (function () {
 
         const calendar = document.createElement('div');
         calendar.className = 'static-calendar';
+        const maxCount = Math.max(1, ...months.map(month => Number(month.count) || 0));
 
         for (let index = 0; index < months.length; index += 6) {
             const row = document.createElement('div');
@@ -94,20 +95,28 @@ const githubModule = (function () {
 
             months.slice(index, index + 6).forEach(month => {
                 const level = Math.max(0, Math.min(4, Number(month.level) || 0));
-                const contributionCount = Number(month.count) || 0;
+                const contributionCount = Math.max(0, Number(month.count) || 0);
                 const tooltip = `${month.name} ${month.year}: ${formatNumber(contributionCount)} ${pluralize('contribution', contributionCount)}`;
                 const monthElement = document.createElement('div');
                 const initial = document.createElement('span');
+                const count = document.createElement('span');
+                const bar = document.createElement('span');
 
                 monthElement.className = `calendar-month level-${level}`;
                 monthElement.dataset.month = month.name;
                 monthElement.dataset.tooltip = tooltip;
                 monthElement.setAttribute('role', 'img');
                 monthElement.setAttribute('aria-label', tooltip);
+                monthElement.tabIndex = 0;
+                monthElement.style.setProperty('--month-height', `${contributionCount / maxCount * 100}%`);
 
+                count.className = 'month-count';
+                count.textContent = formatNumber(contributionCount);
+                bar.className = 'month-bar';
+                bar.setAttribute('aria-hidden', 'true');
                 initial.className = 'month-initial';
-                initial.textContent = String(month.name || '').charAt(0);
-                monthElement.appendChild(initial);
+                initial.textContent = String(month.name || '').slice(0, 3);
+                monthElement.append(count, bar, initial);
                 row.appendChild(monthElement);
             });
 
@@ -127,26 +136,26 @@ const githubModule = (function () {
     }
 
     function showLoadingState() {
-        setCalendarMessage('Loading real activity…');
-        updateRangeText('GitHub GraphQL');
+        setCalendarMessage('Loading activity…');
+        updateRangeText('—');
         updateGithubCard({
             stars: '—',
             main: '—',
             label: 'contributions',
-            focus: 'loading activity',
-            latest: 'from GitHub'
+            focus: 'Loading activity…',
+            latest: ''
         });
     }
 
     function showUnavailableState() {
         setCalendarMessage('Activity unavailable', true);
-        updateRangeText('try again later');
+        updateRangeText('—');
         updateGithubCard({
             stars: '—',
             main: '—',
             label: 'activity unavailable',
-            focus: 'no cached data',
-            latest: 'open profile'
+            focus: 'Please try again later',
+            latest: ''
         });
     }
 
