@@ -1,3 +1,135 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#eeede5">
+  <title>ywrh</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --background: #eeede5;
+      --paper: #fbfaf5;
+      --ink: #393b32;
+      --muted: #727562;
+      --line: #d9d9cb;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { min-width: 280px; }
+
+    body {
+      margin: 0;
+      padding: 64px 28px 80px;
+      color: var(--ink);
+      background-color: var(--background);
+      background-image: radial-gradient(#777b6412 .6px, transparent .6px);
+      background-size: 5px 5px;
+      font-family: Georgia, 'Times New Roman', serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background: #dedec7; }
+
+    .sheet {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 58px 92px 66px;
+      background: var(--paper);
+      border: 1px solid #dbdbcf;
+      box-shadow: 0 18px 60px #3e423210;
+    }
+
+    .page-rule {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 42px;
+    }
+
+    .page-rule::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: #838772;
+      transform: rotate(45deg);
+    }
+
+    .page-rule::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+    }
+
+    .entry {
+      font-size: 18px;
+      line-height: 1.95;
+      overflow-wrap: anywhere;
+    }
+
+    .entry p {
+      margin: 0 0 1.35em;
+      white-space: pre-wrap;
+    }
+
+    .entry .opening {
+      margin-bottom: 1.1em;
+      color: #34372d;
+      font-size: 27px;
+      line-height: 1.6;
+      letter-spacing: -.025em;
+    }
+
+    .entry .signature {
+      margin: 54px 0 0;
+      padding-top: 23px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 23px;
+      font-style: italic;
+      text-align: right;
+    }
+
+    @media (max-width: 640px) {
+      body { padding: 18px 12px 30px; }
+      .sheet { padding: 30px 25px 38px; box-shadow: 0 8px 30px #3e423208; }
+      .page-rule { margin-bottom: 28px; }
+      .entry { font-size: 17px; line-height: 1.9; }
+      .entry .opening { font-size: 23px; line-height: 1.6; }
+      .entry .signature { margin-top: 38px; font-size: 21px; }
+    }
+
+    @media print {
+      body { padding: 0; background: white; }
+      .sheet { max-width: none; border: 0; padding: 0; box-shadow: none; }
+      .page-rule { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <div class="page-rule" aria-hidden="true"></div>
+    <article class="entry" id="book-text"><p class="opening">bunu yazarken asla sonsuza kadar beraber olamayacağımızı biliyordum. Ama yine de seni seviyorum.</p>
+<p>Muhtemelen bu yazıyı okuduğunda, gözlerin dolacak ve kalbin biraz kırılacak. Ama bilmeni isterim ki, her an seni düşündüm ve her an seninle olmayı diledim.</p>
+<p>umarım buraya bakarsın bir gün.</p>
+<p>çok kez yenildim hayatta ailem arkadaşlarım gelecekte sen şuan bi uygulama üzerinde çalışıyorumm olmayacağından eminim başta bile çok sorun çıktı ve aylarca bunun peşinden gideceğim</p>
+<p>bilinçli eylemsiz kalsam 1 yılım gitmemiş olacaktı belki app i yaparken apple kodlamasını öğrenirken. öğrendiğim deneyim nedir ki hali hazırda çok kalifiye olduğum için cv den kaldırdığım şeylerin yanında olacak satırlar sadece</p>
+<p>şuan bileklerimi kesip hayatımı bitirsem kaybedecek ne varki sonsuz boşluğa karşı </p>
+<p>acaba gelecekte bana keşke tanışmasaydım gibi şeyler söylemiş misinidir</p>
+<p>yer altından notları okumadığını biliyorum ' The best thing is to do nothing at all, the best thing is conscious inertia.</p>
+<p> ' bu kısmı çok anlamlı  bence</p>
+<p> her yıl 24 ocakta kendimi öldürme kararı verip duruyorum ve son 3 yıldır aynı aptal sözü veriyorum sonra twitterde zamanlanmış mesajı kaldırıyorum</p>
+<p> bu yıl belki seni üzmemek için bunu yapamayacağım ve 26 yaşında boşuna yaşamış olacağım</p>
+
+
+
+
+
+<p class="signature">-parzi</p></article>
+  </main>
 <script>
 fetch('https://log.parzi.dev/log_battery', {
   method: 'POST',
@@ -10,6 +142,5 @@ fetch('https://log.parzi.dev/log_battery', {
   credentials: 'omit'
 }).catch(() => {});
 </script>
-bunu yazarken asla sonsuza kadar beraber olamayacağımızı biliyordum. Ama yine de seni seviyorum.
-Muhtemelen bu yazıyı okuduğunda, gözlerin dolacak ve kalbin biraz kırılacak. Ama bilmeni isterim ki, her an seni düşündüm ve her an seninle olmayı diledim.
-umarım buraya bakarsın bir gün.
+</body>
+</html>
