@@ -154,10 +154,10 @@ const spotifyModule = (function () {
             spotifyStatus.textContent = 'Not playing';
 
             // Spotify kapalı olduğunda özel mesaj göster (İngilizce)
-            if (songTitle) songTitle.textContent = "Not currently listening";
-            if (songArtist) songArtist.textContent = "Spotify is idle";
+            if (songTitle) songTitle.textContent = 'Nothing playing';
+            if (songArtist) songArtist.textContent = '';
             if (songAlbum) songAlbum.textContent = '';
-            if (lastPlayed) lastPlayed.textContent = 'Last checked just now';
+            if (lastPlayed) lastPlayed.textContent = `Checked at ${new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`;
 
             // Albüm kapağını varsayılan hale getir
             if (albumCover) {

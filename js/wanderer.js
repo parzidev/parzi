@@ -220,7 +220,16 @@
         [51,52,448,512], [491,138,887,513], [918,203,1313,501], [1340,274,1743,501],
         [56,583,433,828], [495,583,871,828], [931,583,1306,828], [1352,583,1728,827]
     ];
-    const perchSelectors = ['.profile-image', '.profile-details', '.visitor-section', '.now-section', '.github-card', '.details-section', '.server-card'];
+    const perchSelectors = ['.name', '.visitor-heading'];
+    const PERCH_FOOT_X = 40.5;
+    const PERCH_FOOT_Y = 67.75;
+    const PERCH_FOOT_SPAN = 17;
+    // Talon centres in the atlas; the first two landing poses are still airborne.
+    const perchFeet = [null, null, [1141, 499], [1566, 499], [276.5, 826], [714, 826], [1149.5, 826], [1570, 826]];
+    const glyphCanvas = document.createElement('canvas');
+    const glyphContext = glyphCanvas.getContext('2d', { willReadFrequently: true });
+    const glyphCache = new Map();
+    let textPerchCache = new WeakMap();
     let crowSize = BOT_SIZE;
     let lastDrawnFrame = '';
     let state = readState();
@@ -338,35 +347,149 @@
 
     function choosePerch() {
         const candidates = [];
+        const win = getCurrentWindowShape();
         perchSelectors.forEach(selector => {
             document.querySelectorAll(selector).forEach((element, index) => {
-                const rect = element.getBoundingClientRect();
-                if (rect.width > crowSize + 24 && rect.top > crowSize + 8 && rect.top < window.innerHeight - 12 && rect.height > 0) {
-                    candidates.push({ windowId: instanceId, selector, index, ratio: randomBetween(0.15, 0.85) });
-                }
+                const surface = getTextPerchSurface(element);
+                if (!surface) return;
+                const preferred = surface.points[Math.floor(Math.random() * surface.points.length)];
+                const ratio = preferred.x / surface.rect.width;
+                const direction = win.x + surface.rect.left + preferred.x > state.x + crowSize / 2 ? 'right' : 'left';
+                const perch = { windowId: instanceId, selector, index, ratio, direction };
+                const point = getPerchPoint(perch);
+                if (point) candidates.push({ perch, point });
             });
         });
         state.nextPerchAt = Date.now() + randomBetween(8000, 14000);
         if (!candidates.length) return;
-        state.perch = candidates[Math.floor(Math.random() * candidates.length)];
+        const candidate = candidates[Math.floor(Math.random() * candidates.length)];
+        state.perch = candidate.perch;
         state.motion = 'approach';
-        const point = getPerchPoint(state.perch);
-        state.targetX = point.x;
-        state.targetY = point.y;
+        state.targetX = candidate.point.x;
+        state.targetY = candidate.point.y;
         state.lastTargetAt = performance.now();
     }
 
     function getPerchPoint(perch) {
-        if (perch.windowId !== instanceId) return null;
+        if (perch.windowId !== instanceId || !perchSelectors.includes(perch.selector)) return null;
         const element = document.querySelectorAll(perch.selector)[perch.index];
         if (!element) return null;
-        const rect = element.getBoundingClientRect();
-        if (rect.top < crowSize || rect.top > window.innerHeight - 8 || rect.width < crowSize || !rect.height) return null;
+        const surface = getTextPerchSurface(element);
+        if (!surface) return null;
+        const scale = crowSize / BOT_SIZE;
+        const footX = (perch.direction === 'left' ? BOT_SIZE - PERCH_FOOT_X : PERCH_FOOT_X) * scale;
+        let contact = null;
+        let nearest = Infinity;
+        surface.points.forEach(point => {
+            const x = surface.rect.left + point.x - footX;
+            const y = surface.rect.top + point.y - PERCH_FOOT_Y * scale;
+            if (x < 4 || x + crowSize > window.innerWidth - 4 || y < 4 || y + crowSize > window.innerHeight - 4) return;
+            const gap = Math.abs(point.x / surface.rect.width - perch.ratio);
+            if (gap < nearest) {
+                nearest = gap;
+                contact = { x, y };
+            }
+        });
+        if (!contact) return null;
         const win = getCurrentWindowShape();
-        return {
-            x: win.x + rect.left + (rect.width - crowSize) * perch.ratio,
-            y: win.y + rect.top - crowSize * 68 / 72
-        };
+        return { x: win.x + contact.x, y: win.y + contact.y };
+    }
+
+    function getTextPerchSurface(element) {
+        const rect = element.getBoundingClientRect();
+        const style = getComputedStyle(element);
+        const fontSize = parseFloat(style.fontSize);
+        if (!glyphContext || fontSize < 48 || !rect.width || !rect.height || style.visibility !== 'visible' || style.display === 'none' || Number(style.opacity) === 0) return null;
+        if (element.checkVisibility && !element.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true })) return null;
+        const nodes = Array.from(element.childNodes).filter(node => node.nodeType === 3);
+        const font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+        const key = [font, style.fontKerning, style.letterSpacing, style.wordSpacing, style.lineHeight, style.textTransform, style.textAlign, rect.width, rect.height, crowSize, ...nodes.map(node => node.textContent)].join('|');
+        let cached = textPerchCache.get(element);
+        if (!cached || cached.key !== key) {
+            const roof = new Float32Array(Math.ceil(rect.width));
+            roof.fill(Infinity);
+            const range = document.createRange();
+            nodes.forEach(node => {
+                let offset = 0;
+                for (const character of node.textContent) {
+                    const start = offset;
+                    offset += character.length;
+                    if (!/\p{L}/u.test(character)) continue;
+                    let glyph = character;
+                    if (style.textTransform === 'uppercase') glyph = glyph.toUpperCase();
+                    if (style.textTransform === 'lowercase') glyph = glyph.toLowerCase();
+                    const ink = getGlyphInk(glyph, font, style.fontKerning);
+                    if (!ink) continue;
+                    range.setStart(node, start);
+                    range.setEnd(node, offset);
+                    const bounds = range.getBoundingClientRect();
+                    if (!bounds.width || !bounds.height) continue;
+                    // Range includes the font box; alpha pixels locate the actual ink within it.
+                    const fontScale = bounds.height / (ink.ascent + ink.descent);
+                    const baseline = bounds.top - rect.top + ink.ascent * fontScale;
+                    ink.columns.forEach((top, column) => {
+                        if (!Number.isFinite(top)) return;
+                        const x = Math.round(bounds.left - rect.left + (ink.left + column) * fontScale);
+                        if (x >= 0 && x < roof.length) roof[x] = Math.min(roof[x], baseline + top * fontScale);
+                    });
+                }
+            });
+            const halfSpan = Math.ceil(PERCH_FOOT_SPAN * crowSize / BOT_SIZE / 2);
+            const points = [];
+            for (let x = halfSpan; x < roof.length - halfSpan; x += 2) {
+                let top = Infinity;
+                let bottom = -Infinity;
+                for (let column = x - halfSpan; column <= x + halfSpan; column++) {
+                    top = Math.min(top, roof[column]);
+                    bottom = Math.max(bottom, roof[column]);
+                }
+                // Both feet need an unbroken, nearly level patch of painted letter.
+                if (Number.isFinite(bottom) && bottom - top <= 3 * crowSize / BOT_SIZE) points.push({ x, y: top + 0.5 });
+            }
+            cached = { key, points };
+            textPerchCache.set(element, cached);
+        }
+        return cached.points.length ? { rect, points: cached.points } : null;
+    }
+
+    function getGlyphInk(glyph, font, kerning) {
+        const key = `${font}|${kerning}|${glyph}`;
+        if (glyphCache.has(key)) return glyphCache.get(key);
+        glyphContext.font = font;
+        glyphContext.fontKerning = kerning;
+        const metrics = glyphContext.measureText(glyph);
+        if (!Number.isFinite(metrics.fontBoundingBoxAscent) || !Number.isFinite(metrics.fontBoundingBoxDescent) || metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent <= 0) return null;
+        const left = Math.floor(-metrics.actualBoundingBoxLeft) - 1;
+        const top = Math.floor(-metrics.actualBoundingBoxAscent) - 1;
+        const width = Math.ceil(metrics.actualBoundingBoxRight) + 1 - left;
+        const height = Math.ceil(metrics.actualBoundingBoxDescent) + 1 - top;
+        if (!(width > 0 && height > 0)) return null;
+        glyphCanvas.width = width * 2;
+        glyphCanvas.height = height * 2;
+        glyphContext.setTransform(2, 0, 0, 2, 0, 0);
+        glyphContext.font = font;
+        glyphContext.fontKerning = kerning;
+        glyphContext.fillText(glyph, -left, -top);
+        const pixels = glyphContext.getImageData(0, 0, glyphCanvas.width, glyphCanvas.height).data;
+        const columns = new Float32Array(width);
+        columns.fill(Infinity);
+        for (let x = 0; x < width; x++) {
+            for (let y = 0; y < glyphCanvas.height; y++) {
+                if (pixels[(y * glyphCanvas.width + x * 2) * 4 + 3] >= 96 || pixels[(y * glyphCanvas.width + x * 2 + 1) * 4 + 3] >= 96) {
+                    columns[x] = top + y / 2;
+                    break;
+                }
+            }
+        }
+        const ink = { left, columns, ascent: metrics.fontBoundingBoxAscent, descent: metrics.fontBoundingBoxDescent };
+        if (glyphCache.size > 96) glyphCache.clear();
+        glyphCache.set(key, ink);
+        return ink;
+    }
+
+    function invalidateTextPerches() {
+        textPerchCache = new WeakMap();
+        glyphCache.clear();
     }
 
     function takeOff() {
@@ -399,8 +522,9 @@
         const sourceY = Math.max(0, top - 2);
         const width = Math.min(image.naturalWidth, right + 2) - sourceX;
         const height = Math.min(image.naturalHeight, bottom + 2) - sourceY;
-        const x = perching ? (72 - (right - left) * scale) / 2 - 2 * scale : 55 - (right - 28 - sourceX) * scale;
-        const y = perching ? 68 - (bottom - sourceY) * scale : 42 - ([188, 377, 561, 761][Math.floor(frame / 8)] - sourceY) * scale;
+        const feet = perching ? perchFeet[frame] : null;
+        const x = feet ? PERCH_FOOT_X - (feet[0] - sourceX) * scale : perching ? (72 - (right - left) * scale) / 2 - 2 * scale : 55 - (right - 28 - sourceX) * scale;
+        const y = feet ? PERCH_FOOT_Y - (feet[1] - sourceY) * scale : perching ? 68 - (bottom - sourceY) * scale : 42 - ([188, 377, 561, 761][Math.floor(frame / 8)] - sourceY) * scale;
         context.setTransform(2, 0, 0, 2, 0, 0);
         context.clearRect(0, 0, 72, 72);
         context.drawImage(image, sourceX, sourceY, width, height, x, y, width * scale, height * scale);
@@ -428,7 +552,9 @@
         const isVisible = localX > -BOT_SIZE && localY > -BOT_SIZE && localX < window.innerWidth && localY < window.innerHeight;
         const tilt = ['landing', 'perched'].includes(state.motion) ? 0 : Math.max(-7, Math.min(7, (state.targetX - state.x) * 0.018));
 
-        if (Math.abs(state.targetX - state.x) > 5) {
+        if (state.perch) {
+            bot.dataset.direction = state.perch.direction;
+        } else if (Math.abs(state.targetX - state.x) > 5) {
             bot.dataset.direction = state.targetX < state.x ? 'left' : 'right';
         }
 
@@ -595,9 +721,15 @@
 
     window.addEventListener('resize', () => {
         crowSize = bot.offsetWidth || BOT_SIZE;
+        invalidateTextPerches();
         updateWindowRegistry();
         clampTarget();
     });
+
+    if (document.fonts) {
+        document.fonts.ready.then(invalidateTextPerches);
+        document.fonts.addEventListener('loadingdone', invalidateTextPerches);
+    }
 
     window.addEventListener('beforeunload', () => {
         const windows = readWindows();
