@@ -6,7 +6,9 @@ const themeModule = (function() {
     let themeToggleLabel;
     let xdText;
     let themeColorMeta;
-    let currentMode = 'light'; // default mode
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+    let preferredMode = readPreference();
+    let currentMode = preferredMode || getSystemMode();
     const browserChrome = {
         dark: {
             favicon: 'images/code-white.png',
@@ -17,6 +19,11 @@ const themeModule = (function() {
             themeColor: '#ffffff'
         }
     };
+
+    // Apply before the stylesheets load so dark-mode visitors do not see a white flash.
+    themeColorMeta = document.getElementById('theme-color-meta');
+    document.documentElement.setAttribute('data-theme', currentMode);
+    updateBrowserChrome(currentMode);
 
     // Modül başlatma
     function init() {
@@ -31,20 +38,25 @@ const themeModule = (function() {
             return this;
         }
 
-        // Kullanıcının tema tercihini localStorage'dan al
-        const savedMode = normalizeMode(localStorage.getItem('mode') || 'light');
-
-        // Kaydedilen modu uygula
-        applyMode(savedMode);
+        applyMode(preferredMode || getSystemMode());
 
         if (themeOptions.length) {
             themeOptions.forEach(option => {
-                option.addEventListener('click', () => applyMode(option.dataset.themeOption));
+                option.addEventListener('click', () => chooseMode(option.dataset.themeOption));
             });
         } else {
             themeToggle.addEventListener('click', function() {
-                applyMode(currentMode === 'dark' ? 'light' : 'dark');
+                chooseMode(currentMode === 'dark' ? 'light' : 'dark');
             });
+        }
+
+        const followSystemTheme = () => {
+            if (!preferredMode) applyMode(getSystemMode());
+        };
+        if (systemTheme.addEventListener) {
+            systemTheme.addEventListener('change', followSystemTheme);
+        } else {
+            systemTheme.addListener(followSystemTheme);
         }
 
         return this;
@@ -53,7 +65,6 @@ const themeModule = (function() {
     // Modu uygulama fonksiyonu
     function applyMode(mode) {
         currentMode = normalizeMode(mode);
-        localStorage.setItem('mode', currentMode);
 
         // Eski night-mode efektlerini temizle
         document.documentElement.removeAttribute('data-night-mode');
@@ -79,6 +90,29 @@ const themeModule = (function() {
         }
 
         updateBrowserChrome(currentMode);
+    }
+
+    function chooseMode(mode) {
+        preferredMode = normalizeMode(mode);
+        try {
+            localStorage.setItem('mode', preferredMode);
+        } catch (error) {
+            // Keep the explicit choice in memory when storage is unavailable.
+        }
+        applyMode(preferredMode);
+    }
+
+    function readPreference() {
+        try {
+            const mode = localStorage.getItem('mode');
+            return mode === 'dark' || mode === 'light' ? mode : null;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    function getSystemMode() {
+        return systemTheme.matches ? 'dark' : 'light';
     }
 
     function updateBrowserChrome(mode) {
