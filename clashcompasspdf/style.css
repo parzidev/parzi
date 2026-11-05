@@ -40,3 +40,5 @@ footer{gap:22px;padding:0 4vw}.footer-page{width:145px}.footer-page>span{font-si
 
 /* Chapter names and unnumbered content keep the presentation uncluttered. */
 .competitive-list article,.workflow-chain button{grid-template-columns:1fr}.footer-page{gap:0;align-items:center}.game-grid article{display:block}.game-grid p{grid-column:auto}
+
+.portfolio-adoption{display:flex;gap:45px;margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}.portfolio-adoption a{text-decoration:none}.portfolio-adoption strong{display:block;font:600 34px/1 "Barlow Condensed";color:var(--rust)}.portfolio-adoption span{display:block;font-size:14px;margin-top:5px;color:var(--muted)}.portfolio-metric{display:flex;gap:10px;align-items:baseline;margin-top:12px}.portfolio-metric strong{font:600 32px/1 "Barlow Condensed";color:var(--rust)}.portfolio-metric span{font-size:14px;color:var(--muted)}@media(max-width:760px){.portfolio-adoption{gap:28px}.portfolio-adoption span{font-size:12px}}
