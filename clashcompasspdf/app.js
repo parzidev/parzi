@@ -67,3 +67,6 @@ document.querySelectorAll('[data-gallery]').forEach(b=>b.onclick=()=>{$('#enlarg
 go(location.hash.slice(1)||'overview',false);
 
 document.querySelectorAll('[data-layout]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-layout]').forEach(x=>{x.classList.toggle('selected',x===b);x.setAttribute('aria-pressed',String(x===b));});$('#esports-preview').src=b.dataset.layout;$('.map-zoom').dataset.gallery=b.dataset.layout;$('.layout-feature figcaption span').textContent=b.dataset.layoutName;});
+
+document.querySelectorAll('[data-exhibit]').forEach(b=>b.onclick=()=>{const box=document.getElementById(b.dataset.exhibit);box.querySelectorAll('[data-pane]').forEach(p=>p.hidden=p.dataset.pane!==b.dataset.show);box.querySelectorAll('[data-exhibit]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',String(x===b));});});
+document.querySelectorAll('[data-plan]').forEach(b=>b.addEventListener('click',()=>{const demo=document.querySelector('[data-show="demo"]');if(demo)demo.click();}));
