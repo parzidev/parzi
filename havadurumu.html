@@ -153,10 +153,6 @@
             cursor: pointer;
         }
 
-        #card-ada {
-            --card-accent: #60a5fa;
-        }
-
         #card-parzi {
             --card-accent: #facc15;
         }
@@ -764,102 +760,6 @@
         </header>
 
         <div class="cards-grid">
-            <!-- Ada Ev Kartı -->
-            <div class="weather-card is-open" id="card-ada">
-                <div class="card-header">
-                    <div>
-                        <h2 class="city-name">Ada Ev</h2>
-                        <div class="weather-desc" id="desc-ada">
-                            <div class="skeleton skeleton-text" style="width: 80px;"></div>
-                        </div>
-                    </div>
-                    <div class="weather-icon-container float-anim" id="icon-ada">
-                        <div class="skeleton skeleton-icon"></div>
-                    </div>
-                </div>
-
-                <div id="temp-ada" class="temperature">
-                    <div class="skeleton skeleton-temp"></div>
-                </div>
-
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <span class="stat-label"><i data-lucide="thermometer" style="width: 14px; height: 14px;"></i>
-                            Hissedilen</span>
-                        <span class="stat-value" id="feels-ada">
-                            <div class="skeleton skeleton-text" style="height: 0.95rem; width: 40px; margin-top: 0">
-                            </div>
-                        </span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label"><i data-lucide="droplets" style="width: 14px; height: 14px;"></i>
-                            Nem</span>
-                        <span class="stat-value" id="hum-ada">
-                            <div class="skeleton skeleton-text" style="height: 0.95rem; width: 40px; margin-top: 0">
-                            </div>
-                        </span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label"><i data-lucide="wind" style="width: 14px; height: 14px;"></i>
-                            Rüzgar</span>
-                        <span class="stat-value" id="wind-ada">
-                            <div class="skeleton skeleton-text" style="height: 0.95rem; width: 60px; margin-top: 0">
-                            </div>
-                        </span>
-                    </div>
-                </div>
-                <div class="extra-grid">
-                    <div class="extra-pill">
-                        <span class="extra-label"><i data-lucide="umbrella" style="width: 13px; height: 13px;"></i>
-                            Yağmur</span>
-                        <span class="extra-value" id="rain-ada">
-                            <div class="skeleton skeleton-text" style="height: 0.92rem; width: 50px; margin-top: 0">
-                            </div>
-                        </span>
-                    </div>
-                    <div class="extra-pill">
-                        <span class="extra-label"><i data-lucide="eye" style="width: 13px; height: 13px;"></i>
-                            Görüş</span>
-                        <span class="extra-value" id="visibility-ada">
-                            <div class="skeleton skeleton-text" style="height: 0.92rem; width: 48px; margin-top: 0">
-                            </div>
-                        </span>
-                    </div>
-                    <div class="extra-pill">
-                        <span class="extra-label"><i data-lucide="sunrise" style="width: 13px; height: 13px;"></i>
-                            Güneş</span>
-                        <span class="extra-value" id="sun-ada">
-                            <div class="skeleton skeleton-text" style="height: 0.92rem; width: 84px; margin-top: 0">
-                            </div>
-                        </span>
-                    </div>
-                </div>
-                <button class="forecast-toggle" type="button" id="toggle-ada" aria-expanded="true"
-                    aria-controls="forecast-ada">
-                    <span>Bugün ve 5 gün</span>
-                    <i data-lucide="chevron-down" style="width: 18px; height: 18px;"></i>
-                </button>
-                <div class="forecast-panel" id="forecast-ada">
-                    <div class="forecast-panel-inner">
-                        <div class="today-hours">
-                            <div class="forecast-section-title">Bugünün saatleri <span>3 saatlik</span></div>
-                            <div class="hourly-strip" id="hourly-ada">
-                                <div class="skeleton skeleton-text" style="height: 112px; width: 92px; margin-top: 0">
-                                </div>
-                                <div class="skeleton skeleton-text" style="height: 112px; width: 92px; margin-top: 0">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="forecast-section-title">5 günlük tahmin <span>özet</span></div>
-                        <div class="forecast-list" id="forecast-list-ada">
-                            <div class="skeleton skeleton-text" style="height: 64px; width: 100%; margin-top: 0"></div>
-                            <div class="skeleton skeleton-text" style="height: 64px; width: 100%; margin-top: 0"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="last-updated" id="time-ada"></div>
-            </div>
-
             <!-- Parzi Ev Kartı -->
             <div class="weather-card" id="card-parzi">
                 <div class="card-header">
@@ -964,7 +864,6 @@
 
         const API_KEY = 'bc9ee4dc966affd2c33c7358511d1510';
         const CITIES = [
-            { id: 'ada', name: 'silifke' },
             { id: 'parzi', name: 'arnavutköy' }
         ];
 

@@ -10,6 +10,7 @@
     'use strict';
 
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const SPEED = 1.4;
     const palette = ['#db6545', '#9861cf', '#339b79', '#bd8c28', '#cd5e91', '#378e9b'];
     let current = null;
 
@@ -340,7 +341,7 @@
             }
             const rect = this.bounds(task.element);
             task.rect = rect;
-            const elapsed = time - job.started;
+            const elapsed = (time - job.started) * SPEED;
             if (elapsed < job.travel) {
                 const fraction = elapsed / job.travel;
                 const eased = fraction * fraction * (3 - 2 * fraction);
@@ -405,8 +406,8 @@
                     else {
                         const x = parking.x + index * parking.step;
                         const y = parking.y;
-                        agent.x += (x - agent.x) * Math.min(1, delta * 6);
-                        agent.y += (y - agent.y) * Math.min(1, delta * 6);
+                        agent.x += (x - agent.x) * Math.min(1, delta * 6 * SPEED);
+                        agent.y += (y - agent.y) * Math.min(1, delta * 6 * SPEED);
                         agent.parked = Math.hypot(x - agent.x, y - agent.y) < 0.5;
                         if (agent.parked) {
                             agent.x = x;
