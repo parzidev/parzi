@@ -1,0 +1,36 @@
+{
+  "messages": [
+    "caw, hello",
+    "just passing through",
+    "looking for crumbs",
+    "that looks shiny",
+    "one more lap",
+    "found a perch",
+    "wings need a stretch",
+    "where is my twig?",
+    "the wind changed",
+    "keeping an eye out",
+    "this branch will do",
+    "heard something",
+    "a feather came loose",
+    "watching from here",
+    "room for one crow",
+    "taking the long way",
+    "nice view from here",
+    "a small detour",
+    "looking for a quiet spot",
+    "back on the wing",
+    "just checking the corners",
+    "time for a short rest",
+    "who moved my twig?",
+    "one crumb would be enough"
+  ],
+  "transitionMessages": [
+    "another window",
+    "a new view",
+    "flying over here",
+    "found another ledge",
+    "coming through",
+    "a short hop"
+  ]
+}

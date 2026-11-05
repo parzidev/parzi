@@ -1,184 +1,8 @@
 // Wandering crow
 (function () {
-    const messages = [
-        'npm install snacks',
-        'ship it? maybe',
-        'ping 127.0.0.1',
-        'cache invalidated',
-        'works on my machine',
-        'sudo make coffee',
-        'segfault avoided',
-        'deploying vibes',
-        'git blame gravity',
-        'undefined is a mood',
-        'null pointer nap',
-        '404 motivation found',
-        'chmod +x confidence',
-        'merge conflict in brain',
-        'stack overflowed again',
-        'linting my feelings',
-        'kernel panic? cute',
-        'localhost sweet localhost',
-        'dns propagation arc',
-        'hotfixing reality',
-        'async await snacks',
-        'promise still pending',
-        'garbage collector hungry',
-        'recursion wants attention',
-        'binary dreams only',
-        'bit flipped politely',
-        'cron job missed me',
-        'api rate limited',
-        'docker compose chaos',
-        'yaml did nothing wrong',
-        'json has trust issues',
-        'css is sentient',
-        'z-index boss fight',
-        'flexbox entered chat',
-        'pixel perfect-ish',
-        'dark mode supremacy',
-        'terminal says hi',
-        'ssh into the void',
-        'vim exit unlocked',
-        'tabs versus spaces',
-        'commit: final_final',
-        'refactor the universe',
-        'prod is watching',
-        'rollback spell ready',
-        'cache says no',
-        'one more console.log',
-        'regex summoned rain',
-        'semicolon optional boss',
-        'heap is cozy',
-        'byte me gently',
-        'patch notes pending',
-        'lag spike detected',
-        'fps above feelings',
-        'quest accepted',
-        'side quest acquired',
-        'inventory full',
-        'mana too low',
-        'critical hit on bug',
-        'bug took poison damage',
-        'autosave complete',
-        'checkpoint reached',
-        'boss music starts',
-        'final boss: css',
-        'respawn in 3...',
-        'loading next area',
-        'npc behavior enabled',
-        'rare drop: motivation',
-        'loot table cursed',
-        'speedrun strats',
-        'any percent chaos',
-        'patch 1.0.1 maybe',
-        'nerf deadlines pls',
-        'buff coffee',
-        'skill issue? perhaps',
-        'roll for initiative',
-        'nat 1 deploy',
-        'nat 20 debug',
-        'aggro range too wide',
-        'stealth check failed',
-        'quest marker missing',
-        'minimap offline',
-        'crafting bug spray',
-        'xp gained: 3',
-        'level up soon',
-        'low hp, high ping',
-        'healer disconnected',
-        'party wiped by typo',
-        'raid starts at midnight',
-        'cooldown not ready',
-        'achievement unlocked',
-        'secret room found',
-        'glitch in matrix',
-        'texture pack loaded',
-        'shader compiling...',
-        'press f to debug',
-        'wasd brain mode',
-        'spacebar to cope',
-        'controller drift detected',
-        'save scumming reality',
-        'mod loader awake',
-        'dlc: extra bugs',
-        'open world anxiety',
-        'sandbox mode active',
-        'physics engine tired',
-        'ragdolling through tasks',
-        'hitbox questionable',
-        'enemy ai pathfinding',
-        'spawn camping errors',
-        'crafting table missing',
-        'redstone brain online',
-        'creeper? aw man',
-        'diamond pickaxe energy',
-        'nether portal vibes',
-        'enderman stole focus',
-        'elytra needs mending',
-        'triforce of caffeine',
-        'hyrule needs logs',
-        'pokemon used git pull',
-        'super effective fix',
-        'trainer wants coffee',
-        'dark souls of css',
-        'bonfire lit',
-        'you died: typo',
-        'estus flask empty',
-        'elden bug defeated',
-        'tarnished but compiling',
-        'portal gun unavailable',
-        'the cake is cached',
-        'companion cube approved',
-        'half-life 3 confirmed?',
-        'skyrim intro loading',
-        'fus ro debug',
-        'doom scroll complete',
-        'rip and tear bugs',
-        'among us in prod',
-        'sus commit detected',
-        'minecraft server lag',
-        'terraria night begins',
-        'stardew deploy day',
-        'factorio belt jam',
-        'satisfactory spaghetti',
-        'rimworld colonist idle',
-        'dwarf fortress moment',
-        'kerbal stage separation',
-        'rocket equation hurts',
-        'sim city tax bug',
-        'city needs more ram',
-        'civilization one more turn',
-        'age of deploys',
-        'starcraft apm: 12',
-        'league queue dodged',
-        'valorant whiff logged',
-        'cs2 smoke lineup',
-        'minecraft bed missing',
-        'steam sale damage',
-        'backlog boss undefeated',
-        'save file corrupted',
-        'cloud sync praying',
-        'anti-cheat says maybe',
-        'patcher stuck at 99%',
-        'mod conflict detected'
-    ];
-
-    const transitionMessages = [
-        'window hop',
-        'portal open',
-        'teleporting...',
-        'dimension shift',
-        'alt-tab dodge',
-        'loading next window',
-        'transfer complete',
-        'syncing position',
-        'phase shift',
-        'warp drive engaged',
-        'entering new instance',
-        'scene changed',
-        'respawned elsewhere'
-    ];
+    let messages = [];
+    let transitionMessages = [];
+    const crowMessages = new Set();
 
     const bot = document.createElement('button');
     bot.type = 'button';
@@ -239,6 +63,8 @@
     let lastMessageIndex = -1;
     let lastWriteAt = 0;
 
+    loadMessages();
+
     document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(bot);
         crowSize = bot.offsetWidth || BOT_SIZE;
@@ -253,8 +79,8 @@
             writeState(state);
         }
 
-        if (!state.message) {
-            setMessage('hello, world');
+        if (messages.length && !crowMessages.has(state.message)) {
+            setMessage(messages[0]);
         }
 
         setInterval(updateWindowRegistry, 500);
@@ -562,11 +388,31 @@
         bot.style.transform = `translate3d(${localX}px, ${localY}px, 0) rotate(${tilt}deg)`;
         drawCrow();
 
-        if (state.message && state.messageUntil > Date.now() && isVisible) {
+        if (crowMessages.has(state.message) && state.messageUntil > Date.now() && isVisible) {
             bubble.textContent = state.message;
             bubble.classList.add('is-visible');
         } else {
             bubble.classList.remove('is-visible');
+        }
+    }
+
+    async function loadMessages() {
+        try {
+            const response = await fetch('data/crow-messages.json', { cache: 'no-store' });
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+            const data = await response.json();
+            if (!Array.isArray(data.messages) || !Array.isArray(data.transitionMessages)) {
+                throw new Error('Invalid crow messages data');
+            }
+            const isMessage = value => typeof value === 'string' && value.trim().length > 0;
+            messages = data.messages.filter(isMessage);
+            transitionMessages = data.transitionMessages.filter(isMessage);
+            for (const message of [...messages, ...transitionMessages]) crowMessages.add(message);
+            if (state && messages.length && !crowMessages.has(state.message)) {
+                setMessage(messages[0]);
+            }
+        } catch (error) {
+            console.warn('Crow messages could not be loaded:', error.message);
         }
     }
 
@@ -579,6 +425,7 @@
     }
 
     function setTransitionMessage() {
+        if (!transitionMessages.length) return;
         state.message = transitionMessages[Math.floor(Math.random() * transitionMessages.length)];
         state.messageUntil = Date.now() + 1200;
     }
@@ -747,10 +594,12 @@
     bot.addEventListener('click', event => {
         event.preventDefault();
         event.stopPropagation();
-        setMessage(getRandomMessage());
+        const message = getRandomMessage();
+        if (message) setMessage(message);
     });
 
     function getRandomMessage() {
+        if (!messages.length) return null;
         let nextIndex = Math.floor(Math.random() * messages.length);
 
         if (messages.length > 1) {
