@@ -11,7 +11,6 @@ function go(target, updateHash = true) {
  document.querySelectorAll('.rail-button').forEach((b,i)=>{b.classList.toggle('current',i===idx); if(i===idx)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');});
  document.querySelectorAll('#chapter-links button').forEach((b,i)=>b.classList.toggle('menu-current',i===idx));
  $('#current-title').textContent=slides[idx].dataset.name;
- $('#counter').textContent=`${String(idx+1).padStart(2,'0')} / ${slides.length}`;
  $('#prev').disabled=idx===0; $('#next').disabled=idx===slides.length-1;
  document.title=`${slides[idx].dataset.name} · Clash Compass`;
  if(updateHash && location.hash.slice(1)!==slides[idx].id) history.replaceState(null,'',`#${slides[idx].id}`);
@@ -19,8 +18,8 @@ function go(target, updateHash = true) {
  const active=document.querySelector('.rail-button.current');if(active)active.scrollIntoView({block:'nearest',inline:'nearest'});
 }
 slides.forEach((s,i)=>{
- const b=document.createElement('button'); b.className='rail-button'; b.innerHTML=`<span>${String(i+1).padStart(2,'0')}</span>${s.dataset.name}`;b.title=`${i+1}. ${s.dataset.name}`;b.setAttribute('aria-label',b.title);b.onclick=()=>go(i);$('#rail').append(b);
- const m=document.createElement('button');m.textContent=`${String(i+1).padStart(2,'0')}  ${s.dataset.name}`;m.onclick=()=>go(i);$('#chapter-links').append(m);
+ const b=document.createElement('button'); b.className='rail-button'; b.textContent=s.dataset.name;b.title=s.dataset.name;b.setAttribute('aria-label',b.title);b.onclick=()=>go(i);$('#rail').append(b);
+ const m=document.createElement('button');m.textContent=s.dataset.name;m.onclick=()=>go(i);$('#chapter-links').append(m);
 });
 $('#prev').onclick=()=>go(current-1);$('#next').onclick=()=>go(current+1);
 document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
