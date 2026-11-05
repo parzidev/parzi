@@ -1,871 +1,122 @@
 <!DOCTYPE html>
 <html lang="tr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hava Durumu</title>
-    <!-- Modern web fonts -->
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#f5f4ef" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#171a17" media="(prefers-color-scheme: dark)">
+    <meta name="description" content="Arnavutköy için güncel hava durumu, saatlik tahmin ve API yanıtları.">
+    <title>Hava Durumu · parzi.dev</title>
+    <link rel="icon" href="images/code-white.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Lucide Icons for clean SVGs -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/weather-api.css?v=e0d4f324ae">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        :root {
-            --bg-base: #000000;
-            --bg-card: rgba(17, 19, 23, 0.78);
-            --bg-card-strong: rgba(255, 255, 255, 0.055);
-            --border-color: rgba(255, 255, 255, 0.08);
-            --border-hover: rgba(255, 255, 255, 0.15);
-            --text-primary: #ffffff;
-            --text-secondary: #a1a1aa;
-            --text-muted: #71717a;
-            --accent: #ededed;
-            --accent-bg: #111111;
-            --sun: #facc15;
-            --rain: #60a5fa;
-            --cloud: #94a3b8;
-            --leaf: #4ade80;
-            --rose: #fb7185;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background:
-                linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 260px),
-                linear-gradient(135deg, #020203 0%, #0c0e12 46%, #030303 100%);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100%;
-            background-image:
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 48px 48px;
-            mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent 680px);
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1120px;
-            padding: 3rem 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 2.5rem;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-            animation: fadeDown 0.6s ease-out;
-        }
-
-        h1 {
-            font-size: 1.35rem;
-            font-weight: 600;
-            letter-spacing: 0;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            background: linear-gradient(to right, #ffffff, #a1a1aa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .refresh-btn {
-            background-color: var(--text-primary);
-            color: var(--bg-base);
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 0.875rem;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
-        }
-
-        .refresh-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(255, 255, 255, 0.15);
-            background-color: #f4f4f5;
-        }
-
-        .refresh-btn:active {
-            transform: translateY(1px);
-        }
-
-        .spin-anim {
-            animation: spin 1s linear infinite;
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            align-items: start;
-            gap: 2rem;
-            animation: fadeUp 0.6s ease-out 0.2s both;
-        }
-
-        .weather-card {
-            --card-accent: #60a5fa;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 2rem;
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
-            position: relative;
-            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        #card-parzi {
-            --card-accent: #facc15;
-        }
-
-        .weather-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background:
-                linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 34%),
-                linear-gradient(90deg, var(--card-accent), transparent 42%);
-            opacity: 0.08;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .weather-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 100px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 100%);
-            pointer-events: none;
-        }
-
-        .weather-card:hover {
-            transform: translateY(-6px);
-            border-color: color-mix(in srgb, var(--card-accent) 44%, rgba(255, 255, 255, 0.16));
-            background: rgba(22, 24, 29, 0.86);
-            box-shadow:
-                0 18px 56px rgba(0, 0, 0, 0.58),
-                0 0 0 1px color-mix(in srgb, var(--card-accent) 22%, transparent),
-                inset 0 1px 0 rgba(255, 255, 255, 0.08);
-        }
-
-        .weather-card:hover::before {
-            opacity: 0.16;
-        }
-
-        .weather-card:focus-visible {
-            outline: 2px solid var(--card-accent);
-            outline-offset: 4px;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            z-index: 1;
-        }
-
-        .city-name {
-            font-size: 1.25rem;
-            font-weight: 500;
-            letter-spacing: 0;
-            color: var(--text-primary);
-        }
-
-        .weather-desc {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            text-transform: capitalize;
-            margin-top: 0.4rem;
-        }
-
-        .weather-icon-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            filter: drop-shadow(0 10px 18px color-mix(in srgb, var(--card-accent) 22%, transparent));
-            transition: transform 0.25s ease, filter 0.25s ease;
-        }
-
-        .weather-card:hover .weather-icon-container {
-            transform: translateY(-2px) scale(1.04);
-            filter: drop-shadow(0 14px 22px color-mix(in srgb, var(--card-accent) 34%, transparent));
-        }
-
-        .temperature {
-            display: flex;
-            align-items: flex-start;
-            font-size: 6rem;
-            font-weight: 700;
-            letter-spacing: 0;
-            line-height: 1;
-            margin: 1.5rem 0;
-            color: var(--text-primary);
-            z-index: 1;
-            transition: color 0.25s ease, text-shadow 0.25s ease;
-        }
-
-        .weather-card:hover .temperature {
-            color: #ffffff;
-            text-shadow: 0 18px 38px rgba(255, 255, 255, 0.08);
-        }
-
-        .deg-symbol {
-            font-size: 3.5rem;
-            font-weight: 400;
-            margin-top: 0.2rem;
-            color: var(--text-secondary);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border-color);
-            z-index: 1;
-        }
-
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-            gap: 0.4rem;
-        }
-
-        .stat-label {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .stat-value {
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-
-        .extra-grid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 0.75rem;
-            z-index: 1;
-        }
-
-        .extra-pill {
-            min-height: 66px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background: var(--bg-card-strong);
-            padding: 0.75rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 0.35rem;
-            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-        }
-
-        .extra-pill:hover {
-            transform: translateY(-2px);
-            border-color: color-mix(in srgb, var(--card-accent) 36%, rgba(255, 255, 255, 0.14));
-            background: rgba(255, 255, 255, 0.075);
-        }
-
-        .extra-label {
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
-            color: var(--text-muted);
-            font-size: 0.72rem;
-            font-weight: 600;
-        }
-
-        .extra-value {
-            color: var(--text-primary);
-            font-size: 0.92rem;
-            font-weight: 600;
-        }
-
-        .forecast-toggle {
-            width: 100%;
-            border: 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.075);
-            border-radius: 0;
-            background: transparent;
-            color: var(--text-secondary);
-            font-family: inherit;
-            font-size: 0.88rem;
-            font-weight: 600;
-            min-height: 34px;
-            padding: 0.85rem 0 0.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            z-index: 2;
-            transition: color 0.2s ease, border-color 0.2s ease;
-        }
-
-        .forecast-toggle:hover {
-            color: var(--text-primary);
-            border-color: color-mix(in srgb, var(--card-accent) 34%, rgba(255, 255, 255, 0.12));
-        }
-
-        .forecast-toggle i {
-            color: var(--text-muted);
-            transition: transform 0.22s ease, color 0.2s ease;
-        }
-
-        .forecast-toggle:hover i {
-            color: var(--card-accent);
-        }
-
-        .weather-card.is-open .forecast-toggle i {
-            transform: rotate(180deg);
-        }
-
-        .forecast-panel {
-            display: none;
-            grid-template-rows: 0fr;
-            opacity: 0;
-            transform: translateY(-4px);
-            transition: grid-template-rows 0.28s ease, opacity 0.22s ease, transform 0.22s ease;
-            z-index: 1;
-        }
-
-        .weather-card.is-open .forecast-panel {
-            display: grid;
-            grid-template-rows: 1fr;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .forecast-panel-inner {
-            overflow: hidden;
-        }
-
-        .forecast-list {
-            display: grid;
-            gap: 0.75rem;
-        }
-
-        .forecast-section-title {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 0.35rem;
-            color: var(--text-primary);
-            font-size: 0.82rem;
-            font-weight: 700;
-            margin: 0.15rem 0 0.65rem;
-        }
-
-        .forecast-section-title::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            border-radius: 2px;
-            background: var(--card-accent);
-            box-shadow: 0 0 18px color-mix(in srgb, var(--card-accent) 70%, transparent);
-            margin-right: 0.45rem;
-        }
-
-        .forecast-section-title span {
-            margin-left: auto;
-            color: var(--text-muted);
-            font-size: 0.72rem;
-            font-weight: 600;
-        }
-
-        .today-hours {
-            margin-bottom: 1rem;
-        }
-
-        .hourly-strip {
-            display: grid;
-            grid-auto-flow: column;
-            grid-auto-columns: minmax(92px, 1fr);
-            gap: 0.65rem;
-            overflow-x: auto;
-            padding-bottom: 0.2rem;
-            scrollbar-width: thin;
-        }
-
-        .hour-card {
-            min-height: 112px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.045);
-            padding: 0.78rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 0.45rem;
-            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .hour-card:hover {
-            transform: translateY(-3px);
-            border-color: color-mix(in srgb, var(--card-accent) 40%, rgba(255, 255, 255, 0.16));
-            background: rgba(255, 255, 255, 0.075);
-            box-shadow: 0 12px 26px rgba(0, 0, 0, 0.28);
-        }
-
-        .hour-time {
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-
-        .hour-temp {
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
-            font-size: 1.18rem;
-            font-weight: 800;
-        }
-
-        .hour-desc,
-        .hour-rain {
-            color: var(--text-secondary);
-            font-size: 0.7rem;
-            font-weight: 600;
-            line-height: 1.25;
-        }
-
-        .hour-desc {
-            text-transform: capitalize;
-        }
-
-        .forecast-day {
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.045);
-            padding: 0.9rem;
-            display: grid;
-            grid-template-columns: 1.05fr auto 1.3fr;
-            align-items: center;
-            gap: 0.85rem;
-            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .forecast-day:hover {
-            transform: translateX(4px);
-            border-color: color-mix(in srgb, var(--card-accent) 34%, rgba(255, 255, 255, 0.14));
-            background: rgba(255, 255, 255, 0.07);
-            box-shadow: 0 12px 26px rgba(0, 0, 0, 0.24);
-        }
-
-        .forecast-date {
-            display: flex;
-            flex-direction: column;
-            gap: 0.22rem;
-            min-width: 0;
-        }
-
-        .forecast-weekday {
-            color: var(--text-primary);
-            font-size: 0.95rem;
-            font-weight: 700;
-        }
-
-        .forecast-desc {
-            color: var(--text-secondary);
-            font-size: 0.76rem;
-            text-transform: capitalize;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .forecast-temp {
-            display: flex;
-            align-items: baseline;
-            gap: 0.25rem;
-            color: var(--text-primary);
-            font-size: 1.35rem;
-            font-weight: 700;
-        }
-
-        .forecast-temp span {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .forecast-meta {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0.4rem;
-        }
-
-        .forecast-chip {
-            min-height: 30px;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.055);
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 0.32rem;
-            padding: 0.35rem 0.45rem;
-            font-size: 0.72rem;
-            font-weight: 600;
-            white-space: nowrap;
-            transition: background 0.2s ease, color 0.2s ease;
-        }
-
-        .forecast-day:hover .forecast-chip,
-        .hour-card:hover .hour-rain {
-            background: rgba(255, 255, 255, 0.085);
-        }
-
-        .forecast-chip strong {
-            color: var(--text-primary);
-            font-weight: 700;
-        }
-
-        .last-updated {
-            align-self: flex-end;
-            margin-top: -0.65rem;
-            font-size: 0.65rem;
-            color: var(--text-secondary);
-            font-weight: 400;
-            z-index: 1;
-        }
-
-        /* Loading Skeleton Animation */
-        .skeleton {
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 25%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 75%);
-            background-size: 200% 100%;
-            animation: skeletonLoading 1.5s infinite;
-            border-radius: 6px;
-        }
-
-        .skeleton-text {
-            height: 1rem;
-            width: 60%;
-            margin-top: 0.4rem;
-        }
-
-        .skeleton-temp {
-            height: 4.5rem;
-            width: 50%;
-            margin: 1.5rem 0;
-            border-radius: 12px;
-        }
-
-        .skeleton-icon {
-            height: 48px;
-            width: 48px;
-            border-radius: 50%;
-        }
-
-        @keyframes skeletonLoading {
-            0% {
-                background-position: 200% 0;
-            }
-
-            100% {
-                background-position: -200% 0;
-            }
-        }
-
-        @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes fadeDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-8px);
-            }
-        }
-
-        .float-anim {
-            animation: float 4s ease-in-out infinite;
-        }
-
-        /* Responsive */
-        @media (max-width: 640px) {
-            .container {
-                padding: 2rem 1rem;
-                gap: 1.5rem;
-            }
-
-            .weather-card {
-                padding: 1.5rem;
-            }
-
-            h1 {
-                min-width: 0;
-                font-size: 1.15rem;
-            }
-
-            .refresh-btn {
-                flex-shrink: 0;
-                padding: 0.5rem 0.75rem;
-            }
-
-            .cards-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .extra-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .forecast-day {
-                grid-template-columns: 1fr auto;
-            }
-
-            .forecast-meta {
-                grid-column: 1 / -1;
-            }
-
-            header {
-                padding-bottom: 1rem;
-            }
-
-            .temperature {
-                font-size: 4.5rem;
-                margin: 1rem 0;
-            }
-
-            .deg-symbol {
-                font-size: 2.5rem;
-            }
-        }
-
-        /* Icon styling */
-        .lucide {
-            stroke-width: 2;
-        }
-
-        .icon-sun {
-            color: #facc15;
-        }
-
-        .icon-moon {
-            color: #e2e8f0;
-        }
-
-        .icon-cloud {
-            color: #94a3b8;
-        }
-
-        .icon-rain {
-            color: #60a5fa;
-        }
-
-        .icon-snow {
-            color: #bae6fd;
-        }
-
-        .icon-lightning {
-            color: #facc15;
-        }
-    </style>
 </head>
-
 <body>
-    <div class="container">
-        <header>
-            <h1>
-                <i data-lucide="cloud-sun" style="width: 24px; height: 24px; color: #facc15;"></i>
-                Hava Durumu
-            </h1>
-            <button class="refresh-btn" id="refresh-btn">
-                <i data-lucide="refresh-cw" id="refresh-icon" style="width: 14px; height: 14px;"></i>
-                Yenile
-            </button>
+    <div class="shell">
+        <header class="masthead">
+            <a class="wordmark" href="/" aria-label="parzi.dev"><span class="wordmark-symbol" aria-hidden="true">{ }</span><span>parzi<span class="slash"> / </span>weather</span></a>
+            <nav aria-label="Sayfa bölümleri"><a href="#current">Güncel</a><a href="#forecast">Tahmin</a><a href="#response">JSON</a></nav>
         </header>
-
-        <div class="cards-grid">
-            <!-- Parzi Ev Kartı -->
-            <div class="weather-card" id="card-parzi">
-                <div class="card-header">
-                    <div>
-                        <h2 class="city-name">Parzi Ev</h2>
-                        <div class="weather-desc" id="desc-parzi">
-                            <div class="skeleton skeleton-text" style="width: 80px;"></div>
-                        </div>
-                    </div>
-                    <div class="weather-icon-container float-anim" id="icon-parzi">
-                        <div class="skeleton skeleton-icon"></div>
-                    </div>
-                </div>
-
-                <div id="temp-parzi" class="temperature">
-                    <div class="skeleton skeleton-temp"></div>
-                </div>
-
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <span class="stat-label"><i data-lucide="thermometer" style="width: 14px; height: 14px;"></i>
-                            Hissedilen</span>
-                        <span class="stat-value" id="feels-parzi">
-                            <div class="skeleton skeleton-text" style="height: 0.95rem; width: 40px; margin-top: 0">
-                            </div>
-                        </span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label"><i data-lucide="droplets" style="width: 14px; height: 14px;"></i>
-                            Nem</span>
-                        <span class="stat-value" id="hum-parzi">
-                            <div class="skeleton skeleton-text" style="height: 0.95rem; width: 40px; margin-top: 0">
-                            </div>
-                        </span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label"><i data-lucide="wind" style="width: 14px; height: 14px;"></i>
-                            Rüzgar</span>
-                        <span class="stat-value" id="wind-parzi">
-                            <div class="skeleton skeleton-text" style="height: 0.95rem; width: 60px; margin-top: 0">
-                            </div>
-                        </span>
-                    </div>
-                </div>
-                <div class="extra-grid">
-                    <div class="extra-pill">
-                        <span class="extra-label"><i data-lucide="umbrella" style="width: 13px; height: 13px;"></i>
-                            Yağmur</span>
-                        <span class="extra-value" id="rain-parzi">
-                            <div class="skeleton skeleton-text" style="height: 0.92rem; width: 50px; margin-top: 0">
-                            </div>
-                        </span>
-                    </div>
-                    <div class="extra-pill">
-                        <span class="extra-label"><i data-lucide="eye" style="width: 13px; height: 13px;"></i>
-                            Görüş</span>
-                        <span class="extra-value" id="visibility-parzi">
-                            <div class="skeleton skeleton-text" style="height: 0.92rem; width: 48px; margin-top: 0">
-                            </div>
-                        </span>
-                    </div>
-                    <div class="extra-pill">
-                        <span class="extra-label"><i data-lucide="sunrise" style="width: 13px; height: 13px;"></i>
-                            Güneş</span>
-                        <span class="extra-value" id="sun-parzi">
-                            <div class="skeleton skeleton-text" style="height: 0.92rem; width: 84px; margin-top: 0">
-                            </div>
-                        </span>
-                    </div>
-                </div>
-                <button class="forecast-toggle" type="button" id="toggle-parzi" aria-expanded="false"
-                    aria-controls="forecast-parzi">
-                    <span>Bugün ve 5 gün</span>
-                    <i data-lucide="chevron-down" style="width: 18px; height: 18px;"></i>
-                </button>
-                <div class="forecast-panel" id="forecast-parzi">
-                    <div class="forecast-panel-inner">
-                        <div class="today-hours">
-                            <div class="forecast-section-title">Bugünün saatleri <span>3 saatlik</span></div>
-                            <div class="hourly-strip" id="hourly-parzi">
-                                <div class="skeleton skeleton-text" style="height: 112px; width: 92px; margin-top: 0">
-                                </div>
-                                <div class="skeleton skeleton-text" style="height: 112px; width: 92px; margin-top: 0">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="forecast-section-title">5 günlük tahmin <span>özet</span></div>
-                        <div class="forecast-list" id="forecast-list-parzi">
-                            <div class="skeleton skeleton-text" style="height: 64px; width: 100%; margin-top: 0"></div>
-                            <div class="skeleton skeleton-text" style="height: 64px; width: 100%; margin-top: 0"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="last-updated" id="time-parzi"></div>
-            </div>
+        <div class="intro">
+            <div><span class="eyebrow">OpenWeather / veri görünümü</span><h1>Hava durumu</h1></div>
+            <button class="refresh-btn" id="refresh-btn" type="button"><i data-lucide="refresh-cw" id="refresh-icon" aria-hidden="true"></i>Yenile</button>
         </div>
+        <div class="request-bar">
+            <span class="method">GET</span><code class="request-path" id="request-path">/data/2.5/weather</code>
+            <span class="request-host">api.openweathermap.org</span>
+            <div class="request-result"><span class="http-status" id="request-status" role="status" aria-live="polite">—</span><span class="latency" id="request-latency">— ms</span></div>
+        </div>
+        <div class="query-row" aria-label="İstek parametreleri"><span>q=<b>arnavutköy</b></span><span>units=<b>metric</b></span><span>lang=<b>tr</b></span></div>
+        <main class="weather-card is-open" id="card-parzi">
+            <div class="workspace">
+                <section class="panel current-panel" id="current" aria-labelledby="current-heading">
+                    <div class="panel-heading"><span id="current-heading"><span class="index">01</span>Güncel</span><span class="secondary">weather.current</span></div>
+                    <div class="current-body">
+                        <div class="location-row"><h2 class="city-name" id="location-name">Arnavutköy</h2><span class="country" id="location-country">TR</span></div>
+                        <p class="weather-desc" id="desc-parzi"><span class="skeleton"></span></p>
+                        <div class="readout"><div class="temperature" id="temp-parzi"><span class="skeleton skeleton-temp"></span></div><div class="weather-icon-container" id="icon-parzi" aria-hidden="true"><span class="skeleton skeleton-icon"></span></div></div>
+                        <dl class="stats-grid">
+                            <div class="stat-item"><dt class="stat-label">feels_like</dt><dd class="stat-value" id="feels-parzi">—</dd></div>
+                            <div class="stat-item"><dt class="stat-label">humidity</dt><dd class="stat-value" id="hum-parzi">—</dd></div>
+                            <div class="stat-item"><dt class="stat-label">wind_speed</dt><dd class="stat-value" id="wind-parzi">—</dd></div>
+                        </dl>
+                        <dl class="extra-grid">
+                            <div class="extra-pill"><dt class="extra-label">rain_probability</dt><dd class="extra-value" id="rain-parzi">—</dd></div>
+                            <div class="extra-pill"><dt class="extra-label">visibility</dt><dd class="extra-value" id="visibility-parzi">—</dd></div>
+                            <div class="extra-pill"><dt class="extra-label">sunrise / sunset</dt><dd class="extra-value" id="sun-parzi">—</dd></div>
+                        </dl>
+                        <p class="last-updated" id="time-parzi"></p>
+                    </div>
+                </section>
+                <section class="panel response-panel" id="response" aria-label="API yanıtı">
+                    <div class="response-tabs" role="group" aria-label="API isteği"><button type="button" data-endpoint="current" aria-pressed="true">current</button><button type="button" data-endpoint="forecast" aria-pressed="false">forecast</button><span class="file-kind">JSON</span></div>
+                    <div class="code-window"><pre class="code-lines" id="response-lines" aria-hidden="true"></pre><pre class="code-content"><code id="response-json"></code></pre><span class="response-empty" id="response-empty">Yanıt bekleniyor</span></div>
+                    <div class="code-footer"><span id="response-type">—</span><span id="response-size">—</span><button class="copy-response" type="button" id="copy-response" disabled>JSON kopyala</button></div>
+                </section>
+            </div>
+            <section class="forecast-wrap" id="forecast" aria-labelledby="forecast-heading">
+                <button class="forecast-toggle" type="button" id="toggle-parzi" aria-expanded="true" aria-controls="forecast-parzi"><span id="forecast-heading"><span class="index">02 / </span>Tahmin</span><span class="toggle-end">5 gün<i data-lucide="chevron-down" aria-hidden="true"></i></span></button>
+                <div class="forecast-panel" id="forecast-parzi"><div class="forecast-panel-inner">
+                    <div class="forecast-section"><h3 class="forecast-section-title">Saatlik<span>interval: 3h</span></h3><div class="hourly-strip" id="hourly-parzi"><span class="skeleton"></span></div></div>
+                    <div class="forecast-section"><h3 class="forecast-section-title">Günlük<span>max / min</span></h3><div class="forecast-list" id="forecast-list-parzi"><span class="skeleton"></span></div></div>
+                </div></div>
+            </section>
+        </main>
+        <footer class="page-footer"><span><span class="footer-bracket">[ ]</span>Arnavutköy, İstanbul</span><a href="https://openweathermap.org/" target="_blank" rel="noopener noreferrer">source: OpenWeather</a></footer>
     </div>
-
     <script>
         // Init icons generally
-        lucide.createIcons();
+        renderIcons();
 
         const API_KEY = 'bc9ee4dc966affd2c33c7358511d1510';
         const CITIES = [
             { id: 'parzi', name: 'arnavutköy' }
         ];
+
+
+        const requestEntries = {
+            current: { path: '/data/2.5/weather', phase: 'idle' },
+            forecast: { path: '/data/2.5/forecast', phase: 'idle' }
+        };
+        let selectedEndpoint = 'current';
+        let refreshInFlight = false;
+        let displayedJson = '';
+        let copyTimer;
+
+        function renderIcons(root) {
+            if (window.lucide) window.lucide.createIcons(root ? { root } : undefined);
+        }
+
+        function renderResponse() {
+            const entry = requestEntries[selectedEndpoint];
+            const status = document.getElementById('request-status');
+            document.getElementById('request-path').textContent = entry.path;
+            status.className = 'http-status ' + entry.phase;
+            status.textContent = entry.phase === 'pending' ? 'İstek sürüyor'
+                : entry.status ? entry.status + (entry.phase === 'success' ? ' OK' : ' ERROR')
+                : entry.phase === 'error' ? 'Bağlantı hatası' : '—';
+            document.getElementById('request-latency').textContent = Number.isFinite(entry.ms) ? entry.ms + ' ms' : '— ms';
+            const payload = entry.data || (entry.error ? { error: entry.error } : null);
+            displayedJson = payload ? JSON.stringify(payload, (key, value) =>
+                /^(appid|api[_-]?key|token|authorization)$/i.test(key) ? undefined : value, 2) : '';
+            document.getElementById('response-json').textContent = displayedJson;
+            document.getElementById('response-lines').textContent = displayedJson
+                ? Array.from({ length: displayedJson.split('\n').length }, (_, index) => index + 1).join('\n') : '';
+            const empty = document.getElementById('response-empty');
+            empty.hidden = Boolean(displayedJson);
+            empty.textContent = entry.phase === 'pending' ? 'İstek sürüyor…' : 'Yanıt bekleniyor';
+            document.getElementById('response-type').textContent = entry.contentType || '—';
+            const bytes = new TextEncoder().encode(displayedJson).length;
+            document.getElementById('response-size').textContent = bytes ? (bytes >= 1024 ? (bytes / 1024).toFixed(1) + ' KB' : bytes + ' B') : '—';
+            document.getElementById('copy-response').disabled = !displayedJson;
+            document.querySelectorAll('[data-endpoint]').forEach(button => {
+                button.setAttribute('aria-pressed', String(button.dataset.endpoint === selectedEndpoint));
+            });
+        }
 
         function getIconConfig(main, isNight) {
             main = main.toLowerCase();
@@ -878,36 +129,51 @@
             return { name: 'cloud', class: 'icon-cloud' }; // default
         }
 
-        async function fetchWeather(cityObj) {
-            try {
-                const encodedCity = encodeURIComponent(cityObj.name);
-                const currentUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodedCity}&appid=${API_KEY}&units=metric&lang=tr`;
-                const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodedCity}&appid=${API_KEY}&units=metric&lang=tr`;
-                const [currentData, forecastData] = await Promise.all([
-                    fetchJson(currentUrl),
-                    fetchJson(forecastUrl)
-                ]);
 
-                updateCardUI(cityObj.id, currentData);
-                updateForecastUI(cityObj.id, forecastData);
-            } catch (error) {
-                console.error('Fetch Error:', error);
-                setCardError(cityObj.id);
-            }
+        async function fetchWeather(cityObj) {
+            const encodedCity = encodeURIComponent(cityObj.name);
+            const base = 'https://api.openweathermap.org/data/2.5/';
+            const query = '?q=' + encodedCity + '&appid=' + API_KEY + '&units=metric&lang=tr';
+            await Promise.allSettled([
+                fetchJson(base + 'weather' + query, 'current')
+                    .then(data => updateCardUI(cityObj.id, data))
+                    .catch(() => setCardError(cityObj.id, 'current')),
+                fetchJson(base + 'forecast' + query, 'forecast')
+                    .then(data => updateForecastUI(cityObj.id, data))
+                    .catch(() => setCardError(cityObj.id, 'forecast'))
+            ]);
         }
 
-        async function fetchJson(url) {
-            const response = await fetch(url);
-            const data = await response.json();
-
-            if (!response.ok || (data.cod && !['200', 200].includes(data.cod))) {
-                throw new Error(data.message || `API Error: ${response.status}`);
+        async function fetchJson(url, endpoint) {
+            const entry = requestEntries[endpoint];
+            const started = performance.now();
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 15000);
+            try {
+                const response = await fetch(url, { signal: controller.signal });
+                entry.status = response.status;
+                entry.contentType = (response.headers.get('content-type') || '').split(';')[0];
+                const data = await response.json();
+                entry.data = data;
+                if (!response.ok || (data.cod && !['200', 200].includes(data.cod))) {
+                    throw new Error(data.message || 'HTTP ' + response.status);
+                }
+                entry.phase = 'success';
+                return data;
+            } catch (error) {
+                entry.phase = 'error';
+                entry.error = error.name === 'AbortError' ? 'İstek zaman aşımına uğradı' : error.message;
+                throw error;
+            } finally {
+                clearTimeout(timeout);
+                entry.ms = Math.round(performance.now() - started);
+                if (selectedEndpoint === endpoint) renderResponse();
             }
-
-            return data;
         }
 
         function updateCardUI(id, data) {
+            document.getElementById('location-name').textContent = data.name;
+            document.getElementById('location-country').textContent = data.sys.country || '—';
             const temp = Math.round(data.main.temp);
             const feels = Math.round(data.main.feels_like);
             const hum = data.main.humidity;
@@ -936,7 +202,7 @@
             const iconContainer = document.getElementById(`icon-${id}`);
             iconContainer.innerHTML = `<i data-lucide="${iconConfig.name}" class="${iconConfig.class}" style="width: 48px; height: 48px; stroke-width: 1.5px;"></i>`;
 
-            lucide.createIcons({ root: iconContainer });
+            renderIcons(iconContainer);
         }
 
         function updateForecastUI(id, forecastData) {
@@ -988,8 +254,8 @@
                 `;
             }).join('');
 
-            lucide.createIcons({ root: hourlyList });
-            lucide.createIcons({ root: forecastList });
+            renderIcons(hourlyList);
+            renderIcons(forecastList);
         }
 
         function buildTodayHours(list, timezone) {
@@ -1134,118 +400,88 @@
                 .replaceAll("'", '&#039;');
         }
 
-        function setCardError(id) {
-            document.getElementById(`desc-${id}`).textContent = 'Bağlantı Hatası';
-            document.getElementById(`temp-${id}`).innerHTML = `--<span class="deg-symbol">°</span>`;
-            document.getElementById(`feels-${id}`).textContent = `--°`;
-            document.getElementById(`hum-${id}`).textContent = `--%`;
-            document.getElementById(`wind-${id}`).textContent = `--`;
-            document.getElementById(`rain-${id}`).textContent = `--`;
-            document.getElementById(`visibility-${id}`).textContent = `--`;
-            document.getElementById(`sun-${id}`).textContent = `--`;
-            document.getElementById(`hourly-${id}`).innerHTML = `
-                <div class="hour-card">
-                    <span class="hour-time">--:--</span>
-                    <div class="hour-temp">--°</div>
-                    <span class="hour-desc">Saatlik veri yok</span>
-                    <span class="hour-rain">Yağmur --</span>
-                </div>
-            `;
-            document.getElementById(`forecast-list-${id}`).innerHTML = `
-                <div class="forecast-day">
-                    <div class="forecast-date">
-                        <span class="forecast-weekday">Tahmin alınamadı</span>
-                        <span class="forecast-desc">Biraz sonra tekrar dene</span>
-                    </div>
-                    <div class="forecast-temp">--<span>--</span></div>
-                    <div class="forecast-meta">
-                        <span class="forecast-chip"><i data-lucide="wifi-off" style="width: 14px; height: 14px;"></i><strong>API</strong></span>
-                    </div>
-                </div>
-            `;
-            lucide.createIcons({ root: document.getElementById(`forecast-list-${id}`) });
+
+        function setCardError(id, endpoint) {
+            if (endpoint === 'current') {
+                document.getElementById('desc-' + id).textContent = 'Veri alınamadı';
+                document.getElementById('temp-' + id).innerHTML = '--<span class="deg-symbol">°</span>';
+                for (const field of ['feels', 'hum', 'wind', 'visibility', 'sun']) {
+                    document.getElementById(field + '-' + id).textContent = '—';
+                }
+                const icon = document.getElementById('icon-' + id);
+                icon.innerHTML = '<i data-lucide="wifi-off"></i>';
+                renderIcons(icon);
+                document.getElementById('time-' + id).textContent = '';
+            } else {
+                document.getElementById('rain-' + id).textContent = '—';
+                document.getElementById('hourly-' + id).innerHTML = '<div class="empty-state">Saatlik veri alınamadı</div>';
+                document.getElementById('forecast-list-' + id).innerHTML = '<div class="empty-state">Tahmin alınamadı</div>';
+            }
         }
+
 
         async function refreshAll() {
-            const btnIcon = document.getElementById('refresh-icon');
-            btnIcon.classList.add('spin-anim');
-
-            // Re-render skeletons
-            CITIES.forEach(c => {
-                document.getElementById(`desc-${c.id}`).innerHTML = `<div class="skeleton skeleton-text" style="width: 80px;"></div>`;
-                document.getElementById(`temp-${c.id}`).innerHTML = `<div class="skeleton skeleton-temp"></div>`;
-                document.getElementById(`icon-${c.id}`).innerHTML = `<div class="skeleton skeleton-icon"></div>`;
-                document.getElementById(`feels-${c.id}`).innerHTML = `<div class="skeleton skeleton-text" style="height: 0.95rem; width: 40px; margin-top: 0"></div>`;
-                document.getElementById(`hum-${c.id}`).innerHTML = `<div class="skeleton skeleton-text" style="height: 0.95rem; width: 40px; margin-top: 0"></div>`;
-                document.getElementById(`wind-${c.id}`).innerHTML = `<div class="skeleton skeleton-text" style="height: 0.95rem; width: 60px; margin-top: 0"></div>`;
-                document.getElementById(`rain-${c.id}`).innerHTML = `<div class="skeleton skeleton-text" style="height: 0.92rem; width: 50px; margin-top: 0"></div>`;
-                document.getElementById(`visibility-${c.id}`).innerHTML = `<div class="skeleton skeleton-text" style="height: 0.92rem; width: 48px; margin-top: 0"></div>`;
-                document.getElementById(`sun-${c.id}`).innerHTML = `<div class="skeleton skeleton-text" style="height: 0.92rem; width: 84px; margin-top: 0"></div>`;
-                document.getElementById(`hourly-${c.id}`).innerHTML = `
-                    <div class="skeleton skeleton-text" style="height: 112px; width: 92px; margin-top: 0"></div>
-                    <div class="skeleton skeleton-text" style="height: 112px; width: 92px; margin-top: 0"></div>
-                `;
-                document.getElementById(`forecast-list-${c.id}`).innerHTML = `
-                    <div class="skeleton skeleton-text" style="height: 64px; width: 100%; margin-top: 0"></div>
-                    <div class="skeleton skeleton-text" style="height: 64px; width: 100%; margin-top: 0"></div>
-                `;
-                document.getElementById(`time-${c.id}`).textContent = '';
+            if (refreshInFlight) return;
+            refreshInFlight = true;
+            const button = document.getElementById('refresh-btn');
+            const icon = document.getElementById('refresh-icon');
+            button.disabled = true;
+            icon.classList.add('spin-anim');
+            Object.values(requestEntries).forEach(entry => {
+                Object.assign(entry, { phase: 'pending', status: null, ms: null, data: null, error: null, contentType: null });
             });
-
-            await Promise.all(CITIES.map(c => fetchWeather(c)));
-
-            setTimeout(() => {
-                btnIcon.classList.remove('spin-anim');
-            }, 600); // small delay for smoother animation transition
+            renderResponse();
+            for (const city of CITIES) {
+                for (const field of ['desc', 'feels', 'hum', 'wind', 'rain', 'visibility', 'sun']) {
+                    document.getElementById(field + '-' + city.id).innerHTML = '<span class="skeleton"></span>';
+                }
+                document.getElementById('temp-' + city.id).innerHTML = '<span class="skeleton skeleton-temp"></span>';
+                document.getElementById('icon-' + city.id).innerHTML = '<span class="skeleton skeleton-icon"></span>';
+                document.getElementById('hourly-' + city.id).innerHTML = '<span class="skeleton"></span>';
+                document.getElementById('forecast-list-' + city.id).innerHTML = '<span class="skeleton"></span>';
+                document.getElementById('time-' + city.id).textContent = '';
+            }
+            try {
+                await Promise.all(CITIES.map(city => fetchWeather(city)));
+            } finally {
+                button.disabled = false;
+                icon.classList.remove('spin-anim');
+                refreshInFlight = false;
+            }
         }
+
 
         function setupForecastToggles() {
-            const items = CITIES.map(city => ({
-                card: document.getElementById(`card-${city.id}`),
-                toggle: document.getElementById(`toggle-${city.id}`)
-            }));
-
-            function setOpen(item, isOpen) {
-                item.card.classList.toggle('is-open', isOpen);
-                item.toggle.setAttribute('aria-expanded', String(isOpen));
-            }
-
-            function openOnly(targetItem) {
-                items.forEach(item => setOpen(item, item === targetItem));
-            }
-
-            function toggleItem(item) {
-                const shouldOpen = !item.card.classList.contains('is-open');
-
-                if (shouldOpen) {
-                    openOnly(item);
-                } else {
-                    setOpen(item, false);
-                }
-            }
-
-            items.forEach(item => {
-                item.toggle.addEventListener('click', event => {
-                    event.stopPropagation();
-                    toggleItem(item);
+            for (const city of CITIES) {
+                const card = document.getElementById('card-' + city.id);
+                const toggle = document.getElementById('toggle-' + city.id);
+                const panel = document.getElementById('forecast-' + city.id);
+                toggle.addEventListener('click', () => {
+                    const open = card.classList.toggle('is-open');
+                    toggle.setAttribute('aria-expanded', String(open));
+                    panel.inert = !open;
                 });
-
-                item.card.addEventListener('click', event => {
-                    if (event.target.closest('.forecast-panel')) return;
-                    toggleItem(item);
-                });
-
-                item.card.addEventListener('keydown', event => {
-                    if (event.key !== 'Enter' && event.key !== ' ') return;
-                    if (document.activeElement === item.toggle) return;
-                    event.preventDefault();
-                    toggleItem(item);
-                });
-
-                item.card.tabIndex = 0;
-                setOpen(item, item.card.classList.contains('is-open'));
-            });
+            }
         }
+
+        document.querySelectorAll('[data-endpoint]').forEach(button => {
+            button.addEventListener('click', () => {
+                selectedEndpoint = button.dataset.endpoint;
+                renderResponse();
+            });
+        });
+        document.getElementById('copy-response').addEventListener('click', async event => {
+            const button = event.currentTarget;
+            clearTimeout(copyTimer);
+            try {
+                await navigator.clipboard.writeText(displayedJson);
+                button.textContent = 'Kopyalandı';
+            } catch (_) {
+                button.textContent = 'Kopyalanamadı';
+            }
+            copyTimer = setTimeout(() => { button.textContent = 'JSON kopyala'; }, 1800);
+        });
+        renderResponse();
 
         setupForecastToggles();
 
@@ -1256,8 +492,6 @@
 
         // Auto refresh 5 mins
         setInterval(refreshAll, 5 * 60 * 1000);
-
     </script>
 </body>
-
 </html>
