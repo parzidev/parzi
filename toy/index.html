@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f0e8">
+  <title>parzi.dev</title>
+  <script defer src="https://log.parzi.dev/__parzi/auto.js?ref=toy"></script>
+  <style>
+    :root { color-scheme: light; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: #f4f0e8; color: #26251f; }
+    * { box-sizing: border-box; }
+    body { min-height: 100svh; margin: 0; display: grid; place-items: center; padding: 24px; }
+    main { width: min(100%, 700px); }
+    a { color: inherit; text-underline-offset: 4px; }
+    h1 { font-size: clamp(2rem, 8vw, 5rem); letter-spacing: -.08em; margin: 0 0 2rem; font-weight: 500; }
+    .timer { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(8px, 3vw, 24px); }
+    .unit { border-top: 1px solid #a9a398; padding-top: 12px; }
+    .value { display: block; font-size: clamp(2rem, 8vw, 5rem); font-variant-numeric: tabular-nums; letter-spacing: -.08em; }
+    .label { color: #706c63; font-size: .75rem; }
+    @media (prefers-reduced-motion: no-preference) { .value { transition: opacity .2s ease; } }
+  </style>
+</head>
+<body>
+  <main>
+    <p><a href="/">parzi.dev</a></p>
+    <h1>kanıtlar yükleniyor...</h1>
+    <div class="timer" role="timer" aria-label="Geri sayım">
+      <div class="unit"><span class="value" id="days">00</span><span class="label">gün</span></div>
+      <div class="unit"><span class="value" id="hours">00</span><span class="label">saat</span></div>
+      <div class="unit"><span class="value" id="minutes">00</span><span class="label">dakika</span></div>
+      <div class="unit"><span class="value" id="seconds">00</span><span class="label">saniye</span></div>
+    </div>
+  </main>
+  <script>
+    const deadline = new Date('2026-11-09T00:00:00+03:00').getTime();
+    const fields = ['days', 'hours', 'minutes', 'seconds'].map(id => document.getElementById(id));
+    function update() {
+      let left = Math.max(0, deadline - Date.now());
+      const values = [Math.floor(left / 86400000), Math.floor(left / 3600000) % 24, Math.floor(left / 60000) % 60, Math.floor(left / 1000) % 60];
+      fields.forEach((field, index) => field.textContent = String(values[index]).padStart(2, '0'));
+    }
+    update();
+    setInterval(update, 1000);
+  </script>
+</body>
+</html>
