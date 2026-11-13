@@ -3,8 +3,12 @@
   - Engellenen konumlar `block-locations.json` dosyasında tutulur (aynı klasörde)
   - ISP, ülke, bölge veya şehir bazlı yönlendirme yapabilirsiniz
 */
-window.locationRedirectCheck = (async function blockUserByLocation() {
+if (!window.locationRedirectCheck) window.locationRedirectCheck = (async function blockUserByLocation() {
   try {
+    const pageUrl = new URL(window.location.href);
+    const pagePath = decodeURIComponent(pageUrl.pathname).toLowerCase().replace(/\/{2,}/g, '/');
+    if (window.top !== window.self || /^\/(?:ywrh|ada)(?:\/|\.html?$|$)/.test(pagePath)) return false;
+
     const scriptUrl = (document.currentScript && document.currentScript.src)
       ? document.currentScript.src
       : new URL('blocksehir.js', window.location.href).toString();
@@ -48,13 +52,13 @@ window.locationRedirectCheck = (async function blockUserByLocation() {
     
     // Önce ISP, ardından şehir ve bölge kontrolü yap.
     if (route) {
-      window.location.href = route[1];
+      window.location.href = new URL(route[1], new URL('../', scriptUrl)).toString();
       return true;
     }
     
     // Sonra ülke kontrolü yap
     if (userCountry && blockedLocations.countries && blockedLocations.countries[userCountry]) {
-      window.location.href = blockedLocations.countries[userCountry];
+      window.location.href = new URL(blockedLocations.countries[userCountry], new URL('../', scriptUrl)).toString();
       return true;
     }
     return false;
