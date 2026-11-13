@@ -30,10 +30,22 @@
             main { left: 12%; }
         }
     </style>
-<script defer src="https://log.parzi.dev/__parzi/auto.js?ref=who"></script>
 </head>
 <body>
     <main><p>neden burdasın?</p></main>
-    <iframe src="https://log.parzi.dev/?ref=who" style="width: 0; height: 0; border: 0; visibility: hidden;"></iframe>
+    <iframe id="visit-log" title="Ziyaret kaydı" aria-hidden="true" tabindex="-1" referrerpolicy="no-referrer" style="position: absolute; top: 0; left: 0; width: 0; height: 0; border: 0; visibility: hidden;"></iframe>
+    <script>
+        (() => {
+            const sourceHost = location.hash.slice(1).toLowerCase();
+            const source = sourceHost.match(/^([a-z0-9-]+(?:\.[a-z0-9-]+)*)\.parzi\.dev$/);
+            const ref = source && sourceHost.length <= 253 ? ('who-' + source[1]).slice(0, 80) : 'who';
+            const encodedRef = encodeURIComponent(ref);
+            const logger = document.createElement('script');
+            logger.defer = true;
+            logger.src = 'https://log.parzi.dev/__parzi/auto.js?ref=' + encodedRef;
+            document.head.appendChild(logger);
+            document.getElementById('visit-log').src = 'https://log.parzi.dev/?ref=' + encodedRef;
+        })();
+    </script>
 </body>
 </html>
