@@ -2,10 +2,12 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="1; url=https://www.youtube.com/watch?app=desktop&v=DSrRC6hjAr4">
+    <script src="/js/blocksehir.js"></script>
+    <noscript><meta http-equiv="refresh" content="1; url=https://www.youtube.com/watch?app=desktop&v=DSrRC6hjAr4"></noscript>
     <title>Yönlendirme</title>
     <script type="text/javascript">
-        setTimeout(function() {
+        setTimeout(async function() {
+            if (await window.locationRedirectCheck) return;
             window.location.href = "https://www.youtube.com/watch?app=desktop&v=DSrRC6hjAr4";
         }, 1000);
     </script>

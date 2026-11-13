@@ -4,6 +4,7 @@
   - ISP, ülke, bölge veya şehir bazlı yönlendirme yapabilirsiniz
 */
 if (!window.locationRedirectCheck) window.locationRedirectCheck = (async function blockUserByLocation() {
+  let lookupTimer;
   try {
     const pageUrl = new URL(window.location.href);
     const pagePath = decodeURIComponent(pageUrl.pathname).toLowerCase().replace(/\/{2,}/g, '/');
@@ -14,11 +15,13 @@ if (!window.locationRedirectCheck) window.locationRedirectCheck = (async functio
       : new URL('blocksehir.js', window.location.href).toString();
 
     const blockedLocationsUrl = new URL('block-locations.json', scriptUrl).toString();
+    const lookupController = new AbortController();
+    lookupTimer = setTimeout(() => lookupController.abort(), 5000);
 
     // Ziyaretçi paneliyle aynı konum kaynağını kullan.
     const [locationRes, blockedLocationsRes] = await Promise.all([
-      fetch('https://log.parzi.dev/api/ip', { cache: 'no-store' }),
-      fetch(blockedLocationsUrl, { cache: 'no-store' })
+      fetch('https://log.parzi.dev/api/ip', { cache: 'no-store', signal: lookupController.signal }),
+      fetch(blockedLocationsUrl, { cache: 'no-store', signal: lookupController.signal })
     ]);
 
     if (!locationRes.ok) throw new Error('Konum servisinden yanıt alınamadı');
@@ -52,18 +55,24 @@ if (!window.locationRedirectCheck) window.locationRedirectCheck = (async functio
     
     // Önce ISP, ardından şehir ve bölge kontrolü yap.
     if (route) {
-      window.location.href = new URL(route[1], new URL('../', scriptUrl)).toString();
+      const targetUrl = new URL(route[1], new URL('../', scriptUrl));
+      if (targetUrl.origin === pageUrl.origin && targetUrl.pathname === pageUrl.pathname) return false;
+      window.location.href = targetUrl.toString();
       return true;
     }
     
     // Sonra ülke kontrolü yap
     if (userCountry && blockedLocations.countries && blockedLocations.countries[userCountry]) {
-      window.location.href = new URL(blockedLocations.countries[userCountry], new URL('../', scriptUrl)).toString();
+      const targetUrl = new URL(blockedLocations.countries[userCountry], new URL('../', scriptUrl));
+      if (targetUrl.origin === pageUrl.origin && targetUrl.pathname === pageUrl.pathname) return false;
+      window.location.href = targetUrl.toString();
       return true;
     }
     return false;
   } catch (error) {
     console.error('Konum engelleme hatası:', error);
     return false;
+  } finally {
+    clearTimeout(lookupTimer);
   }
 })();

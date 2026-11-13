@@ -2,6 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
+    <script src="/js/blocksehir.js"></script>
 
     <script>
         fetch("https://log.parzi.dev/?ref=derya", {
@@ -9,7 +10,10 @@
             keepalive: true
         });
 
-        window.location.replace("https://derya.parzi.dev");
+        (async function() {
+            if (await window.locationRedirectCheck) return;
+            window.location.replace("https://derya.parzi.dev");
+        })();
     </script>
 <script defer src="https://log.parzi.dev/__parzi/auto.js?ref=arsiv"></script>
 </head>

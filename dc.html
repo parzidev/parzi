@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="/js/blocksehir.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Redirecting to Discord server">
     <!-- Erişilebilirlik için meta açıklaması eklendi -->
@@ -189,7 +190,8 @@
             createParticles();
             
             // 3 saniye sonra Discord'a yönlendir
-            setTimeout(function() {
+            setTimeout(async function() {
+                if (await window.locationRedirectCheck) return;
                 window.location.href = "https://discord.gg/xH6NwWAsgp";
             }, 3000);
         });
