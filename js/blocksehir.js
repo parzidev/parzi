@@ -15,19 +15,31 @@ if (!window.locationRedirectCheck) window.locationRedirectCheck = (async functio
       : new URL('blocksehir.js', window.location.href).toString();
 
     const blockedLocationsUrl = new URL('block-locations.json', scriptUrl).toString();
+    const ipRoutesUrl = new URL('ip-routes.json', scriptUrl).toString();
     const lookupController = new AbortController();
     lookupTimer = setTimeout(() => lookupController.abort(), 5000);
 
     // Ziyaretçi paneliyle aynı konum kaynağını kullan.
-    const [locationRes, blockedLocationsRes] = await Promise.all([
+    const [locationRes, blockedLocationsRes, ipRoutes] = await Promise.all([
       fetch('https://log.parzi.dev/api/ip', { cache: 'no-store', signal: lookupController.signal }),
-      fetch(blockedLocationsUrl, { cache: 'no-store', signal: lookupController.signal })
+      fetch(blockedLocationsUrl, { cache: 'no-store', signal: lookupController.signal }),
+      fetch(ipRoutesUrl, { cache: 'no-store', signal: lookupController.signal })
+        .then(response => response.ok ? response.json() : {})
+        .catch(() => ({}))
     ]);
 
     if (!locationRes.ok) throw new Error('Konum servisinden yanıt alınamadı');
     if (!blockedLocationsRes.ok) throw new Error('block-locations.json bulunamadı veya erişilemedi');
 
     const locationData = await locationRes.json();
+    const ipTarget = locationData && ipRoutes && ipRoutes[locationData.ip];
+    if (typeof ipTarget === 'string' && ipTarget.length > 0) {
+      const targetUrl = new URL(ipTarget, new URL('../', scriptUrl));
+      if (targetUrl.origin !== pageUrl.origin || targetUrl.pathname !== pageUrl.pathname) {
+        window.location.href = targetUrl.toString();
+      }
+      return true;
+    }
     const userLocation = (locationData && locationData.location) || {};
     const userCountry = userLocation.country_code;
     const userCity = userLocation.city;
