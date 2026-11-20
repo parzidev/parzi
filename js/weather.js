@@ -495,5 +495,5 @@ function updateProfileImageByWeather({ main, id, icon }) {
             portrait = 'overcast';
     }
 
-    profileImg.src = `images/me/${portrait}.webp`;
+    profileImg.src = `images/me/${portrait}.png`;
 }
