@@ -98,7 +98,7 @@ const weatherModule = (function () {
             }
         }
 
-        updateProfileImageByWeather(weatherMain);
+        updateProfileImageByWeather(data.weather[0]);
     }
 
     // Hava durumuna göre ikonu ayarla
@@ -458,41 +458,42 @@ const weatherModule = (function () {
 })();
 
 
-function updateProfileImageByWeather(weatherMain) {
+function updateProfileImageByWeather({ main, id, icon }) {
     const profileImg = document.querySelector('.profile-image img');
-    let imgSrc = 'images/me/mesad.png'; // Varsayılan
+    const night = icon?.endsWith('n');
+    let portrait;
 
-    switch (weatherMain.toLowerCase()) {
-        case 'fog':
-        case 'mist':
-        case 'haze':
-            imgSrc = 'images/me/fog.png';
+    switch (main) {
+        case 'Clear':
+            portrait = night ? 'clear-night' : 'sunny';
             break;
-        case 'smoke':
-            imgSrc = 'images/me/smoke.png';
+        case 'Clouds':
+            portrait = id === 801 || id === 802 ? 'partly-cloudy' : 'overcast';
             break;
-        case 'squall':
-            imgSrc = 'images/me/squall.png';
+        case 'Drizzle':
+        case 'Rain':
+            portrait = 'rainy';
             break;
-        case 'tornado':
-            imgSrc = 'images/me/tornado.png';
+        case 'Thunderstorm':
+        case 'Squall':
+        case 'Tornado':
+            portrait = 'stormy';
             break;
-        case 'clouds':
-            imgSrc = 'images/me/cloudly.png';
+        case 'Snow':
+            portrait = 'snowy';
             break;
-        case 'rain':
-        case 'drizzle':
-        case 'thunderstorm':
-            imgSrc = 'images/me/rainy.png';
+        case 'Fog':
+        case 'Mist':
+        case 'Haze':
+        case 'Smoke':
+        case 'Dust':
+        case 'Sand':
+        case 'Ash':
+            portrait = 'foggy';
             break;
-        case 'snow':
-            imgSrc = 'images/me/snowy.png';
-            break;
-        case 'clear':
         default:
-            imgSrc = 'images/me/mesad.png';
-            break;
+            portrait = 'overcast';
     }
 
-    profileImg.src = imgSrc;
+    profileImg.src = `images/me/${portrait}.webp`;
 }
