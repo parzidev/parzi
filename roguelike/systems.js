@@ -23,7 +23,7 @@ window.ROGUELIKE_SYSTEMS = [
     entries: [
       {title: "Kademe ve ücretli yükseltme", text: "Aynı silahın aynı kademedeki iki kopyasını bir üst kademeye birleştirebilirsin. Ücretli yükseltme bir, iki ve üç kademe sıçrama için sırasıyla %50, %25 ve %10 başarı şansı verir. Başarısız olursan hem ücret hem seçtiğin silah gider. Kumarbazın Çekirdeği bu şansları artırır ve kaybı büyütebilir."},
       {title: "Menzil, aileler ve hız", text: "Menzil ayrı bir stat olarak satın alınır. Silah menzil dışındaki hedefe ateş etmez. Aynı aileden birkaç silah taşıdığında İlkel canı, Hassas kritiği, Silahsız kaçınmayı ve Alet mühendisliği artırır. Silahın kademesi yükseldikçe saldırıları hızlanır. Çok sık tekrar eden atış sesleri sınırlanır."},
-      {title: "Dört taret", text: "Her İngiliz Anahtarı, dalga başında kendi kademesinde bir taret kurar. I. kademe tohum atar, II. alev konisi yayar, III. delici lazer kullanır, IV. patlayıcı mermi fırlatır. Taret hasarı mühendislikten güç alır. Mühendis’in taretleri daha yakın kurulur."},
+      {title: "Taret kurulumu ve menzil", text: "Her İngiliz Anahtarı, dalga başında kendi kademesinde bir taret kurar. Dükkândan alınan taretler de her dalga başında yeniden kurulur. Taret hasarı Mühendislikten güç alır. Her +10 Menzil, Kademe I ile Ağaç Tareti’ne +15, Kademe II–IV’e +10 menzil verir."},
       {title: "Savaş etkileşimleri", text: "Çapa veya Bıçak ile işaretlenen düşmana tohum atmak alan patlaması çıkarır. Çapa’nın sporu alevle yayılır. İtme Eli’nin köklediği hedefe Diken veya Diken Mızrağı daha sert vurur. Mermi izleri, isabet parlamaları ve ölüm efektleri saldırıları ayırt etmeyi kolaylaştırır."}
     ]
   },

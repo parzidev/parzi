@@ -542,3 +542,35 @@ footer a {
     width:76px;
   }
 }
+
+.turret-release {
+  padding-top:48px;
+}
+.turret-card {
+  display:flex;
+  flex-direction:column;
+  align-items:start;
+}
+.turret-card .turret-art {
+  float:none;
+  width:96px;
+  height:96px;
+  margin:0 0 6px;
+}
+.turret-card p:last-of-type {
+  margin-bottom:16px;
+}
+.turret-card .turret-attack {
+  float:none;
+  width:100%;
+  height:auto;
+  aspect-ratio:2.1;
+  border-radius:9px;
+  object-fit:cover;
+  margin:auto 0 0;
+}
+.turret-release-note {
+  font-size:14px;
+  line-height:1.55;
+  margin:18px 0 0;
+}
