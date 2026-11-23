@@ -560,14 +560,20 @@ footer a {
 .turret-card p:last-of-type {
   margin-bottom:16px;
 }
+.turret-preview {
+  display:block;
+  width:100%;
+  margin:auto 0 0;
+}
 .turret-card .turret-attack {
+  display:block;
   float:none;
   width:100%;
   height:auto;
   aspect-ratio:2.1;
   border-radius:9px;
   object-fit:cover;
-  margin:auto 0 0;
+  margin:0;
 }
 .turret-release-note {
   font-size:14px;
