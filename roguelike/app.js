@@ -27,9 +27,9 @@
   const normalize = value => String(value ?? '').toLocaleLowerCase('tr-TR').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ı/g, 'i');
   function renderItems() {
     const query = normalize(search.value.trim());
-    const selected = data.items.filter(item => {
+    const selected = data.items.filter((item, index) => {
       const category = normalize(item.category);
-      const matchesFilter = filter === 'all' || (filter === 'cursed' ? item.curse > 0 : filter === 'normal' ? !item.curse : category === normalize(filter));
+      const matchesFilter = filter === 'all' || (filter === 'latest' ? item.id >= 119 : filter === 'cursed' ? item.curse > 0 : filter === 'normal' ? !item.curse : category === normalize(filter));
       return matchesFilter && normalize(item.name + ' ' + item.desc).includes(query);
     });
     itemGrid.replaceChildren();
@@ -64,7 +64,7 @@
   }
   document.querySelector('#latest-items').addEventListener('click', () => {
     search.value = '';
-    chooseFilter('cursed');
+    chooseFilter('latest');
   });
   renderItems();
   for (const hero of data.heroes) {

@@ -118,7 +118,11 @@ window.ROGUELIKE_CATALOG = {
     {"id":115,"name":"Alev Tareti","desc":"Fırın, yakınındaki düşmanları geniş bir turuncu alev konisiyle topluca vurur. Koninin içindeki birden fazla hedef aynı anda hasar alabilir.","icon":"media/item-115.webp","tier":2,"price":32,"limit":2,"curse":0,"category":"silah"},
     {"id":116,"name":"Lazer Tareti","desc":"Prizma, ateşlediği anda menzilin sonuna ulaşan mor bir ışın çıkarır. Işın hattına giren birden fazla hedefi deler.","icon":"media/item-116.webp","tier":3,"price":52,"limit":2,"curse":0,"category":"silah"},
     {"id":117,"name":"Patlayıcı Taret","desc":"Mancınık yavaş, fitilli bir bomba fırlatır. Bomba ilk temasta veya menzilinin sonunda patlar ve çevredeki hedeflere hasar verir.","icon":"media/item-117.webp","tier":4,"price":90,"limit":2,"curse":0,"category":"silah"},
-    {"id":118,"name":"Taret Fidanı","desc":"Kütüğe bağlı yay ince bir tahta ok fırlatır. Taret Fidanı kırılan her ağacın yerine bu tareti kurar. Taret o dalga boyunca kalır ve ağaç normal ganimetini bırakır.","icon":"media/item-118.webp","tier":3,"price":52,"limit":1,"curse":0,"category":"silah"}
+    {"id":118,"name":"Taret Fidanı","desc":"Kütüğe bağlı yay ince bir tahta ok fırlatır. Taret Fidanı kırılan her ağacın yerine bu tareti kurar. Taret o dalga boyunca kalır ve ağaç normal ganimetini bırakır.","icon":"media/item-118.webp","tier":3,"price":52,"limit":1,"curse":0,"category":"silah"},
+    {"id":119,"name":"Patlak Mısır","desc":"Patlamayla ölen normal düşman, aynı güçle 70 menzilli bir patlama daha yaratır.","icon":"media/item-119.webp","tier":4,"price":90,"limit":1,"curse":0,"category":"özel"},
+    {"id":120,"name":"Kurtlu Çekirdek","desc":"Mermi, kalan delişlerini aynı hedefte 0,18 sn arayla ek vuruşa çevirir; deliş hasar kaybı korunur.","icon":"media/item-120.webp","tier":3,"price":52,"limit":1,"curse":0,"category":"silah"},
+    {"id":121,"name":"Yabani Ot","desc":"En kalabalık iki silah ailesini bire bir eşler; eşleşen silahlar iki ailenin setine de sayılır.","icon":"media/item-121.webp","tier":3,"price":52,"limit":1,"curse":0,"category":"silah"},
+    {"id":122,"name":"Çürük Kök","desc":"Can yenilenmen seni yaralar ve kaybettiğin canın beş katı hasarla çevrene diken saçar.","icon":"media/item-122.webp","tier":3,"price":52,"limit":1,"curse":0,"category":"can"}
   ],
   "heroes": [
     {"id":0,"name":"Gürültücü","desc":"+%30 hasar, +%50 düşman. Her dalga sonunda −3 hasat.","hp":10,"icon":"media/hero-0.webp"},
@@ -131,7 +135,11 @@ window.ROGUELIKE_CATALOG = {
     {"id":7,"name":"Mazoşist","desc":"+10 can, +20 yenilenme, +8 zırh. −%100 hasar. Her hasar alışta dalga sonuna kadar +%5 hasar.","hp":20,"icon":"media/hero-7.webp"},
     {"id":8,"name":"Mutant","desc":"Seviye için gereken deneyim −%66. Eşya fiyatları +%50.","hp":10,"icon":"media/hero-8.webp"},
     {"id":9,"name":"Tutumlu","desc":"+15 hasat. Her 25 malzemeye +%1 hasar. Kumbara ile başlar: dalga başında +%20 malzeme. Eşya ve silah fiyatları +%50.","hp":10,"icon":"media/hero-9.webp"},
-    {"id":10,"name":"Mühendis","desc":"+10 mühendislik. Mühendislik değişimleri +%25, hasar değişimleri −%50. Ek anahtarla başlar. Her anahtar dalga başında bir taret kurar; taretler yakın yerleşir.","hp":10,"icon":"media/hero-10.webp"}
+    {"id":10,"name":"Mühendis","desc":"+10 mühendislik. Mühendislik değişimleri +%25, hasar değişimleri −%50. Ek anahtarla başlar. Her anahtar dalga başında bir taret kurar; taretler yakın yerleşir.","hp":10,"icon":"media/hero-10.webp"},
+    {"id":11,"name":"Dunpy","desc":"Tek silahı Mandalina Dilimi. Dalga sonunda yerde kalan para deneyim verir. Her 20 malzeme Poro’yu bir seviye geliştirir. Seviye başına +2 taban hasar, her 3 seviyede +1 delinen hedef. Poro ilk seviyeden itibaren dalga başına bir darbeyi engeller.","hp":10,"icon":"media/hero-11.webp"},
+    {"id":12,"name":"Sarmaşık","desc":"Yürüyerek bir halka kapatınca içinde kalan normal düşmanları 1,5 saniye kökler.","hp":10,"icon":"media/hero-12.webp"},
+    {"id":13,"name":"Çeşnici","desc":"Düz Tohum ve Bıçak ile başlar. Aynı hedefe 3 saniyede iki farklı silah ailesi vurunca tarif tamamlanır. Son aile: İlkel çevreye hasar, Hassas tek hedefe hasar, Silahsız itme, Alet sıcak alan. Temel silah hasarı −%20.","hp":10,"icon":"media/hero-13.webp"},
+    {"id":14,"name":"Kilerci","desc":"Her dalganın ilk sandığını hemen alır veya sonraki dükkânda aynı kademeden iki eşyadan biriyle değiştirir.","hp":10,"icon":"media/hero-14.webp"}
   ],
   "weapons": [
     {"id":0,"name":"Düz Tohum","desc":"Tek hedefe tohum atar.","family":"primitive","damage":12,"range":430,"cooldown":0.85,"icon":"media/weapon-0.webp"},
@@ -147,7 +155,8 @@ window.ROGUELIKE_CATALOG = {
     {"id":10,"name":"Asma Kırbacı","desc":"Uzun ve geniş bir yayda vurur.","family":"primitive","damage":12,"range":160,"cooldown":1.05,"icon":"media/weapon-10.webp"},
     {"id":11,"name":"Diken Mızrağı","desc":"Dar bir doğrultuda uzaktaki hedeflere saplanır.","family":"precise","damage":21,"range":190,"cooldown":1.2,"icon":"media/weapon-11.webp"},
     {"id":12,"name":"Yaprak Yelpazesi","desc":"Geniş açıyla beş kısa menzilli yaprak saçar.","family":"primitive","damage":4,"range":220,"cooldown":1.05,"icon":"media/weapon-12.webp"},
-    {"id":13,"name":"Güneş Merceği","desc":"Düz ışın hedeflere anında ulaşır ve deler.","family":"tool","damage":16,"range":500,"cooldown":1.3,"icon":"media/weapon-13.webp"}
+    {"id":13,"name":"Güneş Merceği","desc":"Düz ışın hedeflere anında ulaşır ve deler.","family":"tool","damage":16,"range":500,"cooldown":1.3,"icon":"media/weapon-13.webp"},
+    {"id":14,"name":"Mandalina Dilimi","desc":"Tek hedefe bir mandalina dilimi atar.","family":"primitive","damage":12,"range":430,"cooldown":0.85,"icon":"media/weapon-14.webp"}
   ],
   "bosses": [
     {"id":"ram","name":"Diken Koçu","desc":"Yeri çizgiyle işaretleyip 0,85 saniye sonra hücum eder. Hücum hattı kilitlendikten sonra seni takip etmez.","phase":"Yarı canın altında koşu yönünü tahmin eder ve indiği yerde kısa patlama bırakır. Son %25 canda, her biri ayrı uyarılan iki hücumu art arda yapar.","counter":"Çizgi belirdikten sonra yön değiştir. İkinci hücumdan sonra toparlanma fırsatını kullan.","icon":"media/boss-ram.webp"},

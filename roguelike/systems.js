@@ -3,7 +3,7 @@ window.ROGUELIKE_SYSTEMS = [
     title: "Dalgalar ve karşılaşmalar",
     entries: [
       {title: "20 dalgalık koşu", text: "Hareketi WASD veya ok tuşlarıyla yönetirsin. Silahlar menzile giren hedeflere otomatik saldırır. Dalgalar arasında malzemeyle silah ve eşya alır, seviye yükseltmesi seçersin. Esc veya Tab ile oyunu durdurup istatistiklerine ve envanterine bakabilirsin."},
-      {title: "Rastgele bosslar ve ikili final", text: "10. ve 15. dalgada on boss arasından birer boss, 20. dalgada birbirinden farklı iki boss çıkar. İkinci boss düştüğünde zafer hemen gelir. Süre dolduğunda canlı bossla savaş sürer ve normal düşman üretimi durur. 3, 6, 9, 12 ve 18. dalgalarda mini boss karşılaşmaları var."},
+      {title: "Rastgele bosslar ve ikili final", text: "10. ve 15. dalgada on boss arasından birer boss, 20. dalgada birbirinden farklı iki boss çıkar. İkinci boss düştüğünde zafer hemen gelir. Süre dolduğunda canlı bossla savaş sürer ve normal düşman üretimi durur. 3, 6, 12 ve 18. dalgalarda mini boss karşılaşmaları var. 5, 9, 13 ve 17. dalgalar boss içermeyen sürü dalgalarıdır; 7 saniyelik baskıyı 3 saniyelik toparlanma izler ve geçit yön değiştirir."},
       {title: "Tehlike, sonsuz mod ve pratik", text: "Tehlike 0–5 arası seçilir. 20. dalgadan sonra sonsuza devam edebilir veya koşuyu bitirebilirsin. Boss Çalışması’nda on bossun her birini tam veya yarı canla başlatıp saldırılarını deneyebilirsin. Bu mod koşu ödülü vermez."},
       {title: "Dört normal düşman", text: "Takipçi temasla vurur. Hızlı takipçi daha çabuk yaklaşır. Menzilli düşman yakınında yanlamasına yürürken tek mermi atar. Elit, üstüne yürüyüp üçlü yelpaze atışı yapar. Zırhlı sözleşme düşmanları daha dayanıklıdır."}
     ]
