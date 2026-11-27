@@ -7,7 +7,7 @@
 <title>Game Test · Yama Notları</title>
 <meta name="description" content="Game Test yama notları: 123 eşya, 15 karakter, 10 boss ve 15 silah; sürü dalgaları ve yeni pasifler.">
 <link rel="canonical" href="https://parzi.dev/roguelike/">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=20261127-history">
 <script defer src="catalog.js"></script>
 <script defer src="systems.js"></script>
 <script defer src="app.js"></script>
@@ -85,14 +85,188 @@
   <p class="turret-release-note">Kahramanın ve giydiği ekipman sağa sola hareket ederken onunla birlikte döner. Durduğunda veya dikey yürüdüğünde son baktığı yön korunur.</p>
 </section>
 <section id="yenilikler" class="feature"><div><div class="eyebrow light">YENİ EŞYALAR</div><h2>Dört pasif eşya</h2><p>Patlak Mısır, Kurtlu Çekirdek, Yabani Ot ve Çürük Kök.</p><a href="#esyalar" id="latest-items">Yeni eşyalara bak</a></div><div class="feature-icons"><img src="media/item-119.webp" alt="Patlak Mısır"><img src="media/item-120.webp" alt="Kurtlu Çekirdek"><img src="media/item-121.webp" alt="Yabani Ot"><img src="media/item-122.webp" alt="Çürük Kök"></div></section>
-<section class="history"><div class="eyebrow">GÜNCELLEME GEÇMİŞİ</div><p>Tahmini üç aylık geliştirme takvimi</p>
-<div class="history-row"><time datetime="2026-11-27">27 KASIM</time><p>Çürük Kök, sürü dalgaları, ölüm ve kurtulma etkileşimleri, kalabalıkta okunabilir hasar sayıları.</p></div>
-<div class="history-row"><time datetime="2026-11-24">24 KASIM</time><p>Patlak Mısır, Kurtlu Çekirdek ve Yabani Ot.</p></div>
-<div class="history-row"><time datetime="2026-11-20">20 KASIM</time><p>Dunpy ve Poro, Sarmaşık Salatalık, Çeşnici Sarımsak ve Kilerci Bal Kabağı.</p></div>
-<div class="history-row"><time datetime="2026-11-14">14 KASIM</time><p>1.0 taretleri, Taret Fidanı, taret saldırıları ve kahramanın yatay dönüşü.</p></div>
-<div class="history-row"><time datetime="2026-10-24">24 EKİM</time><p>Lanetli eşyalar ve ikonlar, eşya deneme, silah eşleştirme, Kiler Kraliçesi ve işçileri.</p></div>
-<div class="history-row"><time datetime="2026-09-28">28 EYLÜL</time><p>Kestane Şövalyesi ve Bataklık Nilüferi, boss saldırı pozları, iyileşme ve öfke mekanikleri.</p></div>
-<div class="history-row"><time datetime="2026-08-27">27 AĞUSTOS</time><p>Rün dalları ve yol kesişimleri, final dalgasında iki boss.</p></div></section>
+<section id="gecmis" class="history">
+  <div class="eyebrow">GÜNCELLEME GEÇMİŞİ</div>
+  <h2>Yama notları<span class="dot">.</span></h2>
+  <p class="history-caption">Tahmini üç aylık geliştirme takvimi</p>
+  <article class="history-row"><time datetime="2026-11-27">27 KASIM 2026</time><div><h3>Çürük Kök ve sürü dalgaları</h3>
+
+    <h4>Çürük Kök</h4>
+    <ul>
+      <li>III. kademe Çürük Kök 52 malzemeye alınır. Koşuda bir tane taşınır ve doğal can yenilenmesini kendine hasara çevirir. Her saniye yenilenmenin beşte biri kadar can kaybettirir ve kaybedilen canın beş katı hasarla 125 yarıçapta diken saçar. Örneğin 10 yenilenme saniyede 2 can kaybettirir ve 10 taban hasarlı diken üretir. Dikenler ağaçlara hasar vermez ve Patlak Mısır zincirini başlatmaz.</li>
+      <li>İyileştirme tohumları ve can çalma normal şekilde iyileştirmeye devam eder. Bu hasar Boğa’nın patlamasını ve Mazoşist’in dalga sonuna kadar her hasar alışta kazandığı %5 hasar artışını tetikler.</li>
+    </ul>
+
+    <h4>Sürü dalgaları ve malzeme</h4>
+    <ul>
+      <li>5, 9, 13 ve 17. dalgalar boss içermeyen sürü dalgalarıdır. Gruplar yedi saniye baskı kurar, ardından üç saniye yeni grup çıkmaz. Arenada kalan düşmanlar bu sırada saldırmaya devam eder.</li>
+      <li>Dalga sırasına göre gruplarda 12, 15, 18 ve 21 düşman bulunur. Temel grup aralıkları sırasıyla 1,8, 1,65, 1,5 ve 1,35 saniyedir ve düşman sayısı özelliğine göre değişir.</li>
+      <li>Grupların açık bıraktığı taraf zamanla değişir. 220 düşman sınırında yeni grup bekler ve mevcut düşmanlar sessizce silinmez.</li>
+      <li>Sürüde öldürülen düşmanlar normal malzeme ödüllerini bırakır. Bosslar 10 ve 15. dalgada tek, 20. dalgada çift olarak gelmeye devam eder.</li>
+    </ul>
+
+    <h4>Savaş geri bildirimi ve düzeltmeler</h4>
+    <ul>
+      <li>Kalabalıkta yakın hasar sayıları kısa süreli toplamda birleşir. Menüde veya koşu bittikten sonra yapılan ışın çağrılarının arenada sahipsiz mermi bırakması düzeltildi. Ölümcül hasar, kurtulma ve öldürerek iyileşmenin sıralaması düzeltildi.</li>
+    </ul>
+  </div></article>
+  <article class="history-row"><time datetime="2026-11-24">24 KASIM 2026</time><div><h3>Üç yeni pasif eşya</h3><p>Her birinden koşu başına bir tane alınır. Fiyatlar taban malzeme bedelidir.</p>
+
+    <h4>Patlak Mısır</h4>
+    <ul>
+      <li>IV. kademe Patlak Mısır 90 malzemedir. Dost patlamasıyla ölen normal düşman, aynı güçte ve 70 yarıçaplı yeni bir patlama oluşturur.</li>
+      <li>Yeni patlama normal düşmanları öldürdükçe zincir sürer. Elitler ve bosslar hasar alır, fakat zinciri yalnız normal düşman ölümleri devam ettirir.</li>
+      <li>Havan, Patlayıcı Taret, Boğa, Barut Kabağı ve patlayıcı rün etkileri zinciri başlatabilir. Her normal düşman zincire ölümünde bir kez katılır.</li>
+    </ul>
+
+    <h4>Kurtlu Çekirdek</h4>
+    <ul>
+      <li>III. kademe Kurtlu Çekirdek 52 malzemedir. Merminin kalan delme hakları aynı hedefte 0,18 saniye arayla ek vuruşa dönüşür.</li>
+      <li>İki ek deliş hakkı ilk isabetle birlikte üç vuruş sağlar. Delme hasarı kaybı ve koruması korunur, hedef ölürse kalan vuruşlar sona erer.</li>
+      <li>Kurtlu Çekirdek bosslarda ve Mandalina Dilimi’nde çalışır. Havanın kalan delişleri ilk patlamadan sonra çarpılan hedefe uygulanır.</li>
+    </ul>
+
+    <h4>Yabani Ot</h4>
+    <ul>
+      <li>III. kademe Yabani Ot 52 malzemedir. En kalabalık iki silah ailesini bire bir eşler ve eşleşen silahları iki ailenin setine sayar.</li>
+      <li>5 Alet ve 1 Hassas, 6 Alet ve 2 Hassas sayılır. 4 ve 2 dağılımı 6 ve 4, 3 ve 3 dağılımı ise 6 ve 6 olur.</li>
+      <li>Satın alma, satış, birleştirme ve kayıpta eşleşme yeniden hesaplanır. Eşitlikte önce kuşanılan aile seçilir ve Çeşnici tarifleri gerçek aileleri kullanır.</li>
+    </ul>
+  </div></article>
+  <article class="history-row"><time datetime="2026-11-20">20 KASIM 2026</time><div><h3>Dört kahraman ve Poro</h3>
+
+    <h4>Dunpy ve Poro</h4>
+    <ul>
+      <li>Dunpy yalnız Mandalina Dilimi kullanır. Başlangıçta başka silah seçemez ve dükkândan silah satın alamaz. Eşya alımı açıktır. Yanındaki Poro yürür ve arayı kapatırken yuvarlanır.</li>
+      <li>Dalga sonunda yerde kalan her 20 malzeme Poro’yu bir seviye geliştirir. Artan malzeme sonraki seviyeye sayılır ve yerde kalanlar da deneyim verir.</li>
+      <li>Her Poro seviyesi Mandalina Dilimi’ne 2 taban hasar ekler. Her üç seviyede dilim bir hedef daha deler ve Poro birinci seviyeden itibaren dalga başına bir darbeyi engeller.</li>
+      <li>Her dükkânda bir sonraki dalga için en fazla bir hazırlık satın alınır. Keskin Dilim’in taban fiyatı 14 malzemedir ve bir dalgalığına ek deliş verir. Poro Merhemi 12 malzemeye engellenen darbede 4 can yeniler ve Poro birinci seviyeye ulaşınca açılır.</li>
+    </ul>
+
+    <h4>Sarmaşık Salatalık</h4>
+    <ul>
+      <li>Sarmaşık Salatalık beş saniye kalan iziyle yürüyerek halka kapatır ve içindeki normal düşmanları 1,5 saniye kökler. Halka kapandıktan sonra yeniden kullanılması için üç saniye geçer.</li>
+    </ul>
+
+    <h4>Çeşnici Sarımsak</h4>
+    <ul>
+      <li>Çeşnici Sarımsak sabit Düz Tohum ve Bıçak çiftiyle başlar ve başlangıçta başka silah seçemez. Aynı hedefe üç saniye içinde farklı iki silah ailesi vurduğunda tarif tamamlanır.</li>
+      <li>Son aile İlkel ise çevre hasarı, Hassas ise tek hedef hasarı, Silahsız ise itme, Alet ise sıcak alan oluşur. Temel silah hasarı %20 düşüktür.</li>
+    </ul>
+
+    <h4>Kilerci Bal Kabağı</h4>
+    <ul>
+      <li>Kilerci Bal Kabağı her dalganın ilk sandığında oyunu durdurup eşyayı hemen alabilir veya sonraki dükkâna ayırabilir. Dükkânda aynı kademeden iki ikonlu eşya arasından seçim yapabilir ya da ücret ödemeden seçimi geçebilir.</li>
+    </ul>
+  </div></article>
+  <article class="history-row"><time datetime="2026-11-14">14 KASIM 2026</time><div><h3>1.0 ve taretler</h3>
+
+    <h4>Satın alınabilir taretler</h4>
+    <ul>
+      <li>Dört taret dükkâna eklendi. Her tipten en fazla iki tane alınır, silah yuvası kullanmadan dalga başında kurulur ve Mühendislik ile güçlenir.</li>
+      <li>I. kademe Tohum Tareti 20 malzemedir, 200 menzilde tek hedefe tohum atar. II. kademe Alev Tareti 32 malzemedir ve 165 menzilde alev konisiyle topluca vurur.</li>
+      <li>III. kademe Lazer Tareti 52 malzemedir ve 420 menzilde hedefleri delen anlık ışın atar. IV. kademe Patlayıcı Taret 90 malzemedir ve 420 menzilli bombasıyla alan hasarı verir.</li>
+      <li>III. kademe Taret Fidanı 52 malzemedir. Kırılan her ağaç normal ganimetini bırakır ve yerinde o dalga için 200 menzilli Ağaç Tareti kurulur.</li>
+    </ul>
+
+    <h4>Menzil dengesi</h4>
+    <ul>
+      <li>Tohum Tareti’nin taban menzili 420’den 200’e düşürüldü. Her 10 Menzil, Tohum ve Ağaç Tareti’ne 15, diğer üç tipe 10 menzil ekler.</li>
+    </ul>
+
+    <h4>Saldırı görselleri ve karakter yönü</h4>
+    <ul>
+      <li>İngiliz Anahtarı kendi kademesinde taret kurmayı sürdürür. Taret tipleri tohum, alev, ışın ve bomba saldırılarıyla birbirinden ayrılır. Saldırı görselleri dört karelik animasyonlarla gösterilir.</li>
+      <li>Kahraman ve ekipmanı yatay harekete göre döner. Dikey hareket ve durma sırasında son yatay yön korunur.</li>
+    </ul>
+  </div></article>
+  <article class="history-row"><time datetime="2026-10-24">24 EKİM 2026</time><div><h3>Lanetli eşyalar ve Kiler Kraliçesi</h3>
+
+    <h4>Lanetli eşyalar</h4>
+    <ul>
+      <li>Lanetli eşyalara kendi ikonları ve etkilerini gösteren açıklamalar eklendi. Her eşya güçlü bir faydayı belirli bir bedelle birleştirir.</li>
+      <li>Cam Tohum hasarı ikiye katlar ve azami canı 1’e indirir.</li>
+      <li>Çatlak Ceviz tam canda ilk darbeyi engeller ve kabuk saçar, ancak azami canı dalga sonuna kadar 1’e indirir. Kuru Kök azami canı ikiye katlar, savaş sırasında iyileşmeyi kapatır.</li>
+      <li>Dikenli Kalp silah isabetlerini %50 güçlendirir ve isabet eden her onuncu saldırıda 1 can alır. Ters Filiz mermi hasarını ikiye katlar ama menzilli silahları hedefin tersine ateşletir.</li>
+      <li>Son Yaprak ilk ölümcül darbede canı doldurur ve düşmanları savurur, ancak en yüksek kademeli silahı kaybettirir. Kör Tomurcuk kaçınmayı 35 puan artırır, kaçınılamayan darbelerin hasarını ikiye katlar.</li>
+      <li>Demir Kabuk düşman mermilerini en çok 1 hasara indirir, gövde teması ise üç kat hasar verir. Barut Kabağı mermileri patlatır, patlamanın yakınındaki oyuncuya 2 hasar verir.</li>
+      <li>Tek Diş seçilen tek silahı üç kat güçlendirir ve diğer silahları kaybettirir. Kırık Saat Çiçeği üç saniye üç kat saldırı hızından sonra iki saniye ateşi durdurur.</li>
+      <li>Kefil Kök hemen 100 malzeme verir, sonraki üç dalganın her birinde toplanan ilk 45 malzeme borca gider. Altın Kabuk ölümcül darbede 50 malzemeyle kurtarır ve dükkân fiyatlarını %35 artırır.</li>
+    </ul>
+
+    <h4>Eşya deneme ve savaş eşyaları</h4>
+    <ul>
+      <li>Emanet Etiketi uygun eşyayı fiyatının dörtte biriyle bir dalga denetir. Sonraki dükkânda kalan bedel ödenir veya eşya iade edilir. Örneğin 40 malzemelik eşya 10 malzemeyle denenir ve tutulursa kalan 30 ödenir.</li>
+      <li>Çiy Çanı üç kıl payı mermi sıyırmasından sonra ses dalgası salar. Dulavratotu Tokası iki hedefi dört saniye bağlar ve doğrudan hasarın %40’ını diğerine aktarır.</li>
+      <li>Tefeci Bakla doğrudan hasarın %60’ını hemen verir, %80’ini dokunarak tahsil edilen baklada biriktirir. Sırık Fasulye Makarası altı saniyede çevrelenen düşmanları ortaya çeker.</li>
+      <li>Taşıma Kayışı tareti 0,6 saniye üzerinde durunca taşır ve yeniden durunca indirir. Körüklü Eldiven itilen düşman çarpışmalarına hasar ekler ve duvarda bu hasarı ikiye katlar.</li>
+      <li>Boğumlu Şarjör hedef yokken en fazla üç atış saklar. Turşu Küpü ilk iyileştirme tohumunu saklar ve altı saniye sonra iki tohum olarak tüketilmesini sağlar.</li>
+    </ul>
+
+    <h4>Silah eşleştirme</h4>
+    <ul>
+      <li>Nöbet Mandalı’nda kurucunun üç ayrı saldırısı eşini kurar. Eşi bir kez dört kat hasarla vurur.</li>
+    </ul>
+
+    <h4>Kiler Kraliçesi</h4>
+    <ul>
+      <li>Kiler Kraliçesi yuvasına tahıl taşıyan işçi gönderir. Teslim edilen tane kraliçenin yelpaze biçimli salvo atmasına yol açar.</li>
+      <li>İşçinin önüne geçilirse tane düşer. Taneye dokunmak onu kraliçeye geri fırlatır ve kraliçeyi bir saniye sersemletir.</li>
+      <li>Yarı canın altında iki işçi farklı yuvalara gider. Çizgili tane üç salvo, benekli tane üç gecikmeli patlama başlatır.</li>
+    </ul>
+  </div></article>
+  <article class="history-row"><time datetime="2026-09-28">28 EYLÜL 2026</time><div><h3>Yeni bosslar ve saldırı aralıkları</h3>
+
+    <h4>Kestane Şövalyesi</h4>
+    <ul>
+      <li>Kestane Şövalyesi oyuncunun bulunduğu noktaya dikenli koza bırakır ve sonraki saldırıda kilitli bir hat boyunca hücum eder.</li>
+      <li>Kendi kozasına çarptığında 2,2 saniye sersemler ve %50 fazla hasar alır. Yarı canın altında aynı anda iki koza bırakır.</li>
+    </ul>
+
+    <h4>Bataklık Nilüferi</h4>
+    <ul>
+      <li>Bataklık Nilüferi oyuncunun geçtiği yerlerde üç yaprak bırakır. Son konum fırtınaya dönüşür ve yeterince uzaktaki önceki yapraklar sel sırasında güvenli kalır.</li>
+      <li>Yarı canın altında güvenli yaprak yarıçapı 65’ten 52’ye iner. Yapraklar üst üste gelirse erişilebilir bir yedek güvenli nokta açılır.</li>
+    </ul>
+
+    <h4>İyileşme, öfke ve saldırı kesme</h4>
+    <ul>
+      <li>Spor Ekici ve Kabuklu Bakla %40 canın altında bir kez geri çekilip üç saniyede azami canlarının %8’ine kadar iyileşebilir.</li>
+      <li>Geri çekilme veya iyileşme sırasında azami canın %3’ü kadar hasar vermek iyileşmeyi keser ve bossu 0,7 saniye sersemletir.</li>
+      <li>Diken Koçu ve Hasat Biçici %25 canın altında öfkelenir. Koç art arda iki hücum yapar, Biçici beş halkalı saldırı kullanır.</li>
+      <li>Kök Muhafızı saldırı hazırlığındayken azami canının %6’sı kadar hasar alırsa saldırısı kesilir ve 0,75 saniye sersemler. Bu kesintinin beş saniyelik bekleme süresi vardır.</li>
+    </ul>
+  </div></article>
+  <article class="history-row"><time datetime="2026-08-27">27 AĞUSTOS 2026</time><div><h3>Rün ağacı ve final dalgası</h3>
+
+    <h4>Altı rün dalı</h4>
+    <ul>
+      <li>Altı rün dalı Adım, Bahçe, Tohum, Yankı, Can ve Hasat farklı saldırı biçimleri sunar.</li>
+      <li>Adım her 150 mesafede diken izi bırakır. Bahçe bir saniye durunca çevrede saldıran alan oluşturur.</li>
+      <li>Tohum her beş doğrudan öldürmede altı saniyelik filiz doğurur. Yankı saldırıyı 0,65 saniye sonra %20 güçle tekrarlar.</li>
+      <li>Can fazla iyileşmeyi saldırı dalgasına dönüştürür. Hasat her beş para toplamada dönen bir saldırı parası oluşturur.</li>
+    </ul>
+
+    <h4>Dalların kesişimi</h4>
+    <ul>
+      <li>Yürüyen İz için Uzun İz ve Çoğalma gerekir. Taşan Yankı için Dolu Can ve Geç Vuruş gerekir. İkisi de yedinci seviyede açılır.</li>
+      <li>Altın Bahçe, Derin Kök ile Uzun Yörünge’yi birleştirir ve beşinci seviyede açılır. Bahçede toplanan para bahçeyi büyütür ve güçlendirir.</li>
+      <li>Delici Yankı, Delici Dal ve Geç Vuruş gerektirir. Aynı merminin ardışık isabetleri arasında 0,35 saniye sonra %35 hasarlı çizgi oluşturur.</li>
+    </ul>
+
+    <h4>Yol seçimi ve açılma koşulları</h4>
+    <ul>
+      <li>Arınma mevcut ve yeni eşya cezalarını kaldırır, karakter cezaları ve bedeller korunur. Yük Gücü cezaları korur ve her beş doğrudan isabette ceza sayısıyla güçlenen diken patlaması oluşturur.</li>
+      <li>Giriş ve değiştirici düğümler bir puan ve bir mühür, ana ve ustalık düğümleri bir puan ve iki mühür, birleşimler genellikle bir puan ve üç mühür gerektirir. Ana düğümler beşinci seviyede bir boss veya mini boss, ustalık düğümleri yedinci seviyede ana boss ister.</li>
+      <li>Arınma ve Yük Gücü aynı koşuda birlikte alınamaz. Her ikisi de ana boss, yedinci rün seviyesi, iki puan ve üç mühür gerektirir.</li>
+    </ul>
+
+    <h4>İkili final</h4>
+    <ul>
+      <li>20. dalgada iki farklı boss aynı anda gelir. 10 ve 15. dalgalarda tek boss karşılaşması sürer.</li>
+    </ul>
+  </div></article>
+</section>
 <section id="esyalar" class="section"><div class="section-head"><div><div class="eyebrow">EŞYA KATALOĞU</div><h2>Eşyalar<span class="dot">.</span></h2><p>Dükkân ve sandık eşyaları. Fiyatlar taban malzeme bedelidir.</p></div><span class="count" id="item-count" aria-live="polite">123 EŞYA</span></div><div class="controls"><label class="search"><span aria-hidden="true">⌕</span><span class="sr-only">Eşya ara</span><input id="search" type="search" placeholder="Eşya veya etki ara" autocomplete="off"></label><div class="filters" role="group" aria-label="Eşya türü"><button class="active" data-filter="all" aria-pressed="true">Tümü</button><button data-filter="latest" aria-pressed="false">Yeni</button><button data-filter="normal" aria-pressed="false">Diğer eşyalar</button><button data-filter="cursed" aria-pressed="false">Lanetli</button><button data-filter="can" aria-pressed="false">Can</button><button data-filter="silah" aria-pressed="false">Silah</button><button data-filter="ekonomi" aria-pressed="false">Ekonomi</button><button data-filter="hareket" aria-pressed="false">Hareket</button><button data-filter="düşman" aria-pressed="false">Düşman</button></div></div><p id="no-results" class="empty" hidden>Bu aramayla eşleşen eşya bulunamadı.</p><div id="item-grid" class="item-grid"></div></section>
 <section id="karakterler" class="section alternate"><div class="section-head"><div><div class="eyebrow">OYUNCU KADROSU</div><h2>Karakterler<span class="dot">.</span></h2><p>Her karakterin başlangıç özellikleri ve bedelleri.</p></div><span class="count">15 KARAKTER</span></div><div id="hero-grid" class="hero-grid"></div></section>
 <section id="bosslar" class="section"><div class="section-head"><div><div class="eyebrow">DALGA KARŞILAŞMALARI</div><h2>Bosslar<span class="dot">.</span></h2><p>10. ve 15. dalgada bir, 20. dalgada iki farklı boss gelir.</p></div><span class="count">10 BOSS</span></div><div id="boss-grid" class="boss-grid"></div></section>
