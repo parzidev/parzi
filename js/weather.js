@@ -98,7 +98,6 @@ const weatherModule = (function () {
             }
         }
 
-        updateProfileImageByWeather(data.weather[0]);
     }
 
     // Hava durumuna göre ikonu ayarla
@@ -456,44 +455,3 @@ const weatherModule = (function () {
     };
 
 })();
-
-
-function updateProfileImageByWeather({ main, id, icon }) {
-    const profileImg = document.querySelector('.profile-image img');
-    const night = icon?.endsWith('n');
-    let portrait;
-
-    switch (main) {
-        case 'Clear':
-            portrait = night ? 'clear-night' : 'sunny';
-            break;
-        case 'Clouds':
-            portrait = id === 801 || id === 802 ? 'partly-cloudy' : 'overcast';
-            break;
-        case 'Drizzle':
-        case 'Rain':
-            portrait = 'rainy';
-            break;
-        case 'Thunderstorm':
-        case 'Squall':
-        case 'Tornado':
-            portrait = 'stormy';
-            break;
-        case 'Snow':
-            portrait = 'snowy';
-            break;
-        case 'Fog':
-        case 'Mist':
-        case 'Haze':
-        case 'Smoke':
-        case 'Dust':
-        case 'Sand':
-        case 'Ash':
-            portrait = 'foggy';
-            break;
-        default:
-            portrait = 'overcast';
-    }
-
-    profileImg.src = `images/me/${portrait}.png`;
-}
