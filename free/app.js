@@ -6,6 +6,44 @@ const rewards = [
   { game: 'Brawl Stars', name: '1 Thunder Frogs kutusu', event: 'Thunder Frogs', image: 'thunder', end: '2026-11-29T09:00:00Z', url: 'https://link.brawlstars.com/voucher/af1ff7ad-04f3-4114-a420-6b1654d4d5f4' }
 ];
 
+
+const loot = quantity => ({ name: 'Epic Lootkey', quantity, image: 'lootkey.png' });
+const item = (name, quantity, links, image) => ({ name, quantity, links, image: `${image}.webp` });
+const levelRewards = {
+  clans: {
+    1: [loot(2)],
+    2: [item('Dark Age Dragon Trophy', 1, 1, 'trophy')],
+    3: [loot(5), item('Study Soup Snack', 1, 20, 'soup'), item('Power Pancakes Snack', 1, 20, 'pancakes'), item('Mighty Morsel Snack', 1, 20, 'morsel'), item('Clan Castle Cake Snack', 1, 20, 'cake')],
+    4: [loot(10), item('Common Treasure Chest', 3, 10, 'chest')]
+  },
+  royale: {
+    1: [loot(2)],
+    2: [item('Gold', 50000, 5, 'gold'), item('KABLAMMO', 1, 1, 'kablammo'), item('Destructive Duo', 1, 1, 'duo')],
+    3: [loot(5), item('Gold', 100000, 10, 'gold')],
+    4: [loot(10), item('Gold', 150000, 20, 'gold')]
+  },
+  brawl: {
+    1: [loot(2)],
+    2: [item('Miami Stack Icon', 1, 1, 'icon'), item('Chaos Drop', 3, 20, 'chaos')],
+    3: [loot(5), item('Legendary Starr Drop', 2, 20, 'starr')],
+    4: [loot(10), item('Brawl Pass', 1, 20, 'brawlpass')]
+  },
+  hayday: {
+    1: [loot(2), item('2 Stars Expansion Crate', 1, 50, 'crate2')],
+    2: [item('Mount Wheatmore', 1, 1, 'wheatmore')],
+    3: [loot(5), item('3 Stars Expansion Crate', 1, 25, 'crate3')],
+    4: [loot(10), item('Farm Pass', 1, 5, 'farmpass'), item('Festival Pass', 1, 5, 'festival'), item('Party Pass', 1, 5, 'party')]
+  },
+  thunder: { 4: [{ name: 'Thunder Frogs Box', quantity: 1, links: 25, image: '../thunder-reward.webp' }] }
+};
+
+function renderLevels(game) {
+  return `<section class="level-rewards" aria-label="Seviye ödülleri"><h3>Seviye ödülleri</h3>${Object.entries(levelRewards[game]).map(([level, items]) => `
+    <div class="level"><div class="level-heading"><h4>Seviye ${level}</h4>${Number(level) > 1 ? '<span class="locked">Kilitli</span>' : ''}</div>
+      ${items.map(reward => `<div class="level-item"><img src="assets/levels/${reward.image}" alt="" loading="lazy"><div><div class="level-name">${reward.name} <span>×${reward.quantity.toLocaleString('tr-TR')}</span></div><div class="level-detail">${reward.links === undefined ? 'İçerik üreticisi ödülü' : `Dağıtım: ${reward.links} bağlantı`}</div></div></div>`).join('')}
+    </div>`).join('')}</section>`;
+}
+
 const container = document.querySelector('#rewards');
 const dateFormatter = new Intl.DateTimeFormat('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Istanbul' });
 container.innerHTML = rewards.map((reward, index) => `
@@ -14,6 +52,7 @@ container.innerHTML = rewards.map((reward, index) => `
     <div class="card-body"><div class="game">${reward.game}</div><h2>${reward.name}</h2>
       <div class="timing"><div><span class="timing-label">BİTİŞ</span><time datetime="${reward.end}">${dateFormatter.format(new Date(reward.end))}</time></div><div class="remaining"><span class="timing-label">KALAN SÜRE</span><span class="countdown"></span></div></div>
       <a class="claim" href="${reward.url}" target="_blank" rel="noopener noreferrer">Ödülü al</a>
+      ${renderLevels(reward.image)}
     </div>
   </article>`).join('');
 
